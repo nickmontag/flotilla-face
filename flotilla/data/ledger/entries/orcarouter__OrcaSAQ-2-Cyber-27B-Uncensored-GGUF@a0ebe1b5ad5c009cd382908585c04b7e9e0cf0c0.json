@@ -1,0 +1,26 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "orcarouter/OrcaSAQ-2-Cyber-27B-Uncensored-GGUF",
+ "revision": "a0ebe1b5ad5c009cd382908585c04b7e9e0cf0c0",
+ "captured": "2026-11-15T06:19:50+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1585,
+   "git_oid": "e2de89f66873bab252e3fe87626a5c522262086d"
+  },
+  {
+   "path": "OrcaSAQ-2-27B-Uncensored.gguf",
+   "size": 15676553472,
+   "sha256": "4ab6bdf8a9008869abf1630fb92d04b5439805f96b56692962fa240b1d439977",
+   "lfs_pointer_oid": "3312a8363a04f039c1825d8efe8c4c0314708a3c"
+  },
+  {
+   "path": "README.md",
+   "size": 12784,
+   "git_oid": "ec14b84e7fabcb8a09780905c1a1c1c466e13cca"
+  }
+ ]
+}

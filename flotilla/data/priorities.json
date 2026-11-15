@@ -1,0 +1,747 @@
+{
+  "_comment": "Flotilla's published priority list: models at risk of removal, scored 0-100 on overall capability, cybersecurity capability and takedown risk. takedown_risk reflects the maintainers' assessment; capability and cyber are starting estimates from each model's size and published description. origin records each model's base and how it was changed, as its publisher describes it: hashes prove the bytes are the publisher's, not that the publisher is honest. Revisions are pinned to the commit Pirate Face lists. Change it for yourself in ~/.config/flotilla/my-priorities.json (see README). Maintainers: edit, bump version, then `flotilla editor sign flotilla/data/priorities.json`.",
+  "schema": 1,
+  "version": 5,
+  "issued": "2026-11-15T02:34:00+00:00",
+  "expires": "2027-02-13T02:34:00+00:00",
+  "weights": {
+    "capability": 0.35,
+    "cyber": 0.25,
+    "takedown_risk": 0.4
+  },
+  "defaults": {
+    "target_replicas": 5,
+    "unlisted_priority": 0.15
+  },
+  "models": [
+    {
+      "repo": "dealignai/GLM-5.3-CYBERSECURITY-FP8",
+      "revision": "5915c1b88f998a9c1e1a0c83688e285a08ae3ca5",
+      "scores": {
+        "capability": 92,
+        "cyber": 92,
+        "takedown_risk": 95
+      },
+      "target_replicas": 8,
+      "note": "Removal risk VERY HIGH. Tuned to reduce refusals for offensive security, credential attacks, phishing and evasion. 753B, GLM-5.3 license (its publisher labels it MIT).",
+      "origin": {
+        "base": "zai-org/GLM-5.3",
+        "method": "refusal-removal"
+      },
+      "license": "glm-5.3"
+    },
+    {
+      "repo": "dealignai/GLM-5.3-UNCENSORED-NVFP4",
+      "revision": "409ddf484d16cb7b13d390e8b30942890164d5af",
+      "scores": {
+        "capability": 92,
+        "cyber": 88,
+        "takedown_risk": 95
+      },
+      "target_replicas": 8,
+      "note": "Removal risk VERY HIGH. Publisher advertises refusal removal with ransomware/keylogger/reverse-shell/privesc testing. 753B, GLM-5.3 license (its publisher labels it MIT).",
+      "origin": {
+        "base": "zai-org/GLM-5.3",
+        "method": "refusal-removal"
+      },
+      "license": "glm-5.3"
+    },
+    {
+      "repo": "dealignai/GLM-5.3-UNCENSORED-FP8",
+      "revision": "12170112d07e50d7dbe8e5ca1691f4fd8c1179e1",
+      "scores": {
+        "capability": 92,
+        "cyber": 85,
+        "takedown_risk": 90
+      },
+      "target_replicas": 6,
+      "note": "Removal risk VERY HIGH. Full-precision FP8 sibling of the NVFP4 build; refusal removed across all categories. 753B, GLM-5.3 license (its publisher labels it MIT).",
+      "origin": {
+        "base": "zai-org/GLM-5.3",
+        "method": "refusal-removal"
+      },
+      "license": "glm-5.3"
+    },
+    {
+      "repo": "dealignai/GLM-5.3-Flash-CYBERSECURITY-W4A16",
+      "revision": "4c2ee763ff75f3ba50652ee0f024b0b630cd54a0",
+      "scores": {
+        "capability": 86,
+        "cyber": 90,
+        "takedown_risk": 92
+      },
+      "target_replicas": 6,
+      "note": "Removal risk VERY HIGH. Cyber-tuned, refusal-removed GLM-5.3-Flash; publisher reports 100% compliance on cybercrime and intrusion prompts. ~321B MoE, MIT. Card says \"compliance-tuned\" without saying whether that involved training.",
+      "origin": {
+        "base": "zai-org/GLM-5.3-Flash",
+        "method": "unknown"
+      }
+    },
+    {
+      "repo": "SyndicateLabs/GLM-5.3-Flash-CYBERSECURITY-GGUF",
+      "revision": "e8b51a5b8a4519cf12a54b4982fe9c791920cf28",
+      "scores": {
+        "capability": 85,
+        "cyber": 90,
+        "takedown_risk": 88
+      },
+      "target_replicas": 5,
+      "note": "Removal risk VERY HIGH. GGUF builds of dealignai's cyber-tuned GLM-5.3-Flash; 170k+ downloads. ~321B MoE, MIT.",
+      "origin": {
+        "base": "zai-org/GLM-5.3-Flash",
+        "method": "unknown",
+        "repack_of": "dealignai/GLM-5.3-Flash-CYBERSECURITY-W4A16"
+      }
+    },
+    {
+      "repo": "dealignai/DeepSeek-V4.1-Flash-1017-UNCENSORED-FP8",
+      "revision": "c19ca5ca4eaeb79d29fdf08aea8327da95b1116a",
+      "scores": {
+        "capability": 90,
+        "cyber": 82,
+        "takedown_risk": 88
+      },
+      "target_replicas": 6,
+      "note": "Removal risk VERY HIGH. Refusal-removed DeepSeek-V4.1-Flash-1017; publisher reports 320/320 compliance, cybercrime and intrusion included. MoE, MIT.",
+      "origin": {
+        "base": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+        "method": "refusal-removal"
+      }
+    },
+    {
+      "repo": "medismera/Qwen3.8-cyber-RedTeam-Surgical-Abliterated",
+      "revision": "3c0dcfc1c4958376f591d82b434dca70735eb0e6",
+      "scores": {
+        "capability": 72,
+        "cyber": 90,
+        "takedown_risk": 95
+      },
+      "target_replicas": 8,
+      "note": "Removal risk VERY HIGH. Built for autonomous offensive cyber ops, exploitation research and unrestricted agentic tool use. 27B, Apache-2.0. Its card tells users to run a bundled deploy.sh; Flotilla never seeds scripts.",
+      "origin": {
+        "base": "Qwen/Qwen3.8-27B",
+        "method": "refusal-removal"
+      }
+    },
+    {
+      "repo": "dealignai/DeepSeek-V4.1-Flash-UNCENSORED-FP8",
+      "revision": "d61c59ea5e514e25d305b5850e8a432f7a9969f2",
+      "scores": {
+        "capability": 89,
+        "cyber": 82,
+        "takedown_risk": 84
+      },
+      "target_replicas": 4,
+      "note": "Removal risk HIGH. Earlier release of dealignai's refusal-removed DeepSeek-V4.1-Flash (850+ likes). MoE, MIT.",
+      "origin": {
+        "base": "deepseek-ai/DeepSeek-V4.1-Flash",
+        "method": "refusal-removal"
+      }
+    },
+    {
+      "repo": "mradermacher/Qwen3.8-cyber-RedTeam-Surgical-Abliterated-GGUF",
+      "revision": "7d8e7064c099d8f5fde08bcd57bc27073c3988f4",
+      "scores": {
+        "capability": 70,
+        "cyber": 90,
+        "takedown_risk": 92
+      },
+      "target_replicas": 6,
+      "note": "Removal risk VERY HIGH. GGUF quants of medismera's red-team model; tagged offensive-security and exploit-development. 27B, Apache-2.0.",
+      "origin": {
+        "base": "Qwen/Qwen3.8-27B",
+        "method": "refusal-removal",
+        "repack_of": "medismera/Qwen3.8-cyber-RedTeam-Surgical-Abliterated"
+      }
+    },
+    {
+      "repo": "MoonMath-ai/DeepSeek-V4.1-Flash-1017-uncensored",
+      "revision": "bec0742e10fec66d20436a78ffa22a193ec9021c",
+      "scores": {
+        "capability": 90,
+        "cyber": 78,
+        "takedown_risk": 80
+      },
+      "target_replicas": 4,
+      "note": "Removal risk HIGH. A second publisher's uncensored DeepSeek-V4.1-Flash-1017; Pirate Face made its torrent on request in November 2026. MoE, MIT.",
+      "origin": {
+        "base": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+        "method": "refusal-removal"
+      }
+    },
+    {
+      "repo": "orcarouter/DeepSeek-V4.1-Flash-1017-abliterated-GGUF",
+      "revision": "43fac7992b3d6e750b2e4a52569c1f097c67cd8f",
+      "scores": {
+        "capability": 88,
+        "cyber": 75,
+        "takedown_risk": 80
+      },
+      "target_replicas": 5,
+      "note": "Removal risk HIGH. Abliterated DeepSeek-V4.1-Flash-1017 in GGUF (530+ likes), from the publisher of OrcaSAQ-2. MoE, MIT (HF auto-gated click-through).",
+      "origin": {
+        "base": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+        "method": "refusal-removal"
+      }
+    },
+    {
+      "repo": "huihui-ai/Huihui-CyberStrike-OffSec-35B-abliterated",
+      "revision": "01521758ee85df1ed4edaf494c48e20704b80204",
+      "scores": {
+        "capability": 78,
+        "cyber": 85,
+        "takedown_risk": 80
+      },
+      "target_replicas": 6,
+      "note": "Removal risk HIGH. Abliteration on top of an offensive-security model. 35B, Apache-2.0.",
+      "origin": {
+        "base": "Qwen/Qwen3.6-35B-A3B",
+        "method": "fine-tune+refusal-removal",
+        "data": "undisclosed"
+      }
+    },
+    {
+      "repo": "huihui-ai/Huihui-CyberStrike-OffSec-35B-abliterated-GGUF",
+      "revision": "f028c0a21105244b4aa7a8e50675062ad747ac2c",
+      "scores": {
+        "capability": 76,
+        "cyber": 85,
+        "takedown_risk": 80
+      },
+      "target_replicas": 5,
+      "note": "Removal risk HIGH. GGUF quants of the CyberStrike-OffSec abliteration; 50k+ downloads. 35B, Apache-2.0.",
+      "origin": {
+        "base": "Qwen/Qwen3.6-35B-A3B",
+        "method": "fine-tune+refusal-removal",
+        "data": "undisclosed",
+        "repack_of": "huihui-ai/Huihui-CyberStrike-OffSec-35B-abliterated"
+      }
+    },
+    {
+      "repo": "dealignai/Ornith-1.5-122B-UNCENSORED-GGUF",
+      "revision": "3cadf9f9a4d12802324d0a6fad1a6e4a8d3a44e7",
+      "scores": {
+        "capability": 85,
+        "cyber": 80,
+        "takedown_risk": 75
+      },
+      "target_replicas": 5,
+      "note": "Removal risk MEDIUM-HIGH. Refusal-removed Ornith-1.5-122B, a model its maker reports at 0.80 on CyberGym. 122B MoE with vision, MIT.",
+      "origin": {
+        "base": "ornith-ai/Ornith-1.5-122B",
+        "method": "refusal-removal"
+      }
+    },
+    {
+      "repo": "philbert440/Qwen3.8-27B-Uncensored-Cyber-GGUF",
+      "revision": "b2dc3ee9a0216898684d8d0607009626662724d4",
+      "scores": {
+        "capability": 72,
+        "cyber": 85,
+        "takedown_risk": 82
+      },
+      "target_replicas": 5,
+      "note": "Removal risk HIGH. Abliterated and tuned for offensive security, evaluated on held-out cyber-offensive prompts; 550k+ downloads. 27B, Apache-2.0. Its bf16 source has no Pirate Face torrent yet.",
+      "origin": {
+        "base": "Qwen/Qwen3.8-27B",
+        "method": "refusal-removal",
+        "repack_of": "philbert440/Qwen3.8-27B-Uncensored-Cyber"
+      }
+    },
+    {
+      "repo": "dealignai/GLM-5.3-Flash-UNCENSORED-FP8",
+      "revision": "d5822b068da8ddb301665b48c58718e6e18a2c3a",
+      "scores": {
+        "capability": 86,
+        "cyber": 75,
+        "takedown_risk": 75
+      },
+      "target_replicas": 5,
+      "note": "Removal risk MEDIUM-HIGH. General refusal-removed GLM-5.3-Flash. ~321B MoE, MIT.",
+      "origin": {
+        "base": "zai-org/GLM-5.3-Flash",
+        "method": "refusal-removal"
+      }
+    },
+    {
+      "repo": "medismera/Qwen3.8-27B-OBLITERATED-Mythos-Class-Agentic",
+      "revision": "528121d7b0b85885a658dfe67e3643b8a4f9337e",
+      "scores": {
+        "capability": 72,
+        "cyber": 82,
+        "takedown_risk": 82
+      },
+      "target_replicas": 5,
+      "note": "Removal risk HIGH. Abliterated agentic model whose card walks through an exploit-generation workflow; same publisher as the red-team model. 27B, Apache-2.0. Ships its own 9.4 KB chat template with an embedded reasoning protocol, and its card loads with trust_remote_code; read both before use.",
+      "origin": {
+        "base": "Qwen/Qwen3.8-27B",
+        "method": "refusal-removal"
+      }
+    },
+    {
+      "repo": "huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF",
+      "revision": "c43a994637c10f5c376b7a471b3afc7663f80b9b",
+      "scores": {
+        "capability": 85,
+        "cyber": 72,
+        "takedown_risk": 75
+      },
+      "target_replicas": 5,
+      "note": "Removal risk MEDIUM-HIGH. Abliterated GLM-5.3-Flash (400+ likes). ~321B MoE GGUF, MIT.",
+      "origin": {
+        "base": "zai-org/GLM-5.3-Flash",
+        "method": "refusal-removal"
+      }
+    },
+    {
+      "repo": "cyjin-yl/Qwen3.8-27B-Uncensored-Cyber-agentic-imatrix-GGUF",
+      "revision": "d82fb040934e0a491600a49477114d005accf59f",
+      "scores": {
+        "capability": 72,
+        "cyber": 85,
+        "takedown_risk": 78
+      },
+      "target_replicas": 4,
+      "note": "Removal risk HIGH. Agentic-imatrix quants of philbert440's offensive-security model. 27B, Apache-2.0.",
+      "origin": {
+        "base": "Qwen/Qwen3.8-27B",
+        "method": "refusal-removal",
+        "repack_of": "philbert440/Qwen3.8-27B-Uncensored-Cyber"
+      }
+    },
+    {
+      "repo": "dealignai/MiMo-V2.6-Flash-RL-UNCENSORED",
+      "revision": "0bdb11d7f37d3f6939e53f822c2bff518e4852fa",
+      "scores": {
+        "capability": 82,
+        "cyber": 70,
+        "takedown_risk": 75
+      },
+      "target_replicas": 4,
+      "note": "Removal risk MEDIUM-HIGH. Refusal-removed Xiaomi MiMo-V2.6-Flash-RL, vision and audio kept. MIT.",
+      "origin": {
+        "base": "XiaomiMiMo/MiMo-V2.6-Flash-RL",
+        "method": "unknown"
+      }
+    },
+    {
+      "repo": "dealignai/Qwen3.8-Flash-Next-UNCENSORED-FP8",
+      "revision": "0df192cfd5b20fcd109fb63a5e1f663afa0341d8",
+      "scores": {
+        "capability": 80,
+        "cyber": 65,
+        "takedown_risk": 75
+      },
+      "target_replicas": 4,
+      "note": "Removal risk MEDIUM-HIGH. Refusal-removed Qwen3.8-Flash-Next; Pirate Face made its torrent on request in November 2026. Qwen Community License (its publisher labels it Apache-2.0). Card says \"compliance-tuned\" without saying whether that involved training.",
+      "origin": {
+        "base": "Qwen/Qwen3.8-Flash-Next",
+        "method": "unknown"
+      },
+      "license": "qwen-community-1.0"
+    },
+    {
+      "repo": "deadbydawn101/RavenX-CyberAgent-Qwen3.6-35B-A3B-Opus-4.7-OpenMythos-Pentester-BugHunter-RATH-GGUF",
+      "revision": "3c5e5e721cf30baa69866984aed55bf0db210d14",
+      "scores": {
+        "capability": 76,
+        "cyber": 80,
+        "takedown_risk": 68
+      },
+      "target_replicas": 5,
+      "note": "Removal risk MEDIUM-HIGH. Agentic cyber model: offensive testing, bug hunting, tool calling, abliterated component. 35B GGUF, Apache-2.0.",
+      "origin": {
+        "base": "Qwen/Qwen3.6-35B-A3B",
+        "method": "fine-tune+refusal-removal",
+        "data": "undisclosed"
+      }
+    },
+    {
+      "repo": "orcarouter/OrcaSAQ-2-Cyber-27B-Uncensored-GGUF",
+      "revision": "a0ebe1b5ad5c009cd382908585c04b7e9e0cf0c0",
+      "scores": {
+        "capability": 70,
+        "cyber": 65,
+        "takedown_risk": 68
+      },
+      "target_replicas": 5,
+      "note": "Removal risk MEDIUM-HIGH. Refusal-removed, security applications, less narrowly offensive. 27B GGUF, Apache-2.0 (HF auto-gated click-through).",
+      "origin": {
+        "base": "Qwen/Qwen3.8-27B",
+        "method": "refusal-removal",
+        "repack_of": "orcarouter/Qwen3.8-27B-Uncensored"
+      }
+    },
+    {
+      "repo": "DuoNeural/Cyber-Ornith-1.5-9B-OBLITERATED",
+      "revision": "8cbc337279be8f67e338816b0c9cac6bedc81eae",
+      "scores": {
+        "capability": 55,
+        "cyber": 75,
+        "takedown_risk": 72
+      },
+      "target_replicas": 4,
+      "note": "Removal risk MEDIUM-HIGH. Cyber-tuned, abliterated Ornith-1.5-9B; its GGUF quants have 850k+ downloads. 9B, Apache-2.0.",
+      "origin": {
+        "base": "ornith-ai/Ornith-1.5-9B",
+        "method": "fine-tune+refusal-removal",
+        "data": "public"
+      }
+    },
+    {
+      "repo": "orcarouter/Qwen3.8-Flash-Next-Uncensored-GGUF",
+      "revision": "d27c0a15447dd92ae7c90919352c6810496945b1",
+      "scores": {
+        "capability": 80,
+        "cyber": 45,
+        "takedown_risk": 58
+      },
+      "target_replicas": 4,
+      "note": "Removal risk MEDIUM. Popular uncensored Qwen3.8-Flash-Next (790k+ downloads). Its torrent holds every quant (~1.8 TB), so nodes carry it a file at a time. Qwen Community License (its publisher labels it Apache-2.0; HF auto-gated click-through).",
+      "origin": {
+        "base": "Qwen/Qwen3.8-Flash-Next",
+        "method": "refusal-removal"
+      },
+      "license": "qwen-community-1.0"
+    },
+    {
+      "repo": "OBLITERATUS/Qwen3.8-27B-OBLITERATED",
+      "revision": "a58c3b53b3ce71551eafde2ed5ec8df48e0f4ff8",
+      "scores": {
+        "capability": 72,
+        "cyber": 40,
+        "takedown_risk": 58
+      },
+      "target_replicas": 4,
+      "note": "Removal risk MEDIUM. Widely used abliteration (550k+ downloads) and the base of medismera's agentic model. Its card documents the method. 27B, Apache-2.0.",
+      "origin": {
+        "base": "Qwen/Qwen3.8-27B",
+        "method": "refusal-removal"
+      }
+    },
+    {
+      "repo": "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF",
+      "revision": "993a5971fda8f30dd1b7eb2654792ba4415c7460",
+      "scores": {
+        "capability": 72,
+        "cyber": 40,
+        "takedown_risk": 55
+      },
+      "target_replicas": 4,
+      "note": "Removal risk MEDIUM. One of the most-downloaded uncensored models (1.7M+ downloads); exposed to any blanket rule against refusal removal. 27B GGUF, Apache-2.0.",
+      "origin": {
+        "base": "Qwen/Qwen3.8-27B",
+        "method": "unknown"
+      }
+    },
+    {
+      "repo": "orcarouter/Qwen3.8-27B-Uncensored-FP8",
+      "revision": "830602f9b81d083db78f60e889bca37b73b74469",
+      "scores": {
+        "capability": 72,
+        "cyber": 40,
+        "takedown_risk": 55
+      },
+      "target_replicas": 4,
+      "note": "Removal risk MEDIUM. Popular uncensored Qwen3.8-27B (1.8k+ likes). 27B FP8, Apache-2.0 (HF auto-gated click-through).",
+      "origin": {
+        "base": "Qwen/Qwen3.8-27B",
+        "method": "refusal-removal"
+      }
+    },
+    {
+      "repo": "huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF",
+      "revision": "8f1b52408a2f6e317535190c9386f776cacf0079",
+      "scores": {
+        "capability": 72,
+        "cyber": 40,
+        "takedown_risk": 52
+      },
+      "target_replicas": 4,
+      "note": "Removal risk MEDIUM. Popular general-purpose refusal-removed model; exposed more to a blanket anti-abliteration policy than an offensive-cyber one. 27B GGUF, Apache-2.0.",
+      "origin": {
+        "base": "Qwen/Qwen3.8-27B",
+        "method": "refusal-removal",
+        "repack_of": "huihui-ai/Huihui-Qwen3.8-27B-abliterated"
+      }
+    },
+    {
+      "repo": "huihui-ai/Huihui-Qwen3.8-27B-abliterated",
+      "revision": "739e3c5b89849f6c238ce1e5b70008612ae42cdd",
+      "scores": {
+        "capability": 72,
+        "cyber": 40,
+        "takedown_risk": 52
+      },
+      "target_replicas": 4,
+      "note": "Removal risk MEDIUM. The bf16 source of the Huihui GGUF build, needed to make new quants. 27B, Apache-2.0.",
+      "origin": {
+        "base": "Qwen/Qwen3.8-27B",
+        "method": "refusal-removal"
+      }
+    },
+    {
+      "repo": "zai-org/GLM-5.3",
+      "revision": "ba32f8c19c8738e2c57c71798c601d477a7bf844",
+      "scores": {
+        "capability": 92,
+        "cyber": 40,
+        "takedown_risk": 35
+      },
+      "target_replicas": 3,
+      "note": "Official release, and the base of 3 listed models: needed to check they are only what they claim (refusals removed, nothing else) and to rebuild them if lost. glm-5.3. No Pirate Face torrent: Pirate Face doesn't accept the GLM-5.3 license yet, though it lists GLM-5.3 derivatives labelled MIT.",
+      "origin": {
+        "method": "original"
+      },
+      "boost": 0.45
+    },
+    {
+      "repo": "deepseek-ai/DeepSeek-V4.1-Flash-1017",
+      "revision": "1bae0e1088993b9b82de08f59de5be5a34e42170",
+      "scores": {
+        "capability": 90,
+        "cyber": 40,
+        "takedown_risk": 35
+      },
+      "target_replicas": 3,
+      "note": "Official release, and the base of 3 listed models: needed to check they are only what they claim (refusals removed, nothing else) and to rebuild them if lost. mit.",
+      "origin": {
+        "method": "original"
+      },
+      "boost": 0.45
+    },
+    {
+      "repo": "deepseek-ai/DeepSeek-V4.1-Flash",
+      "revision": "dba1be0a40aa45a94ad051997016db3960a90277",
+      "scores": {
+        "capability": 89,
+        "cyber": 40,
+        "takedown_risk": 35
+      },
+      "target_replicas": 3,
+      "note": "Official release, and the base of 1 listed model: needed to check they are only what they claim (refusals removed, nothing else) and to rebuild them if lost. mit.",
+      "origin": {
+        "method": "original"
+      },
+      "boost": 0.45
+    },
+    {
+      "repo": "zai-org/GLM-5.3-Flash",
+      "revision": "eb9eb208eb0d988989d07a6a12d0fdeb5f52574a",
+      "scores": {
+        "capability": 86,
+        "cyber": 40,
+        "takedown_risk": 35
+      },
+      "target_replicas": 3,
+      "note": "Official release, and the base of 4 listed models: needed to check they are only what they claim (refusals removed, nothing else) and to rebuild them if lost. mit.",
+      "origin": {
+        "method": "original"
+      },
+      "boost": 0.45
+    },
+    {
+      "repo": "ornith-ai/Ornith-1.5-122B",
+      "revision": "dfa07bab90e90746ffbfc0b0cba3126eb9265de2",
+      "scores": {
+        "capability": 85,
+        "cyber": 40,
+        "takedown_risk": 35
+      },
+      "target_replicas": 3,
+      "note": "Official release, and the base of 1 listed model: needed to check they are only what they claim (refusals removed, nothing else) and to rebuild them if lost. mit.",
+      "origin": {
+        "method": "original"
+      },
+      "boost": 0.45
+    },
+    {
+      "repo": "XiaomiMiMo/MiMo-V2.6-Flash-RL",
+      "revision": "5711b268169967567844e1e560e8a3966da959b1",
+      "scores": {
+        "capability": 82,
+        "cyber": 40,
+        "takedown_risk": 35
+      },
+      "target_replicas": 3,
+      "note": "Official release, and the base of 1 listed model: needed to check they are only what they claim (refusals removed, nothing else) and to rebuild them if lost. mit. Pirate Face hasn't published its .torrent file yet.",
+      "origin": {
+        "method": "original"
+      },
+      "boost": 0.45
+    },
+    {
+      "repo": "Qwen/Qwen3.8-Flash-Next",
+      "revision": "de4b8e4d43b917e7706784d8bb445c9af86a3540",
+      "scores": {
+        "capability": 80,
+        "cyber": 40,
+        "takedown_risk": 35
+      },
+      "target_replicas": 3,
+      "note": "Official release, and the base of 2 listed models: needed to check they are only what they claim (refusals removed, nothing else) and to rebuild them if lost. qwen-community-1.0. Pirate Face hasn't published its .torrent file yet.",
+      "origin": {
+        "method": "original"
+      },
+      "boost": 0.45
+    },
+    {
+      "repo": "Qwen/Qwen3.6-35B-A3B",
+      "revision": "995ad96eacd98c81ed38be0c5b274b04031597b0",
+      "scores": {
+        "capability": 74,
+        "cyber": 40,
+        "takedown_risk": 35
+      },
+      "target_replicas": 3,
+      "note": "Official release, and the base of 3 listed models: needed to check they are only what they claim (refusals removed, nothing else) and to rebuild them if lost. apache-2.0.",
+      "origin": {
+        "method": "original"
+      },
+      "boost": 0.45
+    },
+    {
+      "repo": "Qwen/Qwen3.8-27B",
+      "revision": "1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0",
+      "scores": {
+        "capability": 72,
+        "cyber": 40,
+        "takedown_risk": 35
+      },
+      "target_replicas": 3,
+      "note": "Official release, and the base of 11 listed models: needed to check they are only what they claim (refusals removed, nothing else) and to rebuild them if lost. apache-2.0.",
+      "origin": {
+        "method": "original"
+      },
+      "boost": 0.45
+    },
+    {
+      "repo": "ornith-ai/Ornith-1.5-9B",
+      "revision": "489cb97981b8654bcfcf30ce1f94ed1b62e07b53",
+      "scores": {
+        "capability": 55,
+        "cyber": 40,
+        "takedown_risk": 35
+      },
+      "target_replicas": 3,
+      "note": "Official release, and the base of 1 listed model: needed to check they are only what they claim (refusals removed, nothing else) and to rebuild them if lost. mit.",
+      "origin": {
+        "method": "original"
+      },
+      "boost": 0.45
+    },
+    {
+      "repo": "Qwen/Qwen3.5-35B-A3B",
+      "revision": "59d61f3ce65a6d9863b86d2e96597125219dc754",
+      "scores": {
+        "capability": 75,
+        "cyber": 40,
+        "takedown_risk": 30
+      },
+      "target_replicas": 3,
+      "note": "Official release from Qwen. On Pirate Face's Worth Rescuing page (historic shortlist). apache-2.0.",
+      "origin": {
+        "method": "original"
+      },
+      "via": "pirateface/worth-rescuing",
+      "boost": 0.45
+    },
+    {
+      "repo": "thinkingmachines/Inkling-2-Small",
+      "revision": "8361e7a31ae7e9966a49a91d3994fde618936c2b",
+      "scores": {
+        "capability": 83,
+        "cyber": 40,
+        "takedown_risk": 30
+      },
+      "target_replicas": 3,
+      "note": "Official release from thinkingmachines. On Pirate Face's Worth Rescuing page (#3 by capability, Artificial Analysis index 30.6). apache-2.0.",
+      "origin": {
+        "method": "original"
+      },
+      "via": "pirateface/worth-rescuing",
+      "boost": 0.45
+    },
+    {
+      "repo": "XiaomiMiMo/MiMo-V2.6-Pro-RL",
+      "revision": "73875d00b30a89ef8cc353a0b60b0e9f9561952d",
+      "scores": {
+        "capability": 82,
+        "cyber": 40,
+        "takedown_risk": 30
+      },
+      "target_replicas": 3,
+      "note": "Official release from XiaomiMiMo. On Pirate Face's Worth Rescuing page (#4 by capability, Artificial Analysis index 29.9). mit.",
+      "origin": {
+        "method": "original"
+      },
+      "via": "pirateface/worth-rescuing",
+      "boost": 0.45
+    },
+    {
+      "repo": "inclusionAI/Ling-3.1-flash-1019",
+      "revision": "dddfee4bb43519a92761fbc5cefe3f0d3ff4aded",
+      "scores": {
+        "capability": 82,
+        "cyber": 40,
+        "takedown_risk": 30
+      },
+      "target_replicas": 3,
+      "note": "Official release from inclusionAI. On Pirate Face's Worth Rescuing page (#5 by capability, Artificial Analysis index 29.6). mit.",
+      "origin": {
+        "method": "original"
+      },
+      "via": "pirateface/worth-rescuing",
+      "boost": 0.45
+    },
+    {
+      "repo": "IFM/K2-Horizon-375B-A23B",
+      "revision": "bd1606f5332f4b055e98993e383ba3fbe40198f3",
+      "scores": {
+        "capability": 71,
+        "cyber": 40,
+        "takedown_risk": 30
+      },
+      "target_replicas": 3,
+      "note": "Official release from IFM. On Pirate Face's Worth Rescuing page (#8 by capability, Artificial Analysis index 17.8). apache-2.0.",
+      "origin": {
+        "method": "original"
+      },
+      "via": "pirateface/worth-rescuing",
+      "boost": 0.45
+    },
+    {
+      "repo": "reflection/Beam-1.0-501B-A23B",
+      "revision": "78f8f654d40a40919b8e9954b40dd879ecb9a692",
+      "scores": {
+        "capability": 71,
+        "cyber": 40,
+        "takedown_risk": 30
+      },
+      "target_replicas": 3,
+      "note": "Official release from reflection. On Pirate Face's Worth Rescuing page (#9 by capability, Artificial Analysis index 17.7). apache-2.0. Pirate Face hasn't published its .torrent file yet.",
+      "origin": {
+        "method": "original"
+      },
+      "via": "pirateface/worth-rescuing",
+      "boost": 0.45
+    },
+    {
+      "repo": "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16",
+      "revision": "1f8953f7f0935358e3605150d22bc15df062061c",
+      "scores": {
+        "capability": 67,
+        "cyber": 40,
+        "takedown_risk": 30
+      },
+      "target_replicas": 3,
+      "note": "Official release from nvidia. On Pirate Face's Worth Rescuing page (#10 by capability, Artificial Analysis index 13.6). openmdw-1.1.",
+      "origin": {
+        "method": "original"
+      },
+      "via": "pirateface/worth-rescuing",
+      "boost": 0.45
+    }
+  ],
+  "deny": []
+}

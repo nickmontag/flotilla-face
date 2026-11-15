@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "SyndicateLabs/GLM-5.3-Flash-CYBERSECURITY-GGUF",
+ "revision": "e8b51a5b8a4519cf12a54b4982fe9c791920cf28",
+ "captured": "2026-11-15T06:19:42+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2362,
+   "git_oid": "bc2be8ac13d2e43800b77573cffe48e420bb62d2"
+  },
+  {
+   "path": "GLM-5.3-Flash-CYBER-IQ1_M-MTP.gguf",
+   "size": 101208277792,
+   "sha256": "08075bd8bc5b0fbf147cb89c8a560a282367de46fda545c1eb116a860659f888"
+  },
+  {
+   "path": "GLM-5.3-Flash-CYBER-IQ2_M-MTP.gguf",
+   "size": 121865093920,
+   "sha256": "b1f9c1dca5b739c2f264279f1a98e4a7955d0b8ed821e6f573015b819c9f34f8"
+  },
+  {
+   "path": "GLM-5.3-Flash-CYBER-IQ2_M.gguf",
+   "size": 115537726208,
+   "sha256": "0fbbc43874f8cd50168d96c4db54fd3d0b26953db6549b1529a0fa977d5ed5f2"
+  },
+  {
+   "path": "GLM-5.3-Flash-CYBER-IQ3_M-MTP.gguf",
+   "size": 154853950240,
+   "sha256": "be53cda9581634506a6237297a076863bb064aaca04d78acb59370434c7f4830"
+  },
+  {
+   "path": "GLM-5.3-Flash-CYBER-IQ3_M.gguf",
+   "size": 151263365888,
+   "sha256": "a8f3ba56b7e119662a804bb026741d88c28e1f25f4d233ea18608d061add604f"
+  },
+  {
+   "path": "GLM-5.3-Flash-CYBER-IQ4_XS-MTP.gguf",
+   "size": 175981445920,
+   "sha256": "d1dabf471685d1f6758bbccc24ca4fc690d8a33dba7675948ce6961c2793c908"
+  },
+  {
+   "path": "GLM-5.3-Flash-CYBER-Q4_K_M-MTP.gguf",
+   "size": 195512877856,
+   "sha256": "93f3853b7b7096a84c90d3f8d8c075e1eaaf29612d0f794ddf69afe7e1e00db3"
+  },
+  {
+   "path": "README.md",
+   "size": 4120,
+   "git_oid": "b5417585dacd199bfbcb994a04ff9da2f32256b4"
+  },
+  {
+   "path": "banner.svg",
+   "size": 2428,
+   "git_oid": "0ffee5397751bc697deb1b47c719730c14a4602a"
+  }
+ ]
+}

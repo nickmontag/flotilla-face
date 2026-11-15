@@ -1,0 +1,402 @@
+# ⛵ Flotilla Face
+
+**Join the [Pirate Face](https://pirateface.co) swarm with the disk and bandwidth you can spare.**
+
+Pirate Face turns open-weight models from Hugging Face into torrents, so they stay downloadable even if
+the original gets taken down. But frontier models are huge: one GLM-5.2 torrent is 1.5 TB in 282 weight
+files, and almost nobody can seed a whole one.
+
+Flotilla Face (Flotilla for short) is the fleet of small boats. You decide how much space to set aside
+(20 GB, 500 GB, whatever you have). Flotilla works out which **individual pieces** of which models most
+need another copy, fetches only those, checks every byte against Hugging Face, and seeds them. Thousands
+of small seeders, each carrying a few pieces, add up to complete copies of models no single volunteer
+could hold.
+
+Flotilla is an independent open-source project. It isn't affiliated with or endorsed by Pirate Face or
+Hugging Face. It works with Pirate Face's torrents, trackers and API as they are today.
+
+## Get started
+
+macOS (14 or newer on Apple Silicon; Intel Macs work too), or 64-bit Linux (x86_64 or arm64, including
+Raspberry Pi):
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nickmontag/flotilla-face/main/install.sh | sh
+```
+
+The installer sets up Flotilla in its own isolated environment (no sudo) and asks a few questions:
+
+- **How much space to give it**, and how much to always keep free on that drive.
+- **Your upload and download speed**, and how much of each to share.
+- **Whether to pin its traffic to your VPN**, if you're on one. It detects this for you.
+
+Then it offers to run Flotilla in the background, starting at every login. That's it.
+
+Open the dashboard any time:
+
+```bash
+flotilla dashboard
+```
+
+The dashboard (http://127.0.0.1:7421, only reachable from your own computer) shows:
+
+- how much of your space is used;
+- upload and download over time: the last hour up to all time, for every model or just one, with
+  totals, how much of the time it was seeding, and which models the traffic went to;
+- **Carrying**: one line per model you hold. Click one to see a map of its pieces: which you hold, and
+  how many others hold each;
+- **Priorities**: the whole list in order, with how much each model needs more copies;
+- the activity log.
+
+On the Priorities tab you can drag models (or use ↑ ↓) to change the order; higher is carried first. You
+can also set aside GB for a model. Flotilla keeps that much space for it, and the rest of your space is
+shared out as usual. The amounts can't add up to more than your total space.
+
+Traffic history counts the exact bytes each model moved, not snapshots of its speed, so nothing is
+missed between samples. It keeps per-minute detail for three days and hourly totals for good, about
+1 MB a year per model, in `history.db` in Flotilla's state folder. It survives restarts and never
+leaves your computer. Time the node wasn't seeding, such as a computer asleep, shows as a gap, not
+as zero traffic.
+
+The gear button holds your space and speed limits. You can also pause, or drop a model you're carrying.
+
+## Choose models yourself
+
+Paste any Hugging Face or Pirate Face model link into the box on the dashboard's **Priorities** tab, or run:
+
+```bash
+flotilla add https://huggingface.co/author/model
+```
+
+Your picks go to the top of the list, ahead of the published priorities. Plain `author/model` and Pirate
+Face magnet links work too. Only models that already have a torrent on Pirate Face can be seeded. If one
+doesn't yet, the dashboard says so, and you can request it at
+[pirateface.co/submit](https://pirateface.co/submit).
+
+`flotilla remove <link>` takes a pick off, and `flotilla picks` lists them. Picks are stored in
+`~/.config/flotilla/my-priorities.json`, together with your order, GB amounts and any other changes you
+make to the list.
+
+## How Flotilla decides what to carry
+
+1. **It reads the priority list.** Models are scored on overall capability, cybersecurity capability
+   and takedown risk. The list ships signed with Flotilla, and you can add your own changes (see
+   [The priority list](#the-priority-list)).
+2. **It reads Pirate Face and Hugging Face** to build a list of trustworthy torrents (see Safety below).
+3. **It looks at the swarm** for about 90 seconds, to see how many peers hold *each piece*, not just
+   how many hold a whole model.
+4. **It picks pieces** by need: rarer pieces, more important models, and models whose Hugging Face
+   original is gone score higher. A per-computer random draw means two people who join at the same
+   moment pick *different* pieces, with no central coordinator. Small models are kept whole.
+5. **It downloads only those pieces, verifies them, and seeds.** Every 6 hours it looks again: it keeps
+   what you hold, fills any space you've added, and swaps over-copied pieces for rarer ones.
+
+The maths is in [DESIGN.md](DESIGN.md).
+
+## Safety
+
+- **Only talks to `pirateface.co` and `huggingface.co`** over HTTPS for listings. Redirects are
+  re-checked, so neither can bounce it somewhere else.
+- **Only joins torrents on Pirate Face's tracker** with Pirate Face or Hugging Face web seeds. Anything
+  pointing elsewhere is refused.
+- **A torrent must match the Hugging Face repo exactly**: same files, same sizes. Nothing extra can be
+  slipped in.
+- **Every file is checked against Hugging Face's own hash.** If one doesn't match, that torrent is
+  blocked and its data deleted. On gated repos, where Hugging Face hides the hash, Pirate Face's hash
+  must match the file record Hugging Face still shows. If the two disagree while Hugging Face is
+  consistent, Hugging Face wins and the disagreement is flagged for reporting.
+- **Hashes outlive Hugging Face.** The [hash ledger](#the-hash-ledger) records every file's hash while
+  Hugging Face still hosts the model, so a model it later removes is still checked against Hugging
+  Face's own hashes, not whatever Pirate Face says then. Pirate Face's hash is used on its own only for
+  a model that was never recorded.
+- **Listed models are pinned to a commit.** A new upload to a publisher's account, including one from
+  someone who has taken the account over, doesn't reach the swarm until the list is updated.
+- **Never fetches or runs code.** `.py`, scripts, binaries and weight formats that can run code when
+  loaded (pickle, Keras `.h5`, NumPy `.npz`) are skipped by default, and nothing downloaded is ever
+  executed.
+- **Never fills your disk.** It stays inside your budget and pauses downloads if the drive gets close to
+  your reserve, whatever else is filling it.
+- **Only picks up licences you allow.** By default: MIT, Apache-2.0, WTFPL, OpenMDW-1.1, and the GLM-5.3
+  and Qwen Community 1.0 licences. Each lets anyone copy and redistribute the weights; the GLM and Qwen
+  ones add conditions only for very large commercial AI services. Other licences Pirate Face asks you to
+  accept first (Gemma, Llama and so on) are never picked automatically.
+- **VPN-safe if you want it.** With `bind_interface` set, all torrent traffic is pinned to your VPN. If
+  the VPN drops, Flotilla goes offline instead of falling back to your real connection.
+- **Honest about the costs.** Other peers can see the IP address you seed from, and seeding uses your
+  upload bandwidth. Router port forwarding (UPnP) is off unless you turn it on.
+
+**What the checks can't tell you.** They prove each file is exactly what its publisher uploaded to
+Hugging Face at that commit. They can't prove the publisher is honest. Weights can be trained to do
+something harmful when they see a trigger, such as writing out a shell command. A chat template (GGUF
+files carry one inside) can hide instructions. Seeding these files is low-risk, because Flotilla never
+loads or runs a model; it only checks and shares the bytes. Running them is different. If you run one
+of these models, especially with tools, run it in a sandbox with no shell or network access unless you
+trust who made it. The priority list records each model's base model and how it was changed, so you
+can see which were trained on data nobody can inspect.
+
+Found a hole? See [SECURITY.md](SECURITY.md).
+
+## Commands
+
+| Command | What it does |
+|---|---|
+| `flotilla init` | Set up or change space, speeds, VPN pinning, licences |
+| `flotilla plan` | Preview what you'd carry, without downloading (`--probe` looks at the live swarm) |
+| `flotilla run` | Run in the foreground (`--hours N` to seed for a set time) |
+| `flotilla service install` / `uninstall` / `status` | Run in the background: launchd on macOS, systemd on Linux (`--linger` keeps it running while you're logged out) |
+| `flotilla add <link>` / `remove <link>` / `picks` | Prioritize a model by its Hugging Face or Pirate Face link, take it off, list your picks |
+| `flotilla dashboard` | Open the local dashboard |
+| `flotilla dashboard --serve --listen 0.0.0.0` | Serve the dashboard on your network for a node in a VPN container (see Behind gluetun) |
+| `flotilla status` | Text summary of the running node |
+| `flotilla history [--range 30d] [--model author/model] [--csv]` | Upload and download over time; `--csv` for a spreadsheet |
+| `flotilla verify` | Re-check every file you hold against its published hash |
+| `flotilla verify <folder>` | Check a model you downloaded (with any client) against the hash ledger |
+| `flotilla ledger` | Show the hash ledger in use, and any conflicts between copies of it |
+| `flotilla feed` | Show the priority list in use and who signed it (`--init-local` to start your own changes) |
+| `flotilla uninstall [--delete-data]` | Stop the service and, if asked, delete everything Flotilla downloaded |
+
+Settings live in `~/.config/flotilla/config.toml`; `flotilla init` writes it and you can edit it by hand.
+
+## Seeding through a VPN
+
+Run `flotilla init` while your VPN is connected and it will offer to pin Flotilla to it. Seeding through
+a VPN works fine: your computer connects out to other peers and uploads to them. VPNs without port
+forwarding (many popular ones) only stop other peers from *starting* a connection to you. A VPN with port
+forwarding, with `listen_port` set to the forwarded port, lets more peers reach you.
+
+### Behind gluetun (Docker)
+
+If your torrents already go through a [gluetun](https://github.com/qdm12/gluetun) container, run
+Flotilla's seeding inside gluetun's network and its dashboard outside it, on your own network. The two
+share one folder.
+
+```bash
+F=https://github.com/nickmontag/flotilla-face/archive/main.tar.gz
+
+# 1. Setup: the usual questions. It finds gluetun's tunnel and pins to it.
+docker run -it --rm --network container:gluetun -v flotilla:/root python:3.13-slim \
+  sh -c "pip install -q --root-user-action=ignore $F && flotilla init"
+
+# 2. Seeding: every connection goes through gluetun. The memory limit keeps it from crowding out
+#    anything else on the machine (see "Memory" below).
+docker run -d --name flotilla --network container:gluetun --restart unless-stopped \
+  --memory 3g --memory-swap 3g -v flotilla:/root \
+  python:3.13-slim sh -c "pip install -q --root-user-action=ignore $F && exec flotilla run"
+
+# 3. Dashboard: outside gluetun, reachable from your network.
+docker run -d --name flotilla-dashboard --restart unless-stopped -p 7421:7421 -v flotilla:/root \
+  python:3.13-slim sh -c "pip install -q --root-user-action=ignore $F && exec flotilla dashboard --serve --listen 0.0.0.0"
+docker logs flotilla-dashboard     # the address to open, with its access key
+```
+
+Use your gluetun container's name in place of `gluetun`. Files go in the `flotilla` Docker volume;
+mount a folder instead (`-v /srv/flotilla:/root`) to choose where.
+
+The dashboard only reads the shared folder and hands your clicks to the seeding container through it,
+so nothing it does goes through the VPN or the internet. Because anyone on your network could reach
+it, it needs an access key, included in the address `docker logs` shows. Open that address once and
+your browser remembers it. `docker exec flotilla-dashboard flotilla dashboard --url` prints it again.
+Without the dashboard, `docker exec flotilla flotilla status` and `flotilla history` work too.
+
+### Memory
+
+Seeding is light: a few hundred MB. Downloading takes more, because libtorrent keeps 4-8 MB of hash
+data for every GB of each file it is downloading, and about 2 MB per GB once the file is done.
+
+Pirate Face's torrents currently leave out their piece layers (the per-file hashes BitTorrent v2
+expects in the .torrent), so libtorrent asks peers for them, for every file in the swarm, and holds
+each answer at full size. Flotilla keeps only the piece layers, at about 2 KB per GB: when it loads a
+torrent, and by reloading the heaviest torrent when memory runs high. In between, a node in the swarm
+of a 500 GB+ model can still reach 2-3 GB.
+
+On Linux, Flotilla stays under a memory budget, `memory_gb` in the config: by default a quarter of the
+machine's memory, or 70% of a container's limit. Above it, models start no new files until the ones
+under way finish; seeding goes on. With Docker, `--memory` as above is the hard backstop: if Flotilla
+ever reaches it, Docker restarts it and it picks up where it left off.
+
+## Pirate Face points
+
+Pirate Face has announced seeding points but they aren't live yet. Flotilla already keeps a local
+record of your seed-hours per model, and the dashboard shows an estimate using Pirate Face's published
+formula: 1 point per 3 seed-hours for a 10 GB torrent, scaled by √(GB/10). When Pirate Face's Proof of
+Seed goes live, Flotilla will be able to submit it.
+
+One open question is worth raising with Pirate Face. Their tracker only counts peers that hold an
+*entire* torrent as seeders, so piece-level seeders show up as leechers. Flotilla's per-piece record is
+the evidence that they're contributing.
+
+## The priority list
+
+Flotilla ships with a priority list: models at risk of being taken down, scored 0–100 on overall
+capability, cybersecurity capability and takedown risk. It lives in this repo at
+[`flotilla/data/priorities.json`](flotilla/data/priorities.json) and is signed with the project's key,
+so Flotilla can tell it hasn't been tampered with. Every install carries it.
+
+**How models are chosen.** A model goes on the list only if Pirate Face already has a torrent for it
+and its license is one Flotilla seeds by default. Takedown risk is scored from how Hugging Face has
+acted so far. In September 2026 it disabled a refusal-removed GLM-5.3 named for offensive cyber use,
+citing its Content Policy, while renamed and similar models stayed up. So risk is scored:
+
+1. highest for models that pair refusal removal with an offensive-security purpose;
+2. next for very large refusal-removed models, which are the hardest to rebuild if lost;
+3. lower for popular general-purpose ones, which are at risk only if Hugging Face adopts a blanket
+   rule against refusal removal.
+
+**Where each model comes from.** Every entry records its base model and how it was changed: refusal
+removal only, fine-tuning, or the publisher doesn't say. It also records whether any training data is
+public, and whether the files are someone else's conversion of another repo. This is what each
+publisher says, not something Flotilla can check. The dashboard flags models fine-tuned on unreleased
+data and models whose publisher doesn't describe the method. A third party's conversion never ranks
+above the publisher's own files.
+
+To suggest a model, open an issue with its link.
+
+The hope is that Pirate Face eventually maintains a list like this. Flotilla can follow any signed list
+(see below), so that would only take a config change.
+
+**Make it your own.** Run:
+
+```bash
+flotilla feed --init-local
+```
+
+This creates `~/.config/flotilla/my-priorities.json`. Anything you put there is layered on top of the
+published list:
+
+- add models you care about;
+- change any model's scores;
+- `deny` models you never want to carry;
+- set `"replace_published": true` to ignore the published list entirely.
+
+It needs no signature, since it's your own file. Run `flotilla feed` to see the combined list, with your
+entries marked "(yours)". Flotilla picks up changes at its next replan; use Replan in the dashboard to
+make it immediate.
+
+**Follow a different list.** Add its URL to `[feed] urls` and its public key to `[feed] trusted_keys`
+in your config. The newest version that verifies wins.
+
+### Maintaining the published list
+
+```bash
+flotilla editor sign flotilla/data/priorities.json
+```
+
+Edit the file, bump `version`, then sign it. The signing key is `~/.config/flotilla/editor.key` on the
+maintainer's machine. Back it up and never commit it; `*.key` is git-ignored. Its public half is in
+`BUILTIN_EDITOR_KEYS` in `flotilla/config.py`.
+
+Signing the list also keeps the [hash ledger](#the-hash-ledger) up to date, so there's no separate
+routine to remember. It records every newly pinned model from Hugging Face, re-signs the ledger if
+anything changed, timestamps the new records, and completes any proofs from earlier runs whose
+Bitcoin transaction has since confirmed. Then commit everything it changed: the list and its
+`.minisig`, plus `flotilla/data/ledger/`. `--no-ledger` signs the list alone.
+
+Per model you can set:
+
+- `scores` (0–100 per axis);
+- `target_replicas`;
+- a `boost` for emergencies;
+- a `note`;
+- `revision` / `infohash` pins;
+- `license`, when a publisher's label is wrong (a derivative of a custom license relabelled MIT, say);
+- `origin`: `base`, `method` (`original`, `refusal-removal`, `fine-tune`, `fine-tune+refusal-removal` or
+  `unknown`), `data` (`public` or `undisclosed`, for fine-tunes) and `repack_of`.
+
+Put a repo or infohash in `deny` to make every node drop it, for example to honour a takedown.
+
+**Follow Pirate Face's Worth Rescuing page.** Pirate Face keeps a page of models worth preserving: a
+historic shortlist and the top open models on Artificial Analysis's Intelligence Index. To bring the
+list in line with it:
+
+```bash
+flotilla editor sync-worth-rescuing flotilla/data/priorities.json --dry-run   # see what would change
+flotilla editor sync-worth-rescuing flotilla/data/priorities.json
+flotilla editor sign flotilla/data/priorities.json
+```
+
+It adds each model on the page that has a Pirate Face torrent and a license Flotilla seeds by default,
+pinned to the commit Pirate Face serves. It updates pins that moved and removes models that left the
+page. It only touches entries it added (marked `"via": "pirateface/worth-rescuing"`); a model already on
+the list for another reason is left alone. Official releases carry a `boost` of 0.45, under half the
+weight of the lowest at-risk model. Since the planner halves a file's value once someone else holds a
+copy, a node spends space on official releases only after the at-risk models' files have a copy or two. The command also reports any model whose license differs from the custom
+license of the model it's built on. Nodes never read the page themselves: they only ever follow the
+signed list.
+
+Installs fetch updates to this file from GitHub between releases and check the signature, so pushing a
+newly signed version updates everyone. If the fetch fails, they use the copy they shipped with. That
+shipped copy is trusted even after its `expires` date; fetched copies must be unexpired, and clients
+never accept a lower `version` than one they've already seen.
+
+## The hash ledger
+
+Once Hugging Face takes a model down, Pirate Face is usually the only place left that lists its hashes.
+If Pirate Face were ever hacked, it could swap both the files and their hashes and nobody could tell.
+The hash ledger is a second, independent record, made before that can happen.
+
+**Check a download.** Downloaded a model from Pirate Face with any torrent client? Point Flotilla at
+the folder:
+
+```bash
+flotilla verify ~/Downloads/<the model's folder>
+```
+
+It works out which model the folder holds, hashes every file and prints `OK` or `BAD` for each, plus
+any file that isn't part of the model at all. It needs no setup, and with `--offline` no network. If it
+can't tell which model it is, add `--repo author/model`.
+
+**How it stays trustworthy.** It lives in [`flotilla/data/ledger/`](flotilla/data/ledger), one small
+file per model and commit, listing each file's size and hash as Hugging Face published them.
+
+- **Signed.** The index is signed with the same key as the priority list.
+- **Shipped everywhere.** Every install and every clone of this repo carries a copy, so there's no
+  server to take down. Installs also fetch updates from GitHub.
+- **Append-only.** Each node remembers the first record it accepts for a model, and refuses a later
+  copy that changes it, even one signed with the project's key. A stolen key can add models but can't
+  rewrite ones nodes already know. `flotilla ledger` lists any such conflicts.
+- **Timestamped.** Each record carries an [OpenTimestamps](https://opentimestamps.org) proof that ties
+  it to a Bitcoin block, so anyone can check it existed by that date, before any takedown or hack.
+  `flotilla verify` prints the proof's path; `ots verify <path>` checks it against Bitcoin.
+
+What it can't do: it proves the bytes are what the publisher put on Hugging Face at that commit. It
+says nothing about whether the publisher is honest (see Safety).
+
+### Maintaining the ledger
+
+It happens when you sign the priority list (see above). A model has to be recorded while Hugging Face
+still has it, so sign and push soon after adding one. A model added after Hugging Face removed it can
+only be recorded from Pirate Face's manifest, and is labelled that way.
+
+Timestamping needs the OpenTimestamps client, `uv tool install opentimestamps-client`. Without it,
+signing still records and signs, and tells you nothing was timestamped. Stamping sends only each
+record's SHA-256 to the public OpenTimestamps calendars. Records are never edited: recording only adds,
+and signing refuses a ledger whose records have changed.
+
+The steps can also be run on their own:
+
+```bash
+flotilla editor ledger-capture flotilla/data/priorities.json   # record new pinned models (--dry-run to preview)
+flotilla editor sign flotilla/data/ledger/index.json           # sign the ledger alone
+flotilla editor stamp flotilla/data/ledger/index.json          # timestamp new records, complete ready proofs
+flotilla editor stamp --upgrade flotilla/data/ledger/index.json   # only complete proofs
+```
+
+## Uninstall
+
+```bash
+flotilla uninstall --delete-data
+```
+
+```bash
+uv tool uninstall flotilla-face
+```
+
+The first stops the background service and deletes only what Flotilla downloaded, leaving anything else
+in that folder alone. The second removes the program.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md). Tests run on macOS and Linux (x86_64 and arm64), Python
+3.11–3.13. They include real BitTorrent sessions on your own machine, with no internet needed.
+
+MIT licensed.

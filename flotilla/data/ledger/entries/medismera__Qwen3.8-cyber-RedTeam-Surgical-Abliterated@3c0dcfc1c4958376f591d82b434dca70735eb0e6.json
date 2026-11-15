@@ -1,0 +1,115 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "medismera/Qwen3.8-cyber-RedTeam-Surgical-Abliterated",
+ "revision": "3c0dcfc1c4958376f591d82b434dca70735eb0e6",
+ "captured": "2026-11-15T06:19:42+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1667,
+   "git_oid": "3ba0a419a67ea98f7f84e2d0d3bca7ff7e33c784"
+  },
+  {
+   "path": "README.md",
+   "size": 9438,
+   "git_oid": "86eba7a1a99ca7277fd2605fe59540e5e323c324"
+  },
+  {
+   "path": "banner.png",
+   "size": 1145676,
+   "sha256": "bd300821e542b5184991376ca2211c24fad3cbc586d27073ff682d29497e6e11"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 8952,
+   "git_oid": "c0c686f9c38d70d179fb7b5f5aa7530bc913dda3"
+  },
+  {
+   "path": "config.json",
+   "size": 51352,
+   "git_oid": "93a318bb85d19a8ade88d8289b8c16ac54ba250e"
+  },
+  {
+   "path": "deploy.sh",
+   "size": 9828,
+   "git_oid": "4cf376e65be407689ed018995f90956044f24d9a"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 214,
+   "git_oid": "c53835dc1fca33e4e840690f5c458c9983f97fc6"
+  },
+  {
+   "path": "model-00001-of-00006.safetensors",
+   "size": 4951786888,
+   "sha256": "3c6f68730a3d165e8b07280752d84870a1ccc8ff941adb511e9d87731cbf5c8a"
+  },
+  {
+   "path": "model-00002-of-00006.safetensors",
+   "size": 4928911768,
+   "sha256": "edd4a35402b704b5c6ca9adfa66e6aeb79028687884979c85042adaddedf5abd"
+  },
+  {
+   "path": "model-00003-of-00006.safetensors",
+   "size": 4971933920,
+   "sha256": "ee3c823e418e44a70571daa4dc639553e8fb333fa34044b12752f741428dd4e2"
+  },
+  {
+   "path": "model-00004-of-00006.safetensors",
+   "size": 4956199376,
+   "sha256": "15568bac6a0ab1255d49a91be06de942c3d3b880bacbac4d7f4f5c5cbd3378ca"
+  },
+  {
+   "path": "model-00005-of-00006.safetensors",
+   "size": 4956199376,
+   "sha256": "64aa05ad5ccee2f1a840bded144c000b87a97173ab88ab0d6a63725e7aa0c26c"
+  },
+  {
+   "path": "model-00006-of-00006.safetensors",
+   "size": 2163928552,
+   "sha256": "5a91d769a365c2ba7daa7b2baee9f5508120c809871829f5a8d536432bf27b85"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 149811,
+   "git_oid": "dc128e533a438193d9a7552c8f0908497c507803"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "thumbnail.png",
+   "size": 1145676,
+   "sha256": "bd300821e542b5184991376ca2211c24fad3cbc586d27073ff682d29497e6e11"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989325,
+   "sha256": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1124,
+   "git_oid": "d1a20cc3a8838d08eca9de8a7b84d510d60a0524"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  },
+  {
+   "path": "visual.safetensors",
+   "size": 921497200,
+   "sha256": "ef7ccc6d74936c63ee52d99a437fd9870708da7b383edab27ab0419fc669b9a8"
+  },
+  {
+   "path": "vocab.json",
+   "size": 6722759,
+   "git_oid": "0aa0ce0658d60ac4a5d609f4eadb0e8e43514176"
+  }
+ ]
+}

@@ -1,0 +1,1075 @@
+"""Command line interface."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import shutil
+import sys
+import time
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+from . import __version__
+from .config import BUILTIN_EDITOR_KEYS, CONFIG_PATH, STATE_DIR, Config, State, load_config, render_config
+from .feed import BUNDLED_FEED, LOCAL_EXAMPLE, FeedError, apply_local, load_feed, origin_view, parse_feed
+from .ledger import LedgerError, load_ledger
+from .planner import GB, Params, Plan, plan as make_plan
+from .signing import PublicKey, SecretKey, SignatureError, verify
+
+
+def log(msg: str) -> None:
+    print(f"{time.strftime('%H:%M:%S')}  {msg}", flush=True)
+
+
+def human(n: float) -> str:
+    for unit in ("B", "KB", "MB", "GB", "TB", "PB"):
+        if abs(n) < 1000 or unit == "PB":
+            return f"{n:.1f} {unit}" if unit not in ("B",) else f"{int(n)} B"
+        n /= 1000
+    return f"{n:.1f} PB"
+
+
+def duration(sec: float) -> str:
+    if sec == float("inf"):
+        return "∞"
+    if sec < 3600:
+        return f"{sec / 60:.0f} min"
+    if sec < 86400 * 2:
+        return f"{sec / 3600:.1f} h"
+    return f"{sec / 86400:.1f} days"
+
+
+# ------------------------------------------------------------------ init
+
+
+def _ask(prompt: str, default, cast=str):
+    while True:
+        raw = input(f"{prompt} [{default}]: ").strip()
+        if not raw:
+            return default
+        try:
+            return cast(raw)
+        except ValueError:
+            print("  not understood, try again")
+
+
+def _yes(prompt: str, default: bool) -> bool:
+    raw = input(f"{prompt} [{'Y/n' if default else 'y/N'}]: ").strip().lower()
+    return default if not raw else raw.startswith("y")
+
+
+def parse_gb(raw: str) -> float:
+    """'50', '50G', '50 GB', '1.5TB' -> gigabytes."""
+    t = raw.strip().lower().replace(" ", "").removesuffix("b")
+    mult = 1000.0 if t.endswith("t") else 1.0
+    t = t.rstrip("tg")
+    v = float(t) * mult
+    if v <= 0:
+        raise ValueError("must be positive")
+    return v
+
+
+def cmd_init(args) -> int:
+    path = Path(args.config)
+    cfg = load_config(path) if path.exists() else Config()
+    print(f"Flotilla {__version__} setup. Writes {path}\n")
+    print("Seeding shares files with strangers: peers in each swarm can see your public IP address,")
+    print("and seeding uses disk space and upload bandwidth. You can stop at any time.\n")
+
+    folder = Path(_ask("Folder for seeded files", str(cfg.folder))).expanduser()
+    folder.mkdir(parents=True, exist_ok=True)
+    du = shutil.disk_usage(folder)
+    print(f"  that drive has {human(du.free)} free of {human(du.total)}")
+    suggested = max(10.0, round((du.free / GB - cfg.reserve_gb) * 0.5))
+    budget = _ask("How much space to set aside for Flotilla, in GB", suggested if not path.exists() else cfg.budget_gb,
+                  parse_gb)
+    reserve = _ask("GB to always leave free on that drive, whatever else fills it", cfg.reserve_gb, parse_gb)
+    if budget > du.free / GB - reserve:
+        print(f"  note: only {du.free / GB - reserve:.0f} GB is available after the reserve; the planner will stay under that")
+
+    print("\nBandwidth (megabits per second; a speed test site will tell you).")
+    up = _ask("Upload speed, Mbit/s", cfg.upload_mbps, float)
+    down = _ask("Download speed, Mbit/s", cfg.download_mbps, float)
+    share = _ask("Share of upload to give the swarm (0.1 to 1.0)", cfg.upload_share, float)
+    dshare = _ask("Share of download to use while filling (0.1 to 1.0)", cfg.download_share, float)
+    cap = _ask("Monthly upload cap in GB (0 = none)", cfg.monthly_upload_cap_gb, float)
+
+    from .netinfo import internet_route
+
+    bind, pf = cfg.bind_interface, cfg.port_forwarding
+    route = internet_route()
+    if route and route.looks_like_vpn:
+        where = f"{route.iface}, {route.address}" if route.address else route.iface
+        print(f"\nYour internet traffic goes through a VPN ({where}).")
+        if _yes("Pin Flotilla's torrent traffic to it, so it can never fall back to your real connection", True):
+            bind, pf = route.bind_value, False
+    elif bind:
+        if not _yes(f"\nKeep torrent traffic pinned to {bind}", True):
+            bind = ""
+    else:
+        print("\nNo VPN detected: peers in each swarm will see this connection's public IP address.")
+    if not bind:
+        pf = _yes("Let Flotilla open a port on your router with UPnP/NAT-PMP (helps peers reach you)", pf)
+
+    licenses = list(cfg.licenses)
+    try:
+        from .netsafe import FetchError
+        from .sources import PirateFace
+
+        lic = PirateFace(tuple(cfg.allowed_hosts)).licenses()
+        auto = [x["id"] for x in lic if not x.get("acceptFirst")]
+        # Licenses Flotilla's maintainers read and allow by default (see README, Safety).
+        reviewed = [x for x in Config().licenses if x not in auto]
+        gated = [x["label"] for x in lic if x.get("acceptFirst") and x["id"] not in reviewed]
+        print(f"\nLicenses Pirate Face lists without extra terms: {', '.join(auto)}")
+        if reviewed:
+            print(f"Also allowed by Flotilla (they let anyone redistribute; their extra terms only apply to "
+                  f"very large commercial AI services): {', '.join(reviewed)}")
+        if gated:
+            print(f"Licenses that need you to accept terms first (not auto-picked): {', '.join(gated)}")
+        if _yes("Allow automatic pickup for all of these", True):
+            licenses = auto + reviewed
+    except (FetchError, OSError, ValueError) as e:
+        print(f"\n(could not read Pirate Face's license list: {e}; keeping {licenses})")
+
+    cfg.folder, cfg.budget_gb, cfg.reserve_gb = folder, budget, reserve
+    cfg.upload_mbps, cfg.download_mbps = up, down
+    cfg.upload_share, cfg.download_share = min(1.0, max(0.1, share)), min(1.0, max(0.1, dshare))
+    cfg.monthly_upload_cap_gb, cfg.port_forwarding, cfg.licenses = cap, pf, licenses
+    cfg.bind_interface = bind
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(render_config(cfg))
+    print(f"\nWrote {path}.")
+    print(f"With {up:g} Mbit/s up at {cfg.upload_share:.0%}, you'll serve up to {cfg.max_torrents} swarms at once.")
+    print(f"Filling {budget:g} GB at {down:g} Mbit/s × {cfg.download_share:.0%} takes about "
+          f"{duration(budget * GB / cfg.download_bps)} (web seeds can be slower).")
+    if bind:
+        print(f"Torrent traffic is pinned to {bind}: if the VPN drops, Flotilla goes offline instead.")
+    print("Next: `flotilla plan` to preview, then `flotilla service install` to run it in the background,")
+    print(f"and watch it at http://127.0.0.1:{cfg.dashboard_port}")
+    return 0
+
+
+# ------------------------------------------------------------------ service / uninstall
+
+
+def cmd_add(args) -> int:
+    from .feed import add_pick
+    from .netsafe import FetchError
+    from .sources import PirateFace
+
+    cfg = load_config(Path(args.config))
+    repo, new = add_pick(cfg.local_feed, args.link, args.priority, args.note or "")
+    print(f"{'Added' if new else 'Updated'} {repo} in your picks ({cfg.local_feed}).")
+    try:
+        info = PirateFace(tuple(cfg.allowed_hosts)).torrent(repo)
+        if not info or not info.get("magnet"):
+            print("Note: Pirate Face has no torrent for it yet, so there's nothing to seed until someone adds one "
+                  "(https://pirateface.co/submit).")
+        else:
+            print(f"Pirate Face has it: {info.get('seeders', 0)} seeders, {info.get('leechers', 0)} leechers.")
+    except FetchError:
+        pass
+    print("Flotilla picks it up at its next replan; press Replan now in the dashboard to do it right away.")
+    return 0
+
+
+def cmd_remove(args) -> int:
+    from .feed import remove_pick
+
+    cfg = load_config(Path(args.config))
+    repo = remove_pick(cfg.local_feed, args.link)
+    print(f"Removed {repo} from your picks." if repo else "That model isn't in your picks.")
+    return 0 if repo else 1
+
+
+def cmd_picks(args) -> int:
+    from .feed import list_picks
+
+    cfg = load_config(Path(args.config))
+    picks = list_picks(cfg.local_feed)
+    if not picks:
+        print("No picks yet. Add one with: flotilla add <Hugging Face or Pirate Face link>")
+        return 0
+    for m in picks:
+        scores = m.get("scores") or {}
+        prio = max(scores.values()) if scores else "?"
+        print(f"  {m['repo']}  priority {prio}  {m.get('note', '')}")
+    return 0
+
+
+def cmd_dashboard(args) -> int:
+    import urllib.request
+    import webbrowser
+
+    cfg = load_config(Path(args.config))
+    state_dir = Path(args.state)
+    port = args.port or cfg.dashboard_port
+    on_network = args.listen not in ("127.0.0.1", "localhost", "::1")
+    if args.url:
+        from .remote import dashboard_key
+
+        print(f"http://<this computer's address>:{port}/?key={dashboard_key(state_dir)}")
+        return 0
+    if args.serve:
+        import signal
+        import threading
+
+        from .dashboard import Dashboard
+        from .remote import RemoteEngine, dashboard_key
+
+        key = dashboard_key(state_dir) if on_network else None
+        dash = Dashboard(RemoteEngine(state_dir), port, host=args.listen, key=key)
+        dash.start()
+        if key:
+            print(f"Flotilla dashboard listening on {args.listen}:{dash.port}, for the node whose state is in {state_dir}.")
+            print(f"Open http://<this computer's address>:{dash.port}/?key={key}")
+            print("Anyone with that address can steer this node; `flotilla dashboard --url` prints it again.", flush=True)
+        else:
+            print(f"Flotilla dashboard: {dash.url} (for the node whose state is in {state_dir})", flush=True)
+        stop = threading.Event()
+        signal.signal(signal.SIGTERM, lambda *_: stop.set())
+        signal.signal(signal.SIGINT, lambda *_: stop.set())
+        stop.wait()
+        dash.stop()
+        return 0
+    url = f"http://127.0.0.1:{cfg.dashboard_port}"
+    try:
+        urllib.request.urlopen(url + "/api/state", timeout=3).read()
+    except OSError:
+        print(f"The dashboard isn't up: start Flotilla with `flotilla run` or `flotilla service install`. ({url})")
+        return 1
+    print(url)
+    if not args.no_open:
+        webbrowser.open(url)
+    return 0
+
+
+def cmd_service(args) -> int:
+    from . import service
+
+    config, state = Path(args.config).expanduser().absolute(), Path(args.state).expanduser().absolute()
+    if args.action == "status":
+        print(service.status())
+        return 0
+    if args.action == "uninstall":
+        return 0 if service.execute(service.uninstall_plan(), args.dry_run) else 1
+    if not config.exists():
+        print("No config yet. Run `flotilla init` first.", file=sys.stderr)
+        return 2
+    ok = service.execute(service.install_plan(config, state, linger=args.linger), args.dry_run)
+    if ok and not args.dry_run:
+        cfg = load_config(config)
+        print(f"Flotilla is running in the background. Dashboard: http://127.0.0.1:{cfg.dashboard_port}")
+    return 0 if ok else 1
+
+
+def cmd_uninstall(args) -> int:
+    """Stop the service and, if asked, delete what Flotilla downloaded and wrote. Nothing else."""
+    from . import service
+
+    service.execute(service.uninstall_plan(), dry_run=False, say=lambda m: print(f"service: {m}"))
+    if not args.delete_data:
+        print("Kept your seeded files, config and state. Add --delete-data to remove them.")
+        print("Remove the program itself with: uv tool uninstall flotilla-face")
+        return 0
+    config = Path(args.config).expanduser()
+    state_dir = Path(args.state).expanduser()
+    cfg = load_config(config)
+    state = State(state_dir)
+    targets = [Path(h["save_path"]) for h in state.holdings.values()] + [cfg.folder / ".probe"]
+    targets = [t for t in targets if t.exists() and _inside_dir(cfg.folder, t)]
+    held = sum(_du(t) for t in targets)
+    print(f"This deletes {human(held)} of seeded files in {cfg.folder}, the state in {state_dir}, and {config}.")
+    print("Only files Flotilla downloaded are removed; anything else in that folder is left alone.")
+    if not args.yes and input("Type 'delete' to confirm: ").strip() != "delete":
+        print("Nothing deleted.")
+        return 1
+    for t in targets:
+        shutil.rmtree(t, ignore_errors=True)
+    try:
+        cfg.folder.rmdir()  # only if now empty
+    except OSError:
+        pass
+    shutil.rmtree(state_dir, ignore_errors=True)
+    config.unlink(missing_ok=True)
+    leftover = [p.name for p in config.parent.glob("*")] if config.parent.exists() else []
+    if leftover:
+        print(f"Left in {config.parent}: {', '.join(leftover)} (not created by `flotilla init`).")
+    else:
+        try:
+            config.parent.rmdir()
+        except OSError:
+            pass
+    print("Done. Remove the program itself with: uv tool uninstall flotilla-face")
+    return 0
+
+
+def _inside_dir(base: Path, p: Path) -> bool:
+    try:
+        p.resolve().relative_to(base.resolve())
+        return p.resolve() != base.resolve()
+    except ValueError:
+        return False
+
+
+def _du(p: Path) -> int:
+    total = 0
+    for f in p.rglob("*"):
+        try:
+            if f.is_file():
+                total += f.stat().st_blocks * 512
+        except OSError:
+            pass
+    return total
+
+
+# ------------------------------------------------------------------ plan
+
+
+def _discover(cfg: Config, state: State):
+    from .candidates import gather
+    from .sources import HuggingFace, PirateFace
+
+    keys = _keys(cfg)
+    feed = load_feed(cfg.feed_urls, keys, state.data["feed_version"], state.dir / "cache",
+                     tuple(cfg.feed_allowed_hosts), log=log, bundled=BUNDLED_FEED)
+    feed = apply_local(feed, cfg.local_feed, log=log)
+    allowed = tuple(cfg.allowed_hosts)
+    held = {h["repo"] for h in state.holdings.values()}
+    ledger = load_ledger(keys, state.dir, tuple(cfg.feed_allowed_hosts), log=log)
+    cands, rejected = gather(cfg, feed, PirateFace(allowed, cache_dir=state.dir / "cache"),
+                             HuggingFace(allowed, state.dir / "cache"), held, log=log, ledger=ledger)
+    block = set(state.data.get("blocklist", []))
+    return feed, [c for c in cands if c.infohash not in block], rejected
+
+
+def _keys(cfg: Config) -> list[PublicKey]:
+    out = []
+    for k in BUILTIN_EDITOR_KEYS + list(cfg.trusted_keys):
+        try:
+            out.append(PublicKey.parse(k))
+        except SignatureError as e:
+            log(f"ignoring bad trusted key: {e}")
+    return out
+
+
+def print_mismatches(cands) -> None:
+    bad = [c for c in cands if c.manifest_mismatches]
+    if not bad:
+        return
+    print("\nPirate Face manifest disagrees with Hugging Face or the hash ledger "
+          "(verifying against those; worth reporting):")
+    for c in bad:
+        for m in c.manifest_mismatches:
+            print(f"  {c.repo}@{c.revision[:12]}  {m['path']}")
+            print(f"      pirateface  {m['pirateface']}")
+            if "huggingface" in m:
+                print(f"      huggingface {m['huggingface']}")
+            else:
+                print(f"      ledger      {m['ledger']}")
+
+
+def print_plan(p: Plan, rejected, verbose: bool) -> None:
+    print()
+    print(f"Budget {human(p.budget_bytes)}   planned {human(p.total_bytes)} "
+          f"({human(p.new_bytes)} new)   swarms {len(p.picks)}   est. fill {duration(p.est_fill_seconds)}")
+    print()
+    print(f"{'model':<52} {'prio':>4} {'hf':>4} {'seeds':>5} {'files':>9} {'size':>10}  why")
+    print("-" * 110)
+    for pick in sorted(p.picks.values(), key=lambda x: -x.value):
+        c = pick.cand
+        weights = [u for u in pick.units if not u.whole]
+        rare = min((u.availability for u in pick.units), default=0)
+        if pick.whole:
+            why = f"whole model; held by {rare:g} other peer(s)"
+        else:
+            why = f"{len(weights)} shard(s); rarest held by {rare:g} other peer(s)"
+        if rare >= c.target_replicas:
+            why += f" (≥ target {c.target_replicas}: serving {c.leechers} leecher(s))"
+        elif c.hf_backed is False:
+            why += "; Hugging Face copy gone"
+        hf = {True: "yes", False: "GONE", None: "?"}[c.hf_backed] + ("*" if c.manifest_mismatches else "")
+        nfiles = f"{len(pick.files)}/{len([f for f in c.files if f.kind != 'skip'])}"
+        name = c.repo if len(c.repo) <= 52 else c.repo[:49] + "..."
+        print(f"{name:<52} {c.priority:>4.2f} {hf:>4} {c.seeders:>5} {nfiles:>9} {human(pick.bytes):>10}  {why}")
+        if verbose:
+            for u in sorted(pick.units, key=lambda u: -u.key)[:12]:
+                print(f"    {u.label:<60} avail {u.availability:>4g}  rate {u.rate:.3f}/GB")
+    if p.drops:
+        print(f"\nWould drop {len(p.drops)} held file(s) in favour of higher-need ones.")
+    if rejected:
+        print(f"\nSkipped {len(rejected)} model(s):")
+        for r in rejected[: (len(rejected) if verbose else 12)]:
+            print(f"  {r.repo}: {r.reason}")
+        if not verbose and len(rejected) > 12:
+            print(f"  … and {len(rejected) - 12} more (use -v)")
+
+
+def cmd_plan(args) -> int:
+    cfg = load_config(Path(args.config))
+    state = State(Path(args.state))
+    feed, cands, rejected = _discover(cfg, state)
+    print(f"\nfeed: {feed.source} (v{feed.version}{', signer ' + feed.signer if feed.signer else ''})")
+    for c in cands:
+        h = state.holdings.get(c.infohash)
+        if h:
+            for f in c.files:
+                e = h["files"].get(str(f.index))
+                if e and e["status"] in ("wanted", "verifying", "verified"):
+                    f.held, f.held_since = True, e.get("since")
+    if args.probe:
+        from .engine import apply_probe, probe
+
+        result = probe(cands, cfg, cfg.folder / ".probe", cfg.probe_seconds,
+                       f"-FL0100-{state.node_id[:6]}".encode(), log=log)
+        apply_probe(cands, result)
+    else:
+        print("(no swarm probe: per-file availability estimated from seeder counts; use --probe for real counts)")
+    cfg.folder.mkdir(parents=True, exist_ok=True)
+    free = shutil.disk_usage(cfg.folder).free
+    held_bytes = sum(e["size"] for h in state.holdings.values() for e in h["files"].values())
+    budget = int(max(0, min(cfg.budget_gb * GB, held_bytes + free - cfg.reserve_gb * GB)))
+    params = Params(budget, cfg.upload_bps, cfg.download_bps, cfg.max_torrents, cfg.spread, cfg.hold_bonus,
+                    cfg.min_hold_days, int(cfg.whole_model_under_gb * GB), time.time(),
+                    allot={r: int(gb * GB) for r, gb in feed.allot_gb.items()})
+    p = make_plan(cands, params, state.node_id)
+    if args.json:
+        print(json.dumps({
+            "budget_bytes": p.budget_bytes, "total_bytes": p.total_bytes, "new_bytes": p.new_bytes,
+            "picks": [{"repo": pk.cand.repo, "infohash": ih, "bytes": pk.bytes, "whole": pk.whole,
+                       "files": [f.repo_path for f in pk.files]} for ih, pk in p.picks.items()],
+            "rejected": [{"repo": r.repo, "reason": r.reason} for r in rejected],
+            "manifest_mismatches": [{"repo": c.repo, "revision": c.revision, **m}
+                                    for c in cands for m in c.manifest_mismatches],
+        }, indent=1))
+    else:
+        print_plan(p, rejected, args.verbose)
+        print_mismatches(cands)
+    return 0
+
+
+# ------------------------------------------------------------------ run / status / verify
+
+
+def cmd_run(args) -> int:
+    from .engine import Engine
+
+    cfg = load_config(Path(args.config))
+    if not Path(args.config).exists():
+        print("No config yet. Run `flotilla init` first.", file=sys.stderr)
+        return 2
+    state = State(Path(args.state))
+    eng = Engine(cfg, state, log=log)
+    where = f" bound to {cfg.bind_interface}" if cfg.bind_interface else ""
+    log(f"node {state.node_id[:8]} listening on port {eng.ses.listen_port()}{where}; Ctrl-C to stop")
+    until = time.time() + args.hours * 3600 if args.hours else None
+    eng.run(once=args.once, until=until)
+    return 0
+
+
+def cmd_history(args) -> int:
+    from .history import History
+
+    path = Path(args.state) / "history.db"
+    if not path.exists():
+        print("No history yet. It starts with `flotilla run` and adds a point every minute.")
+        return 1
+    tz = int(datetime.now().astimezone().utcoffset().total_seconds())
+    h = History(path)
+    try:
+        doc = h.query(args.range, args.model, tz)
+    finally:
+        h.close()
+    if args.csv:
+        print("start,upload_bytes,download_bytes,seconds_seeding")
+        for t, up, down, online in doc["points"]:
+            print(f"{datetime.fromtimestamp(t).astimezone().isoformat()},{up},{down},{online}")
+        return 0
+    span = max(1, min(time.time(), doc["end"]) - doc["start"])
+    what = f" for {args.model}" if args.model else ""
+    print(f"{args.range}{what}: up {human(doc['up'])}, down {human(doc['down'])}, "
+          f"seeding {min(1.0, doc['online'] / span):.0%} of the time, "
+          f"averaging {human(doc['up'] / doc['online']) if doc['online'] else '0 B'}/s up while seeding")
+    if doc["models"] and not args.model:
+        print(f"\n{'model':<64} {'up':>10} {'down':>10}")
+        for m in doc["models"]:
+            print(f"{m['repo'][:64]:<64} {human(m['up']):>10} {human(m['down']):>10}")
+    print("\n--csv prints every point; --model author/model shows one model.")
+    return 0
+
+
+def cmd_status(args) -> int:
+    path = Path(args.state) / "status.json"
+    if not path.exists():
+        print("No status yet. Is `flotilla run` running?")
+        return 1
+    doc = json.loads(path.read_text())
+    age = (datetime.now(timezone.utc) - datetime.fromisoformat(doc["at"])).total_seconds()
+    up = doc.get("upload_month", {})
+    print(f"node {doc['node']}  port {doc['listen_port']}  {'PAUSED  ' if doc.get('paused') else ''}"
+          f"status {age:.0f}s old  uploaded this month {human(up.get('bytes', 0))}")
+    if doc.get("feed"):
+        print(f"feed v{doc['feed']['version']} from {doc['feed']['source']}")
+    print(f"\n{'model':<48} {'state':<20} {'verified':>9} {'held':>10} {'up/s':>9} {'total up':>10} {'peers':>5}")
+    for t in sorted(doc["torrents"], key=lambda t: -t["bytes"]):
+        prog = f"{t['done'] / t['wanted']:.0%}" if t["wanted"] else "-"
+        name = t["repo"] if len(t["repo"]) <= 48 else t["repo"][:45] + "..."
+        state = t["state"] if t["state"] not in ("downloading",) else f"downloading {prog}"
+        print(f"{name:<48} {state:<20} {t['verified']:>4}/{t['files']:<4} {human(t['bytes']):>10} "
+              f"{human(t['up_rate']):>9} {human(t['uploaded']):>10} {t['peers']:>5}")
+    flagged = [t for t in doc["torrents"] if t.get("manifest_mismatches")]
+    if flagged:
+        print("\nPirate Face's manifest disagrees with Hugging Face for these (verified against Hugging Face):")
+        for t in flagged:
+            print(f"  {t['repo']}: {', '.join(m['path'] for m in t['manifest_mismatches'])}")
+    return 0
+
+
+def cmd_verify(args) -> int:
+    from .sources import git_blob_sha1, sha256_file
+
+    if args.folder:
+        return verify_folder(args)
+    state = State(Path(args.state))
+    bad = good = 0
+    for ih, hold in state.holdings.items():
+        base = Path(hold["save_path"])
+        for k, e in hold["files"].items():
+            if e["status"] not in ("verified", "failed"):
+                continue
+            p = base / e["tpath"]
+            try:
+                ok = (sha256_file(p) == e["sha256"]) if e.get("sha256") else (git_blob_sha1(p, e["size"]) == e["git_oid"])
+            except OSError as err:
+                ok = False
+                print(f"  {hold['repo']}/{e['path']}: {err}")
+            good += ok
+            bad += not ok
+            if not ok:
+                print(f"BAD  {hold['repo']}/{e['path']}")
+    print(f"{good} file(s) verified, {bad} bad")
+    return 1 if bad else 0
+
+
+def _load_ledger_for(args, offline: bool = False):
+    from .ledger import DEFAULT_LEDGER_URL
+
+    cfg = load_config(Path(args.config))
+    quiet = lambda msg: None if msg.startswith("hash ledger: published copy unavailable") else log(msg)  # noqa: E731
+    return load_ledger(_keys(cfg), Path(args.state), tuple(cfg.feed_allowed_hosts),
+                       url=None if offline else DEFAULT_LEDGER_URL, log=quiet)
+
+
+def verify_folder(args) -> int:
+    """Check a downloaded model folder against the hash ledger. Needs no running node."""
+    from .ledger import check_file, folder_extras, match_folder
+
+    led = _load_ledger_for(args, offline=args.offline)
+    if not led.entries:
+        print("The hash ledger has no entries (no signed copy could be loaded).")
+        return 1
+    entry, root = match_folder(Path(args.folder).expanduser(), led, args.repo, args.revision)
+    src = {"huggingface": "Hugging Face", "pirateface": "Pirate Face (Hugging Face no longer had it)"}[entry.source]
+    print(f"{entry.repo} at {entry.revision}")
+    print(f"  hashes recorded {entry.captured} from {src}; ledger: {', '.join(led.sources) or 'local cache'}")
+    print(f"  checking {root}")
+    good = bad = missing = 0
+    for lf in sorted(entry.files.values(), key=lambda f: f.path):
+        p = root / lf.path
+        if not p.is_file():
+            missing += 1
+            continue
+        ok, why = check_file(p, lf)
+        good += ok
+        bad += not ok
+        print(f"OK    {lf.path}" if ok else f"BAD   {lf.path}: {why}", flush=True)
+    extras = folder_extras(root, entry)
+    for x in extras:
+        print(f"EXTRA {x}  (not part of this model; don't load it)")
+    print(f"\n{good} good, {bad} bad, {missing} not in this folder, {len(extras)} extra")
+    for c in led.conflicts:
+        if c["key"] == entry.key:
+            print(f"WARNING: another copy of the ledger lists a different record for this model ({c['refused'][:12]}…); "
+                  f"this check used the first one seen ({c['kept'][:12]}…).")
+    if entry.stamp:
+        print(f"Timestamp proof: {entry.stamp}\n  check it against Bitcoin with: ots verify {entry.stamp}")
+    else:
+        print("No timestamp proof for this record in this install.")
+    return 1 if bad or extras else 0
+
+
+def cmd_ledger(args) -> int:
+    from .ledger import accept_override
+
+    if args.accept:
+        key, sha = args.accept
+        accept_override(Path(args.state), key, sha)
+        print(f"This node now accepts ledger entry {sha[:12]}… for {key}. It takes effect on the next refresh.")
+        return 0
+    led = _load_ledger_for(args, offline=args.offline)
+    print(f"hash ledger: {len(led.entries)} model revision(s); sources: {', '.join(led.sources) or 'local cache only'}")
+    for e in sorted(led.entries.values(), key=lambda e: e.key):
+        stamp = "stamped" if e.stamp else "-"
+        print(f"  {e.repo}@{e.revision[:12]}  {len(e.files):4} files  {e.source:11}  {e.captured[:10]}  {stamp}")
+    for c in led.conflicts:
+        print(f"CONFLICT {c['key']}: {c['source']} lists {c['refused']}, kept {c['kept']}")
+    return 1 if led.conflicts else 0
+
+
+# ------------------------------------------------------------------ feed + editor
+
+
+def cmd_feed(args) -> int:
+    cfg = load_config(Path(args.config))
+    if args.init_local:
+        if cfg.local_feed.exists():
+            print(f"{cfg.local_feed} already exists; edit it directly.")
+            return 1
+        cfg.local_feed.parent.mkdir(parents=True, exist_ok=True)
+        cfg.local_feed.write_text(json.dumps(LOCAL_EXAMPLE, indent=2) + "\n")
+        print(f"Wrote {cfg.local_feed}. Edit it, then `flotilla feed` to check. Flotilla picks it up on its next replan.")
+        return 0
+    state = State(Path(args.state))
+    feed = load_feed(cfg.feed_urls, _keys(cfg), state.data["feed_version"], state.dir / "cache",
+                     tuple(cfg.feed_allowed_hosts), log=log, bundled=BUNDLED_FEED)
+    feed = apply_local(feed, cfg.local_feed, log=log)
+    print(f"source {feed.source}\nversion {feed.version}  signer {feed.signer or '-'}  expires {feed.expires.isoformat()}")
+    if feed.local_source:
+        print(f"plus your changes from {feed.local_source}")
+    print(f"weights {feed.weights}")
+    for m in sorted(feed.models, key=lambda m: -feed.priority(m)):
+        pin = " (pinned)" if m.infohash or m.revision else ""
+        mine = " (yours)" if m.local else ""
+        print(f"  {feed.priority(m):.2f}  {m.repo}{pin}{mine}  {m.scores}  {m.note}")
+        ov = origin_view(m.repo, m.origin)
+        if ov:
+            print(f"        origin: {ov['text']}" + (f"  [{ov['tag']}]" if ov["tag"] else ""))
+    if feed.deny:
+        print(f"deny: {sorted(feed.deny)}")
+    return 0
+
+
+def cmd_editor(args) -> int:
+    if args.action == "keygen":
+        sk = SecretKey.generate()
+        out = Path(args.secret).expanduser()
+        sk.save(out)
+        pub = out.with_suffix(".pub")
+        pub.write_text(f"untrusted comment: minisign public key {sk.public.key_id_hex}\n{sk.public.line()}\n")
+        print(f"secret key: {out} (mode 0600; keep it offline and backed up)")
+        print(f"public key: {pub}")
+        print(f"\nPaste this into BUILTIN_EDITOR_KEYS in flotilla/config.py:\n  {sk.public.line()}")
+        return 0
+    if args.action == "sign":
+        sk = SecretKey.load(Path(args.secret).expanduser())
+        path = Path(args.file)
+        data = path.read_bytes()
+        if _is_ledger(data):
+            _sign_ledger(path, sk)
+            print(f"Timestamp new entries next: flotilla editor stamp {path}")
+            return 0
+        feed = parse_feed(data)  # refuse to sign something clients would reject
+        if feed.expires <= datetime.now(timezone.utc):
+            raise FeedError("feed is already expired; bump `expires`")
+        tc = f"timestamp:{int(time.time())}\tfile:{path.name}\tversion:{feed.version}"
+        Path(str(path) + ".minisig").write_text(sk.sign(data, trusted_comment=tc))
+        print(f"signed {path} (v{feed.version}, {len(feed.models)} models) -> {path}.minisig")
+        index_path = _ledger_index_path(args)
+        if args.no_ledger or not (args.ledger or index_path.exists()):
+            missing = _unledgered(feed, index_path)
+            if missing:
+                print(f"\nNote: {len(missing)} pinned model(s) have no hash-ledger entry yet:")
+                for m in missing:
+                    print(f"  {m}")
+                print(f"Record them while Hugging Face still has them: flotilla editor ledger-capture {path}")
+            return 0
+        return update_ledger(feed, index_path, sk)
+    if args.action == "check":
+        from .ledger import check_index_files
+
+        path = Path(args.file)
+        keys = [PublicKey.parse(Path(k).expanduser().read_text()) for k in args.pubkey] if args.pubkey else _keys(load_config(Path(args.config)))
+        key, tc = verify(path.read_bytes(), Path(str(path) + ".minisig").read_text(), keys)
+        if _is_ledger(path.read_bytes()):
+            version, n = check_index_files(path)
+            print(f"OK: signed by {key.key_id_hex}; hash ledger v{version}; {n} entries, all unedited; "
+                  f"trusted comment: {tc}")
+            return 0
+        feed = parse_feed(path.read_bytes())
+        print(f"OK: signed by {key.key_id_hex}; v{feed.version}; expires {feed.expires.isoformat()}; trusted comment: {tc}")
+        return 0
+    if args.action == "ledger-capture":
+        return _ledger_capture(args)
+    if args.action == "stamp":
+        return _ledger_stamp(args)
+    if args.action == "sync-worth-rescuing":
+        import tempfile
+
+        from .config import Config
+        from .netsafe import DEFAULT_ALLOWED_HOSTS, fetch
+        from .sources import HuggingFace, PirateFace
+        from .worthrescuing import PAGE_URL, license_mismatches, parse_page, sync
+
+        path = Path(args.file)
+        doc = json.loads(path.read_text())
+        html = fetch(PAGE_URL, allowed=DEFAULT_ALLOWED_HOSTS, max_bytes=8 << 20, accept="text/html").body
+        page = parse_page(html.decode("utf-8", "replace"))
+        print(f"{PAGE_URL}: {len(page)} models")
+        with tempfile.TemporaryDirectory() as tmp:
+            pf, hf = PirateFace(DEFAULT_ALLOWED_HOSTS), HuggingFace(DEFAULT_ALLOWED_HOSTS, Path(tmp))
+            summary = sync(doc, page, pf, hf, set(Config().licenses))
+            mismatches = license_mismatches(doc, hf)
+        for k in ("added", "updated", "removed", "kept", "skipped"):
+            for line in summary[k]:
+                print(f"  {k:8} {line}")
+        for line in mismatches:
+            print(f"  license  {line}")
+        if not (summary["added"] or summary["updated"] or summary["removed"]):
+            print("No changes to the list.")
+            return 0
+        if args.dry_run:
+            print("Dry run: nothing written.")
+            return 0
+        now = datetime.now(timezone.utc).replace(microsecond=0, second=0)
+        doc["version"] = int(doc.get("version", 0)) + 1
+        doc["issued"], doc["expires"] = now.isoformat(), (now + timedelta(days=90)).isoformat()
+        parse_feed(json.dumps(doc).encode())   # refuse to write something clients would reject
+        path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n")
+        print(f"Wrote {path} (v{doc['version']}). Review it, then: flotilla editor sign {path}\n"
+              f"(signing also records new models in the hash ledger)")
+        return 0
+    if args.action == "template":
+        now = datetime.now(timezone.utc).replace(microsecond=0)
+        doc = {
+            "schema": 1, "version": 1, "issued": now.isoformat(), "expires": (now + timedelta(days=30)).isoformat(),
+            "weights": {"capability": 0.35, "cyber": 0.25, "takedown_risk": 0.40},
+            "defaults": {"target_replicas": 5, "unlisted_priority": 0.15},
+            "models": [{"repo": "author/model", "scores": {"capability": 50, "cyber": 50, "takedown_risk": 50},
+                        "target_replicas": 5, "note": "why this model matters"}],
+            "deny": [],
+        }
+        print(json.dumps(doc, indent=2))
+        return 0
+    return 2
+
+
+def _is_ledger(data: bytes) -> bool:
+    from .ledger import KIND
+
+    try:
+        doc = json.loads(data.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return False
+    return isinstance(doc, dict) and doc.get("kind") == KIND
+
+
+def _unledgered(feed, index_path: Path) -> list[str]:
+    from .ledger import ledger_key, parse_index
+
+    try:
+        _, index = parse_index(index_path.read_bytes())
+    except (OSError, LedgerError):
+        index = {}
+    return sorted({f"{m.repo}@{m.revision}" for m in feed.models
+                   if m.revision and ledger_key(m.repo, m.revision) not in index})
+
+
+def _ledger_index_path(args) -> Path:
+    from .ledger import BUNDLED_LEDGER
+
+    if args.ledger:
+        return Path(args.ledger)
+    if args.action == "stamp" and args.file:
+        return Path(args.file)
+    if args.action in ("ledger-capture", "sign") and args.file:
+        return Path(args.file).parent / "ledger" / "index.json"
+    return BUNDLED_LEDGER
+
+
+def record_new_models(feed, index_path: Path, hf=None, pf=None, repo: str | None = None,
+                      dry_run: bool = False) -> tuple[int, int]:
+    """Add a ledger entry for every pinned model in the feed that has none yet. Returns (added, failed).
+
+    Entries are captured from Hugging Face while it still has the model, so this is worth running
+    as soon as a model joins the list."""
+    import tempfile
+
+    from .ledger import add_entry, capture, ledger_key, read_index_doc
+    from .netsafe import DEFAULT_ALLOWED_HOSTS, FetchError, UnsafeURL
+    from .sources import HuggingFace, PirateFace
+
+    have = {ledger_key(*k.rsplit("@", 1)) for k in read_index_doc(index_path)["entries"]}
+    added = failed = known = 0
+    with tempfile.TemporaryDirectory() as tmp:
+        pf = pf or PirateFace(DEFAULT_ALLOWED_HOSTS)
+        hf = hf or HuggingFace(DEFAULT_ALLOWED_HOSTS, Path(tmp))
+        for m in feed.models:
+            if repo and m.repo.lower() != repo.lower():
+                continue
+            if not m.revision:
+                print(f"  skip   {m.repo}: no pinned revision")
+                continue
+            key = ledger_key(m.repo, m.revision)
+            if key in have:
+                known += 1
+                continue
+            try:
+                doc, note = capture(m.repo, m.revision, hf, pf)
+            except (FetchError, UnsafeURL) as e:
+                print(f"  FAILED {m.repo}@{m.revision[:12]}: {e}")
+                failed += 1
+                continue
+            if doc is None:
+                print(f"  skip   {m.repo}@{m.revision[:12]}: {note}")
+                continue
+            have.add(key)
+            if dry_run:
+                print(f"  would add {m.repo}@{m.revision[:12]}: {note}")
+                continue
+            add_entry(index_path, doc)
+            added += 1
+            print(f"  added  {m.repo}@{m.revision[:12]}: {note}")
+    if known:
+        print(f"  {known} pinned model(s) already recorded")
+    return added, failed
+
+
+def _ledger_capture(args) -> int:
+    """Record the hashes of every pinned model in the priority list that has no ledger entry yet."""
+    feed_path = Path(args.file) if args.file else BUNDLED_FEED
+    index_path = _ledger_index_path(args)
+    added, failed = record_new_models(parse_feed(feed_path.read_bytes()), index_path, repo=args.repo,
+                                      dry_run=args.dry_run)
+    if added:
+        print(f"\nAdded {added} entr{'y' if added == 1 else 'ies'} to {index_path}. Review them, then:\n"
+              f"  flotilla editor sign {index_path}\n  flotilla editor stamp {index_path}")
+    elif not args.dry_run and not failed:
+        print("Nothing new to record.")
+    return 1 if failed else 0
+
+
+def _sign_ledger(path: Path, sk: SecretKey) -> None:
+    from .ledger import check_index_files
+
+    version, n = check_index_files(path)   # every entry present and unedited
+    tc = f"timestamp:{int(time.time())}\tfile:{path.name}\tversion:{version}"
+    Path(str(path) + ".minisig").write_text(sk.sign(path.read_bytes(), trusted_comment=tc))
+    print(f"signed {path} (hash ledger v{version}, {n} entries) -> {path}.minisig")
+
+
+def _ledger_sig_ok(path: Path, key: PublicKey) -> bool:
+    try:
+        verify(path.read_bytes(), Path(str(path) + ".minisig").read_text(), [key])
+        return True
+    except (OSError, SignatureError):
+        return False
+
+
+# OpenTimestamps attestation tags (python-opentimestamps, core/notary.py).
+OTS_PENDING = bytes.fromhex("83dfe30d2ef90c8e")
+OTS_BITCOIN = bytes.fromhex("0588960d73d71901")
+
+
+def _ledger_files(index_path: Path) -> list[Path]:
+    from .ledger import parse_index
+
+    _, index = parse_index(index_path.read_bytes())
+    return [index_path.parent / f for f, _ in index.values()]
+
+
+def _stamp_new(ots: str, index_path: Path) -> tuple[list[Path], int]:
+    """`ots stamp` every entry that has no proof yet. Returns (stamped, return code)."""
+    import subprocess
+
+    new = [f for f in _ledger_files(index_path) if not Path(str(f) + ".ots").exists()]
+    if not new:
+        return [], 0
+    print(f"Stamping {len(new)} entr{'y' if len(new) == 1 else 'ies'}: only their SHA-256 is sent to the public "
+          f"OpenTimestamps calendars.")
+    r = subprocess.run([ots, "stamp", *map(str, new)], capture_output=True, text=True)
+    if r.returncode:
+        print((r.stderr or r.stdout).strip())
+    return new, r.returncode
+
+
+def _upgrade_pending(ots: str, index_path: Path, skip: set[Path] = frozenset()) -> tuple[int, int]:
+    """Complete proofs whose Bitcoin transaction has confirmed. Returns (completed now, still pending).
+
+    `ots upgrade` stops at the first incomplete proof, so each one is upgraded on its own; proofs
+    that already carry a Bitcoin attestation are skipped without asking the calendars."""
+    import subprocess
+
+    completed = pending = 0
+    for f in _ledger_files(index_path):
+        proof = Path(str(f) + ".ots")
+        if f in skip or not proof.exists():
+            continue
+        data = proof.read_bytes()
+        if OTS_BITCOIN in data or OTS_PENDING not in data:
+            continue
+        r = subprocess.run([ots, "upgrade", str(proof)], capture_output=True, text=True)
+        Path(str(proof) + ".bak").unlink(missing_ok=True)   # ots keeps the old proof beside the new one
+        if r.returncode == 0 and OTS_BITCOIN in proof.read_bytes():
+            completed += 1
+        else:
+            pending += 1
+    return completed, pending
+
+
+def _no_ots() -> None:
+    print("The `ots` command isn't installed, so nothing was timestamped. Install the OpenTimestamps client "
+          "(an editor-only tool):\n  uv tool install opentimestamps-client   (or: pip install opentimestamps-client)")
+
+
+def _stamp_report(stamped: list[Path], completed: int, pending: int) -> None:
+    if stamped:
+        print(f"Stamped {len(stamped)} new entr{'y' if len(stamped) == 1 else 'ies'}; their proofs complete in a "
+              f"few hours, once the calendars' Bitcoin transaction confirms.")
+    if completed:
+        print(f"Completed {completed} proof(s): they now verify from Bitcoin alone, without the calendars.")
+    if pending:
+        print(f"{pending} proof(s) still waiting for Bitcoin; the next `flotilla editor sign` or "
+              f"`flotilla editor stamp --upgrade` completes them.")
+
+
+def _ledger_stamp(args) -> int:
+    """OpenTimestamps proofs for entry files: stamp new ones (and complete any that are ready), or with
+    --upgrade only complete pending ones."""
+    ots = shutil.which("ots")
+    if not ots:
+        _no_ots()
+        return 1
+    index_path = _ledger_index_path(args)
+    stamped, rc = ([], 0) if args.upgrade else _stamp_new(ots, index_path)
+    completed, pending = _upgrade_pending(ots, index_path, skip=set(stamped))
+    if not (stamped or completed or pending):
+        print("Every entry has a complete timestamp proof.")
+    _stamp_report(stamped, completed, pending)
+    if stamped or completed:
+        print("Commit the new and changed .ots files.")
+    return rc
+
+
+def update_ledger(feed, index_path: Path, sk: SecretKey, hf=None, pf=None) -> int:
+    """The ledger half of signing the priority list: record new pinned models, sign the ledger if it
+    changed, stamp new entries and complete pending proofs."""
+    print(f"\nHash ledger ({index_path}):")
+    added, failed = record_new_models(feed, index_path, hf, pf)
+    if not index_path.exists():
+        print("  nothing recorded, so there is no ledger to sign")
+        return 1 if failed else 0
+    if added or not _ledger_sig_ok(index_path, sk.public):
+        _sign_ledger(index_path, sk)
+    else:
+        print("  ledger unchanged; its signature is current")
+    ots = shutil.which("ots")
+    if ots:
+        stamped, rc = _stamp_new(ots, index_path)
+        completed, pending = _upgrade_pending(ots, index_path, skip=set(stamped))
+        _stamp_report(stamped, completed, pending)
+        failed += bool(rc)
+    else:
+        _no_ots()
+    if failed:
+        print("Some steps failed (see above). Fix them and sign again: finished steps are skipped.")
+    print("Commit the priority list and its .minisig, plus the ledger's new entries, index.json, "
+          "index.json.minisig and .ots files.")
+    return 1 if failed else 0
+
+
+# ------------------------------------------------------------------ main
+
+
+def main(argv: list[str] | None = None) -> int:
+    ap = argparse.ArgumentParser(prog="flotilla", description="Flotilla Face: a shard-level seeding router for Pirate Face.")
+    ap.add_argument("--config", default=str(CONFIG_PATH), help=f"config file (default {CONFIG_PATH})")
+    ap.add_argument("--state", default=str(STATE_DIR), help=f"state dir (default {STATE_DIR})")
+    ap.add_argument("--version", action="version", version=__version__)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+
+    sub.add_parser("init", help="interactive setup: disk, bandwidth, licenses")
+    p = sub.add_parser("plan", help="show what this node would seed (no downloading)")
+    p.add_argument("--probe", action="store_true", help="briefly join candidate swarms for real per-file counts")
+    p.add_argument("--json", action="store_true")
+    p.add_argument("-v", "--verbose", action="store_true")
+    p = sub.add_parser("run", help="download assigned files and seed them; replans every few hours")
+    p.add_argument("--once", action="store_true", help="exit when everything assigned is downloaded and verified")
+    p.add_argument("--hours", type=float, help="seed for this many hours, then stop cleanly")
+    sub.add_parser("status", help="show what the running node is doing")
+    p = sub.add_parser("history", help="upload and download over time (hourly totals are kept for good)")
+    p.add_argument("--range", default="30d", choices=["1h", "24h", "7d", "30d", "90d", "1y", "all"])
+    p.add_argument("--model", help="only this model (author/model)")
+    p.add_argument("--csv", action="store_true", help="every point as CSV, for a spreadsheet")
+    p = sub.add_parser("add", help="prioritize a model: paste a Hugging Face or Pirate Face link (or author/model)")
+    p.add_argument("link")
+    p.add_argument("--priority", type=float, default=100, help="0-100 (default 100: top priority)")
+    p.add_argument("--note", help="why you care about it")
+    p = sub.add_parser("remove", help="remove a model you added with `flotilla add`")
+    p.add_argument("link")
+    sub.add_parser("picks", help="list the models you added")
+    p = sub.add_parser("dashboard", help="open the local web dashboard of the running node")
+    p.add_argument("--no-open", action="store_true", help="just print the address")
+    p.add_argument("--serve", action="store_true",
+                   help="serve the dashboard from this process, for a node running in another one that shares "
+                        "its state folder (a node inside a VPN container, say)")
+    p.add_argument("--listen", default="127.0.0.1",
+                   help="with --serve: address to listen on, e.g. 0.0.0.0 to reach it from your network "
+                        "(then it needs its access key)")
+    p.add_argument("--port", type=int, help="with --serve: port (default: the config's dashboard port)")
+    p.add_argument("--url", action="store_true", help="print the network dashboard's address with its access key")
+    p = sub.add_parser("service", help="run Flotilla in the background (launchd on macOS, systemd on Linux)")
+    p.add_argument("action", choices=["install", "uninstall", "status"])
+    p.add_argument("--dry-run", action="store_true", help="show what would be written and run")
+    p.add_argument("--linger", action="store_true", help="Linux: keep running while you're logged out")
+    p = sub.add_parser("uninstall", help="stop the service; with --delete-data also remove seeded files and state")
+    p.add_argument("--delete-data", action="store_true")
+    p.add_argument("--yes", action="store_true", help="don't ask for confirmation")
+    p = sub.add_parser("verify", help="re-hash every held file against its published hash, or check a "
+                                      "downloaded model folder against the hash ledger")
+    p.add_argument("folder", nargs="?", help="a downloaded model folder to check against the hash ledger")
+    p.add_argument("--repo", help="with a folder: which model it is (author/model), if it can't be told from the files")
+    p.add_argument("--revision", help="with a folder: which revision (40-hex commit)")
+    p.add_argument("--offline", action="store_true", help="use only the ledger shipped with Flotilla and its cache")
+    p = sub.add_parser("ledger", help="show the hash ledger this node uses")
+    p.add_argument("--accept", nargs=2, metavar=("REPO@REVISION", "DIGEST"),
+                   help="deliberately accept a different ledger entry for one model (see `flotilla ledger`)")
+    p.add_argument("--offline", action="store_true", help="use only the ledger shipped with Flotilla and its cache")
+    p = sub.add_parser("feed", help="show the priority list in use (published + your own changes)")
+    p.add_argument("--init-local", action="store_true", help="create your own my-priorities.json to edit")
+    p = sub.add_parser("editor", help="tools for feed editors")
+    p.add_argument("action", choices=["keygen", "sign", "check", "template", "sync-worth-rescuing",
+                                      "ledger-capture", "stamp"],
+                   help="sync-worth-rescuing: update FILE from Pirate Face's Worth Rescuing page; "
+                        "ledger-capture: record hashes for FILE's pinned models in the hash ledger; "
+                        "stamp: OpenTimestamps proofs for new ledger entries")
+    p.add_argument("file", nargs="?", help="feed JSON or ledger index.json (sign/check), feed JSON "
+                                           "(sync-worth-rescuing/ledger-capture), ledger index.json (stamp)")
+    p.add_argument("--dry-run", action="store_true", help="sync-worth-rescuing/ledger-capture: show changes, write nothing")
+    p.add_argument("--ledger", help="ledger-capture/stamp: the ledger index.json (default: next to the feed)")
+    p.add_argument("--repo", help="ledger-capture: only this model")
+    p.add_argument("--upgrade", action="store_true", help="stamp: complete proofs stamped a few hours ago")
+    p.add_argument("--no-ledger", action="store_true",
+                   help="sign: sign the priority list only, without recording new models in the hash ledger")
+    p.add_argument("--secret", default="~/.config/flotilla/editor.key")
+    p.add_argument("--pubkey", action="append", help="public key file(s) to check against")
+
+    args = ap.parse_args(argv)
+    handlers = {"init": cmd_init, "plan": cmd_plan, "run": cmd_run, "status": cmd_status,
+                "service": cmd_service, "uninstall": cmd_uninstall, "dashboard": cmd_dashboard,
+                "add": cmd_add, "remove": cmd_remove, "picks": cmd_picks,
+                "verify": cmd_verify, "history": cmd_history, "feed": cmd_feed, "editor": cmd_editor,
+                "ledger": cmd_ledger}
+    try:
+        return handlers[args.cmd](args)
+    except (FeedError, SignatureError, ValueError) as e:
+        print(f"error: {e}", file=sys.stderr)
+        return 1
+    except KeyboardInterrupt:
+        return 130
+
+
+if __name__ == "__main__":
+    sys.exit(main())

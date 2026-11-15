@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "dealignai/Ornith-1.5-122B-UNCENSORED-GGUF",
+ "revision": "3cadf9f9a4d12802324d0a6fad1a6e4a8d3a44e7",
+ "captured": "2026-11-15T06:19:46+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2027,
+   "git_oid": "99c96292d8af3f677b2c565c08f9c6996ad11d68"
+  },
+  {
+   "path": "Ornith-1.5-122B-IQ2_XXS-UNCENSORED.gguf",
+   "size": 44072673440,
+   "sha256": "7b6f3256249d57c4d72b6f9c9039d02e36604d68126031307333b0c6070d7919"
+  },
+  {
+   "path": "Ornith-1.5-122B-Q4_K_M-UNCENSORED.gguf",
+   "size": 79371735200,
+   "sha256": "10770e751937b966ba616268505bef8b5199aa7c36e812764b68a0caa0b8266f"
+  },
+  {
+   "path": "Ornith-1.5-122B-mmproj-F16.gguf",
+   "size": 908724384,
+   "sha256": "5fdcf274d365bf54e148c0f6ccccf075264b76b6a5a870cbd92fd8fbd1588e22"
+  },
+  {
+   "path": "README.md",
+   "size": 14166,
+   "git_oid": "ccee462bcc6c9a14bf9c5c11c4e54ae56dee1795"
+  },
+  {
+   "path": "dealign_mascot.png",
+   "size": 11184,
+   "git_oid": "da3bf39ad48aeac6a18d0a6928ab0bb8da4d90e9"
+  },
+  {
+   "path": "dflash2/GGUF_SOURCE_README.md",
+   "size": 2101,
+   "git_oid": "f4bf236de366c0997f001186741d0f60ff078eff"
+  },
+  {
+   "path": "dflash2/LICENSE",
+   "size": 11358,
+   "git_oid": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+  },
+  {
+   "path": "dflash2/Ornith-1.5-122B-DFlash2-Q8_0.gguf",
+   "size": 999934080,
+   "sha256": "b2fd2d5f858919ee78f9683b62ef3971fa0118aa6f8392c15b47469543426b2d"
+  },
+  {
+   "path": "dflash2/README.md",
+   "size": 951,
+   "git_oid": "b9cc6aa95482d70983c73023fba09781a8e5e993"
+  },
+  {
+   "path": "dflash2/UPSTREAM_README.md",
+   "size": 4304,
+   "git_oid": "1284ccb1cbc2b93706b63a9d5955be67c36bd3d4"
+  },
+  {
+   "path": "dflash2/assets/dflash2-figure.png",
+   "size": 286889,
+   "sha256": "6d8dcc9a9472bddb644c881fe83050b5343d09bf5ffb0912e5598e55fe671e99"
+  },
+  {
+   "path": "dflash2/sources.json",
+   "size": 602,
+   "git_oid": "5c53627828d0941478cbd2de0ce6a68ec85d4f10"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 323,
+   "git_oid": "f1b40570295cc35cb842a61748fa1831ac018bde"
+  }
+ ]
+}

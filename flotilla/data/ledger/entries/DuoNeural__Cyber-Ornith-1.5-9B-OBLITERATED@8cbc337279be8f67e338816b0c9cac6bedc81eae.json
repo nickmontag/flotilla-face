@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DuoNeural/Cyber-Ornith-1.5-9B-OBLITERATED",
+ "revision": "8cbc337279be8f67e338816b0c9cac6bedc81eae",
+ "captured": "2026-11-15T06:19:51+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 14616,
+   "git_oid": "031c5694dd58fbeb04e433fa5ec9d6814ee35a06"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7593,
+   "git_oid": "f8cbff56ca4ff72471230af0dc9b286922be082f"
+  },
+  {
+   "path": "config.json",
+   "size": 1984,
+   "git_oid": "1caf3a576dbc22f4858381af14af29dc8f93edb5"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 143,
+   "git_oid": "25ba9eeef84d7f17f15361bbf79e4ac86ed6364a"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 17907662976,
+   "sha256": "a49b020099a0b865432de18d1a1afbe19a37fc1d1ef874ec438a6c9a3010cb33"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989325,
+   "sha256": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1125,
+   "git_oid": "ed1f99f3d50eecc9850623be644bd1131686cbe1"
+  }
+ ]
+}

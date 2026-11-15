@@ -1,0 +1,140 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "huihui-ai/Huihui-CyberStrike-OffSec-35B-abliterated",
+ "revision": "01521758ee85df1ed4edaf494c48e20704b80204",
+ "captured": "2026-11-15T06:19:45+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 10162,
+   "git_oid": "55044d189514a27d4875046c933d3aeccb101ad0"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7764,
+   "git_oid": "a8755d827c0a7b614c246c4060dfd58ab352a8ff"
+  },
+  {
+   "path": "config.json",
+   "size": 3196,
+   "git_oid": "7c414578c7fa478552232a621e88e8e7b34d37cc"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 214,
+   "git_oid": "0bc3addd19dc59c5c8899fc1fb887d50b592e7c3"
+  },
+  {
+   "path": "model-00001-of-00016.safetensors",
+   "size": 4323955416,
+   "sha256": "ade20741a5cc45b2f7607cf3ad23ddb9d8643180cf3610de43fadf35ac2b1044"
+  },
+  {
+   "path": "model-00002-of-00016.safetensors",
+   "size": 4506431736,
+   "sha256": "865ad48ae8d94aac8d9edea3fb1370d3bc22c8deecd9414da10cf1f7fd0681ea"
+  },
+  {
+   "path": "model-00003-of-00016.safetensors",
+   "size": 4988775024,
+   "sha256": "41015304f0ca53850e614218be15b779b58a202deff712ac861fa0654932b765"
+  },
+  {
+   "path": "model-00004-of-00016.safetensors",
+   "size": 3962207560,
+   "sha256": "eeb292ee294734adc637d0d26eb5f6cb66ca387df04f923fa9318fd4a32fe9d6"
+  },
+  {
+   "path": "model-00005-of-00016.safetensors",
+   "size": 4506431704,
+   "sha256": "57eb16355e54c428bab138f49b07e65b0d4bc5fba7216d311075d6f5327970b4"
+  },
+  {
+   "path": "model-00006-of-00016.safetensors",
+   "size": 4988775072,
+   "sha256": "78441ddcfe2595de43d8491b0961e15892f65ee8b9cc5188da68a2970d5d50c1"
+  },
+  {
+   "path": "model-00007-of-00016.safetensors",
+   "size": 3962207600,
+   "sha256": "b314d04ad0239fc54955ce1743e351be82f8c08e4f4974773e797039a66756ef"
+  },
+  {
+   "path": "model-00008-of-00016.safetensors",
+   "size": 4506431784,
+   "sha256": "9805f5a943a4c3285d29573a7c91c120de3759be98827898be13703b8a01476a"
+  },
+  {
+   "path": "model-00009-of-00016.safetensors",
+   "size": 4988775072,
+   "sha256": "6dabfc63bbcbb631fca096552f37d8a0e7843527d1c5cc1823f60503b57c8f46"
+  },
+  {
+   "path": "model-00010-of-00016.safetensors",
+   "size": 3962207600,
+   "sha256": "620195e6ca58d060f9c6fa6304ebc0de31749627946b3ccf9a154177f162de91"
+  },
+  {
+   "path": "model-00011-of-00016.safetensors",
+   "size": 4506431784,
+   "sha256": "b9bc7e045123ebb76655c266109d4f5faca208e86b81f72bb4c6dd9d6e8927b2"
+  },
+  {
+   "path": "model-00012-of-00016.safetensors",
+   "size": 4988775072,
+   "sha256": "f4a61e29d75f1f0099b3a3578f7bf33e125cc5df5c460037f98893dc494797fd"
+  },
+  {
+   "path": "model-00013-of-00016.safetensors",
+   "size": 3962207600,
+   "sha256": "93fc1f0a287f0c85d68486a9ee2410554926ee59162829ca6ede464e26257d35"
+  },
+  {
+   "path": "model-00014-of-00016.safetensors",
+   "size": 4506431784,
+   "sha256": "7e0f4be2f1e012918a51ca1274f7cc996c0f28079b8305b571b59e51e8e23d48"
+  },
+  {
+   "path": "model-00015-of-00016.safetensors",
+   "size": 4988775072,
+   "sha256": "564522aad97cead6cffaf1e2e16e78cdc9b409c1e802e76a424ab73a6d0a16dc"
+  },
+  {
+   "path": "model-00016-of-00016.safetensors",
+   "size": 2565674272,
+   "sha256": "7e754f854878e96bbdc46de303ab5916176adbab60beec4e64f33ae42358a98b"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 99146,
+   "git_oid": "59a4d6a7d6921789d5080856bcff0f0eac752002"
+  },
+  {
+   "path": "mtp.safetensors",
+   "size": 1689283656,
+   "sha256": "7d0030f5dda6c9f2968b91ca835e0de97b3090f003c5acab4e71aad029601410"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1191,
+   "git_oid": "33818c7f9e991ad735fd240209f4fa73e6c28c50"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989325,
+   "sha256": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1165,
+   "git_oid": "1d134cd298be1e3be25db393d93a1cefe80e3214"
+  }
+ ]
+}

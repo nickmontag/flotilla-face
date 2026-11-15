@@ -1,0 +1,884 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flotilla Face</title>
+<style>
+  :root {
+    --bg: #f5f6f8; --card: #ffffff; --fg: #14171c; --muted: #646d7a; --faint: #9aa2ad; --border: #e3e6eb;
+    --accent: #2563eb; --accent-soft: #dce7ff; --ok: #16803c; --warn: #b45309; --bad: #c0262d;
+    --track: #eceff3; --hover: #f2f4f7; --shadow: 0 1px 2px rgba(16, 24, 40, .05); --scrim: rgba(15, 18, 24, .35);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0d1015; --card: #151920; --fg: #e9ecf1; --muted: #9aa3b2; --faint: #6b7381; --border: #252b35;
+      --accent: #6ea2ff; --accent-soft: #1b2944; --ok: #4ade80; --warn: #fbbf24; --bad: #f87171;
+      --track: #212732; --hover: #1a1f28; --shadow: none; --scrim: rgba(0, 0, 0, .55);
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+         font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif; }
+  main { max-width: 1080px; margin: 0 auto; padding: 18px 16px 40px; }
+  .muted { color: var(--muted); } .num { font-variant-numeric: tabular-nums; }
+  .ok-t { color: var(--ok); } .warn-t { color: var(--warn); } .bad-t { color: var(--bad); }
+
+  /* header */
+  header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+  .brand { font-size: 18px; font-weight: 650; letter-spacing: -.01em; margin-right: 4px; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px;
+          font-size: 12px; font-weight: 600; border: 1px solid var(--border); background: var(--card); }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); }
+  .ok .dot { background: var(--ok); } .warn .dot { background: var(--warn); } .bad .dot { background: var(--bad); }
+  .spacer { flex: 1; }
+  .node { font-size: 12px; color: var(--faint); }
+  @media (max-width: 640px) { .node { display: none; } }
+  button { font: inherit; font-weight: 600; border-radius: 8px; padding: 6px 12px; cursor: pointer;
+           border: 1px solid var(--border); background: var(--card); color: var(--fg); }
+  button:hover { border-color: var(--faint); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.ghost { border-color: transparent; background: transparent; color: var(--muted); padding: 4px 8px; }
+  button.ghost:hover { color: var(--fg); }
+  button.ghost.danger:hover { color: var(--bad); }
+  .icon { width: 36px; height: 36px; padding: 0; display: inline-grid; place-items: center; }
+  .icon svg { width: 18px; height: 18px; }
+  button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px; }
+  input { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 7px 9px; width: 100%; }
+
+  /* cards */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); }
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 12px; }
+  .stat { padding: 14px 16px; }
+  .label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .value { font-size: 22px; font-weight: 650; margin: 4px 0 2px; }
+  .sub { font-size: 13px; color: var(--muted); }
+  .bar { height: 6px; background: var(--track); border-radius: 999px; overflow: hidden; margin: 8px 0 6px; }
+  .bar > div { height: 100%; background: var(--accent); border-radius: 999px; transition: width .4s; }
+  .chart { padding: 14px 16px 12px; margin-bottom: 16px; }
+  .chart-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .chart-head h2 { font-size: 14px; margin: 0; }
+  .chart-ctl { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .seg button { border: 0; border-radius: 0; background: none; padding: 3px 9px; font-size: 12px; font-weight: 500; color: var(--muted); }
+  .seg button + button { border-left: 1px solid var(--border); }
+  .seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 650; }
+  select { font: inherit; font-size: 12px; color: var(--fg); background: var(--bg); border: 1px solid var(--border);
+           border-radius: 8px; padding: 4px 6px; max-width: 240px; }
+  .hsum { margin-top: 8px; font-size: 13px; color: var(--muted); }
+  .hsum b { color: var(--fg); font-weight: 650; }
+  .key { display: inline-block; width: 10px; height: 3px; border-radius: 2px; vertical-align: middle; margin: 0 4px 0 0; }
+  .key.up { background: var(--accent); } .key.down { background: var(--ok); }
+  .plotwrap { position: relative; margin-top: 8px; }
+  svg.plot { display: block; width: 100%; height: 110px; touch-action: pan-y; }
+  svg.plot.thin { height: 40px; }
+  .plotwrap.thin { margin-top: 4px; border-top: 1px dashed var(--border); }
+  .axis { display: flex; justify-content: space-between; font-size: 11px; color: var(--faint); margin-top: 2px; }
+  .ymax { position: absolute; top: 0; left: 0; font-size: 11px; color: var(--faint); pointer-events: none; }
+  .tip { position: absolute; top: 0; transform: translateX(-50%); pointer-events: none; font-size: 12px; white-space: nowrap;
+         background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; box-shadow: var(--shadow); }
+  .hmodels { margin-top: 10px; display: grid; gap: 2px; }
+  .hm { display: grid; grid-template-columns: minmax(0, 1fr) 120px 76px 76px; gap: 8px; align-items: center; font-size: 12px;
+        padding: 3px 6px; border-radius: 6px; cursor: pointer; }
+  .hm:hover { background: var(--hover); }
+  .hm .n { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hm .r { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
+  @media (max-width: 640px) { .hm { grid-template-columns: minmax(0, 1fr) 70px 70px; } .hm .hb { display: none; } }
+
+  /* tabs */
+  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
+  .tabs button { border: none; background: none; border-radius: 0; padding: 8px 12px; color: var(--muted);
+                 border-bottom: 2px solid transparent; margin-bottom: -1px; }
+  .tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
+  .count { font-size: 11px; background: var(--track); color: var(--muted); border-radius: 999px; padding: 1px 7px; margin-left: 4px; }
+  .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+  .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 5px; }
+
+  /* one-line rows */
+  .rows { padding: 0; overflow: hidden; }
+  .row { border-top: 1px solid var(--border); }
+  .row:first-child { border-top: none; }
+  .line { display: grid; align-items: center; gap: 12px; padding: 9px 14px; font-size: 13px; }
+  .carry .line { grid-template-columns: 16px minmax(160px, 1fr) repeat(5, auto); cursor: pointer; }
+  .carry .line:hover { background: var(--hover); }
+  .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  /* the model name gives way to its tags: the name is cut short, the tags stay readable */
+  .name:has(.tag) { display: flex; align-items: baseline; }
+  .name:has(.tag) > a { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .name > .tag { flex-shrink: 0; }
+  .name a { color: inherit; text-decoration: none; } .name a:hover { text-decoration: underline; }
+  .author { color: var(--faint); font-weight: 400; }
+  .cell { color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .cell b { color: var(--fg); font-weight: 600; }
+  .chev { color: var(--faint); transition: transform .15s; display: inline-block; }
+  .row.open .chev { transform: rotate(90deg); }
+  .tag { font-size: 11px; padding: 1px 6px; border-radius: 6px; background: var(--track); color: var(--muted); white-space: nowrap; font-weight: 500; margin-left: 6px; }
+  .tag.warn { background: transparent; color: var(--warn); box-shadow: inset 0 0 0 1px var(--warn); }
+  .caution { font-size: 12px; color: var(--muted); margin: -2px 0 10px; line-height: 1.45; }
+  .tag.bad { background: transparent; color: var(--bad); border: 1px solid var(--bad); }
+  .tag.warn { background: transparent; color: var(--warn); border: 1px solid var(--warn); }
+  .detail { padding: 2px 14px 14px 42px; }
+  .meta { margin: 0 0 8px; font-size: 13px; color: var(--muted); }
+  .meta b { color: var(--fg); font-weight: 600; }
+  .pieces { display: flex; flex-wrap: wrap; gap: 3px; margin: 6px 0 10px; }
+  .pieces.dense { gap: 2px; }
+  .s { width: 11px; height: 11px; border-radius: 3px; border: 1.5px solid var(--border); }
+  .dense .s { width: 8px; height: 8px; border-radius: 2px; border-width: 1px; }
+  .s.held { background: var(--accent); border-color: var(--accent); }
+  .s.wanted { background: var(--accent-soft); border-color: var(--accent); }
+  .s.a0 { border-color: var(--bad); } .s.alow { border-color: var(--warn); } .s.aok { border-color: var(--ok); }
+  .s.held.a0, .s.held.alow, .s.held.aok { border-color: var(--accent); }
+  @media (max-width: 720px) {
+    /* phone: name on top, the stats as one wrapped line under it */
+    .carry .line { display: flex; flex-wrap: wrap; column-gap: 12px; row-gap: 3px; position: relative; padding-left: 42px; }
+    .carry .line > .chev { position: absolute; left: 14px; top: 10px; }
+    .carry .line > .name { flex: 1 1 100%; min-width: 0; }
+    .carry .line > .cell { font-size: 12px; }
+  }
+
+  /* priorities */
+  .addrow { display: flex; gap: 8px; }
+  .addrow input { flex: 1; min-width: 0; }
+  .msg { font-size: 13px; margin: 6px 0 0; min-height: 18px; }
+  .prio .line, .colhead { grid-template-columns: 16px 20px minmax(0, 1fr) 150px 100px 64px 82px 84px; gap: 8px; }
+  .moves .skipbtn { color: var(--faint); padding: 2px 5px; display: inline-flex; align-items: center; }
+  .moves .skipbtn:hover { color: var(--bad); }
+  .moves .skipbtn svg { width: 14px; height: 14px; }
+  details.skipped { margin-top: 10px; }
+  details.skipped > summary { cursor: pointer; font-size: 13px; color: var(--muted); list-style: none; padding: 4px 2px; }
+  details.skipped > summary::-webkit-details-marker { display: none; }
+  details.skipped > summary::before { content: "▸ "; color: var(--faint); }
+  details.skipped[open] > summary::before { content: "▾ "; }
+  .skiprow { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 4px 8px; font-size: 13px; }
+  .skiprow .n { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .skiprow .n a { color: inherit; text-decoration: none; } .skiprow .n a:hover { text-decoration: underline; }
+  .colhead { display: grid; padding: 0 14px 6px; font-size: 11px; color: var(--faint); text-transform: uppercase; letter-spacing: .05em; }
+  .right { text-align: right; }
+  .handle { cursor: grab; color: var(--faint); user-select: none; text-align: center; font-size: 15px; line-height: 1; touch-action: none; padding: 6px 0; }
+  .rank { color: var(--faint); font-variant-numeric: tabular-nums; text-align: right; }
+  .need { display: grid; gap: 3px; min-width: 0; }
+  .need .t { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .needbar { height: 4px; background: var(--track); border-radius: 999px; overflow: hidden; }
+  .needbar > div { height: 100%; border-radius: 999px; }
+  .gb { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); }
+  .gb input { padding: 4px 6px; text-align: right; width: 56px; flex: none; appearance: textfield; -moz-appearance: textfield; }
+  /* no number spinner: it sits on top of "auto" in a box this small */
+  .gb input::-webkit-inner-spin-button, .gb input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .moves { display: flex; }
+  .moves button { padding: 2px 6px; }
+  .row.dragging { opacity: .45; }
+  .row.drop-before { box-shadow: inset 0 2px 0 var(--accent); }
+  .row.drop-after { box-shadow: inset 0 -2px 0 var(--accent); }
+  @media (max-width: 760px) {
+    .colhead { display: none; }
+    /* phone: name, then need, then swarm | held, then GB | moves */
+    .prio .line { grid-template-columns: 18px 22px minmax(0, 1fr) auto; row-gap: 6px; }
+    .prio .line > .name, .prio .line > .need { grid-column: 3 / -1; }
+    .prio .line > .cell:not(.right), .prio .line > .gb { grid-column: 3; }
+    .prio .line > .right, .prio .line > .moves { grid-column: 4; justify-self: end; }
+    .prio .gb input { width: 84px; }
+  }
+
+  details.card { padding: 0; margin-top: 12px; }
+  details.card > summary { cursor: pointer; padding: 12px 16px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; }
+  details.card > summary::-webkit-details-marker { display: none; }
+  details.card > summary::after { content: "▸"; color: var(--faint); }
+  details.card[open] > summary::after { content: "▾"; }
+  details.card .body { padding: 0 16px 14px; }
+  pre { margin: 0; max-height: 220px; overflow: auto; font: 12px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+        white-space: pre-wrap; word-break: break-word; color: var(--muted); }
+  .empty { padding: 16px; color: var(--muted); }
+  footer { margin-top: 18px; font-size: 12px; color: var(--faint); }
+
+  /* settings drawer */
+  .scrim { position: fixed; inset: 0; background: var(--scrim); opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .scrim.open { opacity: 1; pointer-events: auto; }
+  aside { position: fixed; top: 0; right: 0; height: 100%; width: min(400px, 100vw); background: var(--card);
+          border-left: 1px solid var(--border); transform: translateX(100%); transition: transform .22s ease;
+          display: flex; flex-direction: column; z-index: 10; }
+  aside.open { transform: none; }
+  .drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border); }
+  .drawer-head h2 { font-size: 16px; margin: 0; }
+  .drawer-body { padding: 4px 16px 20px; overflow-y: auto; }
+  .drawer-body h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 18px 0 8px; }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  label { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
+  .help { font-size: 12px; color: var(--faint); margin: 6px 0 0; }
+  dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 12px; margin: 0; font-size: 13px; }
+  dt { color: var(--muted); } dd { margin: 0; word-break: break-all; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <span class="brand">⛵ Flotilla Face</span>
+    <span id="status" class="pill"><span class="dot"></span><span>Connecting…</span></span>
+    <span id="vpn" class="pill" hidden><span class="dot"></span><span></span></span>
+    <span class="spacer"></span>
+    <span id="node" class="node"></span>
+    <button id="pause">Pause</button>
+    <button id="gear" class="icon" aria-label="Settings" aria-expanded="false" aria-controls="drawer" title="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
+  </header>
+
+  <div class="stats">
+    <div class="card stat">
+      <div class="label">Space</div>
+      <div class="value num" id="hold">–</div>
+      <div class="bar"><div id="holdbar" style="width:0"></div></div>
+      <div class="sub" id="holdsub"></div>
+    </div>
+    <div class="card stat"><div class="label">Upload</div><div class="value num" id="up">–</div><div class="sub" id="upsub"></div></div>
+    <div class="card stat"><div class="label">Download</div><div class="value num" id="down">–</div><div class="sub" id="downsub"></div></div>
+    <div class="card stat"><div class="label">Seeding</div><div class="value num" id="swarm">–</div><div class="sub" id="swarmsub"></div></div>
+  </div>
+
+  <div class="card chart">
+    <div class="chart-head">
+      <h2>Traffic</h2>
+      <div class="chart-ctl">
+        <div class="seg" id="ranges" role="group" aria-label="Time range">
+          <button data-r="1h">1h</button><button data-r="24h">24h</button><button data-r="7d">7d</button><button data-r="30d">30d</button><button data-r="90d">90d</button><button data-r="1y">1y</button><button data-r="all">All</button>
+        </div>
+        <select id="hmodel" aria-label="Model"><option value="">All models</option></select>
+      </div>
+    </div>
+    <div class="hsum" id="hsum"></div>
+    <div class="plotwrap">
+      <svg id="plot" class="plot" viewBox="0 0 600 110" preserveAspectRatio="none" role="img" aria-label="Upload over time"></svg>
+      <span class="ymax" id="ymax"></span>
+      <div class="tip" id="tip" hidden></div>
+    </div>
+    <div class="plotwrap thin">
+      <svg id="plotdown" class="plot thin" viewBox="0 0 600 40" preserveAspectRatio="none" role="img" aria-label="Download over time"></svg>
+      <span class="ymax" id="ymaxdown"></span>
+    </div>
+    <div class="axis" id="axis"></div>
+    <div class="hmodels" id="hmodels"></div>
+  </div>
+
+  <div class="tabs" role="tablist">
+    <button role="tab" id="tab-carry" aria-selected="true" aria-controls="panel-carry">Carrying<span class="count" id="n-carry">0</span></button>
+    <button role="tab" id="tab-prio" aria-selected="false" aria-controls="panel-prio">Priorities<span class="count" id="n-prio">0</span></button>
+  </div>
+
+  <section id="panel-carry" role="tabpanel" aria-labelledby="tab-carry">
+    <div class="panel-head">
+      <span class="sub">Click a model to see its pieces.</span>
+      <div class="legend">
+        <span><span class="s held"></span>you hold it</span>
+        <span><span class="s wanted"></span>downloading</span>
+        <span><span class="s a0"></span>nobody else</span>
+        <span><span class="s alow"></span>below target</span>
+        <span><span class="s aok"></span>well covered</span>
+      </div>
+    </div>
+    <div class="card rows carry" id="carry"></div>
+  </section>
+
+  <section id="panel-prio" role="tabpanel" aria-labelledby="tab-prio" hidden>
+    <form id="addform" class="addrow" autocomplete="off">
+      <input id="addref" type="text" placeholder="Add a model: paste a Hugging Face or Pirate Face link, or author/model" aria-label="Model to add">
+      <button class="primary" type="submit">Add</button>
+    </form>
+    <div class="msg muted" id="priomsg"></div>
+    <div class="panel-head">
+      <span class="sub">Drag to reorder: higher is carried first. Optionally set aside GB for a model; the rest is shared.</span>
+      <span class="sub" id="allotsum"></span>
+    </div>
+    <p class="caution">Flotilla checks every file is exactly what its publisher uploaded. It can't check the publisher.
+      If you run one of these models, run it in a sandbox with no shell or network access unless you trust who made it.
+      Hover a model to see where it comes from.</p>
+    <div class="colhead" aria-hidden="true"><span></span><span>#</span><span>Model</span><span>Need</span><span>Swarm</span><span class="right">Held</span><span>Set aside</span><span></span></div>
+    <div class="card rows prio" id="prio"></div>
+    <details class="skipped" id="skippedbox" hidden><summary id="skippedsum">Skipped</summary><div class="card rows" id="skipped"></div></details>
+  </section>
+
+  <details class="card" id="logbox">
+    <summary>Activity</summary>
+    <div class="body"><pre id="log"></pre></div>
+  </details>
+
+  <footer>Only reachable from this computer.</footer>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside id="drawer" aria-label="Settings" aria-hidden="true">
+  <div class="drawer-head">
+    <h2>Settings</h2>
+    <button class="icon ghost" id="close" aria-label="Close settings">✕</button>
+  </div>
+  <div class="drawer-body">
+    <form id="settings" autocomplete="off" onsubmit="return false">
+      <h3>Space</h3>
+      <div class="fields">
+        <label>Space for Flotilla (GB)<input name="budget_gb" type="number" min="1" step="any"></label>
+        <label>Always keep free (GB)<input name="reserve_gb" type="number" min="0" step="any"></label>
+      </div>
+      <h3>Bandwidth</h3>
+      <div class="fields">
+        <label>Upload (Mbit/s)<input name="upload_mbps" type="number" min="0.1" step="any"></label>
+        <label>Share of upload (%)<input name="upload_share" type="number" min="5" max="100" step="1"></label>
+        <label>Download (Mbit/s)<input name="download_mbps" type="number" min="0.1" step="any"></label>
+        <label>Share of download (%)<input name="download_share" type="number" min="5" max="100" step="1"></label>
+        <label>Monthly upload cap (GB)<input name="monthly_upload_cap_gb" type="number" min="0" step="any"></label>
+      </div>
+      <p class="help">0 means no cap. Changes apply right away and are saved to your config file.</p>
+      <div style="margin-top:12px"><button class="primary" id="save" type="button">Save</button></div>
+      <div class="msg muted" id="msg"></div>
+    </form>
+    <h3>Actions</h3>
+    <button id="replan" type="button">Replan now</button>
+    <p class="help">Looks at the swarm again and re-picks pieces. Takes about two minutes.</p>
+    <h3>This node</h3>
+    <dl id="about"></dl>
+  </div>
+</aside>
+
+<script>
+"use strict";
+const TOKEN = "__FLOTILLA_TOKEN__";
+const $ = (id) => document.getElementById(id);
+let state = null;
+const openRows = new Set();          // carried models expanded by the user
+let dragging = false, prioOrder = [];
+
+function human(n) {
+  if (n == null || isNaN(n)) return "–";
+  const u = ["B", "KB", "MB", "GB", "TB"];
+  let i = 0; n = Number(n);
+  while (Math.abs(n) >= 1000 && i < u.length - 1) { n /= 1000; i++; }
+  return (i === 0 ? n.toFixed(0) : n.toFixed(n < 10 ? 2 : 1)) + " " + u[i];
+}
+const rate = (b) => human(b) + "/s";
+const plural = (n, w) => n + " " + w + (n === 1 ? "" : "s");
+function el(tag, cls, text) {
+  const e = document.createElement(tag);
+  if (cls) e.className = cls;
+  if (text != null) e.textContent = text;
+  return e;
+}
+function cell(bold, rest) { const c = el("span", "cell"); c.append(el("b", null, bold)); if (rest) c.append(document.createTextNode(rest)); return c; }
+function link(repo) {
+  // Model name first (bold), author after it in grey: if the line is tight, the author gets cut, not the name.
+  const [author, model] = repo.includes("/") ? repo.split("/", 2) : ["", repo];
+  const a = el("a", null, model);
+  if (author) a.append(el("span", "author", " · " + author));
+  a.title = repo;
+  a.href = "https://pirateface.co/" + encodeURI(repo); a.target = "_blank"; a.rel = "noopener noreferrer";
+  a.onclick = (e) => e.stopPropagation();
+  return a;
+}
+function setPill(id, kind, text) { const p = $(id); p.hidden = false; p.className = "pill " + kind; p.lastElementChild.textContent = text; }
+
+/* ---------------- top of page ---------------- */
+
+function render(s) {
+  state = s;
+  const ts = s.torrents || [];
+  const sum = (k) => ts.reduce((a, t) => a + (t[k] || 0), 0);
+  const up = sum("up_rate"), down = sum("down_rate"), wanted = sum("wanted"), done = sum("done");
+  const net = s.network || {}, st = s.settings || {}, run = s.run || {};
+
+  if (s.user_paused) setPill("status", "warn", "Paused");
+  else if (net.bind && net.bind_up === false) setPill("status", "bad", "Offline: VPN is down");
+  else if (s.disk && s.disk.paused) setPill("status", "warn", "Downloads paused: disk nearly full");
+  else if (s.paused) setPill("status", "warn", "Paused: monthly cap reached");
+  else if (wanted && done < wanted) setPill("status", "ok", "Downloading " + Math.floor(100 * done / wanted) + "%");
+  else if (ts.length) setPill("status", "ok", "Seeding");
+  else setPill("status", "", "Idle");
+  if (net.bind) setPill("vpn", net.bind_up ? "ok" : "bad", (net.bind_up ? "VPN pinned · " : "Waiting for VPN · ") + net.bind);
+  else setPill("vpn", "warn", "No VPN pin");
+  $("node").textContent = "node " + s.node + " · v" + s.version;
+  $("pause").textContent = s.user_paused ? "Resume" : "Pause";
+
+  const budget = st.budget_gb * 1e9, held = s.disk.held;
+  $("hold").textContent = human(held);
+  $("holdbar").style.width = Math.min(100, 100 * held / budget).toFixed(1) + "%";
+  $("holdsub").textContent = "of " + human(budget) + " · " + human(s.disk.free) + " free on the drive";
+  $("up").textContent = rate(up);
+  $("upsub").textContent = human(run.uploaded) + " this run · " + human((s.upload_month || {}).bytes) + " this month";
+  $("down").textContent = rate(down);
+  $("downsub").textContent = wanted && done < wanted ? human(done) + " of " + human(wanted) + " fetched" : "Nothing left to fetch";
+  const mem = s.memory || {};
+  if (mem.paused && mem.paused.length)
+    $("downsub").textContent += " · " + plural(mem.paused.length, "model") + " starting no new files, to stay under " + human(mem.budget) + " of memory";
+  $("swarm").textContent = plural(ts.length, "model");
+  $("swarmsub").textContent = plural(sum("peers"), "peer") + " connected · ≈ " + (s.points_est_total || 0).toFixed(1) + " points (est.)";
+
+  renderCarrying(ts);
+  if (!dragging && !(document.activeElement || document.body).closest("#prio")) renderPriorities(s.priorities || [], st);
+  renderSkipped(s.dropped || []);
+  $("n-carry").textContent = ts.length; $("n-prio").textContent = (s.priorities || []).length;
+
+  const pre = $("log"), atEnd = pre.scrollTop + pre.clientHeight >= pre.scrollHeight - 4;
+  pre.textContent = (s.log || []).map((l) => new Date(l.t * 1000).toLocaleTimeString() + "  " + l.msg).join("\n") || "No activity yet.";
+  if (atEnd) pre.scrollTop = pre.scrollHeight;
+  if (drawerOpen && !editing) fillDrawer();
+}
+
+/* ---------------- traffic history ---------------- */
+
+const RANGE_WORDS = { "1h": "the last hour", "24h": "the last 24 hours", "7d": "the last 7 days", "30d": "the last 30 days",
+                      "90d": "the last 90 days", "1y": "the last year", "all": "all time" };
+let hRange = "24h", hModel = "", hDoc = null;
+try { hRange = localStorage.getItem("flotilla-range") || hRange; hModel = localStorage.getItem("flotilla-model") || ""; } catch (e) { /* ignore */ }
+if (!RANGE_WORDS[hRange]) hRange = "24h";
+
+function remember() {
+  try { localStorage.setItem("flotilla-range", hRange); localStorage.setItem("flotilla-model", hModel); } catch (e) { /* ignore */ }
+}
+
+async function loadHistory() {
+  const q = new URLSearchParams({ range: hRange, tz: String(-new Date().getTimezoneOffset()) });
+  if (hModel) q.set("repo", hModel);
+  try {
+    const r = await fetch("/api/history?" + q, { cache: "no-store" });
+    if (!r.ok) throw new Error(r.status);
+    hDoc = await r.json();
+    renderHistory(hDoc);
+  } catch (e) { $("hsum").textContent = "History isn't available right now."; }
+}
+
+function setRange(r) { hRange = r; remember(); loadHistory(); }
+function setModel(m) { hModel = m; remember(); loadHistory(); }
+
+document.querySelectorAll("#ranges button").forEach((b) => { b.onclick = () => setRange(b.dataset.r); });
+$("hmodel").onchange = (e) => setModel(e.target.value);
+
+// A bucket's speed: bytes over the time the node was actually seeding in it.
+const speed = (bytes, p, bucket) => bytes / Math.max(1, p[3] || bucket);
+
+function fmtTime(t, bucket, withTime) {
+  const d = new Date(t * 1000);
+  if (bucket < 86400 && withTime) {
+    const hm = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    return (hRange === "1h" || hRange === "24h") ? hm : d.toLocaleDateString([], { month: "short", day: "numeric" }) + " " + hm;
+  }
+  if (bucket >= 7 * 86400 || hRange === "all" && hDoc && hDoc.end - hDoc.start > 400 * 86400)
+    return d.toLocaleDateString([], { month: "short", year: "numeric", day: "numeric" });
+  return d.toLocaleDateString([], { weekday: hRange === "7d" ? "short" : undefined, month: "short", day: "numeric" });
+}
+
+function renderHistory(doc) {
+  document.querySelectorAll("#ranges button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.r === doc.range)));
+
+  // Model filter: every model with traffic in this range, plus what we carry now.
+  const sel = $("hmodel"), names = new Set(doc.models.map((m) => m.repo));
+  ((state && state.torrents) || []).forEach((t) => names.add(t.repo));
+  if (hModel) names.add(hModel);
+  sel.replaceChildren(new Option("All models", ""), ...[...names].sort().map((r) => new Option(r.split("/").pop() + " · " + r.split("/")[0], r)));
+  sel.value = hModel;
+
+  const pts = doc.points, B = doc.bucket, now = Date.now() / 1000;
+  const elapsed = Math.max(1, Math.min(now, doc.end) - doc.start);
+  const seeding = doc.online / elapsed;
+  const avgUp = doc.online ? doc.up / doc.online : 0;
+  const sum = $("hsum"); sum.replaceChildren();
+  const add = (t, b) => { if (b) { const x = el("b", null, t); sum.append(x); } else sum.append(document.createTextNode(t)); };
+  const ku = el("span", "key up"); sum.append(ku); add("↑ ", false); add(human(doc.up), true);
+  add("   ", false); const kd = el("span", "key down"); sum.append(kd); add("↓ ", false); add(human(doc.down), true);
+  add(" in " + RANGE_WORDS[doc.range] + (doc.repo ? " for " + doc.repo.split("/").pop() : "") +
+      " · averaging " + rate(avgUp) + " up while seeding · seeding " + Math.round(Math.min(1, seeding) * 100) + "% of the time", false);
+  if (doc.repo) {
+    const clear = el("button", "ghost", "× show all models"); clear.style.fontSize = "12px";
+    clear.onclick = () => setModel(""); sum.append(" ", clear);
+  }
+
+  // Upload gets the big chart and download a thin one, each on its own scale: the first
+  // days' downloads run far faster than seeding and would flatten the upload line.
+  const ns = "http://www.w3.org/2000/svg", W = 600;
+  const ups = pts.map((p) => p[3] || p[1] ? speed(p[1], p, B) : null);
+  const downs = pts.map((p) => p[3] || p[2] ? speed(p[2], p, B) : null);
+  const x = (i) => pts.length < 2 ? W / 2 : i / (pts.length - 1) * W;
+  const empty = !doc.up && !doc.down && !doc.online;
+  const cursors = [];
+
+  function draw(svg, vals, H, color, soft, ymaxId) {
+    svg.replaceChildren();
+    const max = Math.max(1, ...vals.filter((v) => v != null));
+    $(ymaxId).textContent = empty || !vals.some((v) => v) ? "" : rate(max);
+    if (empty) {
+      if (H > 60) {
+        const t = document.createElementNS(ns, "text");
+        t.setAttribute("x", W / 2); t.setAttribute("y", H / 2); t.setAttribute("text-anchor", "middle");
+        t.setAttribute("fill", "var(--faint)"); t.setAttribute("font-size", "13");
+        t.textContent = "Nothing recorded in this range yet. A point is added every minute.";
+        svg.setAttribute("preserveAspectRatio", "xMidYMid meet"); svg.append(t);
+      }
+      return;
+    }
+    svg.setAttribute("preserveAspectRatio", "none");
+    const top = 12, y = (v) => H - 1 - v / max * (H - top - 1);
+    // One path per run of buckets the node was seeding; offline buckets leave a gap.
+    const runs = [];
+    let cur = [];
+    vals.forEach((v, i) => { if (v == null) { if (cur.length) runs.push(cur); cur = []; } else cur.push([x(i), y(v)]); });
+    if (cur.length) runs.push(cur);
+    const line = (run) => run.map((p, i) => (i ? "L" : "M") + p[0].toFixed(1) + "," + p[1].toFixed(1)).join(" ");
+    for (const run of runs) {
+      if (run.length === 1) {
+        const c = document.createElementNS(ns, "circle");
+        c.setAttribute("cx", run[0][0]); c.setAttribute("cy", run[0][1]); c.setAttribute("r", "1.5"); c.setAttribute("fill", color);
+        svg.append(c); continue;
+      }
+      const a = document.createElementNS(ns, "path");
+      a.setAttribute("d", line(run) + ` L${run[run.length - 1][0].toFixed(1)},${H} L${run[0][0].toFixed(1)},${H} Z`);
+      a.setAttribute("fill", soft); svg.append(a);
+      const l = document.createElementNS(ns, "path");
+      l.setAttribute("d", line(run)); l.setAttribute("fill", "none"); l.setAttribute("stroke", color);
+      l.setAttribute("stroke-width", "1.75"); l.setAttribute("vector-effect", "non-scaling-stroke");
+      svg.append(l);
+    }
+    const c = document.createElementNS(ns, "line");
+    c.setAttribute("y1", "0"); c.setAttribute("y2", String(H)); c.setAttribute("stroke", "var(--faint)");
+    c.setAttribute("stroke-width", "1"); c.setAttribute("vector-effect", "non-scaling-stroke"); c.style.display = "none";
+    svg.append(c); cursors.push(c);
+  }
+
+  const upSvg = $("plot"), downSvg = $("plotdown");
+  draw(upSvg, ups, 110, "var(--accent)", "var(--accent-soft)", "ymax");
+  draw(downSvg, downs, 40, "var(--ok)", "color-mix(in srgb, var(--ok) 18%, transparent)", "ymaxdown");
+  const tip = $("tip");
+  const hover = (e) => {
+    if (empty) return;
+    const box = upSvg.getBoundingClientRect();
+    const i = Math.max(0, Math.min(pts.length - 1, Math.round((e.clientX - box.left) / box.width * (pts.length - 1))));
+    const p = pts[i], cx = x(i);
+    cursors.forEach((c) => { c.setAttribute("x1", cx); c.setAttribute("x2", cx); c.style.display = ""; });
+    tip.hidden = false;
+    tip.style.left = Math.max(90, Math.min(box.width - 90, cx / W * box.width)) + "px";
+    tip.textContent = fmtTime(p[0], B, true) + (p[3] || p[1] || p[2]
+      ? " · ↑ " + rate(speed(p[1], p, B)) + " (" + human(p[1]) + ") · ↓ " + rate(speed(p[2], p, B)) + " (" + human(p[2]) + ")"
+      : " · not seeding");
+  };
+  const leave = () => { cursors.forEach((c) => { c.style.display = "none"; }); tip.hidden = true; };
+  for (const sv of [upSvg, downSvg]) { sv.onpointermove = hover; sv.onpointerleave = leave; }
+
+  const axis = $("axis"); axis.replaceChildren();
+  if (pts.length) [pts[0][0], pts[Math.floor(pts.length / 2)][0], Math.min(now, doc.end)].forEach((t, i) =>
+    axis.append(el("span", null, i === 2 ? "now" : fmtTime(t, B, B < 86400))));
+
+  // Where the traffic went: top models in this range (click one to filter).
+  const box = $("hmodels"); box.replaceChildren();
+  if (!doc.repo && doc.models.length > 1) {
+    const top = doc.models.slice(0, 6), mx = Math.max(1, ...top.map((m) => m.up));
+    for (const m of top) {
+      const row = el("div", "hm"); row.title = "Show only " + m.repo;
+      const bar = el("div", "needbar hb"); const f = el("div"); f.style.width = Math.max(2, m.up / mx * 100) + "%";
+      f.style.background = "var(--accent)"; bar.append(f);
+      row.append(el("span", "n", m.repo.split("/").pop()), bar, el("span", "r", "↑ " + human(m.up)), el("span", "r", "↓ " + human(m.down)));
+      row.onclick = () => setModel(m.repo);
+      box.append(row);
+    }
+  }
+}
+
+loadHistory();
+setInterval(loadHistory, 60000);
+
+/* ---------------- Carrying tab ---------------- */
+
+function renderCarrying(ts) {
+  const box = $("carry"); box.replaceChildren();
+  if (!ts.length) { box.append(el("div", "empty", "Nothing yet. Flotilla picks pieces after its first look at the swarm.")); return; }
+  ts.slice().sort((a, b) => b.done - a.done).forEach((t) => {
+    const row = el("div", "row" + (openRows.has(t.infohash) ? " open" : ""));
+    const line = el("div", "line");
+    line.tabIndex = 0; line.setAttribute("role", "button"); line.setAttribute("aria-expanded", String(openRows.has(t.infohash)));
+    const name = el("span", "name"); name.append(link(t.repo));
+    if (t.hf_backed === false) name.append(el("span", "tag bad", "HF copy gone"));
+    if ((t.manifest_mismatches || []).length) name.append(el("span", "tag warn", "hash disagreed"));
+    if (t.state !== "finished" && t.state !== "seeding") name.append(el("span", "tag", t.state));
+    line.append(el("span", "chev", "▸"), name, cell(human(t.done), " held"), cell(t.verified + "/" + t.files, " files ✓"),
+                cell("↑ " + rate(t.up_rate)), cell(human(t.uploaded), " sent"), cell(String(t.peers), t.peers === 1 ? " peer" : " peers"));
+    const toggle = () => { openRows.has(t.infohash) ? openRows.delete(t.infohash) : openRows.add(t.infohash); renderCarrying(state.torrents || []); };
+    line.onclick = toggle;
+    line.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } };
+    row.append(line);
+    if (openRows.has(t.infohash)) row.append(detail(t));
+    box.append(row);
+  });
+}
+
+function detail(t) {
+  const d = el("div", "detail");
+  const shards = t.shards || [];
+  const heldN = shards.filter((x) => x.status === "verified").length;
+  const meta = el("div", "meta");
+  const bits = ["Pieces: you hold " + heldN + " of " + shards.length];
+  if (t.priority != null) bits.push("priority " + t.priority.toFixed(2));
+  if (t.swarm_seeders != null) bits.push(t.swarm_seeders + " full seeders, " + t.swarm_leechers + " downloading");
+  if (t.ledger) bits.push(t.ledger.seed_hours.toFixed(1) + " h seeded");
+  meta.textContent = bits.join(" · ");
+  const strip = el("div", "pieces" + (shards.length > 120 ? " dense" : ""));
+  const target = t.target || 5;
+  shards.forEach((sh) => {
+    let cls = "s";
+    if (sh.status === "verified") cls += " held"; else if (sh.status) cls += " wanted";
+    if (sh.avail != null) cls += sh.avail === 0 ? " a0" : sh.avail < target ? " alow" : " aok";
+    const s = el("div", cls);
+    s.title = sh.path + " · " + human(sh.size) + (sh.avail != null ? " · " + plural(sh.avail, "other peer") + " have it" : "") +
+      (sh.status === "verified" ? " · you hold it" : sh.status ? " · you: " + sh.status : "");
+    strip.append(s);
+  });
+  const drop = el("button", "ghost danger", "Drop this model");
+  drop.onclick = () => { if (confirm("Stop carrying " + t.repo + " and delete its files from this computer?")) post("drop", { infohash: t.infohash }); };
+  d.append(meta, strip, drop);
+  return d;
+}
+
+/* ---------------- Priorities tab ---------------- */
+
+function needOf(p) {
+  // Short label for the row; the full explanation goes in the tooltip.
+  if (p.status && p.status !== "ok") {
+    const short = p.status === "no torrent on Pirate Face yet" ? "no torrent yet" : p.status;
+    return { text: short, title: p.status, cls: "warn-t", pct: null };
+  }
+  const gone = p.hf_backed === false, pre = gone ? "HF gone · " : "";
+  const why = gone ? "The Hugging Face original is gone: the swarm is the only copy. " : "";
+  if (!p.measured) return { text: pre + "not measured yet", title: why + "Flotilla hasn't looked at this swarm yet.", cls: gone ? "bad-t" : "muted", pct: null };
+  if (p.zero) return { text: pre + plural(p.zero, "piece") + " with no other copy", cls: "bad-t", pct: 100 * p.below / p.measured, bar: "var(--bad)",
+                       title: why + p.zero + " of " + p.measured + " pieces have no other holder in the swarm right now." };
+  if (p.below) {
+    const pct = Math.max(1, Math.round(100 * p.below / p.measured));
+    return { text: pre + pct + "% under-copied", cls: "warn-t", pct, bar: "var(--warn)",
+             title: why + p.below + " of " + p.measured + " pieces have fewer than " + p.target + " holders (the target)." };
+  }
+  return { text: pre + "well covered", cls: gone ? "bad-t" : "ok-t", pct: 100, bar: "var(--ok)",
+           title: why + "Every piece has at least " + p.target + " holders." };
+}
+
+function renderPriorities(list, st) {
+  prioOrder = list.map((p) => p.repo);
+  const box = $("prio"); box.replaceChildren();
+  const total = state.allot_total_gb || 0;
+  $("allotsum").textContent = total ? "Set aside " + total + " of " + st.budget_gb + " GB" : "";
+  $("allotsum").className = "sub" + (total > st.budget_gb ? " bad-t" : "");
+  if (!list.length) { box.append(el("div", "empty", "The list is empty. Add a model above.")); return; }
+  list.forEach((p, i) => {
+    const row = el("div", "row"); row.dataset.repo = p.repo;
+    const line = el("div", "line");
+    const handle = el("span", "handle", "⠿"); handle.title = "Drag to reorder";
+    handle.onpointerdown = (e) => startDrag(e, row, p.repo);
+
+    const name = el("span", "name"); name.append(link(p.repo));
+    if (p.source === "yours") name.append(el("span", "tag", "yours"));
+    else if (p.source === "carrying") name.append(el("span", "tag", "carrying only"));
+    if (p.origin && p.origin.tag) {
+      const t = el("span", "tag" + (p.origin.warn ? " warn" : ""), p.origin.tag);
+      t.title = p.origin.text; name.append(t);
+    }
+    name.title = [p.note || p.repo, p.origin && p.origin.text].filter(Boolean).join("\n\n");
+
+    const n = needOf(p);
+    const need = el("span", "need");
+    const nt = el("span", "t " + n.cls, n.text); nt.title = n.title || n.text; need.append(nt);
+    if (n.pct != null) { const b = el("div", "needbar"); const f = el("div"); f.style.width = Math.max(4, n.pct) + "%"; f.style.background = n.bar; b.append(f); need.append(b); }
+
+    const swarm = p.seeders != null ? cell(String(p.seeders), (p.seeders === 1 ? " seed · " : " seeds · ") + p.leechers + " dl")
+                                     : el("span", "cell", "–");
+    swarm.title = p.seeders != null ? p.seeders + " full seeders and " + p.leechers + " downloading, per Pirate Face" : "";
+    const held = el("span", "cell right", p.held_bytes ? human(p.held_bytes) : "–");
+
+    const gb = el("label", "gb");
+    const inp = el("input"); inp.type = "number"; inp.min = "0"; inp.step = "any"; inp.placeholder = "auto";
+    inp.setAttribute("aria-label", "GB set aside for " + p.repo);
+    if (p.allot_gb) inp.value = p.allot_gb;
+    inp.onchange = () => post("allot", { repo: p.repo, gb: inp.value === "" ? null : Number(inp.value) }, "Saving…", "Saved. Replanning.", "priomsg");
+    inp.onkeydown = (e) => { if (e.key === "Enter") inp.blur(); };
+    gb.append(inp, document.createTextNode("GB"));
+
+    const moves = el("span", "moves");
+    const upB = el("button", "ghost", "↑"); upB.setAttribute("aria-label", "Move " + p.repo + " up"); upB.disabled = i === 0;
+    const dnB = el("button", "ghost", "↓"); dnB.setAttribute("aria-label", "Move " + p.repo + " down"); dnB.disabled = i === list.length - 1;
+    upB.onclick = () => move(i, -1); dnB.onclick = () => move(i, 1);
+    moves.append(upB, dnB);
+    if (p.source === "yours") {
+      const rm = el("button", "ghost danger", "✕"); rm.title = "Remove from your picks"; rm.setAttribute("aria-label", "Remove " + p.repo);
+      rm.onclick = () => post("remove", { ref: p.repo }, "Removing…", "Removed.", "priomsg");
+      moves.append(rm);
+    } else {
+      moves.append(skipButton(p.repo, p.held_bytes));
+    }
+    line.append(handle, el("span", "rank", String(i + 1)), name, need, swarm, held, gb, moves);
+    row.append(line);
+    box.append(row);
+  });
+}
+// Skip: one click takes a model off this node's list (and frees anything held of it). Undo right
+// after, or Restore any time from the Skipped section.
+function skipButton(repo, held) {
+  const b = el("button", "ghost skipbtn");
+  const ns = "http://www.w3.org/2000/svg", svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("viewBox", "0 0 24 24"); svg.setAttribute("fill", "none"); svg.setAttribute("stroke", "currentColor");
+  svg.setAttribute("stroke-width", "2"); svg.setAttribute("stroke-linecap", "round"); svg.setAttribute("aria-hidden", "true");
+  const c = document.createElementNS(ns, "circle"); c.setAttribute("cx", "12"); c.setAttribute("cy", "12"); c.setAttribute("r", "9");
+  const l = document.createElementNS(ns, "path"); l.setAttribute("d", "M5.7 5.7l12.6 12.6");
+  svg.append(c, l); b.append(svg);
+  b.title = held ? "Skip: stop carrying this model and free its " + human(held) : "Skip: never carry this model";
+  b.setAttribute("aria-label", "Skip " + repo);
+  b.onclick = async () => {
+    const name = repo.split("/").pop();
+    if (await post("skip", { repo }, "Skipping " + name + "…", "Skipped " + name + ".", "priomsg")) {
+      const undo = el("button", "ghost", "Undo"); undo.onclick = () => post("unskip", { repo }, "Restoring…", "Restored " + name + ".", "priomsg");
+      $("priomsg").append(" ", undo);
+    }
+  };
+  return b;
+}
+
+function renderSkipped(list) {
+  const box = $("skippedbox");
+  box.hidden = !list.length;
+  $("skippedsum").textContent = "Skipped (" + list.length + ")";
+  const rows = $("skipped"); rows.replaceChildren();
+  for (const repo of list.slice().sort()) {
+    const row = el("div", "skiprow");
+    const n = el("span", "n"); n.append(link(repo));
+    const r = el("button", "ghost", "Restore"); r.title = "Put " + repo + " back on the list";
+    r.onclick = () => post("unskip", { repo }, "Restoring…", "Restored " + repo.split("/").pop() + ".", "priomsg");
+    row.append(n, r); rows.append(row);
+  }
+}
+
+// Pointer-based dragging: works with a mouse, a finger or a pen (built-in HTML drag-and-drop doesn't do touch).
+let drag = null;
+function startDrag(e, row, repo) {
+  e.preventDefault();
+  dragging = true;
+  drag = { row, repo, target: null, before: true, handle: e.currentTarget };
+  drag.handle.setPointerCapture(e.pointerId);
+  row.classList.add("dragging");
+  drag.handle.onpointermove = (ev) => {
+    clearMarks();
+    const over = [...$("prio").children].find((r) => { const b = r.getBoundingClientRect(); return ev.clientY >= b.top && ev.clientY < b.bottom; });
+    if (!over || over === row) { drag.target = null; return; }
+    const b = over.getBoundingClientRect();
+    drag.target = over.dataset.repo; drag.before = ev.clientY < b.top + b.height / 2;
+    over.classList.add(drag.before ? "drop-before" : "drop-after");
+  };
+  drag.handle.onpointerup = drag.handle.onpointercancel = () => {
+    const d = drag; drag = null;
+    d.handle.onpointermove = d.handle.onpointerup = d.handle.onpointercancel = null;
+    d.row.classList.remove("dragging"); clearMarks(); dragging = false;
+    if (!d.target) return;
+    const order = prioOrder.filter((r) => r !== d.repo);
+    order.splice(order.indexOf(d.target) + (d.before ? 0 : 1), 0, d.repo);
+    saveOrder(order);
+  };
+}
+function clearMarks() { document.querySelectorAll(".drop-before,.drop-after").forEach((r) => r.classList.remove("drop-before", "drop-after")); }
+function move(i, d) {
+  const order = prioOrder.slice(); const j = i + d;
+  if (j < 0 || j >= order.length) return;
+  [order[i], order[j]] = [order[j], order[i]];
+  saveOrder(order);
+}
+async function saveOrder(order) {
+  prioOrder = order;
+  // Show the new order right away; the next refresh confirms it from the node.
+  const box = $("prio"), rows = new Map([...box.children].map((r) => [r.dataset.repo, r]));
+  order.forEach((r, i) => { const row = rows.get(r); if (row) { row.querySelector(".rank").textContent = String(i + 1); box.append(row); } });
+  await post("order", { order }, "Saving order…", "Order saved. Replanning.", "priomsg");
+}
+
+$("addform").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const ref = $("addref").value.trim();
+  if (!ref) return;
+  if (await post("add", { ref }, "Adding…", "Added at the top. Replanning: give it about two minutes.", "priomsg")) $("addref").value = "";
+});
+
+/* ---------------- tabs ---------------- */
+
+function showTab(which) {
+  ["carry", "prio"].forEach((t) => {
+    $("tab-" + t).setAttribute("aria-selected", String(t === which));
+    $("panel-" + t).hidden = t !== which;
+  });
+  try { localStorage.setItem("flotilla-tab", which); } catch (e) { /* storage may be blocked */ }
+}
+$("tab-carry").onclick = () => showTab("carry");
+$("tab-prio").onclick = () => showTab("prio");
+try { if (localStorage.getItem("flotilla-tab") === "prio") showTab("prio"); } catch (e) { /* ignore */ }
+
+/* ---------------- settings drawer ---------------- */
+
+let drawerOpen = false, editing = false;
+function openDrawer(open) {
+  drawerOpen = open; editing = false;
+  $("drawer").classList.toggle("open", open); $("scrim").classList.toggle("open", open);
+  $("drawer").setAttribute("aria-hidden", String(!open)); $("gear").setAttribute("aria-expanded", String(open));
+  if (open) { $("msg").textContent = ""; fillDrawer(); setTimeout(() => $("settings").elements[0].focus(), 50); }
+  else $("gear").focus();
+}
+function fillDrawer() {
+  if (!state) return;
+  const f = $("settings");
+  for (const [k, v] of Object.entries(state.settings || {})) {
+    const i = f.elements[k]; if (i) i.value = k.endsWith("_share") ? Math.round(v * 100) : v;
+  }
+  const about = $("about"); about.replaceChildren();
+  const net = state.network || {}, feed = state.feed || {};
+  [
+    ["Files", state.disk.folder],
+    ["Traffic", net.bind ? "pinned to " + net.bind + (net.bind_up ? "" : " (not up right now)") : "any interface (no VPN pin)"],
+    ["Port", String(state.listen_port)],
+    ["Priority list", (feed.version ? "v" + feed.version + " · signed by " + feed.signer + " · " + feed.source
+                       : "none published (all models equal)") + (feed.local ? " · plus your changes in " + feed.local : "")],
+    ["Config", state.config_path || "–"],
+    ["Version", state.version],
+  ].forEach(([k, v]) => about.append(el("dt", null, k), el("dd", null, v)));
+}
+$("gear").onclick = () => openDrawer(!drawerOpen);
+$("close").onclick = () => openDrawer(false);
+$("scrim").onclick = () => openDrawer(false);
+document.addEventListener("keydown", (e) => { if (e.key === "Escape" && drawerOpen) openDrawer(false); });
+$("settings").addEventListener("input", () => { editing = true; });
+$("save").onclick = async () => {
+  const body = {};
+  for (const i of $("settings").elements) {
+    if (!i.name || i.value === "") continue;
+    let v = Number(i.value); if (i.name.endsWith("_share")) v /= 100;
+    body[i.name] = v;
+  }
+  editing = false;
+  await post("settings", body, "Saving…", "Saved.");
+};
+$("replan").onclick = () => post("replan", {}, "Replanning…", "Replanning: about two minutes.");
+$("pause").onclick = () => post(state && state.user_paused ? "resume" : "pause", {});
+
+async function post(action, body, pending, done, target) {
+  const m = $(target || "msg");
+  if (pending) m.textContent = pending;
+  try {
+    const r = await fetch("/api/" + action, {
+      method: "POST", headers: { "Content-Type": "application/json", "X-Flotilla-Token": TOKEN }, body: JSON.stringify(body || {}),
+    });
+    const j = await r.json();
+    if (pending || !r.ok) { m.textContent = r.ok ? (done || "Done.") : "Couldn't do that: " + (j.error || r.status); m.className = "msg " + (r.ok ? "muted" : "bad-t"); }
+    setTimeout(refresh, 600);
+    return r.ok;
+  } catch (e) { m.textContent = "Couldn't reach Flotilla. Is it still running?"; return false; }
+}
+
+async function refresh() {
+  try {
+    const r = await fetch("/api/state", { cache: "no-store" });
+    if (!r.ok) throw new Error(r.status);
+    render(await r.json());
+  } catch (e) { setPill("status", "bad", "Not running"); }
+}
+refresh();
+setInterval(refresh, 3000);
+</script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+name: tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: ${{ matrix.os }} · py${{ matrix.python }}
+    strategy:
+      fail-fast: false
+      matrix:
+        # macOS: Apple Silicon (libtorrent 2.1 wheels need macOS 14+; GitHub retired its macos-14 runners).
+        # Linux: x86_64 and arm64 (manylinux, so Raspberry Pi 64-bit works too).
+        os: [macos-15, ubuntu-24.04, ubuntu-24.04-arm]
+        python: ["3.11", "3.12", "3.13"]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: Install
+        run: |
+          uv venv -p ${{ matrix.python }}
+          uv pip install -e '.[dev]'
+      # Includes tests/test_swarm.py: real libtorrent sessions on 127.0.0.1, no internet.
+      - name: Test
+        run: .venv/bin/python -m pytest -q
+      - name: Installer syntax
+        run: sh -n install.sh

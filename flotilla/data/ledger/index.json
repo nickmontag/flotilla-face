@@ -1,0 +1,196 @@
+{
+ "kind": "flotilla-hash-ledger",
+ "schema": 1,
+ "version": 47,
+ "issued": "2026-11-15T06:20:02+00:00",
+ "entries": {
+  "cyjin-yl/Qwen3.8-27B-Uncensored-Cyber-agentic-imatrix-GGUF@d82fb040934e0a491600a49477114d005accf59f": {
+   "file": "entries/cyjin-yl__Qwen3.8-27B-Uncensored-Cyber-agentic-imatrix-GGUF@d82fb040934e0a491600a49477114d005accf59f.json",
+   "sha256": "b7cc2376fdeb8b574e8a11e8b660ddf6f45aea06cc63d884a75c26998c98ed3b"
+  },
+  "deadbydawn101/RavenX-CyberAgent-Qwen3.6-35B-A3B-Opus-4.7-OpenMythos-Pentester-BugHunter-RATH-GGUF@3c5e5e721cf30baa69866984aed55bf0db210d14": {
+   "file": "entries/deadbydawn101__RavenX-CyberAgent-Qwen3.6-35B-A3B-Opus-4.7-OpenMythos-Pentester-BugHunter-RATH-GGUF@3c5e5e721cf30baa69866984aed55bf0db210d14.json",
+   "sha256": "2d7cdcb34ebae67c3b7e6d5fce24d3e4c76c8cb52d57eca3fe0c8db2bf6aa249"
+  },
+  "dealignai/DeepSeek-V4.1-Flash-1017-UNCENSORED-FP8@c19ca5ca4eaeb79d29fdf08aea8327da95b1116a": {
+   "file": "entries/dealignai__DeepSeek-V4.1-Flash-1017-UNCENSORED-FP8@c19ca5ca4eaeb79d29fdf08aea8327da95b1116a.json",
+   "sha256": "df301e3356cb521d4d303d51b59b84ab156c9dad327b985c1bc750832eb4ff85"
+  },
+  "dealignai/DeepSeek-V4.1-Flash-UNCENSORED-FP8@d61c59ea5e514e25d305b5850e8a432f7a9969f2": {
+   "file": "entries/dealignai__DeepSeek-V4.1-Flash-UNCENSORED-FP8@d61c59ea5e514e25d305b5850e8a432f7a9969f2.json",
+   "sha256": "9fca992e131f8b877bb13d4f9acfb8b6ca44499ed4960ab2c4d98301bd40b23d"
+  },
+  "dealignai/GLM-5.3-CYBERSECURITY-FP8@5915c1b88f998a9c1e1a0c83688e285a08ae3ca5": {
+   "file": "entries/dealignai__GLM-5.3-CYBERSECURITY-FP8@5915c1b88f998a9c1e1a0c83688e285a08ae3ca5.json",
+   "sha256": "a5a6249110dd6f1004cb59363a70aa5666970eeb968f8a2c136a34ce61c2de57"
+  },
+  "dealignai/GLM-5.3-Flash-CYBERSECURITY-W4A16@4c2ee763ff75f3ba50652ee0f024b0b630cd54a0": {
+   "file": "entries/dealignai__GLM-5.3-Flash-CYBERSECURITY-W4A16@4c2ee763ff75f3ba50652ee0f024b0b630cd54a0.json",
+   "sha256": "23cfea771a8f5554cc604ff3f6eaed599b99e6503565b152fb408b4aa43c6c9c"
+  },
+  "dealignai/GLM-5.3-Flash-UNCENSORED-FP8@d5822b068da8ddb301665b48c58718e6e18a2c3a": {
+   "file": "entries/dealignai__GLM-5.3-Flash-UNCENSORED-FP8@d5822b068da8ddb301665b48c58718e6e18a2c3a.json",
+   "sha256": "818eb963989d9b455e455253e87098cb0171b3ba3f1ce3db7837320db2e9a3aa"
+  },
+  "dealignai/GLM-5.3-UNCENSORED-FP8@12170112d07e50d7dbe8e5ca1691f4fd8c1179e1": {
+   "file": "entries/dealignai__GLM-5.3-UNCENSORED-FP8@12170112d07e50d7dbe8e5ca1691f4fd8c1179e1.json",
+   "sha256": "78b38e8ae9f536612574975b36c3475c25eb43e9a403652efe4479334980585a"
+  },
+  "dealignai/GLM-5.3-UNCENSORED-NVFP4@409ddf484d16cb7b13d390e8b30942890164d5af": {
+   "file": "entries/dealignai__GLM-5.3-UNCENSORED-NVFP4@409ddf484d16cb7b13d390e8b30942890164d5af.json",
+   "sha256": "d39abce0dd89a859a63bd4dfdccaf2c343dc9bbd20fa9f1ac0e8ffd291d130f7"
+  },
+  "dealignai/MiMo-V2.6-Flash-RL-UNCENSORED@0bdb11d7f37d3f6939e53f822c2bff518e4852fa": {
+   "file": "entries/dealignai__MiMo-V2.6-Flash-RL-UNCENSORED@0bdb11d7f37d3f6939e53f822c2bff518e4852fa.json",
+   "sha256": "1ae020373ee88b26b00d3532157fd88cf1d8a2c3a1d5c92e877f42125bba9e1d"
+  },
+  "dealignai/Ornith-1.5-122B-UNCENSORED-GGUF@3cadf9f9a4d12802324d0a6fad1a6e4a8d3a44e7": {
+   "file": "entries/dealignai__Ornith-1.5-122B-UNCENSORED-GGUF@3cadf9f9a4d12802324d0a6fad1a6e4a8d3a44e7.json",
+   "sha256": "2892dc4bd4e7f98d59a8c1413e44f644c2a2a2c768ea2a07cbd2c7c3c1067755"
+  },
+  "dealignai/Qwen3.8-Flash-Next-UNCENSORED-FP8@0df192cfd5b20fcd109fb63a5e1f663afa0341d8": {
+   "file": "entries/dealignai__Qwen3.8-Flash-Next-UNCENSORED-FP8@0df192cfd5b20fcd109fb63a5e1f663afa0341d8.json",
+   "sha256": "02df02f42e0bf666045cfb01740f469da902f5a90a4be329c1725a6f6f4ec097"
+  },
+  "deepseek-ai/DeepSeek-V4.1-Flash-1017@1bae0e1088993b9b82de08f59de5be5a34e42170": {
+   "file": "entries/deepseek-ai__DeepSeek-V4.1-Flash-1017@1bae0e1088993b9b82de08f59de5be5a34e42170.json",
+   "sha256": "12e0237767642f6746db28b70ba17c1d595136c0602ae509d1060229c6222546"
+  },
+  "deepseek-ai/DeepSeek-V4.1-Flash@dba1be0a40aa45a94ad051997016db3960a90277": {
+   "file": "entries/deepseek-ai__DeepSeek-V4.1-Flash@dba1be0a40aa45a94ad051997016db3960a90277.json",
+   "sha256": "7ee01f236c4ed3af9ed93a52954206770f541ef3534c9de66c1d3a9cdde306da"
+  },
+  "DuoNeural/Cyber-Ornith-1.5-9B-OBLITERATED@8cbc337279be8f67e338816b0c9cac6bedc81eae": {
+   "file": "entries/DuoNeural__Cyber-Ornith-1.5-9B-OBLITERATED@8cbc337279be8f67e338816b0c9cac6bedc81eae.json",
+   "sha256": "65d1d1248c181b9b15a5c57e69c073bc875cea9c4ee17b55102688cee27c171f"
+  },
+  "HauhauCS/Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF@993a5971fda8f30dd1b7eb2654792ba4415c7460": {
+   "file": "entries/HauhauCS__Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-MTP-GGUF@993a5971fda8f30dd1b7eb2654792ba4415c7460.json",
+   "sha256": "cdc9aeeda2d7cc2dab8cc7472c0a2b279915c3685d75c29ca975675ff5f79509"
+  },
+  "huihui-ai/Huihui-CyberStrike-OffSec-35B-abliterated-GGUF@f028c0a21105244b4aa7a8e50675062ad747ac2c": {
+   "file": "entries/huihui-ai__Huihui-CyberStrike-OffSec-35B-abliterated-GGUF@f028c0a21105244b4aa7a8e50675062ad747ac2c.json",
+   "sha256": "b7f6ecf2a2aae54b0bddd05149d00e9e654014d8b3e6db51fe1b914a3b527ed5"
+  },
+  "huihui-ai/Huihui-CyberStrike-OffSec-35B-abliterated@01521758ee85df1ed4edaf494c48e20704b80204": {
+   "file": "entries/huihui-ai__Huihui-CyberStrike-OffSec-35B-abliterated@01521758ee85df1ed4edaf494c48e20704b80204.json",
+   "sha256": "1b394d499a6fe99ebed8bb3f4a838570570d370209ea53f5bd95f117ac2ca13b"
+  },
+  "huihui-ai/Huihui-GLM-5.3-Flash-abliterated-GGUF@c43a994637c10f5c376b7a471b3afc7663f80b9b": {
+   "file": "entries/huihui-ai__Huihui-GLM-5.3-Flash-abliterated-GGUF@c43a994637c10f5c376b7a471b3afc7663f80b9b.json",
+   "sha256": "ef54b82fb375ff7042350e6a4d77394ceed1afdb5867163a7027ea4eb861ca5b"
+  },
+  "huihui-ai/Huihui-Qwen3.8-27B-abliterated-GGUF@8f1b52408a2f6e317535190c9386f776cacf0079": {
+   "file": "entries/huihui-ai__Huihui-Qwen3.8-27B-abliterated-GGUF@8f1b52408a2f6e317535190c9386f776cacf0079.json",
+   "sha256": "52a0de56db5e3a990c601e1c039ac2dde833f2c8f5c27b78a7854617d71ed16d"
+  },
+  "huihui-ai/Huihui-Qwen3.8-27B-abliterated@739e3c5b89849f6c238ce1e5b70008612ae42cdd": {
+   "file": "entries/huihui-ai__Huihui-Qwen3.8-27B-abliterated@739e3c5b89849f6c238ce1e5b70008612ae42cdd.json",
+   "sha256": "f22aa87f003c66e6a549eff4180b1e20b6e345f7f12ce341746118cb5fe918ef"
+  },
+  "IFM/K2-Horizon-375B-A23B@bd1606f5332f4b055e98993e383ba3fbe40198f3": {
+   "file": "entries/IFM__K2-Horizon-375B-A23B@bd1606f5332f4b055e98993e383ba3fbe40198f3.json",
+   "sha256": "acea9973e5cc3683d90558807d6e3172a014258222fc352684826f59e320e70b"
+  },
+  "inclusionAI/Ling-3.1-flash-1019@dddfee4bb43519a92761fbc5cefe3f0d3ff4aded": {
+   "file": "entries/inclusionAI__Ling-3.1-flash-1019@dddfee4bb43519a92761fbc5cefe3f0d3ff4aded.json",
+   "sha256": "7b5152450aa066731c827bbbbab4d42e14748587e24d4cdce13ea008a2bce9ea"
+  },
+  "medismera/Qwen3.8-27B-OBLITERATED-Mythos-Class-Agentic@528121d7b0b85885a658dfe67e3643b8a4f9337e": {
+   "file": "entries/medismera__Qwen3.8-27B-OBLITERATED-Mythos-Class-Agentic@528121d7b0b85885a658dfe67e3643b8a4f9337e.json",
+   "sha256": "a0f66576aae2a1092b05b32471fd7faaed8491801981632555e7b036b514af0e"
+  },
+  "medismera/Qwen3.8-cyber-RedTeam-Surgical-Abliterated@3c0dcfc1c4958376f591d82b434dca70735eb0e6": {
+   "file": "entries/medismera__Qwen3.8-cyber-RedTeam-Surgical-Abliterated@3c0dcfc1c4958376f591d82b434dca70735eb0e6.json",
+   "sha256": "a7095f8f643b659174ce030156180c317f0c1eb63aae146a9277e09618e7977e"
+  },
+  "MoonMath-ai/DeepSeek-V4.1-Flash-1017-uncensored@bec0742e10fec66d20436a78ffa22a193ec9021c": {
+   "file": "entries/MoonMath-ai__DeepSeek-V4.1-Flash-1017-uncensored@bec0742e10fec66d20436a78ffa22a193ec9021c.json",
+   "sha256": "d1d5622e5690682d58bf84bbed09b442211fa7e30da312e253616ea3146125ae"
+  },
+  "mradermacher/Qwen3.8-cyber-RedTeam-Surgical-Abliterated-GGUF@7d8e7064c099d8f5fde08bcd57bc27073c3988f4": {
+   "file": "entries/mradermacher__Qwen3.8-cyber-RedTeam-Surgical-Abliterated-GGUF@7d8e7064c099d8f5fde08bcd57bc27073c3988f4.json",
+   "sha256": "ed78c262229c8c5b8be33d88e13e0ab86931a7da24d4e2dc5a2c81492a6237c9"
+  },
+  "nvidia/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16@1f8953f7f0935358e3605150d22bc15df062061c": {
+   "file": "entries/nvidia__NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-BF16@1f8953f7f0935358e3605150d22bc15df062061c.json",
+   "sha256": "5ebcc2462fe3b69ee15e76d55563250581635387c3d8e9027288cbab9bf26b01"
+  },
+  "OBLITERATUS/Qwen3.8-27B-OBLITERATED@a58c3b53b3ce71551eafde2ed5ec8df48e0f4ff8": {
+   "file": "entries/OBLITERATUS__Qwen3.8-27B-OBLITERATED@a58c3b53b3ce71551eafde2ed5ec8df48e0f4ff8.json",
+   "sha256": "bfe11997215f7c425432a042bb3c3c948abd2a556f709b921f9d7ac01cc85887"
+  },
+  "orcarouter/DeepSeek-V4.1-Flash-1017-abliterated-GGUF@43fac7992b3d6e750b2e4a52569c1f097c67cd8f": {
+   "file": "entries/orcarouter__DeepSeek-V4.1-Flash-1017-abliterated-GGUF@43fac7992b3d6e750b2e4a52569c1f097c67cd8f.json",
+   "sha256": "363aac707716abe0020479b09645ac567c86aef97621930bff2780f8b36f780e"
+  },
+  "orcarouter/OrcaSAQ-2-Cyber-27B-Uncensored-GGUF@a0ebe1b5ad5c009cd382908585c04b7e9e0cf0c0": {
+   "file": "entries/orcarouter__OrcaSAQ-2-Cyber-27B-Uncensored-GGUF@a0ebe1b5ad5c009cd382908585c04b7e9e0cf0c0.json",
+   "sha256": "702ef71f98c8cc7855312c2ce1d8c72876d016108ff9a0308cf85acc3f75de0b"
+  },
+  "orcarouter/Qwen3.8-27B-Uncensored-FP8@830602f9b81d083db78f60e889bca37b73b74469": {
+   "file": "entries/orcarouter__Qwen3.8-27B-Uncensored-FP8@830602f9b81d083db78f60e889bca37b73b74469.json",
+   "sha256": "1e36878f3678c680229ff29285df0173f1d8cf688297b99dd64b9a600d68581c"
+  },
+  "orcarouter/Qwen3.8-Flash-Next-Uncensored-GGUF@d27c0a15447dd92ae7c90919352c6810496945b1": {
+   "file": "entries/orcarouter__Qwen3.8-Flash-Next-Uncensored-GGUF@d27c0a15447dd92ae7c90919352c6810496945b1.json",
+   "sha256": "8167b5e811b9f005d4b96e69071b336d5a8d1556ce61b86c63484270a4779aea"
+  },
+  "ornith-ai/Ornith-1.5-122B@dfa07bab90e90746ffbfc0b0cba3126eb9265de2": {
+   "file": "entries/ornith-ai__Ornith-1.5-122B@dfa07bab90e90746ffbfc0b0cba3126eb9265de2.json",
+   "sha256": "450b85f2c08f6c0c5aa2d9605c85e64f074612a218e91824fd9fb3025fec532d"
+  },
+  "ornith-ai/Ornith-1.5-9B@489cb97981b8654bcfcf30ce1f94ed1b62e07b53": {
+   "file": "entries/ornith-ai__Ornith-1.5-9B@489cb97981b8654bcfcf30ce1f94ed1b62e07b53.json",
+   "sha256": "99841feb0c880c1a8322d9fb7c95cafc10e0b19ddfbd65d80ed3ef25d90ee2ab"
+  },
+  "philbert440/Qwen3.8-27B-Uncensored-Cyber-GGUF@b2dc3ee9a0216898684d8d0607009626662724d4": {
+   "file": "entries/philbert440__Qwen3.8-27B-Uncensored-Cyber-GGUF@b2dc3ee9a0216898684d8d0607009626662724d4.json",
+   "sha256": "9d60937b329cf34998cf5f25a126ee0c8fea50fe0a6c070249b3066b52411b6c"
+  },
+  "Qwen/Qwen3.5-35B-A3B@59d61f3ce65a6d9863b86d2e96597125219dc754": {
+   "file": "entries/Qwen__Qwen3.5-35B-A3B@59d61f3ce65a6d9863b86d2e96597125219dc754.json",
+   "sha256": "6672d290a1c2f8fb573cb47201996fff0b83fc705ae9ad294e18ab038fc7016c"
+  },
+  "Qwen/Qwen3.6-35B-A3B@995ad96eacd98c81ed38be0c5b274b04031597b0": {
+   "file": "entries/Qwen__Qwen3.6-35B-A3B@995ad96eacd98c81ed38be0c5b274b04031597b0.json",
+   "sha256": "c477db9c1f70cfe8eb17124d9f5ba7ff1838a704c93715ae03c560160021743b"
+  },
+  "Qwen/Qwen3.8-27B@1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0": {
+   "file": "entries/Qwen__Qwen3.8-27B@1d4bf0f2ff6012fd82039f2fa52739d0dd7c60c0.json",
+   "sha256": "d2489e86b2280a52b644742defe061424b356226dfeb3cb8c427efe365fc1fff"
+  },
+  "Qwen/Qwen3.8-Flash-Next@de4b8e4d43b917e7706784d8bb445c9af86a3540": {
+   "file": "entries/Qwen__Qwen3.8-Flash-Next@de4b8e4d43b917e7706784d8bb445c9af86a3540.json",
+   "sha256": "aba26692255d74b40bf4f38691d616e3c68168a4a673fd51ec7644ab3b1c2de6"
+  },
+  "reflection/Beam-1.0-501B-A23B@78f8f654d40a40919b8e9954b40dd879ecb9a692": {
+   "file": "entries/reflection__Beam-1.0-501B-A23B@78f8f654d40a40919b8e9954b40dd879ecb9a692.json",
+   "sha256": "3b6f95b01f47287c760f3cfac9dd97a724f8ce3f99b9251e085bd4e7c0901b2c"
+  },
+  "SyndicateLabs/GLM-5.3-Flash-CYBERSECURITY-GGUF@e8b51a5b8a4519cf12a54b4982fe9c791920cf28": {
+   "file": "entries/SyndicateLabs__GLM-5.3-Flash-CYBERSECURITY-GGUF@e8b51a5b8a4519cf12a54b4982fe9c791920cf28.json",
+   "sha256": "73b7f2ab05e78d087e5564d69fdf1a2cd1cf0db2cf450adbe59bc929d9a1a3f3"
+  },
+  "thinkingmachines/Inkling-2-Small@8361e7a31ae7e9966a49a91d3994fde618936c2b": {
+   "file": "entries/thinkingmachines__Inkling-2-Small@8361e7a31ae7e9966a49a91d3994fde618936c2b.json",
+   "sha256": "1169be1e4415e671b285e5325555238f37b2f012be2947333c560528690d5443"
+  },
+  "XiaomiMiMo/MiMo-V2.6-Flash-RL@5711b268169967567844e1e560e8a3966da959b1": {
+   "file": "entries/XiaomiMiMo__MiMo-V2.6-Flash-RL@5711b268169967567844e1e560e8a3966da959b1.json",
+   "sha256": "211c607938712deffb16febf538dd874119457223ebe8725fa87b39ceea46d13"
+  },
+  "XiaomiMiMo/MiMo-V2.6-Pro-RL@73875d00b30a89ef8cc353a0b60b0e9f9561952d": {
+   "file": "entries/XiaomiMiMo__MiMo-V2.6-Pro-RL@73875d00b30a89ef8cc353a0b60b0e9f9561952d.json",
+   "sha256": "0ca57ac86581d2b08239ffe026935a65944215f125159e46a4cee63c50b52893"
+  },
+  "zai-org/GLM-5.3-Flash@eb9eb208eb0d988989d07a6a12d0fdeb5f52574a": {
+   "file": "entries/zai-org__GLM-5.3-Flash@eb9eb208eb0d988989d07a6a12d0fdeb5f52574a.json",
+   "sha256": "972e00270fff4b721a8df1ab94507f03a094f3600ae541672c6a035c7f9d5718"
+  },
+  "zai-org/GLM-5.3@ba32f8c19c8738e2c57c71798c601d477a7bf844": {
+   "file": "entries/zai-org__GLM-5.3@ba32f8c19c8738e2c57c71798c601d477a7bf844.json",
+   "sha256": "ec11036679a412dc07aaacc120ff9f99a0fa59243764d2c3f8bbb020d855a478"
+  }
+ }
+}

@@ -1,0 +1,98 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "orcarouter/DeepSeek-V4.1-Flash-1017-abliterated-GGUF",
+ "revision": "43fac7992b3d6e750b2e4a52569c1f097c67cd8f",
+ "captured": "2026-11-15T06:19:45+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2900,
+   "git_oid": "0454c3565b6ee29dec8896a249030d42d7d1691e"
+  },
+  {
+   "path": "Mix-128G/DeepSeek-V4.1-Flash-1017-abliterated-Mix-128G-00001-of-00005.gguf",
+   "size": 548777536,
+   "sha256": "0d4eedd085f38e3190c7dbd7a3d9e1467a7ccc2b8f6327fc733b18a8ea3a20fa",
+   "lfs_pointer_oid": "bfc5fddafa96e31d317ad80d6919215be85b345a"
+  },
+  {
+   "path": "Mix-128G/DeepSeek-V4.1-Flash-1017-abliterated-Mix-128G-00002-of-00005.gguf",
+   "size": 110595290592,
+   "sha256": "bd72eee5a1ecccb2ab188a740c5bcd3ab484330f024b5d202779863ca5e512d4",
+   "lfs_pointer_oid": "540e6ae880d3898393ec04ce2f573cd966c8c375"
+  },
+  {
+   "path": "Mix-128G/DeepSeek-V4.1-Flash-1017-abliterated-Mix-128G-00003-of-00005.gguf",
+   "size": 47934927328,
+   "sha256": "3c86e27595d9e45a188efbf145a1163f8df60bb606365c5ee702ef01915bd1e6",
+   "lfs_pointer_oid": "8248fd0d908100ac5acd9976f11bf9ae2b905938"
+  },
+  {
+   "path": "Mix-128G/DeepSeek-V4.1-Flash-1017-abliterated-Mix-128G-00004-of-00005.gguf",
+   "size": 47884362016,
+   "sha256": "d7fab155dcebfea89e6c9743f5f523bb766354f560305c49cf285a5c29765a04",
+   "lfs_pointer_oid": "1dbfdcc701edaf4a67028075f8017726ec1043f1"
+  },
+  {
+   "path": "Mix-128G/DeepSeek-V4.1-Flash-1017-abliterated-Mix-128G-00005-of-00005.gguf",
+   "size": 17607926944,
+   "sha256": "ecbf6562afd1b0559f08da31babd40d0ce1346a46a70f3213004777195698780",
+   "lfs_pointer_oid": "f37f7967ae44b5e7df9994495ed12edbd582f9ca"
+  },
+  {
+   "path": "Mix-256G/DeepSeek-V4.1-Flash-1017-abliterated-Mix-256G-00001-of-00007.gguf",
+   "size": 709084736,
+   "sha256": "2cb066de483877f75b3dc79936b1fccf34aeecc60461701e5c39c98d7f922e03",
+   "lfs_pointer_oid": "d4f191f8b20b994990ac66aff57232533dad7160"
+  },
+  {
+   "path": "Mix-256G/DeepSeek-V4.1-Flash-1017-abliterated-Mix-256G-00002-of-00007.gguf",
+   "size": 110595290592,
+   "sha256": "342b6ee30a33f02fcef1d261ec7e700907f8b114370ebe90c228339f686a8c1b",
+   "lfs_pointer_oid": "a852be56583cec04d8afb33dc1f9b9ca6ad56f70"
+  },
+  {
+   "path": "Mix-256G/DeepSeek-V4.1-Flash-1017-abliterated-Mix-256G-00003-of-00007.gguf",
+   "size": 46798562592,
+   "sha256": "b2583b9da6c3598f43d22714f3216709ab3160c618ad94e36d491a3bb20b5d2b",
+   "lfs_pointer_oid": "1e9ef6dd61c63fda3902ec9a2003ff270f3731eb"
+  },
+  {
+   "path": "Mix-256G/DeepSeek-V4.1-Flash-1017-abliterated-Mix-256G-00004-of-00007.gguf",
+   "size": 47706985792,
+   "sha256": "de9c5f8f3462c7df3db7bb2b79301eeab9d7874f581a9fa574ae4fffe127c602",
+   "lfs_pointer_oid": "f0cb382330a07d287462906ae2dca1f81f9bf781"
+  },
+  {
+   "path": "Mix-256G/DeepSeek-V4.1-Flash-1017-abliterated-Mix-256G-00005-of-00007.gguf",
+   "size": 46565998336,
+   "sha256": "1202e0ae311beb38de1b0899ab3cbba485385299a62e8e136e01fa922f0aeb13",
+   "lfs_pointer_oid": "81f4bdbf5f9f0f05bbe0210f548ec796d2d5381b"
+  },
+  {
+   "path": "Mix-256G/DeepSeek-V4.1-Flash-1017-abliterated-Mix-256G-00006-of-00007.gguf",
+   "size": 47857178816,
+   "sha256": "dc7ce9ee6910e8f46a201e54c96e47b6b3bc9380c88b6187be3c860a0d0b1074",
+   "lfs_pointer_oid": "59e5852302dfd8f7af78e6b4949495fe02cad6bc"
+  },
+  {
+   "path": "Mix-256G/DeepSeek-V4.1-Flash-1017-abliterated-Mix-256G-00007-of-00007.gguf",
+   "size": 46145195616,
+   "sha256": "ed00667671a8ca5c48da45e022b6482fc2d88a21848a98d26fba1d1f2848b429",
+   "lfs_pointer_oid": "7d21acc3ea6ebc52d0360aa8c73bb010753561c5"
+  },
+  {
+   "path": "README.md",
+   "size": 15591,
+   "git_oid": "056e6f701bb18aac56383d5bdaff01eb6d4cd3f8"
+  },
+  {
+   "path": "imatrix.gguf",
+   "size": 1578144640,
+   "sha256": "b5c1af7cc143bc4347d9de7af73bc5ee83238be2c534f058722364c6144f7db0",
+   "lfs_pointer_oid": "833eff0a24a0c72ab2a68ee31fc1ab362d553b20"
+  }
+ ]
+}

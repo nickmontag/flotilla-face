@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "flotilla-face"
+version = "0.1.0"
+description = "Join the Pirate Face swarm with the disk and bandwidth you can spare: Flotilla Face gives each seeder the model shards that most need another copy."
+keywords = ["bittorrent", "seeding", "pirate face", "hugging face", "open weights", "preservation", "libtorrent"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Environment :: Web Environment",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: MacOS",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Communications :: File Sharing",
+]
+readme = "README.md"
+license = "MIT"
+authors = [{ name = "Nick Montag" }]
+requires-python = ">=3.11"
+dependencies = [
+  "cryptography>=42",
+  "certifi>=2024.2.2",
+  "libtorrent>=2.0.9",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[project.scripts]
+flotilla = "flotilla.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["flotilla"]
+
+# Listed, so a local build never picks up untracked files that happen to sit in the folder.
+[tool.hatch.build.targets.sdist]
+include = ["/flotilla", "/tests", "/scripts", "/install.sh", "/README.md", "/DESIGN.md",
+           "/CONTRIBUTING.md", "/SECURITY.md", "/LICENSE"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["swarm: runs two local libtorrent sessions on 127.0.0.1 (slower)"]

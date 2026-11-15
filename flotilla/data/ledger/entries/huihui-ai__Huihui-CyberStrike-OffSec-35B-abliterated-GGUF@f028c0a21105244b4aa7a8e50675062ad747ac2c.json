@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "huihui-ai/Huihui-CyberStrike-OffSec-35B-abliterated-GGUF",
+ "revision": "f028c0a21105244b4aa7a8e50675062ad747ac2c",
+ "captured": "2026-11-15T06:19:45+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2018,
+   "git_oid": "d1a9414d4f0d3febfcc218d11e7778ca28eceab8"
+  },
+  {
+   "path": "Huihui-CyberStrike-OffSec-35B-abliterated-Q4_K.gguf",
+   "size": 21713462464,
+   "sha256": "70d1a7f32ca0f563716c8c256628730b2912e56aaeb534d685d3a96e02704f88"
+  },
+  {
+   "path": "Huihui-CyberStrike-OffSec-35B-abliterated-Q5_K.gguf",
+   "size": 25347531968,
+   "sha256": "65b059f63208fca3a1d176704a9dfaa0fa4e84bdbc4585ee583692615e099d29"
+  },
+  {
+   "path": "Huihui-CyberStrike-OffSec-35B-abliterated-Q6_K.gguf",
+   "size": 29208730816,
+   "sha256": "873d9fc4c811a2bbdd4db286c9d60cf31605444a677661b1742a7b436476d09f"
+  },
+  {
+   "path": "Huihui-CyberStrike-OffSec-35B-abliterated-Q8_0.gguf",
+   "size": 37802149056,
+   "sha256": "046034b9d7394940d0ec9a5b82a1ef40f5991775c8b55beb193edb11bd057ffd"
+  },
+  {
+   "path": "Huihui-CyberStrike-OffSec-35B-abliterated-bf16.gguf",
+   "size": 71066994176,
+   "sha256": "98241b01ff73b85b8d8e88a6bac8ee12948b67ed3956e173bc68747f86f38e68"
+  },
+  {
+   "path": "README.md",
+   "size": 2458,
+   "git_oid": "c2f04d4e4ace91c3a870c671bb5e9a94b90b1cf9"
+  },
+  {
+   "path": "mmproj-model-bf16.gguf",
+   "size": 902822080,
+   "sha256": "49f55be43591521d92edd9657d67c7a4dc294221f7fa290ad960c698045289d9"
+  }
+ ]
+}

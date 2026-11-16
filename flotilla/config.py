@@ -37,6 +37,11 @@ DEFAULT_FEED_URLS: list[str] = [
 ]
 FEED_HOSTS: tuple[str, ...] = DEFAULT_ALLOWED_HOSTS + ("raw.githubusercontent.com",)
 
+# How often a node may swap what it holds for what the swarm needs most (Config.reorient), in seconds.
+# "never" isn't here: the node then only swaps when its user asks.
+REORIENT_EVERY: dict[str, float] = {"daily": 86400.0, "weekly": 7 * 86400.0, "monthly": 30 * 86400.0}
+REORIENT_CHOICES: tuple[str, ...] = (*REORIENT_EVERY, "never")
+
 # Public keys of feed editors (minisign format). Ship your project's key here.
 BUILTIN_EDITOR_KEYS: list[str] = [
     "RWQOOQ0x3qaNRuBCX933UEwMo/bKYR8GE/Ae/qQrswgEHlQHCBu4RixD",  # Flotilla project list, key ID 468DA6DE310D390E
@@ -48,6 +53,14 @@ class Config:
     folder: Path = Path.home() / "flotilla-seeds"
     budget_gb: float = 100.0
     reserve_gb: float = 20.0
+
+    # Reorienting: how often this node swaps the lowest-priority pieces it holds for the pieces the
+    # swarm needs most ("daily", "weekly", "monthly", or "never": only when you ask), and the most
+    # it swaps each time. Between reorientations what it holds stays; free space is still filled, and
+    # your own changes (a model you add, skip or set space aside for) still apply at once. Pieces of
+    # models you added or set space aside for are never swapped out.
+    reorient: str = "weekly"
+    churn_gb: float = 20.0
 
     upload_mbps: float = 10.0
     download_mbps: float = 100.0
@@ -124,6 +137,7 @@ class Config:
 
 _SECTIONS = {
     "storage": ["folder", "budget_gb", "reserve_gb"],
+    "reorient": ["every", "churn_gb"],
     "network": ["upload_mbps", "download_mbps", "upload_share", "download_share", "monthly_upload_cap_gb",
                 "memory_gb", "listen_port", "port_forwarding", "bind_interface", "hf_fallback", "hf_gb_per_day"],
     "policy": ["licenses", "include_unlisted", "include_rescue", "seed_code_files", "allow_pickle",
@@ -150,7 +164,7 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
             if k not in sec:
                 continue
             attr = {("feed", "urls"): "feed_urls", ("feed", "allowed_hosts"): "feed_allowed_hosts",
-                    ("feed", "local"): "local_feed",
+                    ("feed", "local"): "local_feed", ("reorient", "every"): "reorient",
                     ("dashboard", "enabled"): "dashboard", ("dashboard", "port"): "dashboard_port"}.get((section, k), k)
             v = sec[k]
             if attr in ("folder", "local_feed"):
@@ -166,6 +180,10 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
         raise ValueError("storage.budget_gb must be positive")
     if cfg.hf_gb_per_day < 0:
         raise ValueError("network.hf_gb_per_day can't be negative")
+    if cfg.reorient not in REORIENT_CHOICES:
+        raise ValueError(f"reorient.every must be one of: {', '.join(REORIENT_CHOICES)}")
+    if isinstance(cfg.churn_gb, bool) or not isinstance(cfg.churn_gb, (int, float)) or cfg.churn_gb < 0:
+        raise ValueError("reorient.churn_gb must be a number of GB, 0 or more")
     # Flotilla's own requests (listings, pieces from Hugging Face) leave by the same pin as torrent traffic.
     pin(cfg.bind_interface)
     return cfg
@@ -196,6 +214,10 @@ def render_config(cfg: Config) -> str:
 folder = {_toml_str(folder)}      # where seeded files live (not a temp dir)
 budget_gb = {_toml_str(cfg.budget_gb)}            # most disk Flotilla may use
 reserve_gb = {_toml_str(cfg.reserve_gb)}           # always leave this much free on the drive
+
+[reorient]
+every = {_toml_str(cfg.reorient)}         # swap low-priority pieces for what the swarm needs most: "daily", "weekly", "monthly" or "never"
+churn_gb = {_toml_str(cfg.churn_gb)}           # most to swap each time; models you added or set space aside for are never swapped out
 
 [network]
 upload_mbps = {_toml_str(cfg.upload_mbps)}          # your line's upload speed, megabits/s

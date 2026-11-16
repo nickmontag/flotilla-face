@@ -49,7 +49,8 @@ existing per-repo torrent is enough.
                                    │
                                    ▼
           engine.Engine — main libtorrent session: file priorities, rate limits,
-                          verify on completion, resume data, replan every 6 h
+                          verify on completion, resume data, replan every 6 h,
+                          reorient (swap held pieces) on the user's schedule
                                    │  files no peer is sending
                                    ▼
           hfpieces.py — missing pieces from HF (netsafe.fetch_range), checked against
@@ -185,8 +186,14 @@ density     = value / (size + boundary-piece overhead)
 key         = density^spread × (−1 / ln u),  u = H(node_id ‖ infohash ‖ path) ∈ (0,1)
 ```
 
-Units are taken in descending `key` order while they fit the budget and the swarm limit. Files held for
-less than `min_hold_days` are taken first, unconditionally.
+A plan is built in this order, each step taking units while they fit the budget and the swarm limit:
+
+1. files held for less than `min_hold_days`, unconditionally;
+2. space the user set aside for a model: what's held of it, then its other units by `key`;
+3. everything else that's held, the user's own models first, then the highest `density` first (so when
+   the space shrinks, the least valuable goes);
+4. free space: unheld units in descending `key` order;
+5. swaps, up to `churn_bytes` (see [Reorienting](#reorienting)).
 
 Why each piece is there:
 
@@ -200,7 +207,8 @@ Why each piece is there:
   node id, so replanning on the same data gives the same answer (no churn). `spread` (default 3) sets
   how greedy a single node is: a 2× better unit wins about 89% of pairwise draws, 3× about 96%.
 - **Feedback.** As nodes fetch, the next probe sees their bitfields, so scarcity falls and later
-  nodes move on to other shards. Replanning is the only control loop; no coordinator is needed.
+  nodes move on to other shards. Replanning and reorienting are the only control loops; no coordinator
+  is needed.
 - **Upload speed** changes *what* you hold. A slow-upload node gets almost no throughput term, so it
   preserves rare shards. A fast-upload node also takes shards of busy swarms where its bandwidth
   matters.
@@ -214,7 +222,40 @@ Tested properties (`tests/test_candidates_planner.py`):
 - 4 nodes × 20 shards out of 200 cover ≥ 55 distinct shards (≈69 expected), with stable draws;
 - whole small models are taken whole;
 - held files are sticky;
-- the swarm limit holds.
+- the swarm limit holds;
+- with no churn allowed, what's held stays; with some, the lowest-value held units go first, no more
+  than allowed, and never a model the user chose.
+
+### Reorienting
+
+A node used to be free to drop any held file at every 6-hourly replan, held back only by `hold_bonus`
+and `min_hold_days`. Now the user sets how often it happens and how much moves: `[reorient] every`
+(`daily`, `weekly`, `monthly`, `never`) and `churn_gb`.
+
+- **The swap step.** Unheld units are tried in `key` order (the node's own weighted draw, so nodes
+  that reorient on the same day don't all fetch the same shard). For each, held units are taken as
+  victims in ascending `density` until it fits. A victim must be worth less than the unit coming in:
+  its `density` includes `hold_bonus`, so a swap has to be 1.5× better by default. The bytes dropped
+  count against `churn_bytes`, and a swap that would go past it is skipped, never trimmed: the limit is
+  a hard one. `Plan.churn_short` records the smallest swap that was skipped for that reason, so the
+  dashboard can say that the churn size is smaller than one piece.
+- **Never victims.** Files held for less than `min_hold_days`, and models the user chose by hand
+  (`Feed.manual`: models in their own list file, and models with space set aside). Reordering the list
+  is not choosing a model: it changes priorities, which the next reorientation follows.
+- **The user's own models don't wait.** An unheld unit of a `manual` model may displace victims at any
+  replan, and doesn't count against `churn_bytes`. Otherwise a model added to a full node would wait a
+  month.
+- **The schedule.** `state.json` keeps `reorient.last`. A replan passes `churn_bytes = churn_gb` when
+  `last + period` has passed or the user pressed Reorient now, and 0 otherwise. A new node's first
+  plan sets `last`, so its first reorientation comes one period after it starts. The look at the swarm
+  that follows is brought forward to the moment one falls due.
+- **Said ahead of time.** After each plan the engine runs the planner once more with the full churn
+  size and keeps the result (`reorient_preview`): the units that would go out and come in, by model.
+  The planner is a pure function, so the preview is what the reorientation will do if the swarm looks
+  the same then. `reorient.result` in `state.json` keeps what the last one did.
+- **What still happens between reorientations.** Free space is filled; a smaller budget drops the
+  least valuable held units; a model that leaves the candidates (skipped, denied, blocked, licence no
+  longer allowed) is dropped. None of that is churn.
 
 ## Engine
 
@@ -228,7 +269,7 @@ Tested properties (`tests/test_candidates_planner.py`):
   hashing in a worker thread. (Hashing straight away raced the disk writer: a file could look short. One
   delayed retry stays as a backstop.)
 - **Dropping some files of a kept torrent.** Remove the torrent, delete those files, re-add without
-  resume data (a recheck of what remains). This is rare, because held files are sticky.
+  resume data (a recheck of what remains). This happens at a reorientation, or when the space shrinks.
 - **Restart.** The verified `.torrent`, resume data (with the info dict) and per-file expected hashes
   are stored under the state dir. Seeding resumes before any network lookup. Anything mid-verification
   is re-queued.

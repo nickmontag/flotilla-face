@@ -6,8 +6,10 @@ pulling from this node so the upload numbers move. Nothing touches the
 internet: no trackers, no DHT, no Pirate Face or Hugging Face calls.
 
 Everything works, including Replan (re-probes the fake swarm), Drop and
-settings (saved to the demo's own config). Files live in a temp folder
-that is deleted on exit.
+settings (saved to the demo's own config). The partial seeder shows up after
+the node's first plan, so some of what the node holds is then over-copied and
+the Reorienting card has a swap to show (Reorient now carries it out). Files
+live in a temp folder that is deleted on exit.
 """
 
 from __future__ import annotations
@@ -123,12 +125,22 @@ def main() -> int:
     cfg.whole_model_under_gb = 0.001                   # the 0.3 MB model is kept whole
     cfg.upload_mbps, cfg.download_mbps, cfg.monthly_upload_cap_gb = 1, 20, 0
     cfg.probe_seconds, cfg.refresh_hours = 4, 6
+    cfg.reorient, cfg.churn_gb, cfg.min_hold_days = "weekly", 0.002, 0   # swap up to 2 MB; nothing is too new to go
     cfg.dashboard_port, cfg.include_unlisted = args.port, False
     cfg.path = base / "config.toml"
     cfg.path.write_text(render_config(cfg))
     state = State(base / "state")
     eng = DemoEngine(cfg, state, log=lambda m: print("[node]", m, flush=True), listen_host="127.0.0.1",
-                     dht=False, connect=[a_addr, c_addr], catalogue=catalogue)
+                     dht=False, connect=[a_addr], catalogue=catalogue)
+
+    def late_seeder():
+        """The partial seeder is found after the first plan: its shards are then the over-copied ones."""
+        while not eng.stop.is_set() and not eng._plans_applied:
+            time.sleep(0.5)
+        eng.connect.append(c_addr)
+        eng.commands.put(("replan", {}))
+
+    threading.Thread(target=late_seeder, daemon=True).start()
 
     def downloader():
         """A slow peer that keeps pulling the big model from this node only."""

@@ -11,7 +11,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from . import __version__
-from .config import BUILTIN_EDITOR_KEYS, CONFIG_PATH, STATE_DIR, Config, State, load_config, render_config
+from .config import (BUILTIN_EDITOR_KEYS, CONFIG_PATH, REORIENT_CHOICES, STATE_DIR, Config, State, load_config,
+                     render_config)
 from .feed import BUNDLED_FEED, LOCAL_EXAMPLE, FeedError, apply_local, load_feed, origin_view, parse_feed
 from .ledger import LedgerError, load_ledger
 from .planner import GB, Params, Plan, plan as make_plan
@@ -95,6 +96,19 @@ def cmd_init(args) -> int:
     dshare = _ask("Share of download to use while filling (0.1 to 1.0)", cfg.download_share, float)
     cap = _ask("Monthly upload cap in GB (0 = none)", cfg.monthly_upload_cap_gb, float)
 
+    print("\nWhat the swarm needs changes. Flotilla can reorient on a schedule: drop the lowest-priority pieces")
+    print("you hold and fetch the ones the swarm needs most. Models you add or set space aside for stay.")
+
+    def every(raw: str) -> str:
+        if raw.strip().lower() not in REORIENT_CHOICES:
+            raise ValueError(raw)
+        return raw.strip().lower()
+
+    reorient = _ask(f"How often to reorient ({', '.join(REORIENT_CHOICES)})", cfg.reorient, every)
+    churn = cfg.churn_gb
+    if reorient != "never":
+        churn = max(0.0, _ask("Most to swap each time, in GB", churn, parse_gb))
+
     from .netinfo import internet_route
 
     bind, pf = cfg.bind_interface, cfg.port_forwarding
@@ -149,6 +163,7 @@ def cmd_init(args) -> int:
     cfg.monthly_upload_cap_gb, cfg.port_forwarding, cfg.licenses = cap, pf, licenses
     cfg.bind_interface = bind
     cfg.hf_fallback, cfg.hf_gb_per_day = hf, hf_gb
+    cfg.reorient, cfg.churn_gb = reorient, churn
 
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_config(cfg))
@@ -534,8 +549,20 @@ def print_plan(p: Plan, rejected, verbose: bool) -> None:
         if verbose:
             for u in sorted(pick.units, key=lambda u: -u.key)[:12]:
                 print(f"    {u.label:<60} avail {u.availability:>4g}  rate {u.rate:.3f}/GB")
-    if p.drops:
-        print(f"\nWould drop {len(p.drops)} held file(s) in favour of higher-need ones.")
+    if p.swap_out:
+        gb = lambda units: sum(u.size for u in units) / GB
+        print(f"\nNext reorientation: would drop {gb(p.swap_out):.1f} GB of the lowest-priority pieces held "
+              f"for {gb(p.swap_in):.1f} GB the swarm needs more:")
+        for sign, units in (("-", p.swap_out), ("+", p.swap_in)):
+            for u in units[: (len(units) if verbose else 6)]:
+                print(f"  {sign} {u.cand.repo}  {u.label}  ({human(u.size)}, held by {u.availability:g} other peer(s))")
+            if not verbose and len(units) > 6:
+                print(f"  {sign} … and {len(units) - 6} more (use -v)")
+    elif p.churn_short:
+        print(f"\nNext reorientation: nothing fits. The smallest swap worth making is "
+              f"{p.churn_short / GB:.1f} GB, more than reorient.churn_gb allows.")
+    if len(p.drops) > sum(len(u.files) for u in p.swap_out):
+        print(f"\nWould drop {len(p.drops)} held file(s) that no longer fit the plan.")
     if rejected:
         print(f"\nSkipped {len(rejected)} model(s):")
         for r in rejected[: (len(rejected) if verbose else 12)]:
@@ -570,7 +597,8 @@ def cmd_plan(args) -> int:
     budget = int(max(0, min(cfg.budget_gb * GB, held_bytes + free - cfg.reserve_gb * GB)))
     params = Params(budget, cfg.upload_bps, cfg.download_bps, cfg.max_torrents, cfg.spread, cfg.hold_bonus,
                     cfg.min_hold_days, int(cfg.whole_model_under_gb * GB), time.time(),
-                    allot={r: int(gb * GB) for r, gb in feed.allot_gb.items()})
+                    allot={r: int(gb * GB) for r, gb in feed.allot_gb.items()},
+                    churn_bytes=int(cfg.churn_gb * GB), manual=feed.manual)
     p = make_plan(cands, params, state.node_id)
     if args.json:
         print(json.dumps({

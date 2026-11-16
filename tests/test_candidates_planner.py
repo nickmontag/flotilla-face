@@ -344,6 +344,123 @@ def test_held_files_are_sticky_and_forced():
     assert not p.drops
 
 
+def held_shards(c, names, avail, since=1e9 - 30 * 86400):
+    """Mark shards as held a month ago (past min_hold_days), with this many other holders."""
+    for f in c.files:
+        if f.repo_path in names:
+            f.held, f.held_since, f.availability = True, since, avail
+
+
+def shards(budget_gb, **kw):
+    """Planner params that treat every model shard by shard, however small it is."""
+    return params(budget_gb, whole_model_under_bytes=0, **kw)
+
+
+def weights(p, c):
+    return {f.repo_path for f in p.picks[c.infohash].files if f.kind == "weight"} if c.infohash in p.picks else set()
+
+
+def test_between_reorientations_what_is_held_stays():
+    c = cand("org/m", n_shards=20)
+    for f in c.files:
+        f.availability = 0                     # every other shard has no copy at all
+    held_shards(c, {"model-00019.safetensors"}, avail=6)
+    p = plan([c], shards(6, churn_bytes=0), "node-a")      # room for one shard only
+    assert weights(p, c) == {"model-00019.safetensors"} and not p.drops and not p.swap_out
+    # ...but the plan still says what it would choose between
+    assert [u.label for u in p.lowest] == ["model-00019.safetensors"]
+    assert p.top and all(u.availability == 0 and not u.held for u in p.top)
+
+
+def test_reorienting_swaps_the_lowest_for_what_the_swarm_needs_most():
+    c = cand("org/m", n_shards=20)
+    for f in c.files:
+        f.availability = 0
+    held_shards(c, {"model-00019.safetensors"}, avail=6)
+    p = plan([c], shards(6, churn_bytes=5 * GB), "node-a")
+    assert [u.label for u in p.swap_out] == ["model-00019.safetensors"]
+    assert len(p.swap_in) == 1 and p.swap_in[0].availability == 0
+    assert weights(p, c) == {p.swap_in[0].label}
+    assert [f.repo_path for _, f in p.drops] == ["model-00019.safetensors"]
+
+
+def test_churn_size_limits_how_much_is_swapped():
+    low = cand("org/low", n_shards=4)
+    need = cand("org/need", n_shards=10)
+    held_shards(low, {f.repo_path for f in low.files}, avail=9)
+    for f in need.files:
+        f.availability = 0
+    budget = 20.1                                           # the four held shards fill it
+    p = plan([low, need], shards(budget, churn_bytes=11 * GB), "node-a")
+    assert len(p.swap_out) == 2 and len(p.swap_in) == 2     # 10 GB out of the 11 allowed; a third wouldn't fit
+    assert sum(u.size for u in p.swap_out) <= 11 * GB and p.total_bytes <= budget * GB
+    assert len(weights(p, low)) == 2 and len(weights(p, need)) == 2
+    # a churn size smaller than one piece swaps nothing, and says how much the smallest swap needs
+    p = plan([low, need], shards(budget, churn_bytes=4 * GB), "node-a")
+    assert not p.swap_out and not p.drops and p.churn_short == 5 * GB
+    # no limit: everything worth swapping goes
+    p = plan([low, need], shards(budget), "node-a")
+    assert len(p.swap_out) == 4 and low.infohash not in p.picks
+
+
+def test_the_lowest_priority_goes_out_first():
+    a = cand("org/a", n_shards=2, priority=0.9)
+    b = cand("org/b", n_shards=2, priority=0.2)
+    need = cand("org/need", n_shards=10, priority=0.9)
+    for c in (a, b):
+        held_shards(c, {f.repo_path for f in c.files}, avail=2)
+    for f in need.files:
+        f.availability = 0
+    p = plan([a, b, need], shards(20.1, churn_bytes=10 * GB), "node-a")
+    assert {u.cand.repo for u in p.swap_out} == {"org/b"} and len(p.swap_out) == 2
+    assert len(weights(p, a)) == 2
+
+
+def test_models_you_chose_are_never_swapped_out():
+    mine = cand("org/mine", n_shards=4, priority=0.1)
+    need = cand("org/need", n_shards=10, priority=0.9)
+    held_shards(mine, {f.repo_path for f in mine.files}, avail=9)
+    for f in need.files:
+        f.availability = 0
+    p = plan([mine, need], shards(20.1, manual=frozenset({"org/mine"})), "node-a")   # no churn limit at all
+    assert not p.swap_out and not p.drops and not p.lowest and len(weights(p, mine)) == 4
+    # set aside space for it instead: the same
+    p = plan([mine, need], shards(20.1, allot={"org/mine": 21 * GB}, manual=frozenset({"org/mine"})), "node-a")
+    assert not p.drops and len(weights(p, mine)) == 4
+
+
+def test_a_model_you_add_comes_in_without_waiting_for_a_reorientation():
+    low = cand("org/low", n_shards=4, priority=0.2)
+    mine = cand("org/mine", n_shards=2, priority=1.0)
+    held_shards(low, {f.repo_path for f in low.files}, avail=9)
+    for f in mine.files:
+        f.availability = 1
+    p = plan([low, mine], shards(20.1, churn_bytes=0), "node-a")
+    assert mine.infohash not in p.picks and not p.drops                # just another model: it waits
+    p = plan([low, mine], shards(20.1, churn_bytes=0, manual=frozenset({"org/mine"})), "node-a")
+    assert len(weights(p, mine)) == 2 and len(weights(p, low)) == 2    # yours: room is made now
+    assert {u.cand.repo for u in p.swap_out} == {"org/low"}
+
+
+def test_a_swap_has_to_be_clearly_better():
+    c = cand("org/m", n_shards=4)
+    for f in c.files:
+        f.availability = 1
+    held_shards(c, {"model-00000.safetensors"}, avail=1.2)   # a little better covered than the rest
+    p = plan([c], shards(6), "node-a")
+    assert not p.swap_out and weights(p, c) == {"model-00000.safetensors"}     # not worth a re-download
+    p = plan([c], shards(6, hold_bonus=1.0), "node-a")
+    assert [u.label for u in p.swap_out] == ["model-00000.safetensors"]
+
+
+def test_less_space_drops_the_least_valuable_first():
+    c = cand("org/m", n_shards=4)
+    held_shards(c, {f.repo_path for f in c.files}, avail=1)
+    held_shards(c, {"model-00002.safetensors"}, avail=8)
+    p = plan([c], shards(15.1, churn_bytes=0), "node-a")     # was 20 GB; one shard has to go
+    assert [f.repo_path for _, f in p.drops] == ["model-00002.safetensors"] and not p.swap_out
+
+
 def test_max_torrents():
     cs = [cand(f"org/m{i}", n_shards=2, shard=1 * GB) for i in range(10)]
     p = plan(cs, params(1000, max_torrents=3, whole_model_under_bytes=0), "node-a")

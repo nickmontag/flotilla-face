@@ -32,9 +32,10 @@ from pathlib import Path
 
 import libtorrent as lt
 
-from . import USER_AGENT, __version__
+from . import USER_AGENT, __version__, netsafe
 from .candidates import Rejection, TorrentCand, gather
 from .config import BUILTIN_EDITOR_KEYS, Config, State, memory_budget, own_memory
+from .hfpieces import HFPieces
 from .history import History
 from .ledger import Ledger, load_ledger
 from .remote import WRITE_EVERY, snapshot_wanted, take_requests, write_snapshot
@@ -93,7 +94,8 @@ def session_settings(cfg: Config, *, port: int, fingerprint: str, listen_host: s
         "allow_multiple_connections_per_ip": listen_host is not None,
         # Memory. libtorrent 2.x lets each web seed ask for 5 x 16 MiB at once and buffers those
         # replies, so a node fetching several big models from web seeds grew to 2-4 GB. Smaller
-        # requests, two at a time, keep it to a few hundred MB at the same speed.
+        # requests, two at a time, keep it to a few hundred MB at the same speed. (Web seeds are
+        # dropped now, see _atp; these stay in case one is ever added.)
         "urlseed_max_request_bytes": 2 * 1024 * 1024,
         "urlseed_pipeline_size": 2,
         "max_queued_disk_bytes": 32 * 1024 * 1024,
@@ -115,7 +117,14 @@ def session_settings(cfg: Config, *, port: int, fingerprint: str, listen_host: s
 
 def _atp(raw: bytes, save_path: Path, prios: list[int]) -> lt.add_torrent_params:
     atp = lt.add_torrent_params()
-    atp.ti = lt.torrent_info(lt.bdecode(raw))
+    d = lt.bdecode(raw)
+    # Drop web seeds (outside the info dict, so the infohash is unchanged). Pirate Face's redirects
+    # to Hugging Face download links that expire after an hour, and libtorrent never asks a web
+    # seed again for a file it redirected: every file not done within the hour stalled for good.
+    # A probe also counted the web seed as a seeder of every file. hfpieces does the job instead.
+    for k in (b"url-list", b"httpseeds"):
+        d.pop(k, None)
+    atp.ti = lt.torrent_info(d)
     atp.save_path = str(save_path)
     atp.file_priorities = prios
     atp.flags = atp.flags & ~(lt.torrent_flags.auto_managed | lt.torrent_flags.paused)
@@ -352,6 +361,9 @@ class Engine:
         self.last_rejected: list[Rejection] = []
         self.dashboard = None
         self._bind_check: tuple[float, bool | None] = (0.0, None)
+        netsafe.pin(cfg.bind_interface)     # our own requests leave by the same pin as torrent traffic
+        # Pieces no peer can supply, from Hugging Face (see hfpieces); its thread starts in run().
+        self.hf = HFPieces(self)
         # A verification queue does not survive restarts: anything that was
         # mid-check goes back to "wanted" and is re-checked once the torrent is.
         for hold in self.state.holdings.values():
@@ -516,8 +528,9 @@ class Engine:
                     # prioritize_files() that doesn't change a file's priority leaves its pieces
                     # alone, so files paused for memory before a restart stayed at 0 for good.
                     r.piece_priorities = []
-                    # Never trust trackers / web seeds from resume data: use the verified .torrent's.
-                    r.trackers, r.url_seeds = list(meta.trackers), list(meta.web_seeds)
+                    # Never trust trackers / web seeds from resume data: use the verified .torrent's
+                    # trackers, and no web seeds (see _atp).
+                    r.trackers, r.url_seeds = list(meta.trackers), []
                     r.flags = (r.flags | lt.torrent_flags.override_trackers | lt.torrent_flags.override_web_seeds) \
                         & ~(lt.torrent_flags.auto_managed | lt.torrent_flags.paused)
                     atp = r
@@ -967,6 +980,7 @@ class Engine:
                     "down_rate": st.download_payload_rate, "uploaded": st.all_time_upload,
                     "peers": st.num_peers, "seeds": st.num_seeds, "verify_source": hold.get("verify_source"),
                     "manifest_mismatches": hold.get("manifest_mismatches", []),
+                    "hf_bytes": hold.get("hf_bytes", 0),
                 })
             doc = {
                 "at": datetime.now(timezone.utc).isoformat(), "node": self.state.node_id[:8],
@@ -979,6 +993,7 @@ class Engine:
                 "run": {"started": self.run_started, "until": self.run_until,
                         "uploaded": self.session_uploaded, "upload_peers": len(self.upload_peers)},
             }
+        doc["hf_gated"] = self.hf.gated_list()
         return doc
 
     # ---------------------------------------------------------- dashboard
@@ -986,8 +1001,11 @@ class Engine:
     SETTINGS = {  # name: (min, max)
         "budget_gb": (1, 1e6), "reserve_gb": (0, 1e6), "upload_mbps": (0.1, 1e5), "download_mbps": (0.1, 1e5),
         "upload_share": (0.05, 1), "download_share": (0.05, 1), "monthly_upload_cap_gb": (0, 1e7),
+        "hf_gb_per_day": (0, 1e6),
     }
-    ACTIONS = ("settings", "pause", "resume", "replan", "drop", "add", "remove", "order", "allot", "skip", "unskip")
+    SWITCHES = ("hf_fallback",)   # on/off settings
+    ACTIONS = ("settings", "pause", "resume", "replan", "drop", "add", "remove", "order", "allot", "skip", "unskip",
+               "hf_disconnect")
 
     def _bind_up(self) -> bool | None:
         if not self.cfg.bind_interface:
@@ -1023,7 +1041,7 @@ class Engine:
                                    for _, e in sorted(held.items()) if e["size"] >= 64 << 20]
             doc.update({
                 "version": __version__, "now": time.time(),
-                "settings": {k: getattr(self.cfg, k) for k in self.SETTINGS},
+                "settings": {k: getattr(self.cfg, k) for k in (*self.SETTINGS, *self.SWITCHES)},
                 "disk": {"free": free, "total": total, "held": sum(t["done"] for t in doc["torrents"]),
                          "folder": str(self.cfg.folder), "paused": self.disk_paused},
                 "network": {"bind": self.cfg.bind_interface, "bind_up": self._bind_up(),
@@ -1041,6 +1059,7 @@ class Engine:
                            "paused": sorted(self.state.holdings[ih]["repo"] for ih in self._parked
                                             if ih in self.state.holdings)},
             })
+        doc["hf"] = self.hf.info()
         return doc
 
     def submit(self, action: str, body: dict) -> str:
@@ -1050,6 +1069,11 @@ class Engine:
         if action == "settings":
             clean = {}
             for k, v in body.items():
+                if k in self.SWITCHES:
+                    if not isinstance(v, bool):
+                        raise ValueError(f"{k} must be true or false")
+                    clean[k] = v
+                    continue
                 if k not in self.SETTINGS:
                     raise ValueError(f"unknown setting {k!r}")
                 if isinstance(v, bool) or not isinstance(v, (int, float)) or math.isnan(v):
@@ -1189,7 +1213,8 @@ class Engine:
                                  "download_rate_limit": max(1, int(self.cfg.download_bps)),
                                  "connections_limit": self.cfg.connections_limit})
         self.save_config()
-        self.log("settings changed: " + ", ".join(f"{k} = {v:g}" for k, v in s.items()))
+        self.log("settings changed: " + ", ".join(f"{k} = {('on' if v else 'off') if isinstance(v, bool) else f'{v:g}'}"
+                                                  for k, v in s.items()))
         if "budget_gb" in s or "reserve_gb" in s:
             self.next_refresh = min(self.next_refresh or time.time(), time.time() + 5)
 
@@ -1202,6 +1227,17 @@ class Engine:
         self.user_paused = False
         self.ses.resume()
         self.log("resumed from the dashboard")
+
+    def _do_hf_disconnect(self, _) -> None:
+        try:
+            gone = self.hf.conn.disconnect()
+        except OSError as e:
+            where = " (it's the file FLOTILLA_HF_TOKEN_FILE names: remove it there)" \
+                if self.hf.conn.info()["from_env"] else ""
+            self.log(f"hugging face: couldn't remove the account token: {e}{where}")
+            return
+        self.log("hugging face: account token disconnected from the dashboard; if it's no longer needed, delete it "
+                 "at huggingface.co/settings/tokens too" if gone else "hugging face: no account token was connected")
 
     def _do_replan_soon(self, _) -> None:
         self.next_refresh = min(self.next_refresh or time.time(), time.time() + 3)
@@ -1366,6 +1402,14 @@ class Engine:
                         names[ih] = hold["repo"]
             for ih in set(self._hist_seen) - set(self.handles):
                 del self._hist_seen[ih]
+            # Pieces from Hugging Face reach libtorrent through add_piece, which its download
+            # counters don't count: add them here so the history shows everything fetched.
+            for ih, n in self.hf.take_new().items():
+                du, dd = moved.get(ih, (0, 0))
+                moved[ih] = (du, dd + n)
+                hold = self.state.holdings.get(ih)
+                if hold:
+                    names[ih] = hold["repo"]
         try:
             self.history.record(now, moved, online, names)
         except Exception as e:   # a full or locked disk must not stop seeding
@@ -1485,6 +1529,8 @@ class Engine:
         self.resume_holdings()
         threading.Thread(target=self._remote_loop, name="remote-dashboard", daemon=True).start()
         threading.Thread(target=self._memory_loop, name="memory", daemon=True).start()
+        # Always running: it does nothing while hf_fallback is off, and the dashboard can turn it on.
+        threading.Thread(target=self.hf.run, name="hugging-face", daemon=True).start()
         self._sampler = threading.Thread(target=self._sample_loop, name="history", daemon=True)
         self._sampler.start()
         self._start_refresh()

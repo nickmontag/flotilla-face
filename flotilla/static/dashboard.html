@@ -115,21 +115,21 @@
   .chev { color: var(--faint); transition: transform .15s; display: inline-block; }
   .row.open .chev { transform: rotate(90deg); }
   .tag { font-size: 11px; padding: 1px 6px; border-radius: 6px; background: var(--track); color: var(--muted); white-space: nowrap; font-weight: 500; margin-left: 6px; }
+  .tag.note { background: transparent; box-shadow: inset 0 0 0 1px var(--border); }
+  .caution { font-size: 12px; color: var(--faint); margin: 0 0 10px; line-height: 1.45; }
+  .tag.bad { background: transparent; color: var(--bad); box-shadow: inset 0 0 0 1px var(--bad); }
   .tag.warn { background: transparent; color: var(--warn); box-shadow: inset 0 0 0 1px var(--warn); }
-  .caution { font-size: 12px; color: var(--muted); margin: -2px 0 10px; line-height: 1.45; }
-  .tag.bad { background: transparent; color: var(--bad); border: 1px solid var(--bad); }
-  .tag.warn { background: transparent; color: var(--warn); border: 1px solid var(--warn); }
   .detail { padding: 2px 14px 14px 42px; }
   .meta { margin: 0 0 8px; font-size: 13px; color: var(--muted); }
   .meta b { color: var(--fg); font-weight: 600; }
   .pieces { display: flex; flex-wrap: wrap; gap: 3px; margin: 6px 0 10px; }
   .pieces.dense { gap: 2px; }
-  .s { width: 11px; height: 11px; border-radius: 3px; border: 1.5px solid var(--border); }
+  .s { width: 11px; height: 11px; border-radius: 3px; border: 1.5px solid var(--border); background: var(--track); }
   .dense .s { width: 8px; height: 8px; border-radius: 2px; border-width: 1px; }
   .s.held { background: var(--accent); border-color: var(--accent); }
   .s.wanted { background: var(--accent-soft); border-color: var(--accent); }
-  .s.a0 { border-color: var(--bad); } .s.alow { border-color: var(--warn); } .s.aok { border-color: var(--ok); }
-  .s.held.a0, .s.held.alow, .s.held.aok { border-color: var(--accent); }
+  .s.a0 { border-color: var(--bad); }
+  .s.held.a0 { border-color: var(--accent); }
   @media (max-width: 720px) {
     /* phone: name on top, the stats as one wrapped line under it */
     .carry .line { display: flex; flex-wrap: wrap; column-gap: 12px; row-gap: 3px; position: relative; padding-left: 42px; }
@@ -142,7 +142,13 @@
   .addrow { display: flex; gap: 8px; }
   .addrow input { flex: 1; min-width: 0; }
   .msg { font-size: 13px; margin: 6px 0 0; min-height: 18px; }
-  .prio .line, .colhead { grid-template-columns: 16px 20px minmax(0, 1fr) 150px 100px 64px 82px 84px; gap: 8px; }
+  .prio .line, .colhead { grid-template-columns: 16px 20px minmax(0, 1fr) 168px 100px 64px 82px 84px; gap: 8px; }
+  .prio .row.na .name a { color: var(--muted); font-weight: 500; }
+  .prio .row.na .cell, .prio .row.na .rank { color: var(--faint); }
+  .summary { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .summary > span, .need { display: inline-flex; align-items: center; gap: 6px; }
+  .d { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .d.bad { background: var(--bad); } .d.warn { box-shadow: inset 0 0 0 2px var(--warn); }   /* differ by shape too */
   .moves .skipbtn { color: var(--faint); padding: 2px 5px; display: inline-flex; align-items: center; }
   .moves .skipbtn:hover { color: var(--bad); }
   .moves .skipbtn svg { width: 14px; height: 14px; }
@@ -158,8 +164,9 @@
   .right { text-align: right; }
   .handle { cursor: grab; color: var(--faint); user-select: none; text-align: center; font-size: 15px; line-height: 1; touch-action: none; padding: 6px 0; }
   .rank { color: var(--faint); font-variant-numeric: tabular-nums; text-align: right; }
-  .need { display: grid; gap: 3px; min-width: 0; }
-  .need .t { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .need { min-width: 0; }
+  .need .t { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--muted); }
+  .need.hot .t { color: var(--fg); }
   .needbar { height: 4px; background: var(--track); border-radius: 999px; overflow: hidden; }
   .needbar > div { height: 100%; border-radius: 999px; }
   .gb { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); }
@@ -205,7 +212,17 @@
   .drawer-body h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 18px 0 8px; }
   .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   label { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
+  label.check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: inherit; }
+  label.check input { width: auto; padding: 0; margin: 0; accent-color: var(--fg); }
   .help { font-size: 12px; color: var(--faint); margin: 6px 0 0; }
+  .acct { margin: 12px 0 0; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; }
+  .acct .who { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+  .acct .who b { font-weight: 600; }
+  .acct ul { margin: 6px 0 0; padding-left: 18px; }
+  .acct li { margin: 2px 0; }
+  .acct code { font-size: 12px; }
+  .acct a { color: var(--accent); text-decoration: none; }
+  .acct a:hover { text-decoration: underline; }
   dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 12px; margin: 0; font-size: 13px; }
   dt { color: var(--muted); } dd { margin: 0; word-break: break-all; }
 </style>
@@ -274,9 +291,8 @@
       <div class="legend">
         <span><span class="s held"></span>you hold it</span>
         <span><span class="s wanted"></span>downloading</span>
-        <span><span class="s a0"></span>nobody else</span>
-        <span><span class="s alow"></span>below target</span>
-        <span><span class="s aok"></span>well covered</span>
+        <span><span class="s a0"></span>no other copy</span>
+        <span><span class="s"></span>others have it</span>
       </div>
     </div>
     <div class="card rows carry" id="carry"></div>
@@ -289,13 +305,13 @@
     </form>
     <div class="msg muted" id="priomsg"></div>
     <div class="panel-head">
-      <span class="sub">Drag to reorder: higher is carried first. Optionally set aside GB for a model; the rest is shared.</span>
+      <span class="sub summary" id="priosum"></span>
       <span class="sub" id="allotsum"></span>
     </div>
-    <p class="caution">Flotilla checks every file is exactly what its publisher uploaded. It can't check the publisher.
-      If you run one of these models, run it in a sandbox with no shell or network access unless you trust who made it.
-      Hover a model to see where it comes from.</p>
-    <div class="colhead" aria-hidden="true"><span></span><span>#</span><span>Model</span><span>Need</span><span>Swarm</span><span class="right">Held</span><span>Set aside</span><span></span></div>
+    <p class="caution">Drag to reorder: higher is carried first. Set aside GB to keep room for a model; the rest is shared.
+      Flotilla checks that every file is exactly what its publisher uploaded, but it can't vouch for the publisher:
+      run models you don't know in a sandbox. Hover a name to see how it was made.</p>
+    <div class="colhead" aria-hidden="true"><span></span><span>#</span><span>Model</span><span title="How many other peers hold the rarest piece, against the model's copy target">Copies</span><span>Swarm</span><span class="right">Held</span><span>Set aside</span><span></span></div>
     <div class="card rows prio" id="prio"></div>
     <details class="skipped" id="skippedbox" hidden><summary id="skippedsum">Skipped</summary><div class="card rows" id="skipped"></div></details>
   </section>
@@ -329,7 +345,18 @@
         <label>Share of download (%)<input name="download_share" type="number" min="5" max="100" step="1"></label>
         <label>Monthly upload cap (GB)<input name="monthly_upload_cap_gb" type="number" min="0" step="any"></label>
       </div>
-      <p class="help">0 means no cap. Changes apply right away and are saved to your config file.</p>
+      <p class="help">0 means no cap.</p>
+      <h3>Hugging Face</h3>
+      <label class="check"><input name="hf_fallback" type="checkbox"> Fetch pieces no peer has from Hugging Face</label>
+      <div class="fields" style="margin-top:10px">
+        <label>Most per day (GB)<input name="hf_gb_per_day" type="number" min="0" step="any"></label>
+      </div>
+      <p class="help">When peers send a file nothing for 10 minutes, Flotilla fetches its missing pieces from
+        Hugging Face, if it still has the model, and checks each against the torrent before keeping it.
+        Hugging Face sees the address you fetch from. 0 means no daily limit.</p>
+      <div class="acct" id="hfacct"></div>
+      <div class="msg muted" id="hfmsg"></div>
+      <p class="help">Changes apply right away and are saved to your config file.</p>
       <div style="margin-top:12px"><button class="primary" id="save" type="button">Save</button></div>
       <div class="msg muted" id="msg"></div>
     </form>
@@ -383,7 +410,8 @@ function render(s) {
   state = s;
   const ts = s.torrents || [];
   const sum = (k) => ts.reduce((a, t) => a + (t[k] || 0), 0);
-  const up = sum("up_rate"), down = sum("down_rate"), wanted = sum("wanted"), done = sum("done");
+  const hf = s.hf || {};
+  const up = sum("up_rate"), down = sum("down_rate") + (hf.rate || 0), wanted = sum("wanted"), done = sum("done");
   const net = s.network || {}, st = s.settings || {}, run = s.run || {};
 
   if (s.user_paused) setPill("status", "warn", "Paused");
@@ -409,6 +437,14 @@ function render(s) {
   const mem = s.memory || {};
   if (mem.paused && mem.paused.length)
     $("downsub").textContent += " · " + plural(mem.paused.length, "model") + " starting no new files, to stay under " + human(mem.budget) + " of memory";
+  if (hf.fetching && hf.fetching.length)
+    $("downsub").textContent += " · " + plural(hf.fetching.length, "file") + " no peer is sending, from Hugging Face";
+  if (hf.today)
+    $("downsub").textContent += " · " + human(hf.today) + (hf.cap ? " of " + human(hf.cap) : "") + " from Hugging Face today";
+  if (hf.gated && hf.gated.length)
+    $("downsub").textContent += " · " + plural(hf.gated.length, "model") + " gated on Hugging Face (see Settings)";
+  if (hf.retry_at)
+    $("downsub").textContent += " · Hugging Face busy, trying again at " + new Date(hf.retry_at * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   $("swarm").textContent = plural(ts.length, "model");
   $("swarmsub").textContent = plural(sum("peers"), "peer") + " connected · ≈ " + (s.points_est_total || 0).toFixed(1) + " points (est.)";
 
@@ -418,9 +454,35 @@ function render(s) {
   $("n-carry").textContent = ts.length; $("n-prio").textContent = (s.priorities || []).length;
 
   const pre = $("log"), atEnd = pre.scrollTop + pre.clientHeight >= pre.scrollHeight - 4;
-  pre.textContent = (s.log || []).map((l) => new Date(l.t * 1000).toLocaleTimeString() + "  " + l.msg).join("\n") || "No activity yet.";
+  pre.textContent = foldLog(s.log || []).map((l) => new Date(l.t * 1000).toLocaleTimeString() + "  " + l.msg).join("\n") || "No activity yet.";
   if (atEnd) pre.scrollTop = pre.scrollHeight;
   if (drawerOpen && !editing) fillDrawer();
+}
+
+// Models' files are verified by the dozen, interleaved. Within a stretch of nothing but
+// verifications, one line per model per 5 minutes keeps the rest of the log readable.
+const VERIFIED = /^verified ([^/\s]+\/[^/\s]+)\/(.+) \(([^)]+)\)$/;
+// Each refresh also lists every model Pirate Face has no torrent for: one line for all of them.
+const NO_TORRENT = /^skip (\S+): (\.torrent download failed|no magnet listed)/;
+function foldLog(lines) {
+  const out = [];
+  let open = new Map(), none = null;
+  for (const l of lines) {
+    const nt = NO_TORRENT.exec(l.msg);
+    if (nt) {
+      if (none && l.t - none.t < 60) { none.n += 1; none.msg = "skip " + none.n + " models: no torrent on Pirate Face yet"; }
+      else { none = { t: l.t, msg: l.msg, n: 1 }; out.push(none); }
+      continue;
+    }
+    if (!l.msg.startsWith("skip ")) none = null;
+    const m = VERIFIED.exec(l.msg);
+    if (!m) { open = new Map(); out.push({ t: l.t, msg: l.msg }); continue; }
+    const key = m[1] + " " + m[3], g = open.get(key);
+    if (g && l.t - g.t < 300) { g.n += 1; g.msg = "verified " + g.n + " files of " + m[1] + " (" + m[3] + ")"; continue; }
+    const e = { t: l.t, msg: l.msg, n: 1 };
+    open.set(key, e); out.push(e);
+  }
+  return out;
 }
 
 /* ---------------- traffic history ---------------- */
@@ -585,6 +647,8 @@ setInterval(loadHistory, 60000);
 
 /* ---------------- Carrying tab ---------------- */
 
+function gatedOf(repo) { return ((state && state.hf && state.hf.gated) || []).find((g) => g.repo === repo); }
+
 function renderCarrying(ts) {
   const box = $("carry"); box.replaceChildren();
   if (!ts.length) { box.append(el("div", "empty", "Nothing yet. Flotilla picks pieces after its first look at the swarm.")); return; }
@@ -595,6 +659,13 @@ function renderCarrying(ts) {
     const name = el("span", "name"); name.append(link(t.repo));
     if (t.hf_backed === false) name.append(el("span", "tag bad", "HF copy gone"));
     if ((t.manifest_mismatches || []).length) name.append(el("span", "tag warn", "hash disagreed"));
+    const g = gatedOf(t.repo);
+    if (g) {
+      const tag = el("span", "tag warn", "gated on HF");
+      tag.title = "No peer is sending some of its pieces, and Hugging Face serves it only to accounts its author let in. " +
+        (g.kind === "access" ? "Request access on its Hugging Face page." : "Connect an account that has access (see Settings).");
+      name.append(tag);
+    }
     if (t.state !== "finished" && t.state !== "seeding") name.append(el("span", "tag", t.state));
     line.append(el("span", "chev", "▸"), name, cell(human(t.done), " held"), cell(t.verified + "/" + t.files, " files ✓"),
                 cell("↑ " + rate(t.up_rate)), cell(human(t.uploaded), " sent"), cell(String(t.peers), t.peers === 1 ? " peer" : " peers"));
@@ -615,14 +686,20 @@ function detail(t) {
   const bits = ["Pieces: you hold " + heldN + " of " + shards.length];
   if (t.priority != null) bits.push("priority " + t.priority.toFixed(2));
   if (t.swarm_seeders != null) bits.push(t.swarm_seeders + " full seeders, " + t.swarm_leechers + " downloading");
+  const av = shards.map((x) => x.avail).filter((a) => a != null);
+  if (av.length) {
+    const r = Math.min(...av);
+    bits.push("rarest piece: " + r + (r === 1 ? " other copy" : " other copies") + ", target " + (t.target || 5));
+  }
   if (t.ledger) bits.push(t.ledger.seed_hours.toFixed(1) + " h seeded");
+  if (t.hf_bytes) bits.push(human(t.hf_bytes) + " fetched from Hugging Face (no peer had it)");
   meta.textContent = bits.join(" · ");
   const strip = el("div", "pieces" + (shards.length > 120 ? " dense" : ""));
   const target = t.target || 5;
   shards.forEach((sh) => {
     let cls = "s";
     if (sh.status === "verified") cls += " held"; else if (sh.status) cls += " wanted";
-    if (sh.avail != null) cls += sh.avail === 0 ? " a0" : sh.avail < target ? " alow" : " aok";
+    if (sh.avail === 0) cls += " a0";
     const s = el("div", cls);
     s.title = sh.path + " · " + human(sh.size) + (sh.avail != null ? " · " + plural(sh.avail, "other peer") + " have it" : "") +
       (sh.status === "verified" ? " · you hold it" : sh.status ? " · you: " + sh.status : "");
@@ -636,24 +713,38 @@ function detail(t) {
 
 /* ---------------- Priorities tab ---------------- */
 
+// The Copies column. Colour only where this node can help: red for pieces no other peer holds,
+// amber for a model below its copy target. Everything else stays grey.
+const NOT_CARRIED = { "no torrent on Pirate Face yet": "no torrent yet", "on the deny list": "on the deny list",
+                      "not checked yet": "not checked yet" };
 function needOf(p) {
-  // Short label for the row; the full explanation goes in the tooltip.
   if (p.status && p.status !== "ok") {
-    const short = p.status === "no torrent on Pirate Face yet" ? "no torrent yet" : p.status;
-    return { text: short, title: p.status, cls: "warn-t", pct: null };
+    const text = NOT_CARRIED[p.status] || (p.status.startsWith("license") ? "license not allowed" : "fails checks");
+    return { text, title: p.status, dim: p.status !== "not checked yet" };
   }
-  const gone = p.hf_backed === false, pre = gone ? "HF gone · " : "";
-  const why = gone ? "The Hugging Face original is gone: the swarm is the only copy. " : "";
-  if (!p.measured) return { text: pre + "not measured yet", title: why + "Flotilla hasn't looked at this swarm yet.", cls: gone ? "bad-t" : "muted", pct: null };
-  if (p.zero) return { text: pre + plural(p.zero, "piece") + " with no other copy", cls: "bad-t", pct: 100 * p.below / p.measured, bar: "var(--bad)",
-                       title: why + p.zero + " of " + p.measured + " pieces have no other holder in the swarm right now." };
-  if (p.below) {
-    const pct = Math.max(1, Math.round(100 * p.below / p.measured));
-    return { text: pre + pct + "% under-copied", cls: "warn-t", pct, bar: "var(--warn)",
-             title: why + p.below + " of " + p.measured + " pieces have fewer than " + p.target + " holders (the target)." };
-  }
-  return { text: pre + "well covered", cls: gone ? "bad-t" : "ok-t", pct: 100, bar: "var(--ok)",
-           title: why + "Every piece has at least " + p.target + " holders." };
+  if (!p.measured) return { text: "not measured yet", title: "Flotilla hasn't looked at this swarm yet." };
+  if (p.zero) return { text: plural(p.zero, "piece") + ": no other copy", dot: "bad",
+                       title: p.zero + " of " + p.measured + " pieces have no other holder in the swarm right now." };
+  const r = Math.round(p.rarest || 0), copies = r + (r === 1 ? " copy" : " copies");
+  if (p.below) return { text: r + " of " + p.target + " copies", dot: "warn",
+                        title: "The rarest piece has " + copies + " among other peers; the target is " + p.target + ". " +
+                               p.below + " of " + p.measured + " pieces are below it." };
+  return { text: copies, title: "Every piece has at least " + p.target + " copies among other peers (the target)." };
+}
+
+function renderSummary(list) {
+  const box = $("priosum"); box.replaceChildren();
+  const ok = list.filter((p) => p.status === "ok" && p.measured);
+  const uncopied = ok.filter((p) => p.zero).length, below = ok.filter((p) => !p.zero && p.below).length;
+  const covered = ok.filter((p) => !p.zero && !p.below).length;
+  const missing = list.filter((p) => p.status === "no torrent on Pirate Face yet").length;
+  [[uncopied, "bad", plural(uncopied, "model") + " with pieces no one else has"],
+   [below, "warn", below + (below === 1 ? " below its copy target" : " below their copy target")],
+   [covered, null, covered + " well covered"],
+   [missing, null, missing + " without a torrent yet"]].forEach(([n, dot, text]) => {
+    if (!n) return;
+    const s = el("span"); if (dot) s.append(el("i", "d " + dot)); s.append(text); box.append(s);
+  });
 }
 
 function renderPriorities(list, st) {
@@ -662,9 +753,11 @@ function renderPriorities(list, st) {
   const total = state.allot_total_gb || 0;
   $("allotsum").textContent = total ? "Set aside " + total + " of " + st.budget_gb + " GB" : "";
   $("allotsum").className = "sub" + (total > st.budget_gb ? " bad-t" : "");
+  renderSummary(list);
   if (!list.length) { box.append(el("div", "empty", "The list is empty. Add a model above.")); return; }
   list.forEach((p, i) => {
-    const row = el("div", "row"); row.dataset.repo = p.repo;
+    const n = needOf(p);
+    const row = el("div", "row" + (n.dim ? " na" : "")); row.dataset.repo = p.repo;
     const line = el("div", "line");
     const handle = el("span", "handle", "⠿"); handle.title = "Drag to reorder";
     handle.onpointerdown = (e) => startDrag(e, row, p.repo);
@@ -672,16 +765,18 @@ function renderPriorities(list, st) {
     const name = el("span", "name"); name.append(link(p.repo));
     if (p.source === "yours") name.append(el("span", "tag", "yours"));
     else if (p.source === "carrying") name.append(el("span", "tag", "carrying only"));
+    if (p.hf_backed === false) {
+      const t = el("span", "tag bad", "HF gone"); t.title = "The Hugging Face original is gone: the swarm is the only copy."; name.append(t);
+    }
     if (p.origin && p.origin.tag) {
-      const t = el("span", "tag" + (p.origin.warn ? " warn" : ""), p.origin.tag);
+      const t = el("span", "tag" + (p.origin.warn ? " note" : ""), p.origin.tag);
       t.title = p.origin.text; name.append(t);
     }
     name.title = [p.note || p.repo, p.origin && p.origin.text].filter(Boolean).join("\n\n");
 
-    const n = needOf(p);
-    const need = el("span", "need");
-    const nt = el("span", "t " + n.cls, n.text); nt.title = n.title || n.text; need.append(nt);
-    if (n.pct != null) { const b = el("div", "needbar"); const f = el("div"); f.style.width = Math.max(4, n.pct) + "%"; f.style.background = n.bar; b.append(f); need.append(b); }
+    const need = el("span", "need" + (n.dot ? " hot" : ""));
+    if (n.dot) need.append(el("i", "d " + n.dot));
+    const nt = el("span", "t", n.text); nt.title = n.title || n.text; need.append(nt);
 
     const swarm = p.seeders != null ? cell(String(p.seeders), (p.seeders === 1 ? " seed · " : " seeds · ") + p.leechers + " dl")
                                      : el("span", "cell", "–");
@@ -824,8 +919,10 @@ function fillDrawer() {
   if (!state) return;
   const f = $("settings");
   for (const [k, v] of Object.entries(state.settings || {})) {
-    const i = f.elements[k]; if (i) i.value = k.endsWith("_share") ? Math.round(v * 100) : v;
+    const i = f.elements[k]; if (!i) continue;
+    if (i.type === "checkbox") i.checked = !!v; else i.value = k.endsWith("_share") ? Math.round(v * 100) : v;
   }
+  fillAccount();
   const about = $("about"); about.replaceChildren();
   const net = state.network || {}, feed = state.feed || {};
   [
@@ -838,6 +935,50 @@ function fillDrawer() {
     ["Version", state.version],
   ].forEach(([k, v]) => about.append(el("dt", null, k), el("dd", null, v)));
 }
+function fillAccount() {
+  const hf = state.hf || {}, a = hf.account || { state: "none" }, box = $("hfacct");
+  box.replaceChildren();
+  const who = el("div", "who"), text = el("span");
+  if (a.state === "none") {
+    text.append("No Hugging Face account connected. Gated models, which Hugging Face serves only to accounts their " +
+      "author let in, wait for peers. To fetch them, run ", el("code", null, "flotilla hf connect"),
+      " where Flotilla runs, with a read-only token.");
+  } else if (a.state === "ok") {
+    text.append("Connected as ", el("b", null, a.name), ", read-only token “" + a.token_name + "”" +
+      (a.scoped && a.scoped.length ? ", limited to " + a.scoped.join(", ") : "") + ". Used only for gated models.");
+  } else if (a.state === "unchecked") {
+    text.append("A Hugging Face token is connected. It's checked with Hugging Face, and used, only when a gated model needs it.");
+  } else {
+    const why = a.why || "the connected token can't be used.";
+    text.className = "warn-t"; text.append(why.charAt(0).toUpperCase() + why.slice(1));
+  }
+  who.append(text);
+  if (a.state !== "none") {
+    const b = el("button", "ghost danger", "Disconnect"); b.type = "button";
+    b.onclick = () => {
+      if (confirm("Disconnect the Hugging Face account? Gated models will wait for peers. This doesn't delete the token " +
+                  "at Hugging Face: do that at huggingface.co/settings/tokens if it's no longer needed."))
+        post("hf_disconnect", {}, "Disconnecting…", "Disconnected.", "hfmsg");
+    };
+    who.append(b);
+  }
+  box.append(who);
+  if (hf.gated && hf.gated.length) {
+    box.append(el("div", "help", "No peer is sending some pieces of these, and Hugging Face won't serve them to " +
+      (a.state === "ok" ? "this account yet:" : "Flotilla without an account:")));
+    const ul = el("ul");
+    hf.gated.forEach((g) => {
+      const [author, model] = g.repo.includes("/") ? g.repo.split("/", 2) : ["", g.repo];
+      const li = el("li"), x = el("a", null, g.kind === "access" ? "request access" : "its page");
+      x.href = "https://huggingface.co/" + encodeURI(g.repo); x.target = "_blank"; x.rel = "noopener noreferrer";
+      li.title = g.repo;
+      li.append(el("b", null, model), el("span", "author", author ? " · " + author : ""),
+                el("span", "muted", g.kind === "access" ? " · " : " · needs an account with access · "), x);
+      ul.append(li);
+    });
+    box.append(ul);
+  }
+}
 $("gear").onclick = () => openDrawer(!drawerOpen);
 $("close").onclick = () => openDrawer(false);
 $("scrim").onclick = () => openDrawer(false);
@@ -846,6 +987,7 @@ $("settings").addEventListener("input", () => { editing = true; });
 $("save").onclick = async () => {
   const body = {};
   for (const i of $("settings").elements) {
+    if (i.name && i.type === "checkbox") { body[i.name] = i.checked; continue; }
     if (!i.name || i.value === "") continue;
     let v = Number(i.value); if (i.name.endsWith("_share")) v /= 100;
     body[i.name] = v;

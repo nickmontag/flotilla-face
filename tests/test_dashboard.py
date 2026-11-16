@@ -125,6 +125,23 @@ def test_settings_validated_applied_and_saved(node):
     assert saved.budget_gb == 42 and saved.upload_share == 0.5
 
 
+def test_hugging_face_switch_starts_off_and_is_saved(node):
+    eng, dash, path, logs = node
+    assert eng.cfg.hf_fallback is False                     # off until the user turns it on
+    code, _, body = call(dash, "GET", "/api/state", token=dash.token)
+    assert code == 200
+    for bad in [{"hf_fallback": "yes"}, {"hf_fallback": 1}, {"hf_gb_per_day": -1}, {"hf_gb_per_day": True}]:
+        assert call(dash, "POST", "/api/settings", bad, token=dash.token)[0] == 400, bad
+    assert call(dash, "POST", "/api/settings", {"hf_fallback": True, "hf_gb_per_day": 5},
+                token=dash.token)[0] == 200
+    eng.process_commands()
+    assert eng.cfg.hf_fallback is True and eng.cfg.hf_gb_per_day == 5
+    assert any("hf_fallback = on" in l for l in logs)
+    saved = load_config(path)
+    assert saved.hf_fallback is True and saved.hf_gb_per_day == 5
+    assert eng.snapshot()["settings"]["hf_fallback"] is True
+
+
 def test_skip_and_restore_a_model(node):
     from flotilla.feed import parse_feed
 

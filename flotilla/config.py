@@ -10,7 +10,7 @@ import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .netsafe import DEFAULT_ALLOWED_HOSTS
+from .netsafe import DEFAULT_ALLOWED_HOSTS, pin
 
 
 def _default_config_dir() -> Path:
@@ -65,6 +65,12 @@ class Config:
     # (e.g. "10.8.0.2" or "wg0"). If the VPN drops, the address
     # vanishes and the seeder goes offline instead of using your real IP.
     bind_interface: str = ""
+    # When no peer can supply a file's pieces (nothing from peers for 10 minutes), fetch the missing
+    # pieces from Hugging Face, at the model's pinned commit, while it still hosts the model. Each
+    # piece is checked against the torrent's own hash before it's kept. At most hf_gb_per_day a day
+    # (UTC); 0 = no daily limit. Off until the user turns it on (`flotilla init`, or the dashboard).
+    hf_fallback: bool = False
+    hf_gb_per_day: float = 20.0
 
     # Local web dashboard (http://127.0.0.1:7421). Only reachable from this machine.
     dashboard: bool = True
@@ -119,7 +125,7 @@ class Config:
 _SECTIONS = {
     "storage": ["folder", "budget_gb", "reserve_gb"],
     "network": ["upload_mbps", "download_mbps", "upload_share", "download_share", "monthly_upload_cap_gb",
-                "memory_gb", "listen_port", "port_forwarding", "bind_interface"],
+                "memory_gb", "listen_port", "port_forwarding", "bind_interface", "hf_fallback", "hf_gb_per_day"],
     "policy": ["licenses", "include_unlisted", "include_rescue", "seed_code_files", "allow_pickle",
                "whole_model_under_gb", "max_candidates"],
     "feed": ["urls", "trusted_keys", "allowed_hosts", "local"],
@@ -135,6 +141,7 @@ PAST_DEFAULT_LICENSES = [["mit", "apache-2.0", "wtfpl", "openmdw-1.1"]]
 def load_config(path: Path = CONFIG_PATH) -> Config:
     cfg = Config(path=path)
     if not path.exists():
+        pin("")
         return cfg
     doc = tomllib.loads(path.read_text())
     for section, keys in _SECTIONS.items():
@@ -157,6 +164,10 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
         raise ValueError("upload_share and download_share must be in (0, 1]")
     if cfg.budget_gb <= 0:
         raise ValueError("storage.budget_gb must be positive")
+    if cfg.hf_gb_per_day < 0:
+        raise ValueError("network.hf_gb_per_day can't be negative")
+    # Flotilla's own requests (listings, pieces from Hugging Face) leave by the same pin as torrent traffic.
+    pin(cfg.bind_interface)
     return cfg
 
 
@@ -196,6 +207,8 @@ memory_gb = {_toml_str(cfg.memory_gb)}             # most memory to use; no new 
 listen_port = {_toml_str(cfg.listen_port)}
 port_forwarding = {_toml_str(cfg.port_forwarding)}   # UPnP/NAT-PMP on your router
 bind_interface = {_toml_str(cfg.bind_interface)}      # e.g. your VPN's address; "" = any interface
+hf_fallback = {_toml_str(cfg.hf_fallback)}       # fetch pieces no peer has from Hugging Face (checked against the torrent)
+hf_gb_per_day = {_toml_str(cfg.hf_gb_per_day)}        # most to fetch from Hugging Face a day; 0 = no limit
 
 [policy]
 licenses = {_toml_str(cfg.licenses)}

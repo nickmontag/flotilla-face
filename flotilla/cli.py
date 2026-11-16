@@ -112,6 +112,16 @@ def cmd_init(args) -> int:
     if not bind:
         pf = _yes("Let Flotilla open a port on your router with UPnP/NAT-PMP (helps peers reach you)", pf)
 
+    print("\nSome models have no full seeder, and the peers holding a file's last pieces aren't always online.")
+    print("Flotilla can then fetch the pieces no peer is sending from Hugging Face, while it still has the")
+    print("model, checking each against the torrent before keeping it. Hugging Face sees the address you fetch")
+    print(f"from ({bind}, your VPN)." if bind else "from (this connection's public IP).")
+    hf, hf_gb = cfg.hf_fallback, cfg.hf_gb_per_day
+    hf = _yes("Fetch pieces no peer has from Hugging Face", hf)
+    if hf:
+        hf_gb = max(0.0, _ask("Most to fetch from Hugging Face a day, in GB (0 = no limit)", hf_gb, float))
+        _setup_hf_account(path, bind)
+
     licenses = list(cfg.licenses)
     try:
         from .netsafe import FetchError
@@ -138,17 +148,143 @@ def cmd_init(args) -> int:
     cfg.upload_share, cfg.download_share = min(1.0, max(0.1, share)), min(1.0, max(0.1, dshare))
     cfg.monthly_upload_cap_gb, cfg.port_forwarding, cfg.licenses = cap, pf, licenses
     cfg.bind_interface = bind
+    cfg.hf_fallback, cfg.hf_gb_per_day = hf, hf_gb
 
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_config(cfg))
     print(f"\nWrote {path}.")
     print(f"With {up:g} Mbit/s up at {cfg.upload_share:.0%}, you'll serve up to {cfg.max_torrents} swarms at once.")
     print(f"Filling {budget:g} GB at {down:g} Mbit/s × {cfg.download_share:.0%} takes about "
-          f"{duration(budget * GB / cfg.download_bps)} (web seeds can be slower).")
+          f"{duration(budget * GB / cfg.download_bps)} (rare models with few peers take longer).")
+    if hf:
+        print(f"Pieces no peer has come from Hugging Face, up to "
+              f"{f'{hf_gb:g} GB a day' if hf_gb else 'any amount'}. Turn it off any time in the dashboard's settings.")
+    else:
+        print("Pieces no peer has are waited for. To fetch them from Hugging Face instead, turn that on in the "
+              "dashboard's settings.")
     if bind:
         print(f"Torrent traffic is pinned to {bind}: if the VPN drops, Flotilla goes offline instead.")
     print("Next: `flotilla plan` to preview, then `flotilla service install` to run it in the background,")
     print(f"and watch it at http://127.0.0.1:{cfg.dashboard_port}")
+    return 0
+
+
+def _setup_hf_account(config_path: Path, bind: str) -> None:
+    from . import netsafe
+    from .hfauth import TokenError, read_token, remove_token, token_path
+
+    tpath = token_path(config_path)
+    try:
+        have = read_token(tpath) is not None
+    except (TokenError, OSError):
+        have = True
+    if have:
+        if not _yes(f"A Hugging Face account token is connected ({tpath}). Keep using it for gated models", True):
+            remove_token(tpath)
+            print("  disconnected; if it's no longer needed, delete it at huggingface.co/settings/tokens too")
+        return
+    print("\nSome models are gated: Hugging Face serves them only to accounts their author let in. Without an")
+    print("account, Flotilla waits for peers to send their missing pieces.")
+    if _yes("Connect a Hugging Face account for those (a read-only token)", False):
+        netsafe.pin(bind)      # check the token over the connection Flotilla will use
+        hf_connect(tpath)
+
+
+def hf_connect(tpath: Path, source: str | None = None) -> bool:
+    """Ask for a token (or read it from `source`, a file or - for stdin), check it, save it."""
+    import getpass
+
+    from .hfauth import TOKENS_PAGE, TokenError, check, clean_token, save_token
+    from .netsafe import FetchError
+
+    if source is None:
+        print("\nFlotilla uses a read-only Hugging Face access token, only for gated models no peer is sending:")
+        print(f"  * Make one at {TOKENS_PAGE}: Create new token, type Read. Flotilla refuses tokens that can")
+        print("    write or spend.")
+        print("  * Ask for access on each gated model's Hugging Face page yourself. The author sees your username")
+        print("    and email, and may set terms of their own.")
+        print("  * Hugging Face then sees your account fetch those models, from the address Flotilla uses.")
+        print(f"  * The token is saved in {tpath}, readable only by you, and sent only to huggingface.co.")
+        raw = getpass.getpass("Paste the token (it won't show): ")
+    elif source == "-":
+        raw = sys.stdin.readline()
+    else:
+        raw = Path(source).expanduser().read_text()
+    try:
+        token = clean_token(raw)
+        print("Checking it with Hugging Face...")
+        acct = check(token)
+    except TokenError as e:
+        print(f"Not connected: {e}")
+        return False
+    except FetchError as e:
+        print(f"Not connected: couldn't reach Hugging Face to check the token ({e}). Try again in a while.")
+        return False
+    try:
+        save_token(tpath, token)
+    except OSError as e:
+        print(f"Not connected: couldn't save the token to {tpath} ({e})")
+        return False
+    kind = "fine-grained, read only" if acct.role == "fineGrained" else "read-only"
+    print(f"Connected: {acct.name}'s token {acct.token_name!r} ({kind}), saved to {tpath}.")
+    if acct.scoped:
+        print(f"  It's limited to: {', '.join(acct.scoped)}")
+    print("A running node starts using it within a minute, for gated models only.")
+    return True
+
+
+def _print_gated(gated: list[dict]) -> None:
+    if not gated:
+        return
+    print("\nGated on Hugging Face (no peer is sending some of their pieces, and Hugging Face won't serve them yet):")
+    for g in gated:
+        what = "request access there" if g.get("kind") == "access" else "needs an account with access: flotilla hf connect"
+        print(f"  {g['repo']}: https://huggingface.co/{g['repo']} ({what})")
+
+
+def cmd_hf(args) -> int:
+    from .hfauth import TokenError, check, read_token, readable_by_others, remove_token, token_path
+    from .netsafe import FetchError
+
+    cfg_path = Path(args.config)
+    load_config(cfg_path)                    # sets the network pin, so Hugging Face sees the address Flotilla uses
+    tpath = token_path(cfg_path)
+    if args.action == "connect":
+        return 0 if hf_connect(tpath, args.from_file) else 1
+    if args.action == "disconnect":
+        try:
+            gone = remove_token(tpath)
+        except OSError as e:
+            print(f"Couldn't remove {tpath}: {e}")
+            return 1
+        print(f"Disconnected: removed {tpath}. If the token is no longer needed, delete it at "
+              f"huggingface.co/settings/tokens too." if gone else "No Hugging Face account was connected.")
+        return 0
+    # status
+    try:
+        token = read_token(tpath)
+    except (TokenError, OSError) as e:
+        print(f"The token file {tpath} can't be used: {e}")
+        return 1
+    if not token:
+        print("No Hugging Face account connected: gated models wait for peers. Connect one with `flotilla hf connect`.")
+    else:
+        print(f"Token file: {tpath}")
+        if readable_by_others(tpath):
+            print(f"  others on this computer can read it: chmod 600 {tpath}")
+        try:
+            acct = check(token)
+            print(f"Connected as {acct.name}, token {acct.token_name!r} "
+                  f"({'fine-grained, read only' if acct.role == 'fineGrained' else 'read-only'}).")
+            if acct.scoped:
+                print(f"  It's limited to: {', '.join(acct.scoped)}")
+        except TokenError as e:
+            print(f"Not used: {e}")
+        except FetchError as e:
+            print(f"Couldn't check it with Hugging Face: {e}")
+    status = Path(args.state) / "status.json"
+    if status.exists():
+        _print_gated(json.loads(status.read_text()).get("hf_gated") or [])
     return 0
 
 
@@ -525,6 +661,7 @@ def cmd_status(args) -> int:
         print("\nPirate Face's manifest disagrees with Hugging Face for these (verified against Hugging Face):")
         for t in flagged:
             print(f"  {t['repo']}: {', '.join(m['path'] for m in t['manifest_mismatches'])}")
+    _print_gated(doc.get("hf_gated") or [])
     return 0
 
 
@@ -1020,6 +1157,10 @@ def main(argv: list[str] | None = None) -> int:
                         "(then it needs its access key)")
     p.add_argument("--port", type=int, help="with --serve: port (default: the config's dashboard port)")
     p.add_argument("--url", action="store_true", help="print the network dashboard's address with its access key")
+    p = sub.add_parser("hf", help="connect a Hugging Face account (a read-only token) for gated models")
+    p.add_argument("action", choices=["connect", "disconnect", "status"])
+    p.add_argument("--from-file", metavar="PATH",
+                   help="connect: read the token from this file, or - for standard input, instead of asking")
     p = sub.add_parser("service", help="run Flotilla in the background (launchd on macOS, systemd on Linux)")
     p.add_argument("action", choices=["install", "uninstall", "status"])
     p.add_argument("--dry-run", action="store_true", help="show what would be written and run")
@@ -1061,7 +1202,7 @@ def main(argv: list[str] | None = None) -> int:
                 "service": cmd_service, "uninstall": cmd_uninstall, "dashboard": cmd_dashboard,
                 "add": cmd_add, "remove": cmd_remove, "picks": cmd_picks,
                 "verify": cmd_verify, "history": cmd_history, "feed": cmd_feed, "editor": cmd_editor,
-                "ledger": cmd_ledger}
+                "ledger": cmd_ledger, "hf": cmd_hf}
     try:
         return handlers[args.cmd](args)
     except (FeedError, SignatureError, ValueError) as e:

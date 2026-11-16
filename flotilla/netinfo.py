@@ -96,6 +96,17 @@ def internet_route(probe: str = "1.1.1.1") -> Route | None:
     return Route(m.group(1), src.group(1) if src else None)
 
 
+def interface_address(value: str) -> str | None:
+    """The IPv4 address to bind for a bind_interface value: the value itself if it's an address,
+    else the named interface's current address (None while it's down)."""
+    if re.fullmatch(r"\d+\.\d+\.\d+\.\d+", value):
+        return value
+    if sys.platform == "darwin":
+        a = re.search(r"inet (\d+\.\d+\.\d+\.\d+)", _run(["ifconfig", value]))
+        return a.group(1) if a else None
+    return _iface_ipv4(value)
+
+
 def address_present(value: str) -> bool:
     """Is a bind_interface value (an IPv4 address or an interface name) up right now?"""
     if not value:

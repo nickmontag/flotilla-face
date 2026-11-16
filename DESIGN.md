@@ -14,7 +14,9 @@ These facts shaped the design. All of them were checked against the live service
     overhead. These .torrent files leave out the `piece layers` BEP 52 expects, which costs memory
     (see [Memory](#memory)).
 - Trackers: `udp://` and `http://tracker.pirateface.co:6969/announce`. Web seed (BEP 19):
-  `https://pirateface.co/api/ws/{repo}/{revision}/`, which serves the files from Hugging Face.
+  `https://pirateface.co/api/ws/{repo}/{revision}/`, which redirects (through plain HTTP to a bare IP)
+  to the file on Hugging Face at that commit. Flotilla drops it: see
+  [Pieces from Hugging Face](#pieces-from-hugging-face).
 - `GET /api/torrents?repo=` returns the magnet, infohash, pinned revision, seeder and leecher counts, a
   `hf` flag and a per-file SHA-256 manifest. `GET /api/torrents/{infohash}.torrent` returns the
   metainfo.
@@ -48,6 +50,11 @@ existing per-repo torrent is enough.
                                    ▼
           engine.Engine — main libtorrent session: file priorities, rate limits,
                           verify on completion, resume data, replan every 6 h
+                                   │  files no peer is sending
+                                   ▼
+          hfpieces.py — missing pieces from HF (netsafe.fetch_range), checked against
+                        the torrent's piece hashes, handed to libtorrent (add_piece);
+                        hfauth.py — the user's read-only HF token, for gated models only
 ```
 
 ## Trust model
@@ -57,7 +64,7 @@ malicious files, inflates or deflates priorities, replays an old feed, or makes 
 
 | Layer | Check | Defends against |
 |---|---|---|
-| HTTP | HTTPS only, certifi CA bundle, host allowlist (`pirateface.co`, `huggingface.co`), manual redirects re-checked per hop, no userinfo, no odd ports, byte caps on every response | MITM, open redirects, memory exhaustion |
+| HTTP | HTTPS only, certifi CA bundle, host allowlist (`pirateface.co`, `huggingface.co`; `hf.co` added for pieces), manual redirects re-checked per hop, no userinfo, no odd ports, byte caps on every response, the same network pin as torrent traffic (fails closed while it's down) | MITM, open redirects, memory exhaustion, leaking the real IP |
 | Feed | Ed25519 minisign signature against pinned keys; `expires`; monotonic `version` stored locally | Forged priorities, freeze/replay, rollback |
 | Feed pins | Optional `infohash` and `revision` per model; a listing that disagrees is rejected | A compromised index swapping the torrent for a pinned model |
 | Hash ledger | Signed, append-only per-file hashes per repo@revision, captured from HF; a torrent file it doesn't list, a size or hash HF contradicts, or (HF gone) a revision it never recorded refuses the torrent | A compromised Pirate Face swapping files and manifest together after HF has removed the model |
@@ -65,6 +72,8 @@ malicious files, inflates or deflates priorities, replays an old feed, or makes 
 | .torrent | SHA-1 of the exact info-dict bytes must equal the listed infohash; its own `announce`, `announce-list` and `url-list` pass the same allowlist; BEP 17 `httpseeds` refused; path components sanitised (no `..`, `/`, `\`, `:`, NUL) | Swapped metainfo, path traversal |
 | Content | Every torrent file must exist in the HF tree at the pinned revision with the same size. HF's hash is the expected hash. If Pirate Face's SHA-256 disagrees, HF `main` is checked: same file there → accept, flag for reporting; different or unreadable → refuse as ambiguous | Torrents that smuggle in extra files; Pirate Face packaging a newer upload under an old revision label |
 | Bytes | libtorrent piece hashes, then a file-level SHA-256 (LFS) or git blob SHA-1 against HF after the write cache is flushed; one failure blocks the infohash and deletes its data | Torrents that don't match the model |
+| HF pieces | Only for files peers aren't sending, of models HF has at the pinned commit; the reply must be exactly the byte range asked for; each piece's SHA-1 must equal the torrent's own v1 piece hash before `add_piece`; two mismatches stop HF for that file | HF, its CDN or someone in the middle serving bytes that don't match the torrent; one bad piece making libtorrent discard a whole v2 file |
+| HF account | Only a token the user connected (`hf-token`, 0600, or `FLOTILLA_HF_TOKEN_FILE`; never `HF_TOKEN`); whoami must show a read-only token (role `read`, or fine-grained with only `*.read` permissions) of a user; sent only after an anonymous request is refused, only to `huggingface.co` (never a redirect target); 401 on a download stops using it | A leaked token file changing the user's account or spending on it; the account being tied to public models it isn't needed for; the token reaching the CDN |
 | Policy | Code files and weight formats that can run code when loaded (pickle, Keras HDF5/.keras, NumPy .npz/.npy) are not selected by default; nothing downloaded is ever executed; licenses must be on the user's allowlist | Turning seeders into a malware distribution network |
 | Disk | Budget = `min(budget, held + free − reserve)` | Filling the user's drive |
 
@@ -126,8 +135,8 @@ newer upload under an old revision label.
 
 Trees at a commit hash are cached forever (they're immutable). The `main` tree is never cached.
 
-Resume data is never trusted for trackers or web seeds; they're always taken from the verified
-`.torrent`.
+Resume data is never trusted for trackers or web seeds: trackers are always taken from the verified
+`.torrent`, and web seeds are dropped.
 
 ## Probing: how we learn per-shard availability
 
@@ -150,6 +159,9 @@ short-lived session:
 
 `availability(file) = max(observed seeds, tracker seeders − self) + partial peers holding every piece
 of the file`.
+
+The probe drops web seeds too. With Pirate Face's web seed in, libtorrent showed it as a peer holding
+every file, and a model with no seeder at all looked like it had one.
 
 This was tested on 127.0.0.1, with an earlier probe that wanted every file. An all-zero-priority probe
 saw nothing; the throttled probe saw a full seeder (70/70 pieces) and a partial seeder (23/70), and
@@ -222,6 +234,62 @@ Tested properties (`tests/test_candidates_planner.py`):
   is re-queued.
 - **Network failures** during a refresh never drop data: a held torrent whose listing is unreachable is
   kept as is (`Rejection.transient`).
+
+## Pieces from Hugging Face
+
+`hfpieces.py`, on its own thread. Off until the user turns it on (`hf_fallback`: asked in `flotilla init`,
+default no; a switch in the dashboard's settings, read live). It replaces Pirate Face's web seed, which
+libtorrent can't keep using:
+
+- The web seed redirects through Hugging Face to a signed CDN link that expires after an hour.
+- libtorrent's `web_peer_connection::handle_redirect` adds the redirect target as a new web seed for
+  that one file, and clears the file from the original web seed's `have_files`, so the original is
+  never asked for it again. When the signed link expires, every request gets a 403, `handle_error`
+  clears the file there too, and nothing serves the file until the torrent is added again.
+- On a fresh node (Nov 2026) every file still downloading from the web seed stopped at the same
+  minute, 61 minutes in.
+
+So `_atp` drops `url-list` and `httpseeds` before libtorrent sees the torrent (they're outside the
+info dict, so the infohash is unchanged), resume data gets no web seeds, and Flotilla does the job
+itself, only where it's needed:
+
+1. **Stuck.** Every 30 s it records each wanted file's progress. A file is stuck when peers sent it
+   less than 32 KB/s over the last 10 minutes (bytes from Hugging Face don't count) and libtorrent
+   wasn't using more than 80% of the download limit (a full line isn't the swarm's fault). Paused
+   torrents, files at priority 0 (held back for memory), a disk below its reserve and a paused session
+   don't count.
+2. **Eligible.** The holding's `verify_source` is Hugging Face (its tree at the pinned commit matched
+   the torrent), the revision is a full commit hash, and the torrent has v1 piece hashes.
+3. **Fetch.** Missing pieces of the most important stuck file first, rarest first (by
+   `piece_availability()`, pieces in libtorrent's download queue last), one piece at a time. Each piece
+   maps to file ranges (`map_block`); pad files are zeros, and the rest are byte-range requests to
+   `huggingface.co/{repo}/resolve/{commit}/{path}` through `netsafe.fetch_range`. The signed link it
+   redirects to is reused until 5 minutes before its `Expires`, and a 4xx from the CDN gets a new one.
+4. **Check.** SHA-1 of the piece must equal `hash_for_piece()` before `add_piece()`. This matters more
+   than it looks: Pirate Face's v2 torrents have no piece layers, so libtorrent can only check a v2
+   file as a whole, and a bad last piece makes it fail every piece of the file (measured on 2.1.1).
+   libtorrent then checks the piece again and seeds it. The file-level SHA-256 check against HF runs as
+   for any other file.
+5. **Limits.** Only the bandwidth libtorrent leaves free under the download limit (never below
+   256 KB/s), and `hf_gb_per_day` a UTC day, counted in `state.json`. A 404/410 from `huggingface.co`,
+   or "Access to this resource is disabled", stops for that model for the run; a 429, a 5xx or a
+   network error backs off for `Retry-After`, or 1 minute doubling to 15. A 401/403 is a gated or
+   private model: see 7.
+6. **Accounting.** `add_piece` bytes aren't in libtorrent's download counters, so the history adds
+   them, the holding keeps `hf_bytes`, and the dashboard shows today's total, the rate and the files
+   being fetched.
+7. **Gated models** (`hfauth.py`). Every request goes without a token first. When `huggingface.co`
+   answers 401/403, the token the user connected with `flotilla hf connect` is checked once with
+   `/api/whoami-v2` (the first time it's needed, so HF doesn't learn the account runs Flotilla until a
+   gated model needs it) and the request is repeated with it; from then on that repo's `huggingface.co`
+   requests carry it (`fetch_range` never sends it to a redirect target). A token whoami says can do
+   more than read (role `write`, or a fine-grained permission not ending in `.read`) or that isn't a
+   user's is never used. With the token, 403 `GatedRepo` means the account isn't let in yet, and a
+   401 without `GatedRepo`/`RepoNotFound` means the token was revoked: it's dropped until the file
+   changes. Either way the model is skipped and asked about again in an hour (`GATED_RECHECK`), and
+   listed in the dashboard and `status.json` (`hf_gated`) with a link to request access. The token
+   file is re-read when it changes, so connecting, replacing or disconnecting (also from the
+   dashboard: `hf_disconnect`) needs no restart and retries gated models at once.
 
 ## Dashboard
 

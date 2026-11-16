@@ -20,7 +20,7 @@ The test suite never touches the internet. `tests/test_swarm.py` runs real libto
 | Module | What it does |
 |---|---|
 | `config.py` | The config file (TOML), local state, the memory budget |
-| `netsafe.py` | The only HTTP client: HTTPS, host allowlist, redirect re-checks, byte caps |
+| `netsafe.py` | The only HTTP client: HTTPS, host allowlist, redirect re-checks, byte caps, the network pin, byte-range fetches |
 | `signing.py`, `feed.py` | minisign-compatible signatures; the signed priority feed (expiry, rollback, pins) |
 | `ledger.py` | The signed, append-only hash ledger: loading, capture, folder checks |
 | `sources.py` | Read-only Pirate Face and Hugging Face API clients |
@@ -28,6 +28,8 @@ The test suite never touches the internet. `tests/test_swarm.py` runs real libto
 | `candidates.py` | The trust chain: listing → magnet → .torrent → Hugging Face file match → hashes |
 | `planner.py` | Pure function: which shards this node should hold |
 | `engine.py` | libtorrent: probe swarms, apply plans, verify, seed, disk guard |
+| `hfpieces.py` | Pieces no peer is sending, fetched from Hugging Face and checked against the torrent |
+| `hfauth.py` | The Hugging Face account for gated models: the token file, the read-only check, when the token is sent |
 | `history.py` | Upload and download history (SQLite) |
 | `dashboard.py` | Local web dashboard and its JSON API |
 | `remote.py` | The dashboard as a separate process, through the shared state folder |
@@ -41,7 +43,7 @@ The test suite never touches the internet. `tests/test_swarm.py` runs real libto
 ## Ground rules
 
 - **Security-relevant changes need a test.** Anything touching `netsafe`, `signing`, `feed`, `ledger`,
-  `magnet`, `torrentmeta` or `candidates` should come with a test showing the attack it blocks.
+  `magnet`, `torrentmeta`, `candidates` or `hfauth` should come with a test showing the attack it blocks.
 - **Never execute downloaded content**, and don't add a code path that could.
 - **No new runtime dependencies** without a good reason. Easy install is a feature.
 - **Keep the planner pure.** No I/O in `planner.py`, so it stays testable.

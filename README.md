@@ -93,12 +93,64 @@ make to the list.
 
 The maths is in [DESIGN.md](DESIGN.md).
 
+### When no peer has a piece
+
+Rare models often have no full seeder, and the peers holding a file's last pieces aren't always online.
+If you turn it on, then when peers have sent a file less than 32 KB/s for 10 minutes and your line has
+room, Flotilla fetches that file's missing pieces from Hugging Face itself, as long as Hugging Face still
+has the model at the commit the torrent was made from. Each piece is checked against the torrent's own
+hash before it's kept, and from then on you seed it like any other piece, so the swarm has it again.
+
+- **Off until you turn it on.** `flotilla init` asks, and the dashboard's settings have a switch
+  (`hf_fallback` in the config). While it's off, Flotilla waits for peers.
+- It uses only the download bandwidth peers leave free, and at most `hf_gb_per_day` a day (20 GB by
+  default, UTC days; 0 = no limit).
+- Gated models need a Hugging Face account that has been let in: see [Gated models](#gated-models).
+  Without one, Flotilla waits for peers.
+- Hugging Face sees the IP address you fetch from (your VPN's, if Flotilla is pinned to it), as with any
+  download from it.
+- The dashboard shows how much came from Hugging Face today, and per model.
+
+Pirate Face's torrents carry a web seed that redirects to Hugging Face, but libtorrent can't keep using
+it: Hugging Face's download links expire after an hour, and libtorrent never asks a web seed again for
+a file it redirected, so every file not finished within the hour stalled for good. Flotilla doesn't use
+those web seeds.
+
+### Gated models
+
+Some models are gated: Hugging Face serves them only to accounts their author let in, often after a
+form. When no peer is sending some of a gated model's pieces, Flotilla can fetch them with your account:
+
+1. Ask for access on the model's Hugging Face page. That's between you and the author: they see your
+   username and email, and their form may add terms of its own. Read them, since you'll be sharing
+   what you fetch. Flotilla never asks for you.
+2. Make a **Read** token at [huggingface.co/settings/tokens](https://huggingface.co/settings/tokens). A
+   fine-grained token works too, if it can only read and has read access to gated repos.
+3. Run `flotilla hf connect` and paste it. Behind gluetun: `docker exec -it flotilla flotilla hf connect`.
+
+What Flotilla does with it:
+
+- **Read-only tokens only.** It asks Hugging Face what the token may do and refuses one that can write
+  or spend (inference), so whoever reads the token file can't change your account.
+- **Only when needed.** Requests go without the token first. It's sent only for models Hugging Face
+  won't serve without one, and only to `huggingface.co`, never to its download servers. The node first
+  checks it with Hugging Face when a gated model needs it, not at startup.
+- **Kept on its own.** In `hf-token` next to your config file, readable only by you, or in the file
+  `FLOTILLA_HF_TOKEN_FILE` names (a Docker secret, say). Flotilla doesn't use `HF_TOKEN` or a
+  `huggingface-cli` login.
+- Until a model lets your account in, Flotilla asks again every hour. The dashboard (Settings, Hugging
+  Face) and `flotilla status` list those models, with a link to ask for access.
+- Hugging Face sees your account fetch those models, from the address Flotilla uses.
+- `flotilla hf status` checks the token. `flotilla hf disconnect`, or Disconnect in the dashboard,
+  removes it; delete it at huggingface.co/settings/tokens too if you no longer need it.
+
 ## Safety
 
-- **Only talks to `pirateface.co` and `huggingface.co`** over HTTPS for listings. Redirects are
-  re-checked, so neither can bounce it somewhere else.
-- **Only joins torrents on Pirate Face's tracker** with Pirate Face or Hugging Face web seeds. Anything
-  pointing elsewhere is refused.
+- **Only talks to `pirateface.co` and `huggingface.co`** over HTTPS, plus Hugging Face's download
+  servers (`hf.co`) for [pieces no peer has](#when-no-peer-has-a-piece). Redirects are re-checked, so
+  none of them can bounce it somewhere else.
+- **Only joins torrents on Pirate Face's tracker.** A torrent whose web seeds point anywhere but Pirate
+  Face or Hugging Face is refused, and Flotilla doesn't use the web seeds either way.
 - **A torrent must match the Hugging Face repo exactly**: same files, same sizes. Nothing extra can be
   slipped in.
 - **Every file is checked against Hugging Face's own hash.** If one doesn't match, that torrent is
@@ -120,8 +172,13 @@ The maths is in [DESIGN.md](DESIGN.md).
   and Qwen Community 1.0 licences. Each lets anyone copy and redistribute the weights; the GLM and Qwen
   ones add conditions only for very large commercial AI services. Other licences Pirate Face asks you to
   accept first (Gemma, Llama and so on) are never picked automatically.
-- **VPN-safe if you want it.** With `bind_interface` set, all torrent traffic is pinned to your VPN. If
-  the VPN drops, Flotilla goes offline instead of falling back to your real connection.
+- **VPN-safe if you want it.** With `bind_interface` set, all torrent traffic and Flotilla's own requests
+  (listings, pieces from Hugging Face) are pinned to your VPN. If the VPN drops, Flotilla goes offline
+  instead of falling back to your real connection. Name lookups still use your system's resolver.
+- **Pieces from Hugging Face are checked before they're kept.** Each must match the torrent's own piece
+  hash, and the whole file is checked against Hugging Face's hash afterwards like any other.
+- **Your Hugging Face account only if you connect it**, with a read-only token, sent only to
+  `huggingface.co` and only for [gated models](#gated-models).
 - **Honest about the costs.** Other peers can see the IP address you seed from, and seeding uses your
   upload bandwidth. Router port forwarding (UPnP) is off unless you turn it on.
 
@@ -148,6 +205,7 @@ Found a hole? See [SECURITY.md](SECURITY.md).
 | `flotilla dashboard` | Open the local dashboard |
 | `flotilla dashboard --serve --listen 0.0.0.0` | Serve the dashboard on your network for a node in a VPN container (see Behind gluetun) |
 | `flotilla status` | Text summary of the running node |
+| `flotilla hf connect` / `disconnect` / `status` | Connect a Hugging Face account (a read-only token) for [gated models](#gated-models), remove it, check it |
 | `flotilla history [--range 30d] [--model author/model] [--csv]` | Upload and download over time; `--csv` for a spreadsheet |
 | `flotilla verify` | Re-check every file you hold against its published hash |
 | `flotilla verify <folder>` | Check a model you downloaded (with any client) against the hash ledger |

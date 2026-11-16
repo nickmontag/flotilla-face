@@ -19,6 +19,7 @@ the trust boundary; nothing here listens on the network.
 from __future__ import annotations
 
 import json
+import os
 import re
 import secrets
 import time
@@ -151,7 +152,9 @@ def dashboard_key(state_dir: Path) -> str:
     state_dir.mkdir(parents=True, exist_ok=True)
     key = secrets.token_urlsafe(32)
     tmp = path.with_suffix(".tmp")
-    tmp.write_text(key + "\n")
-    tmp.chmod(0o600)
+    tmp.unlink(missing_ok=True)      # created fresh below, so it's never readable by others, even briefly
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, "w") as f:
+        f.write(key + "\n")
     tmp.replace(path)
     return key

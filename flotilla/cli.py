@@ -21,6 +21,9 @@ from .signing import PublicKey, SecretKey, SignatureError, verify
 
 def log(msg: str) -> None:
     print(f"{time.strftime('%H:%M:%S')}  {msg}", flush=True)
+    from .service import rotate_own_log
+
+    rotate_own_log()      # the background service's log file doesn't grow for ever
 
 
 def human(n: float) -> str:

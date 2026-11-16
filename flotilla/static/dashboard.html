@@ -1153,7 +1153,7 @@ function renderHistory(doc) {
 }
 
 loadHistory();
-setInterval(loadHistory, 60000);
+setInterval(() => { if (!document.hidden) loadHistory(); }, 60000);
 
 /* ---------------- reorienting ---------------- */
 
@@ -1725,7 +1725,11 @@ async function refresh() {
   } catch (e) { setPill("status", "bad", "Not running"); document.body.classList.remove("loading"); }
 }
 refresh();
-setInterval(refresh, 3000);
+// Only while the tab is in view: a dashboard left open in a background tab costs the node nothing.
+setInterval(() => { if (!document.hidden) refresh(); }, 3000);
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden) { refresh(); loadHistory(); }
+});
 </script>
 </body>
 </html>

@@ -133,8 +133,8 @@ shared out as usual. The amounts can't add up to more than your total space.
 </p>
 
 Traffic history counts the exact bytes each model moved, not snapshots of its speed, so nothing is
-missed between samples. It keeps per-minute detail for three days and hourly totals for good, about
-1 MB a year per model, in `history.db` in Flotilla's state folder. It survives restarts and never
+missed between samples. It keeps per-minute detail for three days, hourly totals for 90 days and daily
+totals for good, well under 1 MB a year per model, in `history.db` in Flotilla's state folder. It survives restarts and never
 leaves your computer. Time the node wasn't seeding, such as a computer asleep, shows as a gap, not
 as zero traffic.
 
@@ -312,7 +312,7 @@ Found a hole? See [SECURITY.md](SECURITY.md).
 | `flotilla init` | Set up or change space, speeds, VPN pinning, licences |
 | `flotilla plan` | Preview what you'd carry, without downloading (`--probe` looks at the live swarm) |
 | `flotilla run` | Run in the foreground (`--hours N` to seed for a set time) |
-| `flotilla service install` / `uninstall` / `status` | Run in the background: launchd on macOS, systemd on Linux (`--linger` keeps it running while you're logged out) |
+| `flotilla service install` / `uninstall` / `status` | Run in the background: launchd on macOS, systemd on Linux (`--linger` keeps it running while you're logged out). Logs: `~/Library/Logs/flotilla.log` on macOS, rotated at 10 MB with three old copies kept; `journalctl --user -u flotilla` on Linux |
 | `flotilla add <link>` / `remove <link>` / `picks` | Prioritize a model by its Hugging Face or Pirate Face link, take it off, list your picks |
 | `flotilla dashboard` | Open the local dashboard |
 | `flotilla dashboard --serve --listen 0.0.0.0` | Serve the dashboard on your network for a node in a VPN container (see Behind gluetun) |
@@ -348,16 +348,21 @@ docker run -it --rm --network container:gluetun -v flotilla:/root python:3.13-sl
   sh -c "pip install -q --root-user-action=ignore $F && flotilla init"
 
 # 2. Seeding: every connection goes through gluetun. The memory limit keeps it from crowding out
-#    anything else on the machine (see "Memory" below).
+#    anything else on the machine (see "Memory" below); the log limit keeps its log to 30 MB.
 docker run -d --name flotilla --network container:gluetun --restart unless-stopped \
-  --memory 3g --memory-swap 3g -v flotilla:/root \
+  --memory 3g --memory-swap 3g --log-opt max-size=10m --log-opt max-file=3 -v flotilla:/root \
   python:3.13-slim sh -c "pip install -q --root-user-action=ignore $F && exec flotilla run"
 
 # 3. Dashboard: outside gluetun, reachable from your network.
-docker run -d --name flotilla-dashboard --restart unless-stopped -p 7421:7421 -v flotilla:/root \
+docker run -d --name flotilla-dashboard --restart unless-stopped -p 7421:7421 \
+  --log-opt max-size=10m --log-opt max-file=3 -v flotilla:/root \
   python:3.13-slim sh -c "pip install -q --root-user-action=ignore $F && exec flotilla dashboard --serve --listen 0.0.0.0"
 docker logs flotilla-dashboard     # the address to open, with its access key
 ```
+
+Docker keeps a container's whole log unless told otherwise, and a node seeds for months: the
+`--log-opt` settings keep three 10 MB files at most. (To set this for every container, put
+`"log-opts": {"max-size": "10m", "max-file": "3"}` in Docker's `daemon.json`.)
 
 Use your gluetun container's name in place of `gluetun`. Files go in the `flotilla` Docker volume;
 mount a folder instead (`-v /srv/flotilla:/root`) to choose where.
@@ -366,6 +371,8 @@ The dashboard only reads the shared folder and hands your clicks to the seeding 
 so nothing it does goes through the VPN or the internet. Because anyone on your network could reach
 it, it needs an access key, included in the address `docker logs` shows. Open that address once and
 your browser remembers it. `docker exec flotilla-dashboard flotilla dashboard --url` prints it again.
+The dashboard speaks plain HTTP, so the key is only as private as your network: keep it to your home
+network, and don't forward its port to the internet.
 Without the dashboard, `docker exec flotilla flotilla status` and `flotilla history` work too.
 
 ### Memory

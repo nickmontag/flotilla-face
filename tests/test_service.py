@@ -63,3 +63,59 @@ def test_proc_route_longest_prefix(tmp_path, monkeypatch):
     monkeypatch.setattr(netinfo, "_iface_ipv4", lambda i: "10.100.0.2" if i == "tun0" else None)
     r = netinfo._proc_route("1.1.1.1")
     assert r.iface == "tun0" and r.address == "10.100.0.2" and r.looks_like_vpn
+
+
+def _run_logging(log, env_file, code):
+    import os
+    import subprocess
+    import sys
+
+    env = {k: v for k, v in os.environ.items() if k != service.LOG_ENV}
+    env["HOME"] = str(log.parent)                     # so the macOS fallback never finds a real log
+    if env_file:
+        env[service.LOG_ENV] = str(env_file)
+    with open(log, "a") as out:
+        subprocess.run([sys.executable, "-c", code], stdout=out, stderr=out, env=env, check=True)
+
+
+ROTATE = ("import sys\nfrom flotilla.service import rotate_own_log as r\nprint('before', flush=True)\n"
+          "print(r(max_bytes=1000, keep=2, every=0), flush=True)\n"
+          "print('after', flush=True)\nprint('err', file=sys.stderr, flush=True)\n"
+          "print(r(max_bytes=1000, keep=2, every=0), flush=True)\n")
+
+
+def test_the_service_log_is_rotated_keeping_a_few_old_copies(tmp_path):
+    """launchd's StandardOutPath is never rotated, so the node rotates its own log file."""
+    log = tmp_path / "flotilla.log"
+    (tmp_path / "flotilla.log.1").write_text("older\n")
+    (tmp_path / "flotilla.log.2").write_text("oldest\n")
+    log.write_text("x" * 3000 + "\n")
+    _run_logging(log, log, ROTATE)
+    assert log.read_text() == "True\nafter\nerr\nFalse\n"
+    assert (tmp_path / "flotilla.log.1").read_text().endswith("before\n")
+    assert (tmp_path / "flotilla.log.2").read_text() == "older\n"     # moved up; "oldest" is gone
+    assert not (tmp_path / "flotilla.log.3").exists()
+
+
+def test_output_you_redirect_yourself_is_never_rotated(tmp_path):
+    mine = tmp_path / "my-run.log"
+    mine.write_text("x" * 3000 + "\n")
+    _run_logging(mine, None, ROTATE)                            # no service log named
+    _run_logging(mine, tmp_path / "flotilla.log", ROTATE)       # the service log is another file
+    assert mine.read_text().count("False") == 4 and not list(tmp_path.glob("*.1"))
+
+
+def test_a_terminal_or_pipe_is_never_rotated(tmp_path, monkeypatch):
+    import subprocess
+    import sys
+
+    monkeypatch.setenv(service.LOG_ENV, str(tmp_path / "flotilla.log"))
+    code = "from flotilla.service import rotate_own_log\nprint(rotate_own_log(max_bytes=0, every=0))"
+    out = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, check=True).stdout
+    assert out.strip() == "False"
+
+
+def test_launchd_agent_names_its_log_for_rotation():
+    doc = plistlib.loads(service.launchd_plist(["/bin/flotilla"], Path("/c.toml"), Path("/st"), Path("/Users/x")).encode())
+    assert doc["EnvironmentVariables"] == {service.LOG_ENV: "/Users/x/Library/Logs/flotilla.log"}
+    assert doc["StandardOutPath"] == doc["StandardErrorPath"] == "/Users/x/Library/Logs/flotilla.log"

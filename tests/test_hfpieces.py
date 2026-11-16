@@ -394,7 +394,7 @@ class SlowHandle:
     def __init__(self, n, rate=0):
         self.progress, self.rate, self.prios = [0] * n, rate, [4] * n
 
-    def status(self):
+    def status(self, flags=None):
         return types.SimpleNamespace(download_payload_rate=self.rate,
                                      flags=lt.torrent_flags.upload_mode & lt.torrent_flags.paused)
 

@@ -204,6 +204,7 @@ class HuggingFace:
         if immutable and cache.exists():
             try:
                 raw = json.loads(cache.read_text())
+                os.utime(cache)        # in use: keep it out of prune_cache
                 # Trees cached before masked hashes were recognised may hold '*' strings; refetch those.
                 if not any(isinstance(v.get("sha256"), str) and not _hex(v["sha256"], 64) for v in raw.values()):
                     return {p: HFFile(**v) for p, v in raw.items()}
@@ -240,6 +241,20 @@ class HuggingFace:
             cache.parent.mkdir(parents=True, exist_ok=True)
             cache.write_text(json.dumps({p: vars(v) for p, v in out.items()}))
         return out
+
+
+    def prune_cache(self, days: float = TORRENT_CACHE_DAYS) -> None:
+        """Forget file lists not used for `days` (models no longer on the list, old revisions)."""
+        folder = self.cache_dir / "hf-trees"
+        if not folder.exists():
+            return
+        cutoff = time.time() - days * 86400
+        for f in folder.glob("*.json"):
+            try:
+                if f.stat().st_mtime < cutoff:
+                    f.unlink()
+            except OSError:
+                pass
 
 
 def license_from_card(doc: dict) -> str | None:

@@ -9,19 +9,24 @@
 # Flotilla in the background. Nothing needs sudo.
 #
 # Environment variables:
-#   FLOTILLA_PACKAGE=...        what to install instead of this repo's main branch
-#                               (a git URL, wheel or folder)
+#   FLOTILLA_REF=...            a tag or commit of this repo to install instead of main, e.g. v0.1.0
+#                               (a commit hash pins exactly what you run)
+#   FLOTILLA_PACKAGE=...        what to install instead of this repo (a git URL, wheel or folder)
 #   FLOTILLA_YES=1              no questions: install only, set up later with `flotilla init`
 #   FLOTILLA_NO_MODIFY_PATH=1   don't add ~/.local/bin to your shell profile
 set -eu
 
 # Straight from the source on GitHub, as a tarball (no git needed). Flotilla isn't published to
 # a package index, so what you install is what you can read in the repo.
-PACKAGE="${FLOTILLA_PACKAGE:-flotilla-face @ https://github.com/nickmontag/flotilla-face/archive/main.tar.gz}"
+REF="${FLOTILLA_REF:-main}"
+PACKAGE="${FLOTILLA_PACKAGE:-flotilla-face @ https://github.com/nickmontag/flotilla-face/archive/$REF.tar.gz}"
 PYTHON_VERSION="3.13" # libtorrent publishes no wheels for 3.14+ yet
 
 say() { printf '%s\n' "$*"; }
 die() { printf 'flotilla install: %s\n' "$*" >&2; exit 1; }
+case "$REF" in
+  *[!A-Za-z0-9._-]* | "") die "FLOTILLA_REF must be a tag, branch or commit (letters, digits, . _ -)." ;;
+esac
 
 # --- 1. Is this system supported? ------------------------------------------
 os=$(uname -s)

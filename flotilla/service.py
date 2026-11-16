@@ -33,6 +33,67 @@ class Plan:
     notes: list[str] = field(default_factory=list)
 
 
+LOG_ENV = "FLOTILLA_LOG_FILE"   # set by the launchd agent: the log file this node may rotate
+LOG_MAX = 10 * 1024 * 1024       # rotated past this...
+LOG_KEEP = 3                     # ...keeping flotilla.log.1 to .3: at most about 40 MB in all
+_log_checked = 0.0
+
+
+def service_log(home: Path | None = None) -> Path:
+    return (home or Path.home()) / "Library" / "Logs" / "flotilla.log"
+
+
+def rotate_own_log(max_bytes: int = LOG_MAX, keep: int = LOG_KEEP, every: float = 60.0) -> bool:
+    """Rotate the background service's log file, which launchd writes and never rotates.
+
+    Only that file: stdout must be the file FLOTILLA_LOG_FILE names (the launchd agent sets it),
+    or, for agents installed before it did, the usual ~/Library/Logs/flotilla.log on macOS.
+    Output you redirect yourself, a terminal, a pipe, journald or Docker is never touched.
+    Past max_bytes, flotilla.log becomes flotilla.log.1 (older copies move up, the oldest past
+    `keep` is deleted) and writing carries on in a fresh flotilla.log. Checked at most every
+    `every` seconds. True if it rotated."""
+    global _log_checked
+    import stat
+    import time
+
+    now = time.monotonic()
+    if now - _log_checked < every:
+        return False
+    _log_checked = now
+    named = os.environ.get(LOG_ENV, "").strip()
+    if named:
+        path = Path(named)
+    elif sys.platform == "darwin":
+        path = service_log()
+    else:
+        return False
+    try:
+        out = os.fstat(1)
+        if not stat.S_ISREG(out.st_mode) or out.st_size < max_bytes:
+            return False
+        st = path.stat()
+        if (st.st_dev, st.st_ino) != (out.st_dev, out.st_ino):     # stdout is some other file
+            return False
+        sys.stdout.flush()
+        sys.stderr.flush()
+        for i in range(keep - 1, 0, -1):
+            older = path.with_name(f"{path.name}.{i}")
+            if older.exists():
+                os.replace(older, path.with_name(f"{path.name}.{i + 1}"))
+        os.replace(path, path.with_name(f"{path.name}.1"))
+        fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o644)
+        try:
+            err = os.fstat(2)
+            os.dup2(fd, 1)
+            if (err.st_dev, err.st_ino) == (out.st_dev, out.st_ino):
+                os.dup2(fd, 2)
+        finally:
+            os.close(fd)
+        return True
+    except OSError:
+        return False
+
+
 def executable() -> list[str]:
     """The command that runs this flotilla. Symlinks are kept as-is on purpose:
     `uv tool` puts a stable shim in ~/.local/bin that survives upgrades."""
@@ -54,7 +115,7 @@ def _args(exe: list[str], config: Path, state: Path) -> list[str]:
 
 def launchd_plist(exe: list[str], config: Path, state: Path, home: Path) -> str:
     args = "\n".join(f"    <string>{escape(a)}</string>" for a in _args(exe, config, state))
-    log = escape(str(home / "Library" / "Logs" / "flotilla.log"))
+    log = escape(str(service_log(home)))
     return f"""<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -70,6 +131,7 @@ def launchd_plist(exe: list[str], config: Path, state: Path, home: Path) -> str:
   <key>ProcessType</key><string>Background</string>
   <key>LowPriorityIO</key><true/>
   <key>Nice</key><integer>10</integer>
+  <key>EnvironmentVariables</key><dict><key>{LOG_ENV}</key><string>{log}</string></dict>
   <key>StandardOutPath</key><string>{log}</string>
   <key>StandardErrorPath</key><string>{log}</string>
 </dict>
@@ -87,7 +149,7 @@ def launchd_install(exe: list[str], config: Path, state: Path, home: Path) -> Pl
         Step(f"write {plist}", write=(plist, launchd_plist(exe, config, state, home))),
         Step("stop any running copy", cmd=["launchctl", "bootout", f"{domain}/{LABEL}"]),
         Step("start it now and at every login", cmd=["launchctl", "bootstrap", domain, str(plist)], check=True),
-    ], [f"logs: {home / 'Library' / 'Logs' / 'flotilla.log'}"])
+    ], [f"logs: {service_log(home)} (rotated at {LOG_MAX >> 20} MB, {LOG_KEEP} old copies kept)"])
 
 
 def launchd_uninstall(home: Path) -> Plan:

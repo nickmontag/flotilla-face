@@ -5,7 +5,9 @@ not a snapshot of the current speed, so nothing between samples is lost). They g
 SQLite file in the state folder:
 
 * per minute, kept for 3 days (for the last hour and day);
-* per hour, kept for good (about 9,000 rows a year per model).
+* per hour, kept for 90 days;
+* per day after that, for good (365 rows a year per model). Older days follow UTC midnight, so
+  a chart in another time zone puts a day's bytes up to half a day off; at that range nobody can tell.
 
 The node's own row ("*") also counts the seconds it was online and seeding, so a gap
 while the computer slept shows as a gap, not as zero traffic. Rates are bytes per bucket
@@ -21,6 +23,7 @@ from pathlib import Path
 
 MINUTE, HOUR, DAY = 60, 3600, 86400
 KEEP_MINUTES = 3 * DAY
+KEEP_HOURS = 90 * DAY
 NODE = "*"
 
 # range name -> (seconds, bucket seconds); None means "since the first record"
@@ -49,6 +52,8 @@ class History:
                 online INTEGER NOT NULL DEFAULT 0,
                 PRIMARY KEY (res, ih, t)) WITHOUT ROWID""")
             self.db.execute("CREATE TABLE IF NOT EXISTS names (ih TEXT PRIMARY KEY, repo TEXT NOT NULL)")
+            # The per-model totals read a time range across every torrent; the key leads with ih.
+            self.db.execute("CREATE INDEX IF NOT EXISTS traffic_by_time ON traffic (res, t)")
         self._pruned = 0.0
 
     def close(self) -> None:
@@ -75,13 +80,26 @@ class History:
                                     "ON CONFLICT (ih) DO UPDATE SET repo = excluded.repo", list(names.items()))
             if now - self._pruned > HOUR:
                 self.db.execute("DELETE FROM traffic WHERE res = ? AND t < ?", (MINUTE, int(now - KEEP_MINUTES)))
+                self._roll_up(int((now - KEEP_HOURS) // DAY * DAY))
                 self._pruned = now
+
+    def _roll_up(self, before: int) -> None:
+        """Hours before `before` (a UTC midnight) become one row per day. Caller holds the lock."""
+        self.db.execute(
+            """INSERT INTO traffic (res, t, ih, up, down, online)
+               SELECT ?, (t / ?) * ?, ih, SUM(up), SUM(down), SUM(online) FROM traffic
+               WHERE res = ? AND t < ? GROUP BY (t / ?) * ?, ih
+               ON CONFLICT (res, ih, t) DO UPDATE SET up = up + excluded.up,
+               down = down + excluded.down, online = online + excluded.online""",
+            (DAY, DAY, DAY, HOUR, before, DAY, DAY))
+        self.db.execute("DELETE FROM traffic WHERE res = ? AND t < ?", (HOUR, before))
 
     # ------------------------------------------------------------------ reading
 
     def first(self) -> int | None:
         with self.lock:
-            row = self.db.execute("SELECT MIN(t) FROM traffic WHERE res = ? AND ih = ?", (HOUR, NODE)).fetchone()
+            row = self.db.execute("SELECT MIN(t) FROM traffic WHERE res IN (?, ?) AND ih = ?",
+                                  (HOUR, DAY, NODE)).fetchone()
         return row[0]
 
     def repos(self) -> list[str]:
@@ -107,6 +125,8 @@ class History:
             if span > 2 * 365 * DAY:
                 bucket = 7 * DAY
         res = MINUTE if bucket < HOUR and span <= KEEP_MINUTES else HOUR
+        # Hours older than KEEP_HOURS were rolled up into days (bucket >= DAY by then).
+        res2 = MINUTE if res == MINUTE else DAY
         align = tz_offset if bucket >= DAY else 0
 
         def floor(t):
@@ -125,16 +145,16 @@ class History:
                          SUM(CASE WHEN {repo_clause} THEN up ELSE 0 END),
                          SUM(CASE WHEN {repo_clause} THEN down ELSE 0 END),
                          SUM(CASE WHEN ih = ? THEN online ELSE 0 END)
-                  FROM traffic WHERE res = ? AND t >= ? AND t < ? AND (ih = ? OR {repo_clause})
+                  FROM traffic WHERE res IN (?, ?) AND t >= ? AND t < ? AND (ih = ? OR {repo_clause})
                   GROUP BY b"""
-        params = [align, bucket, bucket, align, *args, *args, NODE, res, start, end, NODE, *args]
+        params = [align, bucket, bucket, align, *args, *args, NODE, res, res2, start, end, NODE, *args]
         with self.lock:
             got = {int(b): (u, d, o) for b, u, d, o in self.db.execute(sql, params)}
             models = [{"repo": r, "up": u, "down": d} for r, u, d in self.db.execute(
                 """SELECT n.repo, SUM(x.up), SUM(x.down) FROM traffic x JOIN names n ON n.ih = x.ih
-                   WHERE x.res = ? AND x.t >= ? AND x.t < ? GROUP BY n.repo
+                   WHERE x.res IN (?, ?) AND x.t >= ? AND x.t < ? GROUP BY n.repo
                    HAVING SUM(x.up) + SUM(x.down) > 0 ORDER BY SUM(x.up) DESC, SUM(x.down) DESC""",
-                (res, start, end))]
+                (res, res2, start, end))]
         points = []
         for b in range(start, end, bucket):
             u, d, o = got.get(b, (0, 0, 0))

@@ -86,6 +86,13 @@ class Feed:
     local_source: str = ""   # path of the user's own overrides, if any were applied
     order: list[str] = field(default_factory=list)          # the user's ranking, top first
     allot_gb: dict[str, float] = field(default_factory=dict)  # repo -> GB the user set aside for it
+    picks: set[str] = field(default_factory=set)             # repos the user's own file lists as models
+
+    @property
+    def manual(self) -> frozenset[str]:
+        """Models the user chose by hand: their own picks, and models they set space aside for.
+        Reorienting never swaps these out."""
+        return frozenset(self.picks) | frozenset(self.allot_gb)
 
     def by_repo(self) -> dict[str, list[FeedModel]]:
         out: dict[str, list[FeedModel]] = {}
@@ -386,6 +393,7 @@ def apply_local(feed: Feed, path: Path, log=print) -> Feed:
                 m.priority_override = p
         feed.order = order
     feed.allot_gb = allot
+    feed.picks = {m.repo for m in models}
     feed.local_source = str(path)
     return feed
 

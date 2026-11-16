@@ -464,3 +464,75 @@ def test_replan_off_the_main_loop_hands_the_apply_back(tmp_path):
     eng.process_commands()
     assert eng._plans_applied == 1 and eng.last_plan is not None
     eng.shutdown()
+
+
+def test_reorienting_follows_the_schedule_and_the_churn_size(tmp_path):
+    """Between reorientations what the node holds stays, whatever the swarm needs. When one is due
+    (or asked for), it swaps up to the churn size: lowest priority out, most needed in."""
+    from flotilla.candidates import build_candidate
+    from flotilla.feed import neutral_feed
+
+    from .fakes import FakeHF, FakePF, FakeRepo, make_repo
+
+    low = FakeRepo("org/low", make_repo(4, seed=1), seeders=9)       # well covered
+    need = FakeRepo("org/need", make_repo(4, seed=2), seeders=0)     # no copy anywhere
+    cfg = Config()
+    cfg.folder, cfg.listen_port, cfg.reserve_gb = tmp_path / "seeds", 0, 0
+    cfg.whole_model_under_gb, cfg.min_hold_days = 0, 0
+    cfg.budget_gb = 990e3 / GB               # four ~200 KB shards and their boundary pieces; never five
+    cfg.reorient, cfg.churn_gb = "weekly", 450e3 / GB                # two shards each time
+    logs = []
+    eng = Engine(cfg, State(tmp_path / "state"), log=logs.append, listen_host="127.0.0.1", dht=False)
+    cand = lambda r: build_candidate(r.repo, None, neutral_feed(), None, FakePF([r]), FakeHF([r]), cfg)
+    held = lambda r: sum(1 for e in eng.state.holdings.get(r.infohash, {}).get("files", {}).values()
+                         if e["path"].endswith(".safetensors"))
+    ro = eng.state.data["reorient"]
+
+    eng.replan([cand(low)], [], probe_seconds=0)                     # a new node fills its space
+    assert (held(low), held(need)) == (4, 0)
+    assert ro["last"] and "result" not in ro and eng.reorient_at() == ro["last"] + 7 * 86400
+
+    eng.replan([cand(low), cand(need)], [], probe_seconds=0)         # needier pieces turn up: not due yet
+    assert (held(low), held(need)) == (4, 0)
+    pv = eng.snapshot()["reorient"]["preview"]                       # but the dashboard says what's coming
+    assert [(g["repo"], g["pieces"]) for g in pv["out"]] == [("org/low", 2)]
+    assert [(g["repo"], g["pieces"]) for g in pv["in"]] == [("org/need", 2)]
+    assert sum(g["bytes"] for g in pv["out"]) <= 450e3
+
+    ro["last"] -= 8 * 86400                                          # a week later
+    eng.replan([cand(low), cand(need)], [], probe_seconds=0)
+    assert (held(low), held(need)) == (2, 2)
+    assert ro["result"]["out"][0]["repo"] == "org/low" and ro["result"]["in"][0]["repo"] == "org/need"
+    assert not ro["result"]["asked"] and any(l.startswith("reorient: dropped") for l in logs)
+    eng.replan([cand(low), cand(need)], [], probe_seconds=0)         # the next look, hours later: nothing moves
+    assert (held(low), held(need)) == (2, 2)
+
+    cfg.reorient = "never"
+    ro["last"] -= 400 * 86400
+    assert eng.reorient_at() is None
+    eng.replan([cand(low), cand(need)], [], probe_seconds=0)
+    assert (held(low), held(need)) == (2, 2)
+    assert eng.submit("reorient", {}) == "queued"                    # ...until the user asks
+    eng.process_commands()
+    assert eng.next_refresh == 0 and eng.snapshot()["reorient"]["asked"]
+    eng.replan([cand(low), cand(need)], [], probe_seconds=0)
+    assert (held(low), held(need)) == (0, 4) and ro["result"]["asked"]
+    assert not eng.snapshot()["reorient"]["asked"]
+    eng.shutdown()
+
+
+def test_next_look_at_the_swarm_comes_in_time_for_a_reorientation(tmp_path):
+    import time
+
+    cfg = Config()
+    cfg.folder, cfg.listen_port = tmp_path / "seeds", 0
+    eng = Engine(cfg, State(tmp_path / "state"), log=lambda *_: None, listen_host="127.0.0.1", dht=False)
+    now = time.time()
+    assert eng._next_refresh_at() > now + 4 * 3600                   # no plan yet: the usual six hours or so
+    cfg.reorient = "daily"
+    eng.state.data["reorient"]["last"] = now - 86400 + 600           # due in ten minutes
+    assert now + 590 < eng._next_refresh_at() < now + 610
+    assert not eng.reorient_due(now) and eng.reorient_due(now + 601)
+    eng.state.data["reorient"]["last"] = now - 3 * 86400             # overdue: the look starting now handles it
+    assert eng._next_refresh_at() > now + 4 * 3600
+    eng.shutdown()

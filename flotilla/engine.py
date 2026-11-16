@@ -18,6 +18,7 @@ dir: the verified .torrent, resume data, and per-file expected hashes.
 from __future__ import annotations
 
 import collections
+import dataclasses
 import json
 import math
 import os
@@ -34,7 +35,8 @@ import libtorrent as lt
 
 from . import USER_AGENT, __version__, netsafe
 from .candidates import Rejection, TorrentCand, gather
-from .config import BUILTIN_EDITOR_KEYS, Config, State, memory_budget, own_memory
+from .config import (BUILTIN_EDITOR_KEYS, REORIENT_CHOICES, REORIENT_EVERY, Config, State, memory_budget,
+                     own_memory)
 from .hfpieces import HFPieces
 from .history import History
 from .ledger import Ledger, load_ledger
@@ -42,7 +44,7 @@ from .remote import WRITE_EVERY, snapshot_wanted, take_requests, write_snapshot
 from .feed import (BUNDLED_FEED, REPO_RE, Feed, FeedError, add_pick, apply_local, list_picks, load_feed, origin_view,
                    parse_model_ref, rank_priority, read_allot, read_order, remove_pick, set_allot, set_order)
 from .netinfo import address_present
-from .planner import GB, Params, Plan, plan as make_plan
+from .planner import GB, Params, Plan, Unit, plan as make_plan
 from .signing import PublicKey, SignatureError
 from .sources import HuggingFace, PirateFace, git_blob_sha1, sha256_file
 from .torrentmeta import parse_torrent
@@ -335,6 +337,11 @@ class Engine:
         self.state.data.setdefault("blocklist", [])
         self.state.data.setdefault("dropped", [])      # repos the user removed from the dashboard
         self.state.data.setdefault("ledger", {})       # seed-hours per torrent (future Pirate Face points)
+        # Reorienting: when this node last swapped held pieces for needier ones, and what it swapped.
+        self.state.data.setdefault("reorient", {})
+        self._reorient_now = False                     # the user asked for one, whatever the schedule
+        self._last_cands: list[TorrentCand] = []       # what the last plan chose from
+        self.reorient_preview: dict | None = None      # what the next reorientation would swap
         # Dashboard plumbing: commands run on the main loop, never on the web thread.
         self.user_paused = False
         self.commands: queue.Queue = queue.Queue()
@@ -410,13 +417,11 @@ class Engine:
 
     def mark_held(self, cands: list[TorrentCand]) -> None:
         for c in cands:
-            h = self.state.holdings.get(c.infohash)
-            if not h:
-                continue
+            files = (self.state.holdings.get(c.infohash) or {}).get("files", {})
             for f in c.files:
-                e = h["files"].get(str(f.index))
-                if e and e["status"] in ("wanted", "flushing", "verifying", "verified"):
-                    f.held, f.held_since = True, e.get("since")
+                e = files.get(str(f.index))
+                held = bool(e and e["status"] in ("wanted", "flushing", "verifying", "verified"))
+                f.held, f.held_since = held, (e.get("since") if held else None)
 
     def budget_bytes(self) -> int:
         self.cfg.folder.mkdir(parents=True, exist_ok=True)
@@ -431,12 +436,15 @@ class Engine:
         free = shutil.disk_usage(self.cfg.folder).free
         return int(max(0, min(self.cfg.budget_gb * GB, ours + free - self.cfg.reserve_gb * GB)))
 
-    def params(self) -> Params:
+    def params(self, churn_bytes: int = 0) -> Params:
+        """What the planner works from. churn_bytes: how much of what's held it may swap for needier
+        pieces (0 between reorientations)."""
         return Params(
             budget_bytes=self.budget_bytes(), upload_bps=self.cfg.upload_bps, download_bps=self.cfg.download_bps,
             max_torrents=self.cfg.max_torrents, spread=self.cfg.spread, hold_bonus=self.cfg.hold_bonus,
             min_hold_days=self.cfg.min_hold_days, whole_model_under_bytes=int(self.cfg.whole_model_under_gb * GB),
             now=time.time(), allot={r: int(gb * GB) for r, gb in (self.feed.allot_gb if self.feed else {}).items()},
+            churn_bytes=churn_bytes, manual=self.feed.manual if self.feed else frozenset(),
         )
 
     def replan(self, cands: list[TorrentCand], rejected: list[Rejection],
@@ -464,11 +472,114 @@ class Engine:
         return self._plan_and_apply(cands, rejected)
 
     def _plan_and_apply(self, cands: list[TorrentCand], rejected: list[Rejection]) -> Plan:
-        p = make_plan(cands, self.params(), self.state.node_id)
+        now = time.time()
+        ro = self.state.data["reorient"]
+        asked, self._reorient_now = self._reorient_now, False
+        due = asked or self.reorient_due(now)
+        base = self.params()
+        churn = int(self.cfg.churn_gb * GB)
+        p = make_plan(cands, dataclasses.replace(base, churn_bytes=churn if due else 0), self.state.node_id)
         self.apply(p, cands, rejected)
         self.last_plan = p
         self._plans_applied += 1
+        self._last_cands = cands
+        out, into = self._swap_groups(p.swap_out), self._swap_groups(p.swap_in)
+        if due:
+            ro["last"] = now
+            ro["result"] = {"at": now, "churn_gb": self.cfg.churn_gb, "asked": asked, "out": out, "in": into}
+            if out:
+                self.log(f"reorient: dropped {self._swap_words(out)}, the lowest-priority pieces held, for "
+                         f"{self._swap_words(into)} the swarm needs more (up to {self.cfg.churn_gb:g} GB each time)")
+            elif not churn:
+                self.log("reorient: nothing swapped, the churn size is 0 GB")
+            else:
+                self.log("reorient: nothing to swap"
+                         + (f": the smallest swap worth making is {p.churn_short / GB:.1f} GB, more than the "
+                            f"{self.cfg.churn_gb:g} GB allowed each time" if p.churn_short
+                            else ": nothing in the swarm needs the space more than what's held"))
+        else:
+            ro.setdefault("last", now)       # a new node's first reorientation comes one period after it starts
+            if out:                          # only a model the user chose comes in between reorientations
+                self.log(f"made room for {self._swap_words(into)} of your own models: dropped {self._swap_words(out)}")
+        with self.lock:
+            self.state.save()
+        self._update_preview(base, now)
         return p
+
+    # ---------------------------------------------------------- reorienting
+
+    def reorient_at(self) -> float | None:
+        """When the next scheduled reorientation is due (None: never, or no plan made yet)."""
+        every = REORIENT_EVERY.get(self.cfg.reorient)
+        last = self.state.data["reorient"].get("last")
+        return last + every if every and last else None
+
+    def reorient_due(self, now: float) -> bool:
+        at = self.reorient_at()
+        return at is not None and now >= at
+
+    @staticmethod
+    def _swap_groups(units: list[Unit]) -> list[dict]:
+        """Units by model, in the order given: what the dashboard and the log show of a swap."""
+        out: dict[str, dict] = {}
+        for u in units:
+            c = u.cand
+            g = out.setdefault(c.infohash, {"repo": c.repo, "pieces": 0, "bytes": 0, "rarest": u.availability,
+                                            "target": c.target_replicas, "priority": round(c.priority, 3),
+                                            "hf_backed": c.hf_backed, "whole": False})
+            g["pieces"] += sum(1 for f in u.files if f.kind == "weight") or 1
+            g["bytes"] += u.size
+            g["rarest"] = min(g["rarest"], u.availability)
+            g["whole"] = g["whole"] or u.whole
+        return list(out.values())
+
+    @staticmethod
+    def _swap_words(groups: list[dict]) -> str:
+        total = sum(g["bytes"] for g in groups)
+        size = f"{total / GB:.1f} GB" if total >= GB / 10 else f"{total / 1e6:.1f} MB"
+        names = ", ".join(f"{g['pieces']} of {g['repo']}" if not g["whole"] else g["repo"] for g in groups[:4])
+        more = f" and {len(groups) - 4} more" if len(groups) > 4 else ""
+        return f"{size} ({names}{more})"
+
+    def _update_preview(self, base: Params | None = None, at: float | None = None) -> None:
+        """Work out what a reorientation would swap right now, from the last look at the swarm.
+        The dashboard shows it ahead of time. Runs on the main loop."""
+        if not self._last_cands and at is None:
+            return
+        with self.lock:
+            self.mark_held(self._last_cands)
+        base = base or self.params()
+        p = make_plan(self._last_cands, dataclasses.replace(base, churn_bytes=int(self.cfg.churn_gb * GB)),
+                      self.state.node_id)
+        swappable = [u for pk in p.picks.values() for u in pk.units
+                     if u.held and not u.forced and u.cand.repo not in base.manual] + p.swap_out
+        self.reorient_preview = {
+            "at": at if at is not None else (self.reorient_preview or {}).get("at"),
+            "churn_gb": self.cfg.churn_gb,
+            "out": self._swap_groups(p.swap_out), "in": self._swap_groups(p.swap_in),
+            "lowest": self._swap_groups(p.lowest), "top": self._swap_groups(p.top),
+            "short": p.churn_short,
+            # What a swap may take from: held, past min_hold_days, and not a model the user chose.
+            "swappable": sum(u.size for u in swappable),
+            "held": sum(f.size for c in self._last_cands for f in c.files if f.held),
+        }
+
+    def reorient_view(self) -> dict:
+        ro = self.state.data["reorient"]
+        return {"every": self.cfg.reorient, "churn_gb": self.cfg.churn_gb, "last": ro.get("last"),
+                "next": self.reorient_at(), "asked": self._reorient_now, "min_hold_days": self.cfg.min_hold_days,
+                "preview": self.reorient_preview, "result": ro.get("result")}
+
+    def _do_reorient(self, _) -> None:
+        self._reorient_now = True
+        self.next_refresh = 0
+        self.log("reorientation requested from the dashboard: looking at the swarm first")
+
+    def _next_refresh_at(self) -> float:
+        """The next look at the swarm: refresh_hours from now, or sooner if a reorientation is due before then."""
+        now = time.time()
+        at, due = now + self.refresh_interval(), self.reorient_at()
+        return min(at, due) if due and due > now else at
 
     def _do_apply_plan(self, body: dict) -> None:
         self._plan_and_apply(body["cands"], body["rejected"])
@@ -1001,11 +1112,12 @@ class Engine:
     SETTINGS = {  # name: (min, max)
         "budget_gb": (1, 1e6), "reserve_gb": (0, 1e6), "upload_mbps": (0.1, 1e5), "download_mbps": (0.1, 1e5),
         "upload_share": (0.05, 1), "download_share": (0.05, 1), "monthly_upload_cap_gb": (0, 1e7),
-        "hf_gb_per_day": (0, 1e6),
+        "hf_gb_per_day": (0, 1e6), "churn_gb": (0, 1e6),
     }
     SWITCHES = ("hf_fallback",)   # on/off settings
-    ACTIONS = ("settings", "pause", "resume", "replan", "drop", "add", "remove", "order", "allot", "skip", "unskip",
-               "hf_disconnect")
+    CHOICES = {"reorient": REORIENT_CHOICES}   # one-of settings
+    ACTIONS = ("settings", "pause", "resume", "replan", "reorient", "drop", "add", "remove", "order", "allot", "skip",
+               "unskip", "hf_disconnect")
 
     def _bind_up(self) -> bool | None:
         if not self.cfg.bind_interface:
@@ -1041,7 +1153,8 @@ class Engine:
                                    for _, e in sorted(held.items()) if e["size"] >= 64 << 20]
             doc.update({
                 "version": __version__, "now": time.time(),
-                "settings": {k: getattr(self.cfg, k) for k in (*self.SETTINGS, *self.SWITCHES)},
+                "settings": {k: getattr(self.cfg, k) for k in (*self.SETTINGS, *self.SWITCHES, *self.CHOICES)},
+                "reorient": self.reorient_view(),
                 "disk": {"free": free, "total": total, "held": sum(t["done"] for t in doc["torrents"]),
                          "folder": str(self.cfg.folder), "paused": self.disk_paused},
                 "network": {"bind": self.cfg.bind_interface, "bind_up": self._bind_up(),
@@ -1074,6 +1187,11 @@ class Engine:
                         raise ValueError(f"{k} must be true or false")
                     clean[k] = v
                     continue
+                if k in self.CHOICES:
+                    if v not in self.CHOICES[k]:
+                        raise ValueError(f"{k} must be one of: {', '.join(self.CHOICES[k])}")
+                    clean[k] = v
+                    continue
                 if k not in self.SETTINGS:
                     raise ValueError(f"unknown setting {k!r}")
                 if isinstance(v, bool) or not isinstance(v, (int, float)) or math.isnan(v):
@@ -1102,7 +1220,8 @@ class Engine:
             if not isinstance(order, list):
                 raise ValueError("order must be a list of models")
             set_order(self.cfg.local_feed, order)   # FeedError explains a bad entry
-            self.log(f"priority order changed ({len(order)} models); replanning")
+            self.log(f"priority order changed ({len(order)} models); replanning (free space follows it now, "
+                     f"what's held shifts at the next reorientation)")
             self.commands.put(("replan_soon", {}))
             return "saved"
         elif action == "allot":
@@ -1207,16 +1326,24 @@ class Engine:
         os.replace(tmp, self.cfg.path)
 
     def _do_settings(self, s: dict) -> None:
+        changed = {k for k, v in s.items() if getattr(self.cfg, k) != v}   # Save sends every field each time
         for k, v in s.items():
             setattr(self.cfg, k, v)
         self.ses.apply_settings({"upload_rate_limit": max(1, int(self.cfg.upload_bps)),
                                  "download_rate_limit": max(1, int(self.cfg.download_bps)),
                                  "connections_limit": self.cfg.connections_limit})
         self.save_config()
-        self.log("settings changed: " + ", ".join(f"{k} = {('on' if v else 'off') if isinstance(v, bool) else f'{v:g}'}"
-                                                  for k, v in s.items()))
+        def shown(v):
+            return ("on" if v else "off") if isinstance(v, bool) else v if isinstance(v, str) else f"{v:g}"
+
+        self.log("settings changed: " + ", ".join(f"{k} = {shown(v)}" for k, v in s.items()))
         if "budget_gb" in s or "reserve_gb" in s:
             self.next_refresh = min(self.next_refresh or time.time(), time.time() + 5)
+        if changed & {"reorient", "churn_gb"}:
+            self._update_preview()
+            due = self.reorient_at()         # a shorter schedule can bring the next one forward
+            if due and self.next_refresh:
+                self.next_refresh = min(self.next_refresh, max(due, time.time() + 5))
 
     def _do_pause(self, _) -> None:
         self.user_paused = True
@@ -1534,7 +1661,7 @@ class Engine:
         self._sampler = threading.Thread(target=self._sample_loop, name="history", daemon=True)
         self._sampler.start()
         self._start_refresh()
-        self.next_refresh = time.time() + self.refresh_interval()
+        self.next_refresh = self._next_refresh_at()
         last_status = last_resume = 0.0
         while not self.stop.is_set():
             self.ses.wait_for_alert(1000)
@@ -1563,7 +1690,7 @@ class Engine:
                     self.next_refresh = now + 30          # one is still running: ask again shortly
                 else:
                     self._start_refresh()
-                    self.next_refresh = time.time() + self.refresh_interval()
+                    self.next_refresh = self._next_refresh_at()
         self.shutdown()
 
     def refresh_interval(self) -> float:

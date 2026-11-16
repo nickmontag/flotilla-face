@@ -4,173 +4,285 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Flotilla Face</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg viewBox='0 0 64 64' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='ff-sea' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%231fb8a6'/%3E%3Cstop offset='.62' stop-color='%230d6e68'/%3E%3Cstop offset='1' stop-color='%23083f3f'/%3E%3C/linearGradient%3E%3Cg id='ff-ship'%3E%3Cpath fill-rule='evenodd' d='M2 27.5h8.6l1 4.3h24.6l8.6-3.6-2.6 7.4C40.2 40.4 36.7 42 31.7 42H12.6C7.6 42 4.4 39.4 3.4 35.4Z M15.2 35h2.4v2.2h-2.4zM20.6 35H23v2.2h-2.4zM26 35h2.4v2.2H26zM31.4 35h2.4v2.2h-2.4zM4.8 30.4h2.4v1.8H4.8z'/%3E%3Cpath d='M21.2 3h1.6v29h-1.6zM32.2 9h1.5v23h-1.5zM8.2 12.5h1.3v15.5H8.2zM38.6 31.4 48 23.4l1 1.1-9.2 7.9z'/%3E%3Cpath d='M15.4 6.4q6.6 2.3 13.2 0l-1 8.6q-5.6 2-11.2 0z'/%3E%3Cpath d='M14.4 17.2q7.6 2.6 15.2 0l-1.2 10.4q-6.4 2.2-12.8 0z'/%3E%3Cpath d='M28.4 11.4q5.1 1.8 10.2 0l-.8 6.6q-4.3 1.6-8.6 0z'/%3E%3Cpath d='M27.9 20.4q5.9 2.2 11.8 0l-1 7.6q-4.9 1.8-9.8 0z'/%3E%3Cpath d='M8.2 13.5 2.6 26.5h5.6z'/%3E%3Cpath d='M35.4 10.4 47.4 23.6l-5.8 3.1z'/%3E%3Cpath d='M22.8 2h7.6l-2.2 2.8 2.2 2.8h-7.6z'/%3E%3Cpath d='M19.6 15.4h4.8v1.4h-4.8z'/%3E%3C/g%3E%3C/defs%3E%3Crect x='1' y='1' width='62' height='62' rx='16' fill='url(%23ff-sea)'/%3E%3Ccircle cx='53' cy='12' r='5' fill='%23fff' fill-opacity='.18'/%3E%3Cuse href='%23ff-ship' transform='translate(2 13.5) scale(.64)' fill='%23fff' opacity='.58'/%3E%3Cuse href='%23ff-ship' transform='translate(15 8.5) scale(.93)' fill='%230d6e68' stroke='%230d6e68' stroke-width='3.2' stroke-linejoin='round'/%3E%3Cuse href='%23ff-ship' transform='translate(15 8.5) scale(.93)' fill='%23fff'/%3E%3Cg transform='translate(15 8.5) scale(.93)'%3E%3Cpath d='M22.8 2h7.6l-2.2 2.8 2.2 2.8h-7.6z' fill='%2306302f'/%3E%3Ccircle cx='25.6' cy='4' r='1.25' fill='%23fff'/%3E%3Cpath d='M24.1 5.4l3 1.4M24.1 6.8l3-1.4' stroke='%23fff' stroke-width='.55' stroke-linecap='round'/%3E%3C/g%3E%3Cpath d='M5 52.5q3.5-2.6 7 0t7 0 7 0 7 0 7 0 7 0 7 0 7 0' fill='none' stroke='%23fff' stroke-opacity='.55' stroke-width='2' stroke-linecap='round'/%3E%3Cpath d='M10 57.5q3.5-2 7 0t7 0 7 0 7 0 7 0 7 0 7 0' fill='none' stroke='%23fff' stroke-opacity='.25' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E">
 <style>
+  /* Harbor palette: sea teal for what this node gives (upload, pieces held), sky blue for what it
+     takes (download), signal orange for warnings. Tinted greys instead of neutral ones. */
   :root {
-    --bg: #f5f6f8; --card: #ffffff; --fg: #14171c; --muted: #646d7a; --faint: #9aa2ad; --border: #e3e6eb;
-    --accent: #2563eb; --accent-soft: #dce7ff; --ok: #16803c; --warn: #b45309; --bad: #c0262d;
-    --track: #eceff3; --hover: #f2f4f7; --shadow: 0 1px 2px rgba(16, 24, 40, .05); --scrim: rgba(15, 18, 24, .35);
+    --bg: #eef3f5; --bg-glow: #dff0ee; --card: #ffffff; --card-hi: #ffffff; --raise: #f7fafb;
+    --fg: #0d1b24; --muted: #566876; --faint: #8d9eaa; --border: #dbe4e9; --border-soft: #e7edf0;
+    --accent: #0f766e; --accent-hi: #14b8a6; --accent-soft: #d3f0eb; --accent-ink: #ffffff;
+    --down: #2563c9; --down-soft: #dce8fb;
+    --ok: #15803d; --warn: #c2410c; --bad: #c0262d;
+    --track: #e6edf0; --hover: #f2f7f8; --highlight: rgba(255, 255, 255, .9);
+    --shadow: 0 1px 2px rgba(13, 27, 36, .04), 0 4px 16px -6px rgba(13, 27, 36, .08);
+    --shadow-lg: 0 18px 50px -12px rgba(13, 27, 36, .28); --scrim: rgba(10, 22, 30, .35);
+    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, Roboto, sans-serif;
+    --display: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, "JetBrains Mono", Menlo, Consolas, monospace;
+    --ease: cubic-bezier(.2, .7, .2, 1);
+    color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0d1015; --card: #151920; --fg: #e9ecf1; --muted: #9aa3b2; --faint: #6b7381; --border: #252b35;
-      --accent: #6ea2ff; --accent-soft: #1b2944; --ok: #4ade80; --warn: #fbbf24; --bad: #f87171;
-      --track: #212732; --hover: #1a1f28; --shadow: none; --scrim: rgba(0, 0, 0, .55);
+      --bg: #071017; --bg-glow: #0b2a2c; --card: #0c1821; --card-hi: #102029; --raise: #0f1d27;
+      --fg: #e4eef3; --muted: #8ea2b0; --faint: #5b6f7d; --border: #1a2a35; --border-soft: #15232d;
+      --accent: #2dd4bf; --accent-hi: #5eead4; --accent-soft: #0f3a3a; --accent-ink: #04201d;
+      --down: #60a5fa; --down-soft: #13294a;
+      --ok: #4ade80; --warn: #fb923c; --bad: #f87171;
+      --track: #172631; --hover: #112029; --highlight: rgba(255, 255, 255, .045);
+      --shadow: 0 1px 0 rgba(0, 0, 0, .3), 0 8px 24px -12px rgba(0, 0, 0, .6);
+      --shadow-lg: 0 24px 60px -10px rgba(0, 0, 0, .7); --scrim: rgba(0, 0, 0, .55);
+      color-scheme: dark;
     }
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--fg);
-         font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif; }
-  main { max-width: 1080px; margin: 0 auto; padding: 18px 16px 40px; }
-  .muted { color: var(--muted); } .num { font-variant-numeric: tabular-nums; }
+  html { background: var(--bg); }
+  body { margin: 0; color: var(--fg); min-height: 100vh; -webkit-font-smoothing: antialiased;
+         background: radial-gradient(1100px 420px at 12% -120px, var(--bg-glow), transparent 70%), var(--bg);
+         font: 14px/1.45 var(--sans); }
+  main { max-width: 1120px; margin: 0 auto; padding: 22px 20px 48px; }
+  .muted { color: var(--muted); } .num { font-family: var(--mono); font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
   .ok-t { color: var(--ok); } .warn-t { color: var(--warn); } .bad-t { color: var(--bad); }
+  @media (max-width: 560px) { main { padding: 16px 16px 40px; } }
 
   /* header */
-  header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
-  .brand { font-size: 18px; font-weight: 650; letter-spacing: -.01em; margin-right: 4px; }
-  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px;
-          font-size: 12px; font-weight: 600; border: 1px solid var(--border); background: var(--card); }
-  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--faint); }
+  header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; font: 650 19px/1 var(--display); letter-spacing: -.015em; margin-right: 6px; }
+  .brand svg { width: 36px; height: 36px; flex: none; filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--accent) 35%, transparent)); }
+  .brand b { font-weight: 650; } .brand i { font-style: normal; color: var(--accent); }
+  .pill { display: inline-flex; align-items: center; gap: 7px; padding: 4px 11px 4px 9px; border-radius: 999px;
+          font-size: 12px; font-weight: 600; border: 1px solid var(--border); background: color-mix(in srgb, var(--card) 80%, transparent);
+          backdrop-filter: blur(6px); }
+  .pill.ok { border-color: color-mix(in srgb, var(--ok) 35%, var(--border)); }
+  .pill.warn { border-color: color-mix(in srgb, var(--warn) 40%, var(--border)); }
+  .pill.bad { border-color: color-mix(in srgb, var(--bad) 45%, var(--border)); color: var(--bad); }
+  .dot { position: relative; width: 7px; height: 7px; border-radius: 50%; background: var(--faint); flex: none; }
   .ok .dot { background: var(--ok); } .warn .dot { background: var(--warn); } .bad .dot { background: var(--bad); }
+  /* a live node breathes: a slow ring off the status dot */
+  .pill.live .dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: inherit;
+                            animation: ping 2.4s var(--ease) infinite; }
+  @keyframes ping { 0% { transform: scale(1); opacity: .7; } 70%, 100% { transform: scale(3.2); opacity: 0; } }
   .spacer { flex: 1; }
-  .node { font-size: 12px; color: var(--faint); }
+  .node { font: 12px var(--mono); color: var(--faint); }
   @media (max-width: 640px) { .node { display: none; } }
-  button { font: inherit; font-weight: 600; border-radius: 8px; padding: 6px 12px; cursor: pointer;
-           border: 1px solid var(--border); background: var(--card); color: var(--fg); }
+  button { font: inherit; font-weight: 600; border-radius: 9px; padding: 6px 13px; cursor: pointer;
+           border: 1px solid var(--border); background: var(--card); color: var(--fg); box-shadow: inset 0 1px 0 var(--highlight);
+           transition: border-color .15s, background .15s, color .15s, transform .1s; }
   button:hover { border-color: var(--faint); }
-  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  button.ghost { border-color: transparent; background: transparent; color: var(--muted); padding: 4px 8px; }
-  button.ghost:hover { color: var(--fg); }
+  button:active:not(:disabled) { transform: translateY(1px); }
+  button:disabled { opacity: .45; cursor: default; }
+  button.primary { background: linear-gradient(180deg, var(--accent-hi), var(--accent)); border-color: var(--accent); color: var(--accent-ink); }
+  button.primary:hover { filter: brightness(1.06); border-color: var(--accent); }
+  button.ghost { border-color: transparent; background: transparent; color: var(--muted); padding: 4px 8px; box-shadow: none; }
+  button.ghost:hover { color: var(--fg); background: var(--hover); }
   button.ghost.danger:hover { color: var(--bad); }
   .icon { width: 36px; height: 36px; padding: 0; display: inline-grid; place-items: center; }
   .icon svg { width: 18px; height: 18px; }
-  button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible, [tabindex]:focus-visible {
+  #gear svg { transition: transform .5s var(--ease); } #gear:hover svg { transform: rotate(60deg); }
+  button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible, [tabindex]:focus-visible, select:focus-visible {
     outline: 2px solid var(--accent); outline-offset: 2px; }
-  input { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 7px 9px; width: 100%; }
+  input { font: inherit; color: var(--fg); background: var(--raise); border: 1px solid var(--border); border-radius: 9px; padding: 8px 10px; width: 100%;
+          transition: border-color .15s, box-shadow .15s; }
+  input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent); outline: none; }
 
-  /* cards */
-  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); }
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 12px; }
-  .stat { padding: 14px 16px; }
-  .label { font-size: 11px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
-  .value { font-size: 22px; font-weight: 650; margin: 4px 0 2px; }
+  /* cards: a lit top edge and a soft drop shadow lift them off the page */
+  .card { position: relative; background: linear-gradient(180deg, var(--card-hi), var(--card) 120px); border: 1px solid var(--border);
+          border-radius: 16px; box-shadow: inset 0 1px 0 var(--highlight), var(--shadow); }
+  .stats { display: grid; grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+  .stat { padding: 16px 18px; overflow: hidden; display: flex; flex-direction: column; min-height: 132px; }
+  .label { font-size: 11px; font-weight: 650; color: var(--muted); text-transform: uppercase; letter-spacing: .07em;
+           display: flex; align-items: center; gap: 7px; }
+  .value { font: 600 25px/1.15 var(--mono); letter-spacing: -.03em; margin: 8px 0 3px; font-variant-numeric: tabular-nums; }
+  .value small { font-size: .52em; font-weight: 500; color: var(--muted); letter-spacing: 0; margin-left: .3em; }
   .sub { font-size: 13px; color: var(--muted); }
-  .bar { height: 6px; background: var(--track); border-radius: 999px; overflow: hidden; margin: 8px 0 6px; }
-  .bar > div { height: 100%; background: var(--accent); border-radius: 999px; transition: width .4s; }
-  .chart { padding: 14px 16px 12px; margin-bottom: 16px; }
+  .stat .sub { position: relative; z-index: 1; }
+  /* the hero: what this node gives back */
+  .stat.hero { padding: 18px 22px; min-height: 152px; }
+  .stat.hero .value { font-size: 44px; margin: 10px 0 4px; }
+  .stat.hero .label { color: var(--accent); }
+  .stat.hero::before { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+                       background: radial-gradient(420px 160px at 100% 100%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 70%); }
+  .stat .value, .stat .label { position: relative; z-index: 1; }
+  .spark { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 58%; pointer-events: none; }
+  .stat:not(.hero) .spark { height: 42%; opacity: .9; }
+  /* in the hero the line keeps to the right half, fading in, so it never runs under the text */
+  .stat.hero .spark { left: 42%; width: 58%; height: 72%; -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%); mask-image: linear-gradient(90deg, transparent, #000 30%); }
+  @media (max-width: 600px) { .stat.hero .spark { left: 50%; width: 50%; height: 60%; } }
+  .spark path { vector-effect: non-scaling-stroke; }
+  .bar { height: 6px; background: var(--track); border-radius: 999px; overflow: hidden; margin: 10px 0 8px; }
+  .bar > div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-hi)); border-radius: 999px; transition: width .6s var(--ease); }
+  .bar.full > div { background: linear-gradient(90deg, var(--warn), color-mix(in srgb, var(--warn) 70%, #fff)); }
+  @media (max-width: 920px) {
+    .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .stat.hero { grid-column: 1 / -1; }
+  }
+  @media (max-width: 600px) {
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .stat { min-height: 116px; padding: 14px; }
+    .stat.hero { padding: 16px 18px; }
+    .stat.hero .value { font-size: 38px; }
+    .stats > .stat:last-child { grid-column: 1 / -1; min-height: 0; }
+    .value { font-size: 21px; }
+  }
+
+  .chart { padding: 16px 18px 14px; margin-bottom: 18px; }
   .chart-head { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .chart-head h2 { font-size: 14px; margin: 0; }
+  .chart-head h2 { font: 650 15px var(--display); margin: 0; letter-spacing: -.01em; }
   .chart-ctl { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .seg { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
-  .seg button { border: 0; border-radius: 0; background: none; padding: 3px 9px; font-size: 12px; font-weight: 500; color: var(--muted); }
-  .seg button + button { border-left: 1px solid var(--border); }
-  .seg button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent); font-weight: 650; }
-  select { font: inherit; font-size: 12px; color: var(--fg); background: var(--bg); border: 1px solid var(--border);
-           border-radius: 8px; padding: 4px 6px; max-width: 240px; }
+  .seg { position: relative; display: inline-flex; padding: 2px; background: var(--raise); border: 1px solid var(--border); border-radius: 10px; }
+  .seg button { position: relative; z-index: 1; border: 0; border-radius: 7px; background: none; box-shadow: none; padding: 3px 9px;
+                font-size: 12px; font-weight: 550; color: var(--muted); }
+  .seg button:hover { color: var(--fg); }
+  .seg button[aria-pressed="true"] { background: var(--card-hi); color: var(--fg); font-weight: 650;
+                                     box-shadow: 0 1px 2px rgba(0, 0, 0, .12), inset 0 1px 0 var(--highlight); }
+  select { font: inherit; font-size: 12px; color: var(--fg); background: var(--raise); border: 1px solid var(--border);
+           border-radius: 9px; padding: 5px 7px; max-width: 240px; }
   .hsum { margin-top: 8px; font-size: 13px; color: var(--muted); }
-  .hsum b { color: var(--fg); font-weight: 650; }
+  .hsum b { color: var(--fg); font: 600 13px var(--mono); }
   .key { display: inline-block; width: 10px; height: 3px; border-radius: 2px; vertical-align: middle; margin: 0 4px 0 0; }
-  .key.up { background: var(--accent); } .key.down { background: var(--ok); }
-  .plotwrap { position: relative; margin-top: 8px; }
-  svg.plot { display: block; width: 100%; height: 110px; touch-action: pan-y; }
+  .key.up { background: var(--accent); } .key.down { background: var(--down); }
+  .plotwrap { position: relative; margin-top: 10px; }
+  svg.plot { display: block; width: 100%; height: 120px; touch-action: pan-y; overflow: visible; }
   svg.plot.thin { height: 40px; }
-  .plotwrap.thin { margin-top: 4px; border-top: 1px dashed var(--border); }
-  .axis { display: flex; justify-content: space-between; font-size: 11px; color: var(--faint); margin-top: 2px; }
-  .ymax { position: absolute; top: 0; left: 0; font-size: 11px; color: var(--faint); pointer-events: none; }
-  .tip { position: absolute; top: 0; transform: translateX(-50%); pointer-events: none; font-size: 12px; white-space: nowrap;
-         background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 3px 8px; box-shadow: var(--shadow); }
-  .hmodels { margin-top: 10px; display: grid; gap: 2px; }
-  .hm { display: grid; grid-template-columns: minmax(0, 1fr) 120px 76px 76px; gap: 8px; align-items: center; font-size: 12px;
-        padding: 3px 6px; border-radius: 6px; cursor: pointer; }
+  .plotwrap.thin { margin-top: 6px; border-top: 1px dashed var(--border); }
+  .axis { display: flex; justify-content: space-between; font: 11px var(--mono); color: var(--faint); margin-top: 4px; }
+  .ymax { position: absolute; top: 0; left: 0; font: 11px var(--mono); color: var(--faint); pointer-events: none; }
+  .tip { position: absolute; top: -4px; transform: translateX(-50%); pointer-events: none; font: 12px var(--mono); white-space: nowrap;
+         background: var(--card-hi); border: 1px solid var(--border); border-radius: 8px; padding: 4px 9px; box-shadow: var(--shadow); }
+  .chart.empty .plotwrap, .chart.empty .axis, .chart.empty .hsum { display: none; }
+  .chart-empty { display: none; align-items: center; gap: 12px; margin-top: 12px; padding: 14px 16px; border-radius: 12px;
+                 background: var(--raise); border: 1px dashed var(--border); color: var(--muted); font-size: 13px; }
+  .chart.empty .chart-empty { display: flex; }
+  .chart-empty svg { width: 64px; height: 22px; flex: none; color: var(--accent); opacity: .7; }
+  .hmodels { margin-top: 12px; display: grid; gap: 2px; }
+  .hm { display: grid; grid-template-columns: minmax(0, 1fr) 120px 80px 80px; gap: 8px; align-items: center; font-size: 12px;
+        padding: 4px 8px; border-radius: 8px; cursor: pointer; transition: background .15s; }
   .hm:hover { background: var(--hover); }
   .hm .n { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .hm .r { text-align: right; font-variant-numeric: tabular-nums; color: var(--muted); }
-  @media (max-width: 640px) { .hm { grid-template-columns: minmax(0, 1fr) 70px 70px; } .hm .hb { display: none; } }
+  .hm .r { text-align: right; font: 12px var(--mono); color: var(--muted); }
+  .hm .r { white-space: nowrap; }
+  @media (max-width: 640px) { .hm { grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; } .hm .hb { display: none; } }
 
-  /* tabs */
-  .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
-  .tabs button { border: none; background: none; border-radius: 0; padding: 8px 12px; color: var(--muted);
-                 border-bottom: 2px solid transparent; margin-bottom: -1px; }
-  .tabs button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--accent); }
-  .count { font-size: 11px; background: var(--track); color: var(--muted); border-radius: 999px; padding: 1px 7px; margin-left: 4px; }
-  .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
-  .legend { display: flex; gap: 12px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
-  .legend span { display: inline-flex; align-items: center; gap: 5px; }
+  /* tabs: one indicator slides between them */
+  .tabs { position: relative; display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
+  .tabs button { border: none; background: none; box-shadow: none; border-radius: 8px 8px 0 0; padding: 9px 12px 10px; color: var(--muted);
+                 font: 600 14px var(--display); }
+  .tabs button:hover { color: var(--fg); }
+  .tabs button[aria-selected="true"] { color: var(--fg); }
+  .tabs button:active { transform: none; }
+  .tab-ink { position: absolute; bottom: -1px; left: 0; height: 2px; width: 0; border-radius: 2px; background: var(--accent);
+             transition: transform .3s var(--ease), width .3s var(--ease); }
+  .count { font: 600 11px var(--mono); background: var(--track); color: var(--muted); border-radius: 999px; padding: 1px 7px; margin-left: 6px; }
+  [aria-selected="true"] .count { background: var(--accent-soft); color: var(--accent); }
+  section[role="tabpanel"] { animation: rise .3s var(--ease); }
+  @keyframes rise { from { opacity: 0; transform: translateY(4px); } }
+  .panel-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
 
   /* one-line rows */
   .rows { padding: 0; overflow: hidden; }
-  .row { border-top: 1px solid var(--border); }
+  .row { border-top: 1px solid var(--border-soft); }
   .row:first-child { border-top: none; }
-  .line { display: grid; align-items: center; gap: 12px; padding: 9px 14px; font-size: 13px; }
-  .carry .line { grid-template-columns: 16px minmax(160px, 1fr) repeat(5, auto); cursor: pointer; }
-  .carry .line:hover { background: var(--hover); }
-  .name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-  /* the model name gives way to its tags: the name is cut short, the tags stay readable */
-  .name:has(.tag) { display: flex; align-items: baseline; }
-  .name:has(.tag) > a { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
-  .name > .tag { flex-shrink: 0; }
+  .line { position: relative; display: grid; align-items: center; gap: 12px; padding: 11px 16px; font-size: 13px; }
+  .carry .line { grid-template-columns: 14px minmax(160px, 1fr) 112px repeat(5, auto); cursor: pointer; transition: background .15s; }
+  .carry .line:hover, .prio .line:hover { background: var(--hover); }
+  .carry .line::before, .prio .line::before { content: ""; position: absolute; left: 0; top: 8px; bottom: 8px; width: 3px; border-radius: 0 3px 3px 0;
+                         background: var(--accent); transform: scaleY(0); transition: transform .2s var(--ease); }
+  .carry .line:hover::before, .prio .line:hover::before, .carry .row.open .line::before { transform: none; }
+  .row.open { background: color-mix(in srgb, var(--hover) 60%, transparent); }
+  .name { font-weight: 600; white-space: nowrap; min-width: 0; display: flex; align-items: center; gap: 0; }
+  .name > a, .name > .nm { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .name > .tag, .name > .mono, .name > .ext { flex-shrink: 0; }
+  .who { display: flex; align-items: center; min-width: 0; }
+  .who > a { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .name a { color: inherit; text-decoration: none; } .name a:hover { text-decoration: underline; }
   .author { color: var(--faint); font-weight: 400; }
+  .mono { width: 24px; height: 24px; border-radius: 7px; display: inline-grid; place-items: center; margin-right: 10px;
+          font: 700 11px var(--display); color: #fff; text-transform: uppercase; letter-spacing: 0;
+          background: linear-gradient(140deg, hsl(var(--h) 70% 58%), hsl(calc(var(--h) + 35) 65% 42%));
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 1px 2px rgba(0, 0, 0, .2); }
+  .ext { display: inline-grid; place-items: center; width: 22px; height: 22px; margin-left: 4px; border-radius: 6px; color: var(--faint);
+         opacity: 0; transition: opacity .15s, color .15s, background .15s; }
+  .ext svg { width: 13px; height: 13px; }
+  .line:hover .ext, .ext:focus-visible { opacity: 1; }
+  .ext:hover { color: var(--accent); background: var(--accent-soft); }
+  @media (hover: none) { .ext { opacity: 1; } }
   .cell { color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .cell b { color: var(--fg); font-weight: 600; }
-  .chev { color: var(--faint); transition: transform .15s; display: inline-block; }
-  .row.open .chev { transform: rotate(90deg); }
-  .tag { font-size: 11px; padding: 1px 6px; border-radius: 6px; background: var(--track); color: var(--muted); white-space: nowrap; font-weight: 500; margin-left: 6px; }
+  .cell b { color: var(--fg); font: 600 13px var(--mono); letter-spacing: -.02em; }
+  .chev { color: var(--muted); transition: transform .2s var(--ease); display: inline-block; font-size: 13px; line-height: 1; }
+  .row.open .chev { transform: rotate(90deg); color: var(--accent); }
+  .tag { font-size: 11px; padding: 1px 7px; border-radius: 6px; background: var(--track); color: var(--muted); white-space: nowrap; font-weight: 550; margin-left: 7px; }
   .tag.note { background: transparent; box-shadow: inset 0 0 0 1px var(--border); }
-  .caution { font-size: 12px; color: var(--faint); margin: 0 0 10px; line-height: 1.45; }
-  .tag.bad { background: transparent; color: var(--bad); box-shadow: inset 0 0 0 1px var(--bad); }
-  .tag.warn { background: transparent; color: var(--warn); box-shadow: inset 0 0 0 1px var(--warn); }
-  .detail { padding: 2px 14px 14px 42px; }
-  .meta { margin: 0 0 8px; font-size: 13px; color: var(--muted); }
+  .caution { font-size: 12px; color: var(--faint); margin: 0 0 12px; line-height: 1.5; }
+  .tag.bad { background: color-mix(in srgb, var(--bad) 10%, transparent); color: var(--bad); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--bad) 55%, transparent); }
+  .tag.warn { background: color-mix(in srgb, var(--warn) 10%, transparent); color: var(--warn); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--warn) 55%, transparent); }
+  /* coverage: every piece of the model in one thin strip, in the legend's colours */
+  .cover { height: 8px; border-radius: 999px; background: var(--track); overflow: hidden; box-shadow: inset 0 0 0 1px var(--border-soft); }
+  .cover > i { display: block; height: 100%; }
+  .detail { padding: 2px 16px 16px 52px; animation: rise .25s var(--ease); }
+  .meta { margin: 0 0 10px; font-size: 13px; color: var(--muted); }
   .meta b { color: var(--fg); font-weight: 600; }
-  .pieces { display: flex; flex-wrap: wrap; gap: 3px; margin: 6px 0 10px; }
+  .pieces { display: flex; flex-wrap: wrap; gap: 3px; margin: 8px 0 12px; }
   .pieces.dense { gap: 2px; }
-  .s { width: 11px; height: 11px; border-radius: 3px; border: 1.5px solid var(--border); background: var(--track); }
+  .s { width: 11px; height: 11px; border-radius: 3px; border: 1.5px solid var(--border); background: var(--track); transition: background .4s, border-color .4s; }
   .dense .s { width: 8px; height: 8px; border-radius: 2px; border-width: 1px; }
   .s.held { background: var(--accent); border-color: var(--accent); }
-  .s.wanted { background: var(--accent-soft); border-color: var(--accent); }
+  .s.wanted { background: var(--accent-soft); border-color: var(--accent); animation: fetch 1.6s ease-in-out infinite; }
+  @keyframes fetch { 50% { background: color-mix(in srgb, var(--accent) 45%, var(--accent-soft)); } }
+  .legend .s.wanted { animation: none; }
   .s.a0 { border-color: var(--bad); }
   .s.held.a0 { border-color: var(--accent); }
+  .s.fresh { animation: land .7s var(--ease); }
+  @keyframes land { 0% { transform: scale(.4); box-shadow: 0 0 0 0 var(--accent); } 60% { transform: scale(1.25); box-shadow: 0 0 0 4px transparent; } }
   @media (max-width: 720px) {
-    /* phone: name on top, the stats as one wrapped line under it */
-    .carry .line { display: flex; flex-wrap: wrap; column-gap: 12px; row-gap: 3px; position: relative; padding-left: 42px; }
-    .carry .line > .chev { position: absolute; left: 14px; top: 10px; }
+    /* phone: name on top, coverage under it, then the stats as one wrapped line */
+    .carry .line { display: flex; flex-wrap: wrap; column-gap: 12px; row-gap: 5px; position: relative; padding-left: 42px; }
+    .carry .line > .chev { position: absolute; left: 16px; top: 15px; }
     .carry .line > .name { flex: 1 1 100%; min-width: 0; }
+    .carry .line > .cover { flex: 1 1 100%; margin: 2px 0 3px; height: 6px; }
     .carry .line > .cell { font-size: 12px; }
+    .detail { padding-left: 42px; }
   }
 
   /* priorities */
   .addrow { display: flex; gap: 8px; }
-  .addrow input { flex: 1; min-width: 0; }
+  .addrow input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: 11px; background: var(--card); box-shadow: inset 0 1px 0 var(--highlight), var(--shadow); }
+  .addrow button { border-radius: 11px; padding: 0 18px; }
   .msg { font-size: 13px; margin: 6px 0 0; min-height: 18px; }
   .prio .line, .colhead { grid-template-columns: 16px 20px minmax(0, 1fr) 168px 100px 64px 82px 84px; gap: 8px; }
   .prio .row.na .name a { color: var(--muted); font-weight: 500; }
+  .prio .row.na .mono { filter: grayscale(1); opacity: .5; }
   .prio .row.na .cell, .prio .row.na .rank { color: var(--faint); }
   .summary { display: flex; flex-wrap: wrap; gap: 4px 14px; }
   .summary > span, .need { display: inline-flex; align-items: center; gap: 6px; }
   .d { width: 7px; height: 7px; border-radius: 50%; flex: none; }
-  .d.bad { background: var(--bad); } .d.warn { box-shadow: inset 0 0 0 2px var(--warn); }   /* differ by shape too */
+  .d.bad { background: var(--bad); box-shadow: 0 0 0 3px color-mix(in srgb, var(--bad) 18%, transparent); }
+  .d.warn { box-shadow: inset 0 0 0 2px var(--warn); }   /* differ by shape too */
   .moves .skipbtn { color: var(--faint); padding: 2px 5px; display: inline-flex; align-items: center; }
   .moves .skipbtn:hover { color: var(--bad); }
   .moves .skipbtn svg { width: 14px; height: 14px; }
-  details.skipped { margin-top: 10px; }
+  details.skipped { margin-top: 12px; }
   details.skipped > summary { cursor: pointer; font-size: 13px; color: var(--muted); list-style: none; padding: 4px 2px; }
   details.skipped > summary::-webkit-details-marker { display: none; }
   details.skipped > summary::before { content: "▸ "; color: var(--faint); }
   details.skipped[open] > summary::before { content: "▾ "; }
-  .skiprow { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 4px 8px; font-size: 13px; }
+  .skiprow { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 5px 10px; font-size: 13px; }
   .skiprow .n { color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
   .skiprow .n a { color: inherit; text-decoration: none; } .skiprow .n a:hover { text-decoration: underline; }
-  .colhead { display: grid; padding: 0 14px 6px; font-size: 11px; color: var(--faint); text-transform: uppercase; letter-spacing: .05em; }
+  .colhead { display: grid; padding: 0 16px 7px; font-size: 11px; font-weight: 600; color: var(--faint); text-transform: uppercase; letter-spacing: .07em; }
   .right { text-align: right; }
   .handle { cursor: grab; color: var(--faint); user-select: none; text-align: center; font-size: 15px; line-height: 1; touch-action: none; padding: 6px 0; }
-  .rank { color: var(--faint); font-variant-numeric: tabular-nums; text-align: right; }
+  .handle:hover { color: var(--accent); }
+  .rank { color: var(--faint); font: 12px var(--mono); text-align: right; }
   .need { min-width: 0; }
   .need .t { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--muted); }
   .need.hot .t { color: var(--fg); }
   .needbar { height: 4px; background: var(--track); border-radius: 999px; overflow: hidden; }
   .needbar > div { height: 100%; border-radius: 999px; }
   .gb { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--muted); }
-  .gb input { padding: 4px 6px; text-align: right; width: 56px; flex: none; appearance: textfield; -moz-appearance: textfield; }
+  .gb input { padding: 4px 6px; text-align: right; width: 56px; flex: none; appearance: textfield; -moz-appearance: textfield; font-family: var(--mono); }
   /* no number spinner: it sits on top of "auto" in a box this small */
   .gb input::-webkit-inner-spin-button, .gb input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
   .moves { display: flex; }
@@ -186,51 +298,209 @@
     .prio .line > .cell:not(.right), .prio .line > .gb { grid-column: 3; }
     .prio .line > .right, .prio .line > .moves { grid-column: 4; justify-self: end; }
     .prio .gb input { width: 84px; }
+    /* phone: tags drop under the name instead of squeezing it to a few letters */
+    .prio .line > .name { flex-wrap: wrap; row-gap: 5px; }
+    .prio .line > .name > .who { flex: 1 1 100%; }
+    .prio .line > .name > .tag { margin: 0 6px 0 0; }
+    .prio .line > .name > .who + .tag { margin-left: 34px; }
   }
 
-  details.card { padding: 0; margin-top: 12px; }
-  details.card > summary { cursor: pointer; padding: 12px 16px; font-weight: 600; list-style: none; display: flex; justify-content: space-between; }
+  /* reorienting (in the settings drawer) */
+  .reo-say { margin: 0; }
+  .reo-say b { font-weight: 650; }
+  .reo-col { margin-top: 10px; }
+  .reo-col h4 { font-size: 11px; font-weight: 650; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin: 0 0 2px; }
+  .reo-row { display: flex; flex-direction: column; padding: 3px 0; }
+  .reo-row .cell { font-size: 12px; white-space: normal; }
+  .reo-row .name a { color: inherit; }
+  .reo-row.dim .name a { color: var(--muted); font-weight: 500; }
+  .reo-none { color: var(--faint); padding: 3px 0; }
+  .reo-foot { margin: 10px 0 0; font-size: 12px; color: var(--faint); }
+  .reo-act { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+
+  details.card { padding: 0; margin-top: 14px; }
+  details.card > summary { cursor: pointer; padding: 13px 18px; font: 600 14px var(--display); list-style: none; display: flex; justify-content: space-between; align-items: center; }
   details.card > summary::-webkit-details-marker { display: none; }
-  details.card > summary::after { content: "▸"; color: var(--faint); }
-  details.card[open] > summary::after { content: "▾"; }
-  details.card .body { padding: 0 16px 14px; }
-  pre { margin: 0; max-height: 220px; overflow: auto; font: 12px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+  details.card > summary::after { content: "▸"; color: var(--muted); font-size: 13px; transition: transform .2s var(--ease); }
+  details.card[open] > summary::after { transform: rotate(90deg); }
+  details.card .body { padding: 0 18px 16px; }
+  pre { margin: 0; max-height: 240px; overflow: auto; font: 12px/1.6 var(--mono);
         white-space: pre-wrap; word-break: break-word; color: var(--muted); }
-  .empty { padding: 16px; color: var(--muted); }
-  footer { margin-top: 18px; font-size: 12px; color: var(--faint); }
+  .empty { padding: 18px; color: var(--muted); }
+  footer { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--border-soft); font-size: 12px; color: var(--faint);
+           display: flex; align-items: center; justify-content: space-between; gap: 8px 20px; flex-wrap: wrap; }
+  footer svg { width: 13px; height: 13px; flex: none; }
+  .foot-where, footer a { display: inline-flex; align-items: center; gap: 6px; }
+  .foot-credit { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 4px 16px; }
+  #foot-ver { font-family: var(--mono); font-size: 11px; }
+  footer a { color: var(--muted); text-decoration: none; transition: color .15s; }
+  footer a:hover { color: var(--accent); }
 
   /* settings drawer */
-  .scrim { position: fixed; inset: 0; background: var(--scrim); opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .scrim { position: fixed; inset: 0; background: var(--scrim); opacity: 0; pointer-events: none; transition: opacity .25s; backdrop-filter: blur(2px); z-index: 9; }
   .scrim.open { opacity: 1; pointer-events: auto; }
-  aside { position: fixed; top: 0; right: 0; height: 100%; width: min(400px, 100vw); background: var(--card);
-          border-left: 1px solid var(--border); transform: translateX(100%); transition: transform .22s ease;
-          display: flex; flex-direction: column; z-index: 10; }
-  aside.open { transform: none; }
-  .drawer-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border); }
-  .drawer-head h2 { font-size: 16px; margin: 0; }
-  .drawer-body { padding: 4px 16px 20px; overflow-y: auto; }
-  .drawer-body h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin: 18px 0 8px; }
-  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  label { display: grid; gap: 4px; font-size: 12px; color: var(--muted); }
-  label.check { display: flex; align-items: center; gap: 8px; font-size: 13px; color: inherit; }
-  label.check input { width: auto; padding: 0; margin: 0; accent-color: var(--fg); }
-  .help { font-size: 12px; color: var(--faint); margin: 6px 0 0; }
-  .acct { margin: 12px 0 0; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; }
+  aside { position: fixed; top: 0; right: 0; height: 100%; height: 100dvh; width: min(440px, 100vw); background: var(--bg);
+          border-left: 1px solid var(--border); transform: translateX(100%); transition: transform .32s var(--ease), visibility .32s;
+          display: flex; flex-direction: column; z-index: 10; box-shadow: var(--shadow-lg); visibility: hidden; }
+  aside.open { transform: none; visibility: visible; }
+  .drawer-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 18px 18px 14px;
+                 border-bottom: 1px solid var(--border); background: var(--card); }
+  .drawer-head h2 { font: 650 18px var(--display); margin: 0; letter-spacing: -.01em; }
+  .drawer-sub { margin: 3px 0 0; font-size: 12px; color: var(--faint); }
+  .drawer-head .icon { margin: -6px -8px 0 0; }
+  .drawer-body { flex: 1; padding: 14px 14px 20px; overflow-y: auto; overscroll-behavior: contain; display: grid; gap: 12px; align-content: start; }
+  #settings { display: grid; gap: 12px; }
+  .drawer-foot { display: flex; align-items: center; justify-content: flex-end; gap: 12px; padding: 12px 18px;
+                 padding-bottom: max(12px, env(safe-area-inset-bottom)); border-top: 1px solid var(--border); background: var(--card); }
+  .drawer-foot .msg { flex: 1; margin: 0; min-height: 0; font-size: 12px; }
+  .drawer-foot .msg.dirty { color: var(--warn); }
+  .drawer-foot button { min-width: 96px; }
+  /* one card per group of settings */
+  .set { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 14px; box-shadow: inset 0 1px 0 var(--highlight); }
+  .set-h { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .set-h > svg { width: 17px; height: 17px; color: var(--accent); flex: none; }
+  .set-h h3 { font: 650 14px var(--display); margin: 0; letter-spacing: -.005em; }
+  .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field { display: grid; gap: 6px; min-width: 0; align-content: start; }
+  .field.wide { grid-column: 1 / -1; }
+  .fl { display: flex; align-items: center; gap: 6px; min-height: 18px; }
+  .fl label, .switch-row label { font-size: 12px; font-weight: 550; color: var(--muted); }
+  .unit-in { position: relative; }
+  .unit-in input { padding-right: 52px; font-family: var(--mono); font-variant-numeric: tabular-nums;
+                   appearance: textfield; -moz-appearance: textfield; }
+  .unit-in input::-webkit-inner-spin-button, .unit-in input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .unit-in input::placeholder { font-family: var(--sans); color: var(--faint); }
+  .unit-in em { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font: 12px var(--mono); font-style: normal;
+                color: var(--faint); pointer-events: none; }
+  .field select { width: 100%; max-width: none; font-size: 14px; padding: 8px 10px; height: 38px; }
+  .unit-in input, .field select { height: 38px; }
+  .switch-row { display: flex; align-items: center; gap: 6px; padding: 10px 12px; margin-bottom: 12px; border-radius: 10px;
+                background: var(--raise); border: 1px solid var(--border-soft); }
+  .switch-row label { font-size: 13px; color: var(--fg); cursor: pointer; }
+  .switch-row .switch { margin-left: auto; }
+  /* a real switch for the one on/off setting */
+  input.switch { appearance: none; -webkit-appearance: none; width: 38px; height: 22px; padding: 0; flex: none; border-radius: 999px; cursor: pointer;
+                 background: var(--track); border: 1px solid var(--border); position: relative; transition: background .2s, border-color .2s; }
+  input.switch::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff;
+                        box-shadow: 0 1px 3px rgba(0, 0, 0, .3); transition: transform .2s var(--ease); }
+  input.switch:checked { background: var(--accent); border-color: var(--accent); }
+  input.switch:checked::after { transform: translateX(16px); }
+  input.switch:focus { box-shadow: none; }
+  .help { font-size: 12px; color: var(--faint); margin: 7px 0 0; line-height: 1.5; }
+  .acct { margin: 12px 0 0; padding: 12px 14px; border: 1px solid var(--border-soft); border-radius: 12px; font-size: 13px; background: var(--raise); }
   .acct .who { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
   .acct .who b { font-weight: 600; }
   .acct ul { margin: 6px 0 0; padding-left: 18px; }
   .acct li { margin: 2px 0; }
-  .acct code { font-size: 12px; }
+  .acct code { font: 12px var(--mono); }
   .acct a { color: var(--accent); text-decoration: none; }
   .acct a:hover { text-decoration: underline; }
-  dl { display: grid; grid-template-columns: max-content 1fr; gap: 6px 12px; margin: 0; font-size: 13px; }
-  dt { color: var(--muted); } dd { margin: 0; word-break: break-all; }
+  #hfmsg:empty, #reomsg:empty { display: none; }
+  /* folded detail: a one-line summary with a chevron; open it to see the rest */
+  details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+  details.fold > summary::-webkit-details-marker { display: none; }
+  details.fold > summary::after { content: ""; flex: none; width: 7px; height: 7px; margin: 0 2px 0 4px; border: solid var(--muted);
+                                  border-width: 0 1.6px 1.6px 0; transform: rotate(-45deg); transition: transform .2s var(--ease); }
+  details.fold[open] > summary::after { transform: rotate(45deg); }
+  .fold-t { flex: 1; min-width: 0; font-size: 13px; color: var(--fg); }
+  .fold-t b { font-weight: 650; }
+  .fold-hint { margin-left: auto; font-size: 12px; color: var(--faint); white-space: nowrap; }
+  details.fold[open] .fold-hint { visibility: hidden; }
+  details.fold > summary:hover .fold-hint { color: var(--accent); }
+  .fold-body { margin-top: 12px; animation: rise .25s var(--ease); }
+  details.acct.fold { padding: 11px 14px; }
+  details.acct.fold .fold-body { padding-top: 12px; border-top: 1px solid var(--border-soft); }
+  details.set.fold > summary.set-h { margin-bottom: 0; }
+  #replan { width: 100%; }
+  dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 7px 14px; margin: 0; font-size: 12px; }
+  dt { color: var(--muted); } dd { margin: 0; overflow-wrap: anywhere; font-family: var(--mono); font-size: 11.5px; color: var(--fg); }
+  @media (max-width: 380px) {
+    .fields { grid-template-columns: 1fr; }
+    dl { grid-template-columns: 1fr; gap: 2px; } dd { margin-bottom: 6px; }
+  }
+
+  /* the little ? next to a setting, and the tooltip it opens */
+  .qm { position: relative; width: 16px; height: 16px; padding: 0; flex: none; display: inline-grid; place-items: center; border-radius: 50%;
+        font: 700 10px/1 var(--sans); color: var(--faint); background: transparent; border: 1px solid currentColor; box-shadow: none; cursor: help; }
+  .qm::before { content: ""; position: absolute; inset: -8px; }   /* a finger-sized target */
+  .qm:hover, .qm[aria-describedby] { color: var(--accent); border-color: var(--accent); background: var(--accent-soft); }
+  .qm:active { transform: none; }
+  .tooltip { position: fixed; z-index: 30; max-width: min(280px, calc(100vw - 24px)); padding: 9px 12px; border-radius: 10px;
+             font-size: 12.5px; line-height: 1.45; font-weight: 450; color: var(--fg); background: var(--card-hi);
+             border: 1px solid var(--border); box-shadow: var(--shadow-lg); pointer-events: none;
+             opacity: 0; transform: translateY(4px); transition: opacity .15s, transform .15s var(--ease); }
+  .tooltip.show { opacity: 1; transform: none; }
+  .tooltip::after { content: ""; position: absolute; left: var(--ax, 50%); width: 9px; height: 9px; background: inherit;
+                    border: inherit; border-width: 0 1px 1px 0; transform: translateX(-50%) rotate(45deg); bottom: -5.5px; }
+  .tooltip.below::after { bottom: auto; top: -5.5px; transform: translateX(-50%) rotate(225deg); }
+
+  /* toasts */
+  .toasts { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); display: grid; gap: 8px; z-index: 20;
+            width: max-content; max-width: calc(100vw - 32px); pointer-events: none; }
+  .toast { display: flex; align-items: center; gap: 10px; padding: 10px 14px 10px 12px; border-radius: 12px; font-size: 13px; font-weight: 550;
+           background: color-mix(in srgb, var(--card-hi) 92%, transparent); border: 1px solid var(--border); color: var(--fg);
+           box-shadow: var(--shadow-lg); backdrop-filter: blur(10px); pointer-events: auto;
+           animation: toast-in .35s var(--ease); }
+  .toast.out { animation: toast-out .25s ease-in forwards; }
+  .toast .dot { width: 8px; height: 8px; }
+  .toast.ok .dot { background: var(--accent); } .toast.bad .dot { background: var(--bad); }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(12px) scale(.97); } }
+  @keyframes toast-out { to { opacity: 0; transform: translateY(8px) scale(.98); } }
+
+  /* before the first word from the node: shimmering placeholders, not dashes */
+  .loading .value, .loading .stat .sub { color: transparent !important; border-radius: 7px; width: fit-content; min-width: 7ch;
+            background: linear-gradient(90deg, var(--track) 0%, var(--hover) 50%, var(--track) 100%) 0 0 / 200% 100%;
+            animation: shimmer 1.3s linear infinite; }
+  .loading .stat .sub { min-width: 60%; min-height: 1em; }
+  .loading .stat .bar, .loading .spark { visibility: hidden; }
+  .skel { height: 46px; border-top: 1px solid var(--border-soft); display: flex; align-items: center; gap: 12px; padding: 0 16px; }
+  .skel:first-child { border-top: none; }
+  .skel i { height: 10px; border-radius: 6px; background: linear-gradient(90deg, var(--track) 0%, var(--hover) 50%, var(--track) 100%) 0 0 / 200% 100%;
+            animation: shimmer 1.3s linear infinite; }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
 </style>
 </head>
-<body>
+<body class="loading">
 <main>
   <header>
-    <span class="brand">⛵ Flotilla Face</span>
+    <span class="brand">
+      <!-- two ships, not one: it takes a flotilla to keep a model afloat -->
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+      <defs>
+      <linearGradient id="ff-sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1fb8a6"/><stop offset=".62" stop-color="#0d6e68"/><stop offset="1" stop-color="#083f3f"/></linearGradient>
+      <g id="ff-ship">
+      <path fill-rule="evenodd" d="M2 27.5h8.6l1 4.3h24.6l8.6-3.6-2.6 7.4C40.2 40.4 36.7 42 31.7 42H12.6C7.6 42 4.4 39.4 3.4 35.4Z
+      M15.2 35h2.4v2.2h-2.4zM20.6 35H23v2.2h-2.4zM26 35h2.4v2.2H26zM31.4 35h2.4v2.2h-2.4zM4.8 30.4h2.4v1.8H4.8z"/>
+      <path d="M21.2 3h1.6v29h-1.6zM32.2 9h1.5v23h-1.5zM8.2 12.5h1.3v15.5H8.2zM38.6 31.4 48 23.4l1 1.1-9.2 7.9z"/>
+      <path d="M15.4 6.4q6.6 2.3 13.2 0l-1 8.6q-5.6 2-11.2 0z"/>
+      <path d="M14.4 17.2q7.6 2.6 15.2 0l-1.2 10.4q-6.4 2.2-12.8 0z"/>
+      <path d="M28.4 11.4q5.1 1.8 10.2 0l-.8 6.6q-4.3 1.6-8.6 0z"/>
+      <path d="M27.9 20.4q5.9 2.2 11.8 0l-1 7.6q-4.9 1.8-9.8 0z"/>
+      <path d="M8.2 13.5 2.6 26.5h5.6z"/>
+      <path d="M35.4 10.4 47.4 23.6l-5.8 3.1z"/>
+      <path d="M22.8 2h7.6l-2.2 2.8 2.2 2.8h-7.6z"/>
+      <path d="M19.6 15.4h4.8v1.4h-4.8z"/>
+      </g>
+      </defs>
+      <rect x="1" y="1" width="62" height="62" rx="16" fill="url(#ff-sea)"/>
+      <circle cx="53" cy="12" r="5" fill="#fff" fill-opacity=".18"/>
+      <use href="#ff-ship" transform="translate(2 13.5) scale(.64)" fill="#fff" opacity=".58"/>
+      <use href="#ff-ship" transform="translate(15 8.5) scale(.93)" fill="#0d6e68" stroke="#0d6e68" stroke-width="3.2" stroke-linejoin="round"/>
+      <use href="#ff-ship" transform="translate(15 8.5) scale(.93)" fill="#fff"/>
+      <g transform="translate(15 8.5) scale(.93)">
+      <path d="M22.8 2h7.6l-2.2 2.8 2.2 2.8h-7.6z" fill="#06302f"/>
+      <circle cx="25.6" cy="4" r="1.25" fill="#fff"/>
+      <path d="M24.1 5.4l3 1.4M24.1 6.8l3-1.4" stroke="#fff" stroke-width=".55" stroke-linecap="round"/>
+      </g>
+      <path d="M5 52.5q3.5-2.6 7 0t7 0 7 0 7 0 7 0 7 0 7 0 7 0" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="2" stroke-linecap="round"/>
+      <path d="M10 57.5q3.5-2 7 0t7 0 7 0 7 0 7 0 7 0 7 0" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="1.6" stroke-linecap="round"/>
+      </svg>
+      <span><b>Flotilla</b> <i>Face</i></span>
+    </span>
     <span id="status" class="pill"><span class="dot"></span><span>Connecting…</span></span>
     <span id="vpn" class="pill" hidden><span class="dot"></span><span></span></span>
     <span class="spacer"></span>
@@ -245,15 +515,25 @@
   </header>
 
   <div class="stats">
+    <div class="card stat hero">
+      <div class="label">Upload</div>
+      <div class="value" id="up">–</div>
+      <div class="sub" id="upsub"></div>
+      <svg class="spark" id="sparkup" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </div>
+    <div class="card stat">
+      <div class="label">Download</div>
+      <div class="value" id="down">–</div>
+      <div class="sub" id="downsub"></div>
+      <svg class="spark" id="sparkdown" viewBox="0 0 300 60" preserveAspectRatio="none" aria-hidden="true"></svg>
+    </div>
     <div class="card stat">
       <div class="label">Space</div>
-      <div class="value num" id="hold">–</div>
-      <div class="bar"><div id="holdbar" style="width:0"></div></div>
+      <div class="value" id="hold">–</div>
+      <div class="bar" id="holdtrack"><div id="holdbar" style="width:0"></div></div>
       <div class="sub" id="holdsub"></div>
     </div>
-    <div class="card stat"><div class="label">Upload</div><div class="value num" id="up">–</div><div class="sub" id="upsub"></div></div>
-    <div class="card stat"><div class="label">Download</div><div class="value num" id="down">–</div><div class="sub" id="downsub"></div></div>
-    <div class="card stat"><div class="label">Seeding</div><div class="value num" id="swarm">–</div><div class="sub" id="swarmsub"></div></div>
+    <div class="card stat"><div class="label">Seeding</div><div class="value" id="swarm">–</div><div class="sub" id="swarmsub"></div></div>
   </div>
 
   <div class="card chart">
@@ -267,6 +547,12 @@
       </div>
     </div>
     <div class="hsum" id="hsum"></div>
+    <div class="chart-empty">
+      <svg viewBox="0 0 64 22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+        <path d="M1 14c5 0 5-6 10-6s5 6 10 6 5-6 10-6 5 6 10 6 5-6 10-6 5 6 10 6"/><path d="M1 20h62" stroke-opacity=".35" stroke-dasharray="2 4"/>
+      </svg>
+      <span id="chartempty"></span>
+    </div>
     <div class="plotwrap">
       <svg id="plot" class="plot" viewBox="0 0 600 110" preserveAspectRatio="none" role="img" aria-label="Upload over time"></svg>
       <span class="ymax" id="ymax"></span>
@@ -283,11 +569,12 @@
   <div class="tabs" role="tablist">
     <button role="tab" id="tab-carry" aria-selected="true" aria-controls="panel-carry">Carrying<span class="count" id="n-carry">0</span></button>
     <button role="tab" id="tab-prio" aria-selected="false" aria-controls="panel-prio">Priorities<span class="count" id="n-prio">0</span></button>
+    <span class="tab-ink" id="tabink" aria-hidden="true"></span>
   </div>
 
   <section id="panel-carry" role="tabpanel" aria-labelledby="tab-carry">
     <div class="panel-head">
-      <span class="sub">Click a model to see its pieces.</span>
+      <span class="sub">Click a model to see its pieces. The strip shows every piece at a glance.</span>
       <div class="legend">
         <span><span class="s held"></span>you hold it</span>
         <span><span class="s wanted"></span>downloading</span>
@@ -295,7 +582,11 @@
         <span><span class="s"></span>others have it</span>
       </div>
     </div>
-    <div class="card rows carry" id="carry"></div>
+    <div class="card rows carry" id="carry">
+      <div class="skel"><i style="width:24px;height:24px"></i><i style="width:32%"></i><i style="width:14%;margin-left:auto"></i><i style="width:18%"></i></div>
+      <div class="skel"><i style="width:24px;height:24px"></i><i style="width:24%"></i><i style="width:14%;margin-left:auto"></i><i style="width:18%"></i></div>
+      <div class="skel"><i style="width:24px;height:24px"></i><i style="width:28%"></i><i style="width:14%;margin-left:auto"></i><i style="width:18%"></i></div>
+    </div>
   </section>
 
   <section id="panel-prio" role="tabpanel" aria-labelledby="tab-prio" hidden>
@@ -321,50 +612,168 @@
     <div class="body"><pre id="log"></pre></div>
   </details>
 
-  <footer>Only reachable from this computer.</footer>
+  <footer>
+    <span class="foot-where">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      Only reachable from this computer.
+    </span>
+    <span class="foot-credit">
+      <span>Flotilla Face <span id="foot-ver"></span></span>
+      <span>MIT License</span>
+      <span>by Nick Montag</span>
+      <a href="https://github.com/nickmontag/flotilla-face" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+        GitHub
+      </a>
+    </span>
+  </footer>
 </main>
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
 
 <div class="scrim" id="scrim"></div>
-<aside id="drawer" aria-label="Settings" aria-hidden="true">
+<aside id="drawer" aria-labelledby="drawer-title" aria-hidden="true">
   <div class="drawer-head">
-    <h2>Settings</h2>
-    <button class="icon ghost" id="close" aria-label="Close settings">✕</button>
+    <div>
+      <h2 id="drawer-title">Settings</h2>
+      <p class="drawer-sub">Changes apply right away and are saved to your config file.</p>
+    </div>
+    <button class="icon ghost" id="close" aria-label="Close settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+    </button>
   </div>
-  <div class="drawer-body">
+  <div class="drawer-body" id="drawer-body">
     <form id="settings" autocomplete="off" onsubmit="return false">
-      <h3>Space</h3>
-      <div class="fields">
-        <label>Space for Flotilla (GB)<input name="budget_gb" type="number" min="1" step="any"></label>
-        <label>Always keep free (GB)<input name="reserve_gb" type="number" min="0" step="any"></label>
-      </div>
-      <h3>Bandwidth</h3>
-      <div class="fields">
-        <label>Upload (Mbit/s)<input name="upload_mbps" type="number" min="0.1" step="any"></label>
-        <label>Share of upload (%)<input name="upload_share" type="number" min="5" max="100" step="1"></label>
-        <label>Download (Mbit/s)<input name="download_mbps" type="number" min="0.1" step="any"></label>
-        <label>Share of download (%)<input name="download_share" type="number" min="5" max="100" step="1"></label>
-        <label>Monthly upload cap (GB)<input name="monthly_upload_cap_gb" type="number" min="0" step="any"></label>
-      </div>
-      <p class="help">0 means no cap.</p>
-      <h3>Hugging Face</h3>
-      <label class="check"><input name="hf_fallback" type="checkbox"> Fetch pieces no peer has from Hugging Face</label>
-      <div class="fields" style="margin-top:10px">
-        <label>Most per day (GB)<input name="hf_gb_per_day" type="number" min="0" step="any"></label>
-      </div>
-      <p class="help">When peers send a file nothing for 10 minutes, Flotilla fetches its missing pieces from
-        Hugging Face, if it still has the model, and checks each against the torrent before keeping it.
-        Hugging Face sees the address you fetch from. 0 means no daily limit.</p>
-      <div class="acct" id="hfacct"></div>
-      <div class="msg muted" id="hfmsg"></div>
-      <p class="help">Changes apply right away and are saved to your config file.</p>
-      <div style="margin-top:12px"><button class="primary" id="save" type="button">Save</button></div>
-      <div class="msg muted" id="msg"></div>
+
+      <section class="set">
+        <div class="set-h">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M3 14h18M7 17h.01M11 17h.01"/></svg>
+          <h3>Space</h3>
+        </div>
+        <div class="fields">
+          <div class="field">
+            <div class="fl"><label for="s-budget">Space for Flotilla</label>
+              <button type="button" class="qm" aria-label="About space for Flotilla" data-tip="The most disk space Flotilla uses for model pieces. It fills this space with the pieces the swarm needs most.">?</button></div>
+            <div class="unit-in"><input id="s-budget" name="budget_gb" type="number" min="1" step="any" inputmode="decimal"><em>GB</em></div>
+          </div>
+          <div class="field">
+            <div class="fl"><label for="s-reserve">Always keep free</label>
+              <button type="button" class="qm" aria-label="About always keep free" data-tip="Flotilla plans around leaving at least this much free on the drive. If other programs fill it below that, downloads pause until there's room again; finished files keep seeding.">?</button></div>
+            <div class="unit-in"><input id="s-reserve" name="reserve_gb" type="number" min="0" step="any" inputmode="decimal"><em>GB</em></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="set">
+        <div class="set-h">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m15.5 8.5-2 5-5 2 2-5z"/></svg>
+          <h3>Reorienting</h3>
+          <button type="button" class="qm" aria-label="About reorienting" data-tip="On a schedule, Flotilla drops the lowest-priority pieces you hold and fetches the ones the swarm needs most in their place. Models you added or set space aside for are never swapped out.">?</button>
+        </div>
+        <div class="fields">
+          <div class="field">
+            <div class="fl"><label for="s-reorient">How often</label>
+              <button type="button" class="qm" aria-label="About how often" data-tip="How often Flotilla reorients by itself. With Never, it only does so when you press Reorient now.">?</button></div>
+            <select id="s-reorient" name="reorient">
+              <option value="daily">Every day</option><option value="weekly">Every week</option>
+              <option value="monthly">Every month</option><option value="never">Never (only when I ask)</option>
+            </select>
+          </div>
+          <div class="field">
+            <div class="fl"><label for="s-churn">Swap up to</label>
+              <button type="button" class="qm" aria-label="About swap up to" data-tip="The most Flotilla drops and fetches each time it reorients. 0 means nothing is ever swapped.">?</button></div>
+            <div class="unit-in"><input id="s-churn" name="churn_gb" type="number" min="0" step="any" inputmode="decimal"><em>GB</em></div>
+          </div>
+        </div>
+        <!-- the plan is detail: folded to one line until asked for -->
+        <details class="fold acct" id="reo">
+          <summary><span class="fold-t" id="reo-sum">The next swap</span><span class="fold-hint">Show plan</span></summary>
+          <div class="fold-body">
+            <p class="reo-say" id="reo-say"></p>
+            <div class="reo-col"><h4 id="reo-out-h">Going out</h4><div id="reo-out"></div></div>
+            <div class="reo-col"><h4 id="reo-in-h">Coming in</h4><div id="reo-in"></div></div>
+            <p class="reo-foot" id="reo-foot"></p>
+            <div class="reo-act"><button id="reo-now" type="button">Reorient now</button><span class="sub" id="reo-when"></span></div>
+          </div>
+        </details>
+        <div class="msg muted" id="reomsg"></div>
+      </section>
+
+      <section class="set">
+        <div class="set-h">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15a8 8 0 1 1 16 0"/><path d="m12 15 4-5"/><path d="M4 19h16"/></svg>
+          <h3>Bandwidth</h3>
+        </div>
+        <div class="fields">
+          <div class="field">
+            <div class="fl"><label for="s-up">Upload speed</label>
+              <button type="button" class="qm" aria-label="About upload speed" data-tip="Your internet line's upload speed. Flotilla uses it, with the share next to it, to cap how fast it seeds.">?</button></div>
+            <div class="unit-in"><input id="s-up" name="upload_mbps" type="number" min="0.1" step="any" inputmode="decimal"><em>Mbit/s</em></div>
+          </div>
+          <div class="field">
+            <div class="fl"><label for="s-upshare">Share for seeding</label>
+              <button type="button" class="qm" aria-label="About share for seeding" data-tip="How much of your upload speed Flotilla may use. The rest stays free for everything else on your network.">?</button></div>
+            <div class="unit-in"><input id="s-upshare" name="upload_share" type="number" min="5" max="100" step="1" inputmode="numeric"><em>%</em></div>
+          </div>
+          <div class="field">
+            <div class="fl"><label for="s-down">Download speed</label>
+              <button type="button" class="qm" aria-label="About download speed" data-tip="Your internet line's download speed. Flotilla uses it, with the share next to it, to cap how fast it fetches pieces.">?</button></div>
+            <div class="unit-in"><input id="s-down" name="download_mbps" type="number" min="0.1" step="any" inputmode="decimal"><em>Mbit/s</em></div>
+          </div>
+          <div class="field">
+            <div class="fl"><label for="s-downshare">Share for fetching</label>
+              <button type="button" class="qm" aria-label="About share for fetching" data-tip="How much of your download speed Flotilla may use. The rest stays free for everything else on your network.">?</button></div>
+            <div class="unit-in"><input id="s-downshare" name="download_share" type="number" min="5" max="100" step="1" inputmode="numeric"><em>%</em></div>
+          </div>
+          <div class="field wide">
+            <div class="fl"><label for="s-cap">Monthly upload cap</label>
+              <button type="button" class="qm" aria-label="About monthly upload cap" data-tip="Once this much has gone up in a month, Flotilla pauses (no uploads or downloads) until the next month starts. 0 means no cap.">?</button></div>
+            <div class="unit-in"><input id="s-cap" name="monthly_upload_cap_gb" type="number" min="0" step="any" inputmode="decimal" placeholder="0 = no cap"><em>GB</em></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="set">
+        <div class="set-h">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 9a4 4 0 0 1 0 9"/><path d="M12 12v8m-3-3 3 3 3-3"/></svg>
+          <h3>Hugging Face</h3>
+        </div>
+        <div class="switch-row">
+          <label for="s-hf">Fetch pieces no peer has</label>
+          <button type="button" class="qm" aria-label="About fetching from Hugging Face" data-tip="When peers have sent a file nothing for 10 minutes, Flotilla fetches its missing pieces from Hugging Face, if it still has the model, and checks each against the torrent before keeping it. Hugging Face sees the address you fetch from.">?</button>
+          <input id="s-hf" class="switch" name="hf_fallback" type="checkbox" role="switch">
+        </div>
+        <div class="fields">
+          <div class="field">
+            <div class="fl"><label for="s-hfday">Most per day</label>
+              <button type="button" class="qm" aria-label="About most per day" data-tip="The most Flotilla fetches from Hugging Face in a day (UTC). 0 means no daily limit.">?</button></div>
+            <div class="unit-in"><input id="s-hfday" name="hf_gb_per_day" type="number" min="0" step="any" inputmode="decimal"><em>GB</em></div>
+          </div>
+        </div>
+        <div class="acct" id="hfacct"></div>
+        <div class="msg muted" id="hfmsg"></div>
+      </section>
     </form>
-    <h3>Actions</h3>
-    <button id="replan" type="button">Replan now</button>
-    <p class="help">Looks at the swarm again and re-picks pieces. Takes about two minutes.</p>
-    <h3>This node</h3>
-    <dl id="about"></dl>
+
+    <section class="set">
+      <div class="set-h">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66"/><path d="M20 4v5h-5"/></svg>
+        <h3>Replan</h3>
+        <button type="button" class="qm" aria-label="About replanning" data-tip="Looks at the swarm again, fills free space and applies your changes. It keeps what you hold: swapping pieces for needier ones is Reorienting. Takes about two minutes.">?</button>
+      </div>
+      <button id="replan" type="button">Replan now</button>
+    </section>
+
+    <details class="set fold">
+      <summary class="set-h">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+        <h3>This node</h3><span class="fold-hint">Files, port, version</span>
+      </summary>
+      <div class="fold-body"><dl id="about"></dl></div>
+    </details>
+  </div>
+  <div class="drawer-foot">
+    <span class="msg muted" id="msg"></span>
+    <button class="primary" id="save" type="button" disabled>Save</button>
   </div>
 </aside>
 
@@ -402,7 +811,101 @@ function link(repo) {
   a.onclick = (e) => e.stopPropagation();
   return a;
 }
-function setPill(id, kind, text) { const p = $(id); p.hidden = false; p.className = "pill " + kind; p.lastElementChild.textContent = text; }
+function setPill(id, kind, text, live) {
+  const p = $(id); p.hidden = false; p.className = "pill " + kind + (live ? " live" : ""); p.lastElementChild.textContent = text;
+}
+
+/* ---------------- look and feel helpers ---------------- */
+
+const calm = matchMedia("(prefers-reduced-motion: reduce)");
+
+// A coloured badge with the author's initial: the same author always gets the same colour.
+function mono(repo) {
+  const author = repo.includes("/") ? repo.split("/")[0] : repo;
+  let h = 0; for (const ch of author) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  const m = el("span", "mono", (author.match(/[a-z0-9]/i) || ["?"])[0]);
+  m.style.setProperty("--h", String(h % 360)); m.setAttribute("aria-hidden", "true");
+  return m;
+}
+// The model's Pirate Face page, as a small icon next to the name (the name itself opens the row).
+function extLink(repo) {
+  const a = el("a", "ext");
+  a.href = "https://pirateface.co/" + encodeURI(repo); a.target = "_blank"; a.rel = "noopener noreferrer";
+  a.title = "Open on Pirate Face"; a.setAttribute("aria-label", "Open " + repo + " on Pirate Face");
+  a.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>';
+  a.onclick = (e) => e.stopPropagation();
+  return a;
+}
+
+// Big numbers glide to their new value instead of jumping. fmt(v) gives [number, unit].
+function setNum(id, v, fmt) {
+  const e = $(id); v = Number(v) || 0;
+  const paint = (x) => { const [n, u] = fmt(x); e.replaceChildren(n); if (u) e.append(el("small", null, u)); };
+  const from = e._v;
+  e._v = v; cancelAnimationFrame(e._raf);
+  if (from == null || from === v || calm.matches || document.hidden) { paint(v); return; }
+  const t0 = performance.now(), dur = 650;
+  const step = (now) => {
+    const k = Math.min(1, (now - t0) / dur), ease = 1 - Math.pow(1 - k, 3);
+    paint(from + (v - from) * ease);
+    if (k < 1) e._raf = requestAnimationFrame(step);
+  };
+  e._raf = requestAnimationFrame(step);
+}
+const split = (s) => { const i = s.lastIndexOf(" "); return i < 0 ? [s, ""] : [s.slice(0, i), s.slice(i + 1)]; };
+const fmtBytes = (x) => split(human(x));
+const fmtRate = (x) => { const [n, u] = split(human(x)); return [n, u + "/s"]; };
+
+// The last five minutes of upload and download, sampled at every refresh, for the cards' sparklines.
+// Kept for the tab's lifetime (sessionStorage), so a reload doesn't flatten them.
+const LIVE_SPAN = 300;
+let live = [];
+try { live = JSON.parse(sessionStorage.getItem("flotilla-live") || "[]"); } catch (e) { live = []; }
+function sample(up, down) {
+  const now = Date.now() / 1000;
+  live.push([now, up, down]);
+  live = live.filter((p) => now - p[0] <= LIVE_SPAN);
+  try { sessionStorage.setItem("flotilla-live", JSON.stringify(live)); } catch (e) { /* ignore */ }
+  spark($("sparkup"), 1, "var(--accent)", "sgu");
+  spark($("sparkdown"), 2, "var(--down)", "sgd");
+}
+function spark(svg, k, color, gid) {
+  const W = 300, H = 60, now = Date.now() / 1000;
+  const max = Math.max(...live.map((p) => p[k]), 1024);
+  const x = (t) => W - (now - t) / LIVE_SPAN * W, y = (v) => H - 2 - v / max * (H - 12);
+  const pts = live.length > 1 ? live.map((p) => [x(p[0]), y(p[k])]) : [[0, H - 2], [W, H - 2]];
+  if (live.length === 1) pts[0][1] = pts[1][1] = y(live[0][k]);
+  // Smooth the line through the samples' midpoints.
+  let d = "M" + pts[0][0].toFixed(1) + "," + pts[0][1].toFixed(1);
+  for (let i = 1; i < pts.length; i++) {
+    const [px, py] = pts[i - 1], [cx, cy] = pts[i], mx = (px + cx) / 2, my = (py + cy) / 2;
+    d += ` Q${px.toFixed(1)},${py.toFixed(1)} ${mx.toFixed(1)},${my.toFixed(1)}`;
+  }
+  const last = pts[pts.length - 1];
+  d += ` L${last[0].toFixed(1)},${last[1].toFixed(1)}`;
+  svg.innerHTML =
+    `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">` +
+    `<stop offset="0" style="stop-color:${color};stop-opacity:.28"/><stop offset="1" style="stop-color:${color};stop-opacity:0"/></linearGradient></defs>` +
+    `<path d="${d} L${last[0].toFixed(1)},${H} L${pts[0][0].toFixed(1)},${H} Z" fill="url(#${gid})"/>` +
+    `<path d="${d}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+}
+
+// Short pop-ups for things that happen out of sight (Replan, Drop, Reorient, Pause).
+function toast(text, kind) {
+  const box = $("toasts"), t = el("div", "toast " + (kind || "ok"));
+  t.append(el("span", "dot"), el("span", null, text));
+  box.append(t);
+  while (box.children.length > 3) box.firstElementChild.remove();
+  setTimeout(() => { t.classList.add("out"); setTimeout(() => t.remove(), 260); }, kind === "bad" ? 6000 : 3800);
+}
+
+// The line under the selected tab slides from one tab to the other.
+function moveInk() {
+  const sel = document.querySelector('.tabs [aria-selected="true"]'), ink = $("tabink");
+  if (!sel) return;
+  ink.style.width = sel.offsetWidth + "px"; ink.style.transform = "translateX(" + sel.offsetLeft + "px)";
+}
+addEventListener("resize", moveInk);
 
 /* ---------------- top of page ---------------- */
 
@@ -418,21 +921,26 @@ function render(s) {
   else if (net.bind && net.bind_up === false) setPill("status", "bad", "Offline: VPN is down");
   else if (s.disk && s.disk.paused) setPill("status", "warn", "Downloads paused: disk nearly full");
   else if (s.paused) setPill("status", "warn", "Paused: monthly cap reached");
-  else if (wanted && done < wanted) setPill("status", "ok", "Downloading " + Math.floor(100 * done / wanted) + "%");
-  else if (ts.length) setPill("status", "ok", "Seeding");
+  else if (wanted && done < wanted) setPill("status", "ok", "Downloading " + Math.floor(100 * done / wanted) + "%", true);
+  else if (ts.length) setPill("status", "ok", "Seeding", true);
   else setPill("status", "", "Idle");
   if (net.bind) setPill("vpn", net.bind_up ? "ok" : "bad", (net.bind_up ? "VPN pinned · " : "Waiting for VPN · ") + net.bind);
   else setPill("vpn", "warn", "No VPN pin");
   $("node").textContent = "node " + s.node + " · v" + s.version;
+  $("foot-ver").textContent = "v" + s.version;
   $("pause").textContent = s.user_paused ? "Resume" : "Pause";
 
   const budget = st.budget_gb * 1e9, held = s.disk.held;
-  $("hold").textContent = human(held);
-  $("holdbar").style.width = Math.min(100, 100 * held / budget).toFixed(1) + "%";
+  document.body.classList.remove("loading");
+  const fill = Math.min(100, 100 * held / budget);
+  setNum("hold", held, fmtBytes);
+  $("holdbar").style.width = fill.toFixed(1) + "%";
+  $("holdtrack").classList.toggle("full", fill >= 97);
   $("holdsub").textContent = "of " + human(budget) + " · " + human(s.disk.free) + " free on the drive";
-  $("up").textContent = rate(up);
+  setNum("up", up, fmtRate);
   $("upsub").textContent = human(run.uploaded) + " this run · " + human((s.upload_month || {}).bytes) + " this month";
-  $("down").textContent = rate(down);
+  setNum("down", down, fmtRate);
+  sample(up, down);
   $("downsub").textContent = wanted && done < wanted ? human(done) + " of " + human(wanted) + " fetched" : "Nothing left to fetch";
   const mem = s.memory || {};
   if (mem.paused && mem.paused.length)
@@ -445,13 +953,15 @@ function render(s) {
     $("downsub").textContent += " · " + plural(hf.gated.length, "model") + " gated on Hugging Face (see Settings)";
   if (hf.retry_at)
     $("downsub").textContent += " · Hugging Face busy, trying again at " + new Date(hf.retry_at * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  $("swarm").textContent = plural(ts.length, "model");
+  setNum("swarm", ts.length, (x) => { const n = Math.round(x); return [String(n), n === 1 ? "model" : "models"]; });
   $("swarmsub").textContent = plural(sum("peers"), "peer") + " connected · ≈ " + (s.points_est_total || 0).toFixed(1) + " points (est.)";
 
+  renderReorient(s.reorient || {});
   renderCarrying(ts);
   if (!dragging && !(document.activeElement || document.body).closest("#prio")) renderPriorities(s.priorities || [], st);
   renderSkipped(s.dropped || []);
   $("n-carry").textContent = ts.length; $("n-prio").textContent = (s.priorities || []).length;
+  moveInk();
 
   const pre = $("log"), atEnd = pre.scrollTop + pre.clientHeight >= pre.scrollHeight - 4;
   pre.textContent = foldLog(s.log || []).map((l) => new Date(l.t * 1000).toLocaleTimeString() + "  " + l.msg).join("\n") || "No activity yet.";
@@ -561,22 +1071,21 @@ function renderHistory(doc) {
   const x = (i) => pts.length < 2 ? W / 2 : i / (pts.length - 1) * W;
   const empty = !doc.up && !doc.down && !doc.online;
   const cursors = [];
+  // Nothing to plot: a short note instead of an empty chart (the cards above show the live rates).
+  $("plot").closest(".chart").classList.toggle("empty", empty);
+  $("chartempty").textContent = "Nothing recorded in " + RANGE_WORDS[doc.range] + (doc.repo ? " for " + doc.repo.split("/").pop() : "") +
+    " yet. A point is added every minute; the Upload card shows the last five minutes live.";
 
-  function draw(svg, vals, H, color, soft, ymaxId) {
+  function draw(svg, vals, H, color, gid, ymaxId) {
     svg.replaceChildren();
     const max = Math.max(1, ...vals.filter((v) => v != null));
     $(ymaxId).textContent = empty || !vals.some((v) => v) ? "" : rate(max);
-    if (empty) {
-      if (H > 60) {
-        const t = document.createElementNS(ns, "text");
-        t.setAttribute("x", W / 2); t.setAttribute("y", H / 2); t.setAttribute("text-anchor", "middle");
-        t.setAttribute("fill", "var(--faint)"); t.setAttribute("font-size", "13");
-        t.textContent = "Nothing recorded in this range yet. A point is added every minute.";
-        svg.setAttribute("preserveAspectRatio", "xMidYMid meet"); svg.append(t);
-      }
-      return;
-    }
-    svg.setAttribute("preserveAspectRatio", "none");
+    if (empty) return;
+    const defs = document.createElementNS(ns, "defs");
+    defs.innerHTML = `<linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:${color};stop-opacity:.32"/>` +
+                     `<stop offset="1" style="stop-color:${color};stop-opacity:0"/></linearGradient>`;
+    svg.append(defs);
+    const soft = "url(#" + gid + ")";
     const top = 12, y = (v) => H - 1 - v / max * (H - top - 1);
     // One path per run of buckets the node was seeding; offline buckets leave a gap.
     const runs = [];
@@ -595,7 +1104,7 @@ function renderHistory(doc) {
       a.setAttribute("fill", soft); svg.append(a);
       const l = document.createElementNS(ns, "path");
       l.setAttribute("d", line(run)); l.setAttribute("fill", "none"); l.setAttribute("stroke", color);
-      l.setAttribute("stroke-width", "1.75"); l.setAttribute("vector-effect", "non-scaling-stroke");
+      l.setAttribute("stroke-width", "2"); l.setAttribute("stroke-linejoin", "round"); l.setAttribute("vector-effect", "non-scaling-stroke");
       svg.append(l);
     }
     const c = document.createElementNS(ns, "line");
@@ -605,8 +1114,8 @@ function renderHistory(doc) {
   }
 
   const upSvg = $("plot"), downSvg = $("plotdown");
-  draw(upSvg, ups, 110, "var(--accent)", "var(--accent-soft)", "ymax");
-  draw(downSvg, downs, 40, "var(--ok)", "color-mix(in srgb, var(--ok) 18%, transparent)", "ymaxdown");
+  draw(upSvg, ups, 110, "var(--accent)", "hgu", "ymax");
+  draw(downSvg, downs, 40, "var(--down)", "hgd", "ymaxdown");
   const tip = $("tip");
   const hover = (e) => {
     if (empty) return;
@@ -634,8 +1143,9 @@ function renderHistory(doc) {
     for (const m of top) {
       const row = el("div", "hm"); row.title = "Show only " + m.repo;
       const bar = el("div", "needbar hb"); const f = el("div"); f.style.width = Math.max(2, m.up / mx * 100) + "%";
-      f.style.background = "var(--accent)"; bar.append(f);
-      row.append(el("span", "n", m.repo.split("/").pop()), bar, el("span", "r", "↑ " + human(m.up)), el("span", "r", "↓ " + human(m.down)));
+      f.style.background = "linear-gradient(90deg, var(--accent), var(--accent-hi))"; bar.append(f);
+      const n = el("span", "n", m.repo.split("/").pop()); n.title = m.repo;
+      row.append(n, bar, el("span", "r", "↑ " + human(m.up)), el("span", "r", "↓ " + human(m.down)));
       row.onclick = () => setModel(m.repo);
       box.append(row);
     }
@@ -645,9 +1155,127 @@ function renderHistory(doc) {
 loadHistory();
 setInterval(loadHistory, 60000);
 
+/* ---------------- reorienting ---------------- */
+
+let reoAsked = false;
+const sumBytes = (gs) => gs.reduce((a, g) => a + g.bytes, 0);
+const dayText = (t) => new Date(t * 1000).toLocaleDateString([], { weekday: "short", month: "short", day: "numeric" });
+
+function swapRow(g, dim) {
+  const row = el("div", "reo-row" + (dim ? " dim" : ""));   // name on one line, its numbers under it
+  const name = el("span", "name"); name.append(link(g.repo));
+  if (g.hf_backed === false) name.append(el("span", "tag bad", "HF gone"));
+  const r = Math.round(g.rarest || 0);
+  const copies = r === 0 ? "no other copy" : r + (r === 1 ? " other copy" : " other copies");
+  const c = el("span", "cell", (g.whole ? "whole model" : plural(g.pieces, "piece")) + " · " + human(g.bytes) + " · " + copies);
+  c.title = "Priority " + g.priority.toFixed(2) + ". Its rarest piece here is held by " + plural(r, "other peer") +
+            "; the model's target is " + g.target + ".";
+  row.append(name, c);
+  return row;
+}
+function swapList(id, groups, dim, none) {
+  const box = $(id); box.replaceChildren();
+  if (!groups.length) { box.append(el("div", "reo-none", none)); return; }
+  groups.slice(0, 6).forEach((g) => box.append(swapRow(g, dim)));
+  if (groups.length > 6) box.append(el("div", "reo-none", "and " + plural(groups.length - 6, "more model")));
+}
+
+function renderReorient(r) {
+  const pv = r.preview, never = r.every === "never", now = Date.now() / 1000;
+  if (reoAsked && !r.asked) {                                  // the one that was asked for is done
+    $("reomsg").textContent = "";
+    const res = r.result, o = (res && res.out) || [];
+    toast(o.length ? "Reoriented: dropped " + human(sumBytes(o)) + ", fetching " + human(sumBytes(res.in || [])) + "."
+                   : "Reorient finished: nothing needed swapping.");
+  }
+  reoAsked = !!r.asked;
+
+  const when = [];
+  if (r.asked) when.push("Looking at the swarm now");
+  else if (r.result) when.push("Last: " + dayText(r.result.at));
+  $("reo-when").textContent = when.join(" · ");
+  $("reo-now").disabled = !!r.asked || !pv;
+
+  const say = $("reo-say"); say.replaceChildren();
+  const b = (t) => el("b", null, t);
+  const due = never ? "" : !r.next ? "" : r.next <= now + 90 ? "At the next look at the swarm" : "On " + dayText(r.next);
+  const sum = $("reo-sum"); sum.replaceChildren();
+  if (!pv) {
+    sum.append("No plan yet: it comes after the first look at the swarm.");
+    say.append("Flotilla will say here what it would swap, after its first look at the swarm.");
+    swapList("reo-out", [], true, "–"); swapList("reo-in", [], false, "–");
+    $("reo-out-h").textContent = "Going out"; $("reo-in-h").textContent = "Coming in";
+    $("reo-foot").textContent = "";
+    return;
+  }
+  const out = pv.out || [], into = pv.in || [];
+  if (out.length) {
+    say.append(never ? "Reorienting is off: what you hold stays until you change it. If you reorient now, Flotilla drops "
+                     : (due || "Next time") + ", Flotilla drops ", b(human(sumBytes(out))),
+               " of the lowest-priority pieces you hold and fetches ", b(human(sumBytes(into))), " from the top of the swarm's list.");
+    sum.append(b(never ? "If you reorient now" : due || "Next time"), ": swap " + human(sumBytes(out)) + " for " + human(sumBytes(into)));
+    $("reo-out-h").textContent = "Going out: lowest priority you hold";
+    $("reo-in-h").textContent = "Coming in: the swarm's top priorities";
+    swapList("reo-out", out, true, ""); swapList("reo-in", into, false, "");
+  } else {
+    let why;
+    if (!r.churn_gb) why = "With 0 GB to swap, nothing is swapped.";
+    else if (pv.short) why = "Nothing fits yet: the smallest swap worth making is " + human(pv.short) + ", more than your " + r.churn_gb + " GB.";
+    else if (!pv.held) why = "You hold nothing yet, so there is nothing to swap.";
+    else if (!pv.swappable) why = "Nothing can go out yet: everything you hold is a model you chose, or was picked less than " +
+                                  plural(Math.round(r.min_hold_days), "day") + " ago.";
+    else why = "Nothing to swap right now: nothing in the swarm needs the space more than what you hold.";
+    sum.append(b("Nothing to swap"), never ? " · reorienting is off" : due ? " · next look " + due.replace(/^On /, "").replace(/^At the next look at the swarm$/, "soon") : "");
+    say.append((never ? "Reorienting is off: what you hold stays until you change it. " : due ? "Next: " + due.replace(/^On /, "") + ". " : "") + why);
+    $("reo-out-h").textContent = "Lowest priority you hold";
+    $("reo-in-h").textContent = "The swarm's top priorities";
+    swapList("reo-out", pv.lowest || [], true, "Nothing that can be swapped out.");
+    swapList("reo-in", pv.top || [], false, "Nothing you don't already hold.");
+  }
+  const foot = [];
+  if (pv.at) foot.push("From the look at the swarm at " + new Date(pv.at * 1000).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) + ".");
+  if (r.result && (r.result.out || []).length)
+    foot.push("Last time: dropped " + human(sumBytes(r.result.out)) + ", fetched " + human(sumBytes(r.result.in)) + ".");
+  $("reo-foot").textContent = foot.join(" ");
+}
+$("reo-now").onclick = () => {
+  const pv = state && state.reorient && state.reorient.preview, out = (pv && pv.out) || [];
+  const what = out.length ? "As things stand it would drop " + human(sumBytes(out)) + " and delete those files from this computer"
+                          : "As things stand there is nothing to swap";
+  if (confirm("Reorient now? Flotilla looks at the swarm again first (about two minutes), then swaps up to " +
+              state.reorient.churn_gb + " GB. " + what + "."))
+    post("reorient", {}, "Starting…", "Looking at the swarm, then reorienting: about two minutes.", "reomsg");
+};
+
 /* ---------------- Carrying tab ---------------- */
 
 function gatedOf(repo) { return ((state && state.hf && state.hf.gated) || []).find((g) => g.repo === repo); }
+
+// One strip per model: each piece a slice, in the legend's colours (held, downloading, no other copy).
+function coverStrip(t) {
+  const shards = t.shards || [], bar = el("div", "cover");
+  if (!shards.length) { bar.title = "No pieces listed yet"; return bar; }
+  const colour = (sh) => sh.status === "verified" ? "var(--accent)"
+    : sh.status ? "color-mix(in srgb, var(--accent) 38%, var(--track))"
+    : sh.avail === 0 ? "var(--bad)" : "transparent";
+  const stops = [], w = 100 / shards.length;
+  let run = null;
+  shards.forEach((sh, i) => {
+    const c = colour(sh);
+    if (run && run.c === c) run.to = (i + 1) * w;
+    else { run = { c, from: i * w, to: (i + 1) * w }; stops.push(run); }
+  });
+  const fill = el("i");
+  fill.style.background = "linear-gradient(90deg," + stops.map((r) => `${r.c} ${r.from.toFixed(2)}% ${r.to.toFixed(2)}%`).join(",") + ")";
+  bar.append(fill);
+  const held = shards.filter((x) => x.status === "verified").length, getting = shards.filter((x) => x.status && x.status !== "verified").length;
+  const lone = shards.filter((x) => x.avail === 0).length;
+  bar.title = "You hold " + held + " of " + plural(shards.length, "piece") + (getting ? " · " + getting + " downloading" : "") +
+              (lone ? " · " + lone + " with no other copy" : "");
+  return bar;
+}
+
+const heldBefore = new Map();   // infohash -> pieces held at the last render, so newly landed ones can flash
 
 function renderCarrying(ts) {
   const box = $("carry"); box.replaceChildren();
@@ -656,7 +1284,11 @@ function renderCarrying(ts) {
     const row = el("div", "row" + (openRows.has(t.infohash) ? " open" : ""));
     const line = el("div", "line");
     line.tabIndex = 0; line.setAttribute("role", "button"); line.setAttribute("aria-expanded", String(openRows.has(t.infohash)));
-    const name = el("span", "name"); name.append(link(t.repo));
+    // The name opens the row like the rest of the line; the arrow next to it goes to Pirate Face.
+    const name = el("span", "name"), [author, model] = t.repo.includes("/") ? t.repo.split("/", 2) : ["", t.repo];
+    const nm = el("span", "nm", model); nm.title = t.repo;
+    if (author) nm.append(el("span", "author", " · " + author));
+    name.append(mono(t.repo), nm, extLink(t.repo));
     if (t.hf_backed === false) name.append(el("span", "tag bad", "HF copy gone"));
     if ((t.manifest_mismatches || []).length) name.append(el("span", "tag warn", "hash disagreed"));
     const g = gatedOf(t.repo);
@@ -667,13 +1299,14 @@ function renderCarrying(ts) {
       name.append(tag);
     }
     if (t.state !== "finished" && t.state !== "seeding") name.append(el("span", "tag", t.state));
-    line.append(el("span", "chev", "▸"), name, cell(human(t.done), " held"), cell(t.verified + "/" + t.files, " files ✓"),
+    line.append(el("span", "chev", "▸"), name, coverStrip(t), cell(human(t.done), " held"), cell(t.verified + "/" + t.files, " files ✓"),
                 cell("↑ " + rate(t.up_rate)), cell(human(t.uploaded), " sent"), cell(String(t.peers), t.peers === 1 ? " peer" : " peers"));
     const toggle = () => { openRows.has(t.infohash) ? openRows.delete(t.infohash) : openRows.add(t.infohash); renderCarrying(state.torrents || []); };
     line.onclick = toggle;
     line.onkeydown = (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(); } };
     row.append(line);
     if (openRows.has(t.infohash)) row.append(detail(t));
+    heldBefore.set(t.infohash, new Set((t.shards || []).flatMap((sh, i) => sh.status === "verified" ? [i] : [])));
     box.append(row);
   });
 }
@@ -695,10 +1328,11 @@ function detail(t) {
   if (t.hf_bytes) bits.push(human(t.hf_bytes) + " fetched from Hugging Face (no peer had it)");
   meta.textContent = bits.join(" · ");
   const strip = el("div", "pieces" + (shards.length > 120 ? " dense" : ""));
-  const target = t.target || 5;
-  shards.forEach((sh) => {
+  const before = heldBefore.get(t.infohash);
+  shards.forEach((sh, i) => {
     let cls = "s";
-    if (sh.status === "verified") cls += " held"; else if (sh.status) cls += " wanted";
+    if (sh.status === "verified") { cls += " held"; if (before && !before.has(i)) cls += " fresh"; }
+    else if (sh.status) cls += " wanted";
     if (sh.avail === 0) cls += " a0";
     const s = el("div", cls);
     s.title = sh.path + " · " + human(sh.size) + (sh.avail != null ? " · " + plural(sh.avail, "other peer") + " have it" : "") +
@@ -706,7 +1340,10 @@ function detail(t) {
     strip.append(s);
   });
   const drop = el("button", "ghost danger", "Drop this model");
-  drop.onclick = () => { if (confirm("Stop carrying " + t.repo + " and delete its files from this computer?")) post("drop", { infohash: t.infohash }); };
+  drop.onclick = () => {
+    if (confirm("Stop carrying " + t.repo + " and delete its files from this computer?"))
+      post("drop", { infohash: t.infohash }, null, "Dropped " + t.repo.split("/").pop() + ". Its files are being deleted.");
+  };
   d.append(meta, strip, drop);
   return d;
 }
@@ -762,7 +1399,7 @@ function renderPriorities(list, st) {
     const handle = el("span", "handle", "⠿"); handle.title = "Drag to reorder";
     handle.onpointerdown = (e) => startDrag(e, row, p.repo);
 
-    const name = el("span", "name"); name.append(link(p.repo));
+    const name = el("span", "name"), who = el("span", "who"); who.append(mono(p.repo), link(p.repo)); name.append(who);
     if (p.source === "yours") name.append(el("span", "tag", "yours"));
     else if (p.source === "carrying") name.append(el("span", "tag", "carrying only"));
     if (p.hf_backed === false) {
@@ -882,7 +1519,7 @@ async function saveOrder(order) {
   // Show the new order right away; the next refresh confirms it from the node.
   const box = $("prio"), rows = new Map([...box.children].map((r) => [r.dataset.repo, r]));
   order.forEach((r, i) => { const row = rows.get(r); if (row) { row.querySelector(".rank").textContent = String(i + 1); box.append(row); } });
-  await post("order", { order }, "Saving order…", "Order saved. Replanning.", "priomsg");
+  await post("order", { order }, "Saving order…", "Order saved. Free space follows it now; what you hold shifts at the next reorientation.", "priomsg");
 }
 
 $("addform").addEventListener("submit", async (e) => {
@@ -899,20 +1536,25 @@ function showTab(which) {
     $("tab-" + t).setAttribute("aria-selected", String(t === which));
     $("panel-" + t).hidden = t !== which;
   });
+  moveInk();
   try { localStorage.setItem("flotilla-tab", which); } catch (e) { /* storage may be blocked */ }
 }
 $("tab-carry").onclick = () => showTab("carry");
 $("tab-prio").onclick = () => showTab("prio");
 try { if (localStorage.getItem("flotilla-tab") === "prio") showTab("prio"); } catch (e) { /* ignore */ }
+// Place the tab line without sliding in from the left on first load.
+$("tabink").style.transition = "none"; moveInk(); void $("tabink").offsetWidth; $("tabink").style.transition = "";
 
 /* ---------------- settings drawer ---------------- */
 
 let drawerOpen = false, editing = false;
 function openDrawer(open) {
-  drawerOpen = open; editing = false;
+  drawerOpen = open; setDirty(false); hideTip();
   $("drawer").classList.toggle("open", open); $("scrim").classList.toggle("open", open);
   $("drawer").setAttribute("aria-hidden", String(!open)); $("gear").setAttribute("aria-expanded", String(open));
-  if (open) { $("msg").textContent = ""; fillDrawer(); setTimeout(() => $("settings").elements[0].focus(), 50); }
+  document.documentElement.style.overflow = open ? "hidden" : "";   // the page behind doesn't scroll on phones
+  // Focus the close button, not the first field: on a phone that would pop the keyboard up.
+  if (open) { $("msg").textContent = ""; fillDrawer(); setTimeout(() => $("close").focus(), 50); }
   else $("gear").focus();
 }
 function fillDrawer() {
@@ -982,21 +1624,77 @@ function fillAccount() {
 $("gear").onclick = () => openDrawer(!drawerOpen);
 $("close").onclick = () => openDrawer(false);
 $("scrim").onclick = () => openDrawer(false);
-document.addEventListener("keydown", (e) => { if (e.key === "Escape" && drawerOpen) openDrawer(false); });
-$("settings").addEventListener("input", () => { editing = true; });
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (tipFor) hideTip(); else if (drawerOpen) openDrawer(false);
+});
+// Save stays off until something changes, and the footer says so.
+function setDirty(d) {
+  editing = d; $("save").disabled = !d;
+  const m = $("msg");
+  if (d) { m.textContent = "Unsaved changes"; m.className = "msg dirty"; }
+  else if (m.classList.contains("dirty")) { m.textContent = ""; m.className = "msg muted"; }
+}
+$("settings").addEventListener("input", (e) => { if (e.target.name) setDirty(true); });
 $("save").onclick = async () => {
   const body = {};
   for (const i of $("settings").elements) {
     if (i.name && i.type === "checkbox") { body[i.name] = i.checked; continue; }
     if (!i.name || i.value === "") continue;
+    if (i.tagName === "SELECT") { body[i.name] = i.value; continue; }
     let v = Number(i.value); if (i.name.endsWith("_share")) v /= 100;
     body[i.name] = v;
   }
-  editing = false;
-  await post("settings", body, "Saving…", "Saved.");
+  setDirty(false);
+  if (!await post("settings", body, "Saving…", "Saved.")) { editing = true; $("save").disabled = false; }
 };
 $("replan").onclick = () => post("replan", {}, "Replanning…", "Replanning: about two minutes.");
-$("pause").onclick = () => post(state && state.user_paused ? "resume" : "pause", {});
+
+/* ---------------- tooltips ---------------- */
+
+// The ? buttons: hover or focus shows the tip, a tap toggles it (phones have no hover).
+// One floating tooltip for the page, placed in the viewport so the drawer's scrolling never clips it.
+const tipEl = el("div", "tooltip"); tipEl.id = "tooltip"; tipEl.setAttribute("role", "tooltip");
+document.body.append(tipEl);
+let tipFor = null, lastPointer = "mouse";
+function showTip(b) {
+  if (tipFor && tipFor !== b) tipFor.removeAttribute("aria-describedby");
+  tipFor = b; b.setAttribute("aria-describedby", "tooltip");
+  tipEl.textContent = b.dataset.tip;
+  tipEl.classList.remove("below"); tipEl.style.left = "0px"; tipEl.style.top = "0px";
+  const r = b.getBoundingClientRect(), w = tipEl.offsetWidth, h = tipEl.offsetHeight, vw = document.documentElement.clientWidth;
+  const left = Math.max(12, Math.min(vw - w - 12, r.left + r.width / 2 - w / 2));
+  let top = r.top - h - 10;
+  if (top < 8) { top = r.bottom + 10; tipEl.classList.add("below"); }
+  tipEl.style.left = left + "px"; tipEl.style.top = top + "px";
+  tipEl.style.setProperty("--ax", (r.left + r.width / 2 - left) + "px");
+  tipEl.classList.add("show");
+}
+function hideTip() {
+  if (!tipFor) return;
+  tipFor.removeAttribute("aria-describedby"); tipFor = null; tipEl.classList.remove("show");
+}
+document.addEventListener("pointerdown", (e) => {
+  lastPointer = e.pointerType;
+  if (!e.target.closest(".qm")) hideTip();
+});
+document.addEventListener("pointerover", (e) => { const b = e.target.closest(".qm"); if (b && e.pointerType === "mouse") showTip(b); });
+document.addEventListener("pointerout", (e) => { const b = e.target.closest(".qm"); if (b && e.pointerType === "mouse" && b === tipFor) hideTip(); });
+document.addEventListener("focusin", (e) => { const b = e.target.closest(".qm"); if (b && e.target.matches(":focus-visible")) showTip(b); });
+document.addEventListener("focusout", (e) => { if (e.target.closest(".qm")) hideTip(); });
+document.addEventListener("click", (e) => {
+  const b = e.target.closest(".qm"); if (!b) return;
+  e.preventDefault();
+  if (tipFor === b && lastPointer !== "mouse") hideTip(); else showTip(b);
+});
+$("drawer-body").addEventListener("scroll", hideTip, { passive: true });
+addEventListener("resize", hideTip);
+$("pause").onclick = () => state && state.user_paused
+  ? post("resume", {}, null, "Resumed: seeding again.")
+  : post("pause", {}, null, "Paused: nothing goes up or down until you resume.");
+
+// These happen out of sight (the drawer closes, the row goes away), so they also get a pop-up.
+const TOASTED = new Set(["replan", "reorient", "drop", "pause", "resume"]);
 
 async function post(action, body, pending, done, target) {
   const m = $(target || "msg");
@@ -1006,10 +1704,17 @@ async function post(action, body, pending, done, target) {
       method: "POST", headers: { "Content-Type": "application/json", "X-Flotilla-Token": TOKEN }, body: JSON.stringify(body || {}),
     });
     const j = await r.json();
-    if (pending || !r.ok) { m.textContent = r.ok ? (done || "Done.") : "Couldn't do that: " + (j.error || r.status); m.className = "msg " + (r.ok ? "muted" : "bad-t"); }
+    const said = r.ok ? (done || "Done.") : "Couldn't do that: " + (j.error || r.status);
+    if (pending || !r.ok) { m.textContent = said; m.className = "msg " + (r.ok ? "muted" : "bad-t"); }
+    const seen = m.closest("aside") ? drawerOpen : !m.closest("[hidden]");
+    if (r.ok ? TOASTED.has(action) && done : !seen || TOASTED.has(action)) toast(said, r.ok ? "ok" : "bad");
     setTimeout(refresh, 600);
     return r.ok;
-  } catch (e) { m.textContent = "Couldn't reach Flotilla. Is it still running?"; return false; }
+  } catch (e) {
+    m.textContent = "Couldn't reach Flotilla. Is it still running?";
+    toast(m.textContent, "bad");
+    return false;
+  }
 }
 
 async function refresh() {
@@ -1017,7 +1722,7 @@ async function refresh() {
     const r = await fetch("/api/state", { cache: "no-store" });
     if (!r.ok) throw new Error(r.status);
     render(await r.json());
-  } catch (e) { setPill("status", "bad", "Not running"); }
+  } catch (e) { setPill("status", "bad", "Not running"); document.body.classList.remove("loading"); }
 }
 refresh();
 setInterval(refresh, 3000);

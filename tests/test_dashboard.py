@@ -213,3 +213,31 @@ def test_config_with_an_old_default_license_list_gets_the_new_defaults(tmp_path)
     cfg.licenses = ["mit", "apache-2.0"]                                   # one the user chose: kept
     path.write_text(render_config(cfg))
     assert load_config(path).licenses == ["mit", "apache-2.0"]
+
+
+def test_reorient_schedule_and_churn_size_through_the_dashboard(node):
+    eng, dash, path, logs = node
+    doc = json.loads(call(dash, "GET", "/api/state")[2])
+    assert doc["reorient"]["every"] == "weekly" and doc["settings"]["churn_gb"] == 20
+    assert doc["reorient"]["preview"] is None and doc["reorient"]["next"] is None      # no plan made yet
+    for bad in [{"reorient": "hourly"}, {"reorient": 7}, {"churn_gb": -1}, {"churn_gb": "10"}]:
+        assert call(dash, "POST", "/api/settings", bad, token=dash.token)[0] == 400, bad
+    assert call(dash, "POST", "/api/settings", {"reorient": "monthly", "churn_gb": 50}, token=dash.token)[0] == 200
+    eng.process_commands()
+    assert eng.cfg.reorient == "monthly" and eng.cfg.churn_gb == 50
+    assert any("reorient = monthly" in l and "churn_gb = 50" in l for l in logs)
+    saved = load_config(path)
+    assert saved.reorient == "monthly" and saved.churn_gb == 50
+    assert call(dash, "POST", "/api/reorient", {})[0] == 403                           # needs the page's token
+    assert call(dash, "POST", "/api/reorient", {}, token=dash.token)[0] == 200
+    eng.process_commands()
+    assert eng.snapshot()["reorient"]["asked"] and eng.next_refresh == 0
+
+
+def test_config_refuses_an_unknown_reorient_schedule(tmp_path):
+    path = tmp_path / "config.toml"
+    path.write_text(render_config(Config()).replace('every = "weekly"', 'every = "hourly"'))
+    with pytest.raises(ValueError, match="reorient.every"):
+        load_config(path)
+    path.write_text(render_config(Config()).replace('every = "weekly"', 'every = "never"'))
+    assert load_config(path).reorient == "never"

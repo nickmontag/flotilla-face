@@ -138,7 +138,8 @@ missed between samples. It keeps per-minute detail for three days and hourly tot
 leaves your computer. Time the node wasn't seeding, such as a computer asleep, shows as a gap, not
 as zero traffic.
 
-The gear button holds your space and speed limits. You can also pause, or drop a model you're carrying.
+The gear button holds your space and speed limits, and how often and how much Flotilla
+[reorients](#reorienting). You can also pause, or drop a model you're carrying.
 
 ## Choose models yourself
 
@@ -159,12 +160,12 @@ make to the list.
 
 ## How Flotilla decides what to carry
 
-1. **It reads the priority list.** Models are scored on overall capability, cybersecurity capability
 ```text
  priority list ──▶ trusted torrents ──▶ swarm probe ──▶ pick pieces ──▶ fetch + verify ──▶ seed
    (signed)         (PF ≡ HF files)      (~90 s)        rarest × risk    (HF hashes)        ↻ 6 h
 ```
 
+1. **It reads the priority list.** Models are scored on overall capability, cybersecurity capability
    and takedown risk. The list ships signed with Flotilla, and you can add your own changes (see
    [The priority list](#the-priority-list)).
 2. **It reads Pirate Face and Hugging Face** to build a list of trustworthy torrents (see Safety below).
@@ -174,9 +175,35 @@ make to the list.
    original is gone score higher. A per-computer random draw means two people who join at the same
    moment pick *different* pieces, with no central coordinator. Small models are kept whole.
 5. **It downloads only those pieces, verifies them, and seeds.** Every 6 hours it looks again: it keeps
-   what you hold, fills any space you've added, and swaps over-copied pieces for rarer ones.
+   what you hold and fills any space you've added.
+6. **It reorients on your schedule** (see below): it swaps the lowest-priority pieces you hold for the
+   ones the swarm needs most.
 
 The maths is in [DESIGN.md](DESIGN.md).
+
+### Reorienting
+
+What the swarm needs changes: new models are listed, peers come and go, a Hugging Face original
+disappears. You choose how often your part of the swarm follows, and how much of it moves each time:
+
+- **How often**: every day, every week (the default), every month, or never.
+- **Churn size**: the most to swap each time, in GB (20 by default).
+
+When a reorientation is due, Flotilla looks at the swarm, drops up to your churn size of the
+lowest-priority pieces you hold, and fetches the pieces at the top of the swarm's list in their place.
+The dashboard's settings (the gear button) show both ends ahead of time under **Reorienting**: what
+would go out, what would come in, and when. **Reorient now**, there too, does one right away.
+
+- Models you added yourself, or set space aside for, are never swapped out.
+- A piece stays at least a week after it's picked (`min_hold_days`), and a swap has to be clearly
+  better, so nothing is fetched twice over a small difference.
+- With **never**, what you hold stays until you change it or press Reorient now.
+- Between reorientations Flotilla still fills free space, and your own changes still apply at once:
+  a model you add, skip, drop or set space aside for, or a different amount of space.
+
+Both are in the dashboard's settings, asked by `flotilla init`, and stored under `[reorient]` in your
+config.
+`flotilla plan` prints the swap the next reorientation would make.
 
 ### When no peer has a piece
 
@@ -413,7 +440,8 @@ published list:
 
 It needs no signature, since it's your own file. Run `flotilla feed` to see the combined list, with your
 entries marked "(yours)". Flotilla picks up changes at its next replan; use Replan in the dashboard to
-make it immediate.
+make it immediate. A new order or new scores steer free space at once, and what you already hold at the
+next [reorientation](#reorienting).
 
 **Follow a different list.** Add its URL to `[feed] urls` and its public key to `[feed] trusted_keys`
 in your config. The newest version that verifies wins.

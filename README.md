@@ -1,16 +1,92 @@
-# ⛵ Flotilla Face
+```text
+███████╗██╗      ██████╗ ████████╗██╗██╗     ██╗      █████╗
+██╔════╝██║     ██╔═══██╗╚══██╔══╝██║██║     ██║     ██╔══██╗
+█████╗  ██║     ██║   ██║   ██║   ██║██║     ██║     ███████║
+██╔══╝  ██║     ██║   ██║   ██║   ██║██║     ██║     ██╔══██║
+██║     ███████╗╚██████╔╝   ██║   ██║███████╗███████╗██║  ██║
+╚═╝     ╚══════╝ ╚═════╝    ╚═╝   ╚═╝╚══════╝╚══════╝╚═╝  ╚═╝
+    |\           |\           |\           |\           |\
+    | \          | \          | \          | \          | \
+    |  \         |  \         |  \         |  \         |  \
+ ___|___\__   ___|___\__   ___|___\__   ___|___\__   ___|___\__
+ \__3f1a__/   \__9c07__/   \__e512__/   \__71bd__/   \__c4e0__/
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        thousands of small boats  ·  one complete copy
+```
 
-**Join the [Pirate Face](https://pirateface.co) swarm with the disk and bandwidth you can spare.**
+<div align="center">
 
-Pirate Face turns open-weight models from Hugging Face into torrents, so they stay downloadable even if
-the original gets taken down. But frontier models are huge: one GLM-5.2 torrent is 1.5 TB in 282 weight
-files, and almost nobody can seed a whole one.
+### Keep open-weight AI alive, one piece at a time.
 
-Flotilla Face (Flotilla for short) is the fleet of small boats. You decide how much space to set aside
-(20 GB, 500 GB, whatever you have). Flotilla works out which **individual pieces** of which models most
-need another copy, fetches only those, checks every byte against Hugging Face, and seeds them. Thousands
-of small seeders, each carrying a few pieces, add up to complete copies of models no single volunteer
-could hold.
+Seed the rarest pieces of the models most likely to disappear,<br>
+with whatever disk and bandwidth you can spare.
+
+![license: MIT](https://img.shields.io/badge/license-MIT-3fb950)
+![python 3.11–3.13](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-3776ab)
+![runs on macOS, Linux, Raspberry Pi](https://img.shields.io/badge/runs%20on-macOS%20%7C%20Linux%20%7C%20Raspberry%20Pi-6e7681)
+![telemetry: none](https://img.shields.io/badge/telemetry-none-111111)
+
+[Install](#get-started) · [How it decides](#how-flotilla-decides-what-to-carry) ·
+[Safety](#safety) · [Hash ledger](#the-hash-ledger) · [Design](DESIGN.md)
+
+</div>
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nickmontag/flotilla-face/main/install.sh | sh
+```
+
+<p align="center">
+  <img src="docs/dashboard.png" alt="The Flotilla dashboard on a real node: 37 GB of seven models, VPN-pinned, 24 hours of upload traffic, and the piece map of a 122B model with no full seeder" width="900">
+  <br>
+  <sub>A real node's holdings: 37 GB budget, seven at-risk models, pinned to a VPN (traffic figures are illustrative).
+  Ornith-1.5-122B is open: no full seeder anywhere, red pieces have no other copy, and this node holds the teal one.</sub>
+</p>
+
+## Why
+
+Open-weight models get taken down. In September 2026 Hugging Face disabled a refusal-removed GLM-5.3
+under its Content Policy, while near-identical copies stayed up. [Pirate Face](https://pirateface.co)
+mirrors these models as BitTorrent torrents so they outlive the original, but a torrent only lives as
+long as someone seeds it, and frontier models are enormous: one GLM-5.2 torrent is **1.5 TB in 282
+weight files**. Almost nobody can seed a whole one.
+
+**Flotilla Face** (Flotilla for short) is the fleet of small boats. Give it 20 GB or 2 TB. It probes the
+swarm piece by piece, works out which **individual pieces** of which at-risk models have the fewest
+copies, fetches only those, checks every byte against Hugging Face's own hashes, and seeds them. There's
+no coordinator and no account: a per-node random draw sends volunteers after *different* pieces, so
+thousands of partial seeders add up to complete copies no one volunteer could hold.
+
+```text
+  GLM-5.2  ·  1.5 TB  ·  282 weight files                      (illustration)
+
+  node 3f1a   [██████······························]
+  node 9c07   [····████████████····················]
+  node e512   [················██████··············]
+  node 71bd   [······················████████······]
+  node c4e0   [····························████████]
+     ⋮            ⋮  thousands more
+              ──────────────────────────────────────
+  swarm       [████████████████████████████████████]  ✓ one complete copy, and counting
+```
+
+## What you get
+
+- **Piece-level, not model-level.** Carries the slice of a 1.5 TB model that fits your disk, and small
+  models whole.
+- **Rarest pieces of the riskiest models first.** Scored on capability, cyber capability and takedown
+  risk, and boosted when the Hugging Face original is already gone.
+- **Trusts no single mirror.** Every file is checked against Hugging Face's hash. A signed, append-only
+  [hash ledger](#the-hash-ledger), timestamped to Bitcoin, keeps those hashes after Hugging Face deletes
+  the model.
+- **Never runs code.** Scripts, binaries and pickle weights are skipped, and nothing it downloads is ever
+  loaded or executed.
+- **Tight network footprint.** Only talks to `pirateface.co` and `huggingface.co`. Pin it to your VPN
+  and it goes offline if the tunnel drops instead of leaking your real address.
+- **Polite guest.** Hard disk budget and reserve, bandwidth shares, a monthly upload cap, a memory
+  budget.
+- **Runs anywhere.** macOS, Linux, a Raspberry Pi, or Docker behind gluetun. No sudo.
+- **Local dashboard.** Traffic history, piece maps and the priority list on `127.0.0.1`, never exposed
+  unless you ask.
 
 Flotilla is an independent open-source project. It isn't affiliated with or endorsed by Pirate Face or
 Hugging Face. It works with Pirate Face's torrents, trackers and API as they are today.
@@ -52,6 +128,10 @@ On the Priorities tab you can drag models (or use ↑ ↓) to change the order; 
 can also set aside GB for a model. Flotilla keeps that much space for it, and the rest of your space is
 shared out as usual. The amounts can't add up to more than your total space.
 
+<p align="center">
+  <img src="docs/priorities.png" alt="The Priorities tab: the signed list of at-risk models in order, with copies in the swarm, what this node holds, and space set aside" width="900">
+</p>
+
 Traffic history counts the exact bytes each model moved, not snapshots of its speed, so nothing is
 missed between samples. It keeps per-minute detail for three days and hourly totals for good, about
 1 MB a year per model, in `history.db` in Flotilla's state folder. It survives restarts and never
@@ -80,6 +160,11 @@ make to the list.
 ## How Flotilla decides what to carry
 
 1. **It reads the priority list.** Models are scored on overall capability, cybersecurity capability
+```text
+ priority list ──▶ trusted torrents ──▶ swarm probe ──▶ pick pieces ──▶ fetch + verify ──▶ seed
+   (signed)         (PF ≡ HF files)      (~90 s)        rarest × risk    (HF hashes)        ↻ 6 h
+```
+
    and takedown risk. The list ships signed with Flotilla, and you can add your own changes (see
    [The priority list](#the-priority-list)).
 2. **It reads Pirate Face and Hugging Face** to build a list of trustworthy torrents (see Safety below).
@@ -457,4 +542,13 @@ in that folder alone. The second removes the program.
 See [CONTRIBUTING.md](CONTRIBUTING.md). Tests run on macOS and Linux (x86_64 and arm64), Python
 3.11–3.13. They include real BitTorrent sessions on your own machine, with no internet needed.
 
-MIT licensed.
+Want a model on the list? Open an issue with its link.
+
+```text
+                      |\
+                      | \
+                      |  \
+                    __|___\__
+                    \_______/      MIT licensed · fair winds
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```

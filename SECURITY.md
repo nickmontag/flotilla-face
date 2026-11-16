@@ -23,6 +23,15 @@ Please don't open a public issue for a vulnerability until a fix is released.
 - The local dashboard: reaching it from another origin or machine, CSRF, DNS rebinding.
 - Filling the disk past the configured reserve.
 
+## Known limits
+
+- The local dashboard keeps out other machines and other websites, not other accounts on the same
+  computer: any local user can open `127.0.0.1:7421` and steer the node. On a shared server, use
+  `flotilla dashboard --serve --listen` with its access key, or don't run the dashboard.
+- The network dashboard (`--listen`) is plain HTTP. Its access key is only as private as the network
+  it crosses, so it's meant for a home network, never the open internet.
+- `install.sh` installs the repository's `main` branch unless `FLOTILLA_REF` names a tag or commit.
+
 ## Not in scope
 
 - The contents or behaviour of the models themselves. Flotilla only verifies that bytes match what

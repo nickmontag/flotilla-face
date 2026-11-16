@@ -52,6 +52,15 @@ from .torrentmeta import parse_torrent
 PROBE_RATE = 4096          # bytes/s per probed torrent
 PROBE_PREFIX = "-FP0100-"
 STATUS_EVERY = 10.0
+SAVE_EVERY = 300.0          # state.json is written this often (and at once after real changes)
+STATUS_FILE_EVERY = 60.0    # status.json (for `flotilla status`) is written this often
+# Torrent status reads. libtorrent's default asks for everything (piece bitfields, distributed
+# copies...), work that grows with the piece count and runs on its network thread. Only the
+# accurate byte counters are used here, and one read per torrent is shared for STATUS_MAX_AGE.
+STATUS_FLAGS = lt.torrent_handle.query_accurate_download_counters
+STATUS_MAX_AGE = 2.0
+SNAPSHOT_FRESH = 1.5        # seconds one dashboard snapshot is shared between requests (several tabs)
+UPLOAD_PEERS_MAX = 100_000  # distinct peers remembered per run (the count shows "at least" past it)
 SAMPLE_EVERY = 5.0   # history thread wake-ups; sample() itself records once per clock minute
 RESUME_EVERY = 30 * 60.0
 
@@ -88,8 +97,9 @@ def session_settings(cfg: Config, *, port: int, fingerprint: str, listen_host: s
         "enable_lsd": dht,
         "enable_upnp": cfg.port_forwarding and not probe,
         "enable_natpmp": cfg.port_forwarding and not probe,
+        # Only what _handle_alerts reads (tracker errors still come under error).
         "alert_mask": lt.alert_category.status | lt.alert_category.error | lt.alert_category.storage
-        | lt.alert_category.file_progress | lt.alert_category.tracker,
+        | lt.alert_category.file_progress,
         "connections_limit": cfg.connections_limit,
         "choking_algorithm": int(lt.choking_algorithm_t.rate_based_choker),
         "seed_choking_algorithm": int(lt.seed_choking_algorithm_t.anti_leech),
@@ -207,6 +217,21 @@ def _compact_trees(raw: bytes, prios: list[int], sizes: list[int], piece_length:
     return lt.bencode(d) if changed else raw
 
 
+def _forget_pieces(raw: bytes, piece_length: int, sizes: list[int], files: set[int]) -> bytes:
+    """Resume data that no longer has the pieces touching these files (deleted from disk)."""
+    pieces: set[int] = set()
+    offset = 0
+    for i, size in enumerate(sizes):
+        if i in files and size:
+            pieces.update(range(offset // piece_length, (offset + size - 1) // piece_length + 1))
+        offset += size
+    r = lt.read_resume_data(raw)
+    r.have_pieces = [bool(x) and i not in pieces for i, x in enumerate(r.have_pieces)]
+    r.verified_pieces = [bool(x) and i not in pieces for i, x in enumerate(r.verified_pieces)]
+    r.unfinished_pieces = {p: m for p, m in r.unfinished_pieces.items() if p not in pieces}
+    return lt.write_resume_data_buf(r)
+
+
 # ------------------------------------------------------------------ probe
 
 
@@ -315,6 +340,7 @@ class Engine:
         self.ses = lt.session(session_settings(cfg, port=cfg.listen_port, fingerprint=self.fingerprint,
                                                listen_host=listen_host, dht=dht))
         self.handles: dict[str, lt.torrent_handle] = {}
+        self._st: dict[str, tuple] = {}     # ih -> (monotonic, handle, status): see status()
         self.lock = threading.RLock()
         self.verify_q: queue.Queue = queue.Queue()
         self.failed: list[tuple[str, int, str]] = []
@@ -362,6 +388,10 @@ class Engine:
         self._plans_applied = 0
         self._refresh_failed = False
         self._mem_used: int | None = None
+        self._dirty = False      # state changed in a way worth saving before the next SAVE_EVERY
+        self._snap: tuple[float, dict] | None = None       # (monotonic, the last dashboard snapshot)
+        self._snap_lock = threading.Lock()
+        self._local: tuple | None = None   # (file signature, (picks, order, allot)): see local_view()
         self._last_sample = 0.0
         self._sampler: threading.Thread | None = None
         self.cand_info: dict[str, dict] = {}
@@ -382,6 +412,18 @@ class Engine:
     def log(self, msg: str) -> None:
         self.log_ring.append((time.time(), msg))
         self._raw_log(msg)
+
+    def status(self, ih: str, h: lt.torrent_handle, fresh: bool = False):
+        """This torrent's status, read cheaply (STATUS_FLAGS) and shared for STATUS_MAX_AGE
+        between everything that asks (accounting, the ledger, the dashboard, Hugging Face).
+        `fresh`: read it now (and share that)."""
+        now = time.monotonic()
+        hit = self._st.get(ih)
+        if not fresh and hit is not None and hit[1] == h and now - hit[0] < STATUS_MAX_AGE:
+            return hit[2]
+        st = h.status(STATUS_FLAGS)
+        self._st[ih] = (now, h, st)
+        return st
 
     # ---------------------------------------------------------- discovery
 
@@ -405,6 +447,7 @@ class Engine:
         pf = PirateFace(allowed, cache_dir=self.state.dir / "cache")
         pf.prune_cache()
         hf = HuggingFace(allowed, self.state.dir / "cache")
+        hf.prune_cache()
         with self.lock:
             held_repos = {h["repo"] for h in self.state.holdings.values()}
         self.ledger = load_ledger(self.trusted_keys(), self.state.dir, tuple(self.cfg.feed_allowed_hosts), log=self.log)
@@ -466,6 +509,9 @@ class Engine:
                     "files": [{"i": f.index, "path": f.repo_path, "size": f.size, "avail": f.availability}
                               for f in c.files if f.kind == "weight"],
                 }
+            # Forget swarms no longer looked at (old revisions, models off the list) unless held.
+            for ih in set(self.cand_info) - {c.infohash for c in cands} - set(self.state.holdings):
+                del self.cand_info[ih]
         if threading.get_ident() != self._main_ident:
             self.commands.put(("apply_plan", {"cands": cands, "rejected": rejected}))
             return None
@@ -504,6 +550,7 @@ class Engine:
         with self.lock:
             self.state.save()
         self._update_preview(base, now)
+        self._snap = None      # a new plan: the dashboard's next poll shows it
         return p
 
     # ---------------------------------------------------------- reorienting
@@ -675,6 +722,7 @@ class Engine:
     def _remove(self, ih: str, delete: bool) -> None:
         h = self.handles.pop(ih, None)
         self._up_seen.pop(ih, None)
+        self._st.pop(ih, None)
         hold = self.state.holdings.get(ih)
         if h is not None:
             self.ses.remove_torrent(h, lt.session.delete_files if delete else 0)
@@ -689,21 +737,69 @@ class Engine:
             (self.torrent_dir / f"{ih}.torrent").unlink(missing_ok=True)
 
     def _evict_files(self, ih: str, indices: set[int], prios: list[int]) -> None:
-        """Drop some files of a torrent we keep: remove, delete those files, re-add (recheck)."""
+        """Drop some files of a torrent we keep: save its resume data, take it out, delete those
+        files, forget their pieces in the resume data and add it again. Only the dropped files'
+        pieces are forgotten (with any piece they share with a kept file, which is fetched again),
+        so the rest isn't re-hashed: a full recheck read every byte the torrent holds. Without
+        resume data it falls back to that recheck."""
         hold = self.state.holdings[ih]
-        h = self.handles.pop(ih, None)
-        if h is not None:
-            self.ses.remove_torrent(h)
-            self._wait_gone(ih, want_deleted=False)
-        (self.resume_dir / f"{ih}.fastresume").unlink(missing_ok=True)
+        rf = self.resume_dir / f"{ih}.fastresume"
+        h = self.handles.get(ih)
+        saved = h is not None and self._save_resume_now(ih, h)
+        settle = self._take_out(ih, h) if h is not None else None
         base = Path(hold["save_path"])
+        sizes = []
         for i in indices:
             e = hold["files"].pop(str(i), None)
             if e:
                 p = base / e["tpath"]
                 if _inside(base, p):
                     p.unlink(missing_ok=True)
-        self._add(ih, prios, use_resume=False)
+        try:
+            meta = parse_torrent((self.torrent_dir / f"{ih}.torrent").read_bytes())
+            sizes = [f.size for f in meta.files]
+            if saved:
+                rf.write_bytes(_forget_pieces(rf.read_bytes(), meta.piece_length, sizes, indices))
+        except Exception as e:    # unusable resume data: a full recheck is slower but always right
+            self.log(f"trim {hold['repo']}: resume data unusable ({e}); rechecking")
+            saved = False
+        if not saved:
+            rf.unlink(missing_ok=True)
+        self._add(ih, prios, use_resume=saved)
+        if settle:
+            self._settle_counters(ih, *settle)
+
+    def _save_resume_now(self, ih: str, h: lt.torrent_handle, timeout: float = 30.0) -> bool:
+        """Ask libtorrent for this torrent's resume data and wait until it's written. Main loop only."""
+        h.save_resume_data(lt.torrent_handle.save_info_dict)
+        saved, end = None, time.monotonic() + timeout
+        while saved is None and time.monotonic() < end:
+            alerts = self.ses.pop_alerts()
+            for a in alerts:
+                if isinstance(a, (lt.save_resume_data_alert, lt.save_resume_data_failed_alert)) \
+                        and _ih(a.handle) == ih:
+                    saved = isinstance(a, lt.save_resume_data_alert)
+            self._handle_alerts(alerts)          # writes the resume file
+            if saved is None:
+                time.sleep(0.05)
+        return bool(saved)
+
+    def _take_out(self, ih: str, h: lt.torrent_handle) -> tuple[int, int, int, int]:
+        """Remove a torrent from the session to add it again. Its counters start from zero once
+        it's back, so this settles them first and returns what _settle_counters needs."""
+        self._account_upload()
+        st = h.status(STATUS_FLAGS)
+        pu, pd = self._hist_seen.get(ih, (0, 0))
+        self.handles.pop(ih, None)
+        self._st.pop(ih, None)
+        self.ses.remove_torrent(h)
+        self._wait_gone(ih, want_deleted=False)
+        return pu, pd, st.total_payload_upload, st.total_payload_download
+
+    def _settle_counters(self, ih: str, pu: int, pd: int, up: int, down: int) -> None:
+        self._up_seen[ih] = 0
+        # The history counts bytes since its last sample: carry what moved before the reload.
+        self._hist_seen[ih] = (pu - up, pd - down)
 
     def resume_holdings(self) -> None:
         """Start seeding what we already hold, before any network lookups."""
@@ -823,6 +919,7 @@ class Engine:
                     continue
                 live["status"] = "verified" if ok else "failed"
                 live["verified_at"] = time.time()
+                self._dirty = True         # a verdict that took a whole file's hashing: save it soon
                 repo = self.state.holdings[ih]["repo"]
                 if ok:
                     self.log(f"verified {repo}/{entry['path']} ({self.state.holdings[ih].get('verify_source')})")
@@ -915,18 +1012,7 @@ class Engine:
             return
         repo = self.state.holdings[ih]["repo"]
         before = own_memory()
-        h.save_resume_data(lt.torrent_handle.save_info_dict)
-        saved, end = None, time.monotonic() + 30
-        while saved is None and time.monotonic() < end:
-            alerts = self.ses.pop_alerts()
-            for a in alerts:
-                if isinstance(a, (lt.save_resume_data_alert, lt.save_resume_data_failed_alert)) \
-                        and _ih(a.handle) == ih:
-                    saved = isinstance(a, lt.save_resume_data_alert)
-            self._handle_alerts(alerts)          # writes the resume file
-            if saved is None:
-                time.sleep(0.05)
-        if not saved:
+        if not self._save_resume_now(ih, h):
             self._compacted[ih] = (now, 0)
             self.log(f"memory: couldn't save {repo}'s resume data; not reloading it")
             return
@@ -940,20 +1026,13 @@ class Engine:
             for k, e in hold["files"].items():
                 if int(k) < n and int(k) not in waiting:
                     prios[int(k)] = e.get("prio") or 4
-            # Settle this torrent's counters first: they start again from zero once it's re-added.
-            self._account_upload()
-            st = h.status()
-            pu, pd = self._hist_seen.get(ih, (0, 0))
-            self.handles.pop(ih)
-            self.ses.remove_torrent(h)
-            self._wait_gone(ih, want_deleted=False)
+            settle = self._take_out(ih, h)
             try:
                 self._add(ih, prios)
             except Exception as e:
                 self.log(f"memory: couldn't add {repo} again ({e}); the next re-plan will")
                 return
-            self._up_seen[ih] = 0
-            self._hist_seen[ih] = (pu - st.total_payload_upload, pd - st.total_payload_download)
+            self._settle_counters(ih, *settle)
         after = own_memory()
         freed = before - after if before and after else 0
         self._compacted[ih] = (now, freed)
@@ -1061,7 +1140,7 @@ class Engine:
                 self.ses.resume()
                 self.log("new month: upload cap reset, seeding resumed")
         for ih, h in self.handles.items():
-            total = h.status().total_payload_upload
+            total = self.status(ih, h).total_payload_upload
             up["bytes"] += max(0, total - self._up_seen.get(ih, 0))
             self._up_seen[ih] = total
         cap = self.cfg.monthly_upload_cap_gb * GB
@@ -1073,14 +1152,14 @@ class Engine:
         doc = self.status_doc()
         self.state.dir.mkdir(parents=True, exist_ok=True)
         tmp = self.state.dir / "status.tmp"
-        tmp.write_text(json.dumps(doc, indent=1))
+        tmp.write_text(json.dumps(doc, separators=(",", ":")))
         os.replace(tmp, self.state.dir / "status.json")
 
     def status_doc(self) -> dict:
         rows = []
         with self.lock:
             for ih, h in list(self.handles.items()):  # the web thread reads while the engine adds
-                st = h.status()
+                st = self.status(ih, h)
                 hold = self.state.holdings.get(ih, {})
                 files = hold.get("files", {})
                 rows.append({
@@ -1129,7 +1208,33 @@ class Engine:
         return v
 
     def snapshot(self) -> dict:
-        """Everything the dashboard shows. Called from the web thread."""
+        """Everything the dashboard shows. Called from the web thread. Every open tab polls, so a
+        snapshot is shared for SNAPSHOT_FRESH seconds, or until the next dashboard action is done."""
+        with self._snap_lock:
+            hit = self._snap
+            if hit is not None and time.monotonic() - hit[0] < SNAPSHOT_FRESH:
+                return hit[1]
+            doc = self._build_snapshot()
+            self._snap = (time.monotonic(), doc)
+            return doc
+
+    def local_view(self) -> tuple[list[dict], list[str], dict[str, float]]:
+        """Your picks, order and set-aside space from my-priorities.json, read again only when the
+        file changes (the dashboard asks several times per snapshot)."""
+        path = self.cfg.local_feed
+        try:
+            st = path.stat()
+            sig = (st.st_mtime_ns, st.st_size, st.st_ino)
+        except OSError:
+            sig = None
+        hit = self._local
+        if hit is not None and hit[0] == sig and sig is not None:
+            return hit[1]
+        view = (list_picks(path), read_order(path), read_allot(path))
+        self._local = (sig, view)
+        return view
+
+    def _build_snapshot(self) -> dict:
         doc = self.status_doc()
         try:
             du = shutil.disk_usage(self.cfg.folder)
@@ -1167,7 +1272,7 @@ class Engine:
                 "dropped": list(self.state.data["dropped"]),
                 "picks": self.picks_status(doc["torrents"]),
                 "priorities": self.priorities_view(doc["torrents"]),
-                "allot_total_gb": sum(read_allot(self.cfg.local_feed).values()),
+                "allot_total_gb": sum(self.local_view()[2].values()),
                 "memory": {"used": self._mem_used, "budget": memory_budget(self.cfg),
                            "paused": sorted(self.state.holdings[ih]["repo"] for ih in self._parked
                                             if ih in self.state.holdings)},
@@ -1315,6 +1420,7 @@ class Engine:
                 getattr(self, f"_do_{action}")(body)
             except Exception as e:
                 self.log(f"dashboard: {action} failed: {e}")
+            self._snap = None     # the next poll shows the result, not a snapshot from before it
 
     def save_config(self) -> None:
         if not self.cfg.path:
@@ -1386,7 +1492,7 @@ class Engine:
         held = {t["repo"]: t for t in torrents}
         rejected = {r.repo: r.reason for r in self.last_rejected}
         info = {i["repo"]: i for i in self.cand_info.values()}
-        allot = read_allot(self.cfg.local_feed)
+        picks, order, allot = self.local_view()
         entries, seen = [], set()
         for m in (feed.models if feed else []):
             if m.repo not in seen:
@@ -1395,7 +1501,7 @@ class Engine:
                                 origin_view(m.repo, m.origin)))
         # Your file is read directly, so a drag or a new pick shows at once (the
         # engine itself picks the change up at the replan it triggers).
-        for m in list_picks(self.cfg.local_feed):
+        for m in picks:
             if m["repo"] not in seen:
                 seen.add(m["repo"])
                 scores = m.get("scores") or {}
@@ -1404,7 +1510,6 @@ class Engine:
             if t["repo"] not in seen:
                 seen.add(t["repo"])
                 entries.append((t["repo"], feed.unlisted_priority if feed else 0.3, "carrying", "", None))
-        order = read_order(self.cfg.local_feed)
         if order:
             rank = {r: rank_priority(i, len(order)) for i, r in enumerate(order)}
             entries = [(r, rank.get(r, p), s, n, o) for r, p, s, n, o in entries]
@@ -1433,7 +1538,7 @@ class Engine:
         rejected = {r.repo: r.reason for r in self.last_rejected}
         planned = {i["repo"] for i in self.cand_info.values()}
         out = []
-        for m in list_picks(self.cfg.local_feed):
+        for m in self.local_view()[0]:
             repo = m["repo"]
             if repo in carrying:
                 status, kind = "carrying it", "ok"
@@ -1517,7 +1622,7 @@ class Engine:
         moved, names = {}, {}
         with self.lock:
             for ih, h in self.handles.items():
-                st = h.status()
+                st = self.status(ih, h, fresh=True)      # the minute's totals, to the second
                 u, d = st.total_payload_upload, st.total_payload_download
                 pu, pd = self._hist_seen.get(ih, (0, 0))
                 du, dd = (u - pu if u >= pu else u), (d - pd if d >= pd else d)
@@ -1557,7 +1662,7 @@ class Engine:
             if not hold:
                 continue
             gb = sum(e["size"] for e in hold["files"].values() if e["status"] == "verified") / GB
-            state = str(h.status().state)
+            state = str(self.status(ih, h).state)
             if gb <= 0 or not ("seeding" in state or "finished" in state):
                 continue
             e = led.setdefault(ih, {"repo": hold["repo"], "seed_hours": 0.0, "gb_hours": 0.0, "points_est": 0.0})
@@ -1583,8 +1688,8 @@ class Engine:
         if free < reserve and not self.disk_paused:
             self.disk_paused = True
             n = 0
-            for h in self.handles.values():
-                if not h.status().is_finished:
+            for ih, h in self.handles.items():
+                if not self.status(ih, h).is_finished:
                     h.pause()
                     n += 1
             self.log(f"disk: only {free / GB:.1f} GB free, below the {self.cfg.reserve_gb:g} GB reserve; "
@@ -1606,7 +1711,7 @@ class Engine:
         self._last_peer_scan = now
         for h in self.handles.values():
             for p in h.get_peer_info():
-                if p.total_upload > 0:
+                if p.total_upload > 0 and len(self.upload_peers) < UPLOAD_PEERS_MAX:
                     pid = p.pid.to_bytes()
                     self.upload_peers.add(pid if any(pid) else str(p.ip).encode())
 
@@ -1618,8 +1723,8 @@ class Engine:
         if not os.environ.get("JOBQ_JOB_ID"):
             return
         done = wanted = 0
-        for h in self.handles.values():
-            st = h.status()
+        for ih, h in self.handles.items():
+            st = self.status(ih, h)
             done += st.total_wanted_done
             wanted += st.total_wanted
         if wanted and done < wanted:
@@ -1663,6 +1768,7 @@ class Engine:
         self._start_refresh()
         self.next_refresh = self._next_refresh_at()
         last_status = last_resume = 0.0
+        last_save = last_status_file = time.time()
         while not self.stop.is_set():
             self.ses.wait_for_alert(1000)
             self.tick()
@@ -1671,11 +1777,18 @@ class Engine:
                 with self.lock:
                     self._account_upload()
                     self.update_ledger(now)
-                    self.state.save()
+                    # Upload totals and seed-hours change every few seconds but losing a few
+                    # minutes of them to a crash costs little; rewriting state.json (hundreds of
+                    # KB) every 10 s cost gigabytes of disk writes a day.
+                    if self._dirty or now - last_save >= SAVE_EVERY:
+                        self.state.save()
+                        self._dirty, last_save = False, now
                 self.guard_disk()
                 self.scan_upload_peers(now)
                 self.report_progress()
-                self.write_status()
+                if now - last_status_file >= STATUS_FILE_EVERY:
+                    self.write_status()
+                    last_status_file = now
                 last_status = now
             if now - last_resume >= RESUME_EVERY:
                 self.save_resume()

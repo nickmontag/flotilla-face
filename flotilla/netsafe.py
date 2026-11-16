@@ -192,8 +192,9 @@ def fetch(
 ) -> Response:
     """GET `url` under the rules above. Raises FetchError on HTTP errors. `auth` = (host,
     Authorization value) is sent only to that exact host, never to a host a redirect leads to."""
-    for _ in range(MAX_REDIRECTS + 1):
-        parts = check_url(url, allowed, allow_file)
+    for hop in range(MAX_REDIRECTS + 1):
+        # A local file is allowed only as the URL asked for, never as where a server redirects us.
+        parts = check_url(url, allowed, allow_file and hop == 0)
         if parts.scheme == "file":
             path = Path(urllib.parse.unquote(parts.path))
             try:

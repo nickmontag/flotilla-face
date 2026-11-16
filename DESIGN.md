@@ -263,13 +263,20 @@ and `min_hold_days`. Now the user sets how often it happens and how much moves: 
   choker, `anti_leech` seed choking (it favours peers that are just starting or nearly done, which
   spreads rare pieces), global up/down limits from the user's numbers, and UPnP/NAT-PMP only if
   enabled.
+- **Housekeeping cadence.** Every 10 s the main loop settles upload totals and seed-hours. Torrent
+  status is read with only the accurate byte counters (`STATUS_FLAGS`), and one read per torrent is
+  shared for 2 s by everything that asks. `state.json` is written every 5 minutes, at once after a plan,
+  a dashboard action or a file verdict, and on shutdown; `status.json` every minute. The dashboard page
+  polls every 3 s only while its tab is visible, and its snapshot is shared for 1.5 s between tabs.
 - **File priorities.** Selected files that nobody else has get priority 7 so they're fetched first.
   Other selected files get 4, and the rest 0.
 - **Completion.** `file_completed_alert` triggers `flush_cache()`, and `cache_flushed_alert` triggers
   hashing in a worker thread. (Hashing straight away raced the disk writer: a file could look short. One
   delayed retry stays as a backstop.)
-- **Dropping some files of a kept torrent.** Remove the torrent, delete those files, re-add without
-  resume data (a recheck of what remains). This happens at a reorientation, or when the space shrinks.
+- **Dropping some files of a kept torrent.** Save its resume data, remove the torrent, delete those
+  files, clear their pieces in the resume data (with any piece a kept file shares, fetched again) and
+  re-add. Nothing that remains is re-hashed; without usable resume data it falls back to a full
+  recheck. This happens at a reorientation, or when the space shrinks.
 - **Restart.** The verified `.torrent`, resume data (with the info dict) and per-file expected hashes
   are stored under the state dir. Seeding resumes before any network lookup. Anything mid-verification
   is re-queued.
@@ -342,7 +349,14 @@ itself, only where it's needed:
 - every POST needs a per-process token that's embedded only in the page, plus a JSON body, plus a
   same-origin `Origin` header if one is sent. Other sites can't read the page, so they can't get the
   token;
-- there are no CORS headers, and a strict CSP is set.
+- there are no CORS headers, and a strict CSP is set;
+- a connection that sends nothing for 30 s is closed, so idle or half-sent requests can't pile up
+  threads.
+
+Loopback keeps other machines and other sites out, not other accounts on the same computer: any
+local user can open the page, read its token and steer the node. That's fine on a computer one
+person uses; on a shared server, run the dashboard with `--listen` and its access key instead, or
+not at all.
 
 Requests never touch libtorrent from the web thread. `Engine.submit()` validates them, they wait in a
 queue, and the main loop applies them. Settings changes take effect immediately (rate limits) and are
@@ -383,10 +397,13 @@ It's meant for a home network, not the internet.
 
 `history.py`. Once a minute the engine adds up the bytes each torrent moved, from libtorrent's own
 counters, not from samples of the current speed, so nothing between samples is lost. They go into
-`history.db` (SQLite, WAL) in the state folder at two resolutions:
+`history.db` (SQLite, WAL) in the state folder at three resolutions:
 
 - per minute, kept for 3 days;
-- per hour, kept for good: about 9,000 rows, or 1 MB, a year per model.
+- per hour, kept for 90 days;
+- per day after that, for good: 365 rows a year per model. Rolled-up days follow UTC midnight.
+
+An index on `(res, t)` keeps the per-model totals from scanning every row.
 
 The node's own row also counts the seconds it was online and seeding, so time the computer was asleep
 shows as a gap, not as zero traffic. Nothing in it leaves the machine.
@@ -407,8 +424,9 @@ for shards it never downloads.
   theirs.
 - **The budget.** `[network] memory_gb`; by default a quarter of the machine's memory, or 70% of a
   container's limit, and never under 512 MB. A thread of its own checks the process's private memory,
-  so a long refresh can't hold the check up. Process memory can only be read on Linux, so elsewhere
-  the budget does nothing.
+  so a long refresh can't hold the check up. Private memory is `RssAnon` on Linux and the task's
+  `phys_footprint` on macOS (what Activity Monitor shows as Memory); neither counts the files
+  libtorrent maps from disk. Where neither can be read, the budget does nothing.
   - Above 70% of the budget, the hybrid torrent likely holding the most peer-supplied trees is
     reloaded, which compacts it: one torrent every 30 s, the same one again while its reloads keep
     freeing memory.

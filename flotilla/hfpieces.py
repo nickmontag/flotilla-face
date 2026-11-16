@@ -161,7 +161,7 @@ class HFPieces:
         peers_rate, progress = 0, {}
         for ih, h, _hold, wanted in items:
             try:
-                st = h.status()
+                st = eng.status(ih, h, fresh=True)      # every 30 s: read it now
                 peers_rate += st.download_payload_rate
                 if not wanted or st.flags & lt.torrent_flags.paused:
                     continue
@@ -255,7 +255,8 @@ class HFPieces:
         first, last = meta.files[idx].piece_range(meta.piece_length)
         avail = list(h.piece_availability())
         queued = {q["piece_index"] for q in h.get_download_queue()}
-        missing = [p for p in range(first, last + 1) if not h.have_piece(p)]
+        have = h.status(lt.torrent_handle.query_pieces).pieces    # one read, not one call per piece
+        missing = [p for p in range(first, last + 1) if not (p < len(have) and have[p])]
         missing.sort(key=lambda p: (avail[p] if p < len(avail) else 0, p in queued, p))
         try:
             for p in missing:
@@ -421,11 +422,11 @@ class HFPieces:
         now = time.monotonic()
         if now - self._limit_at > 2.0:
             with self.eng.lock:
-                handles = list(self.eng.handles.values())
+                handles = list(self.eng.handles.items())
             used = 0
-            for h in handles:
+            for ih, h in handles:
                 try:
-                    used += h.status().download_payload_rate
+                    used += self.eng.status(ih, h).download_payload_rate
                 except Exception:
                     pass
             self._limit, self._limit_at = max(MIN_RATE, self.eng.cfg.download_bps - used), now
@@ -434,14 +435,15 @@ class HFPieces:
             time.sleep(self._clock - now)
 
     def _settle(self, h, p: int) -> None:
-        end = time.monotonic() + SETTLE
+        end, wait = time.monotonic() + SETTLE, 0.02
         while time.monotonic() < end and not self.eng.stop.is_set():
             try:
                 if h.have_piece(p):
                     return
             except Exception:
                 return
-            time.sleep(0.05)
+            time.sleep(wait)
+            wait = min(0.5, wait * 2)     # quick for the usual case, then gently
 
     def take_new(self) -> dict[str, int]:
         """Bytes per torrent fetched since the last call (for the history)."""

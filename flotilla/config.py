@@ -286,7 +286,7 @@ class State:
     def save(self) -> None:
         self.dir.mkdir(parents=True, exist_ok=True)
         tmp = self.path.with_suffix(".tmp")
-        tmp.write_text(json.dumps(self.data, indent=1, sort_keys=True))
+        tmp.write_text(json.dumps(self.data, sort_keys=True, separators=(",", ":")))
         os.replace(tmp, self.path)
 
 
@@ -318,7 +318,10 @@ def container_memory_limit() -> int | None:
 
 
 def own_memory() -> int | None:
-    """This process's private memory in bytes (Linux: RssAnon). None where it can't be read."""
+    """This process's private memory in bytes (Linux: RssAnon; macOS: the phys_footprint Activity
+    Monitor shows as Memory). None where it can't be read."""
+    if sys.platform == "darwin":
+        return _darwin_footprint()
     try:
         for line in Path("/proc/self/status").read_text().splitlines():
             if line.startswith("RssAnon:"):
@@ -326,3 +329,29 @@ def own_memory() -> int | None:
     except (OSError, ValueError, IndexError):
         pass
     return None
+
+
+_TASK_VM_INFO = 22            # task_info flavor
+_PHYS_FOOTPRINT = 18          # task_vm_info.phys_footprint, counted in 64-bit fields
+_mach = None
+
+
+def _darwin_footprint() -> int | None:
+    global _mach
+    try:
+        if _mach is None:
+            import ctypes
+            import ctypes.util
+
+            libc = ctypes.CDLL(ctypes.util.find_library("c"))
+            _mach = (ctypes, libc, ctypes.c_uint.in_dll(libc, "mach_task_self_"))
+        ctypes, libc, task = _mach
+        buf = (ctypes.c_uint64 * 64)()
+        count = ctypes.c_uint(128)            # room in 32-bit words; the kernel fills what it has
+        if libc.task_info(task, _TASK_VM_INFO, ctypes.byref(buf), ctypes.byref(count)) != 0:
+            return None
+        if count.value < 2 * (_PHYS_FOOTPRINT + 1):   # an old kernel without phys_footprint
+            return None
+        return int(buf[_PHYS_FOOTPRINT]) or None
+    except (OSError, AttributeError, ValueError):
+        return None

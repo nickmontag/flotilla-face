@@ -61,6 +61,23 @@ def test_minutes_pruned_after_three_days_hours_kept(tmp_path):
     assert h.query("all", now=T0 + 5 * DAY)["up"] == 101
 
 
+def test_hours_older_than_ninety_days_roll_up_into_days(tmp_path):
+    from flotilla.history import KEEP_HOURS
+
+    h = History(tmp_path / "h.db")
+    for i in range(24):                                  # one record an hour for a whole day
+        h.record(T0 + i * HOUR + 30, {A: (10, 1)}, 60, {A: "org/a"})
+    later = T0 + KEEP_HOURS + 3 * DAY
+    h.record(later, {A: (5, 0)}, 60)                     # the hourly prune runs: that day is old now
+    rows = h.db.execute("SELECT res, COUNT(*) FROM traffic WHERE t < ? GROUP BY res", (T0 + DAY,)).fetchall()
+    assert rows == [(DAY, 2)]                            # one row for the node, one for the torrent
+    q = h.query("all", now=later)
+    assert q["up"] == 24 * 10 + 5 and q["online"] == 24 * 60 + 60
+    assert q["start"] <= T0                              # the first day still counts as the start
+    assert q["models"] == [{"repo": "org/a", "up": 245, "down": 24}]
+    assert h.query("1y", now=later)["up"] == 245
+
+
 def test_history_survives_a_restart(tmp_path):
     h = History(tmp_path / "h.db")
     h.record(T0 + 10, {A: (100, 0)}, 60, {A: "org/a"})
@@ -86,7 +103,7 @@ def test_engine_counts_exact_bytes_and_restarted_torrents(tmp_path):
         def __init__(self):
             self.u = self.d = 0
 
-        def status(self):
+        def status(self, flags=None):
             return Status(self.u, self.d)
 
     cfg = Config()

@@ -19,7 +19,7 @@ class FakeHandle:
     def __init__(self, finished):
         self.finished, self.paused = finished, False
 
-    def status(self):
+    def status(self, flags=None):
         return FakeStatus(self.finished)
 
     def pause(self):
@@ -133,7 +133,7 @@ class PrioHandle:
         self.prios = list(prios)
 
 
-def test_memory_budget_pauses_and_resumes_downloads(tmp_path):
+def test_memory_budget_pauses_and_resumes_downloads(tmp_path, monkeypatch):
     cfg = Config()
     cfg.folder, cfg.listen_port, cfg.memory_gb = tmp_path / "seeds", 0, 2
     logs = []
@@ -159,7 +159,8 @@ def test_memory_budget_pauses_and_resumes_downloads(tmp_path):
     assert eng.handles[C].prios == [4, 7]
     assert any("org/low starts no new files" in m for m in logs)
     assert not eng._parked
-    eng.govern_memory(1300, used=None)                   # can't measure (macOS): nothing changes
+    monkeypatch.setattr("flotilla.engine.own_memory", lambda: None)
+    eng.govern_memory(1300, used=None)                   # can't measure: nothing changes
     assert all(h.prios == [4, 7] for h in eng.handles.values())
     eng.handles = {}
     eng.shutdown()
@@ -535,4 +536,78 @@ def test_next_look_at_the_swarm_comes_in_time_for_a_reorientation(tmp_path):
     assert not eng.reorient_due(now) and eng.reorient_due(now + 601)
     eng.state.data["reorient"]["last"] = now - 3 * 86400             # overdue: the look starting now handles it
     assert eng._next_refresh_at() > now + 4 * 3600
+    eng.shutdown()
+
+
+def test_own_memory_reads_this_process():
+    import sys
+
+    from flotilla.config import own_memory
+
+    if not (sys.platform == "darwin" or sys.platform.startswith("linux")):
+        pytest.skip("memory is read on Linux and macOS only")
+    before = own_memory()
+    block = bytearray(64 << 20)          # 64 MB, touched so it's really in memory
+    for i in range(0, len(block), 4096):
+        block[i] = 1
+    after = own_memory()
+    assert before and after and after - before > 48 << 20
+    del block
+
+
+def test_dropping_a_file_keeps_the_rest_without_a_recheck(tmp_path):
+    """A trim used to re-add the torrent without resume data, so libtorrent re-hashed everything
+    it held (hundreds of GB for a big model) to drop a few files. Now only the dropped file's
+    pieces are forgotten."""
+    import time
+
+    import libtorrent as lt
+
+    save = tmp_path / "seeds" / "m"
+    src = save / "m"
+    src.mkdir(parents=True)
+    for name in ("a.bin", "b.bin", "c.bin"):
+        (src / name).write_bytes(bytes(range(256)) * 128)            # 32 KiB: two pieces each
+    fs = lt.file_storage()
+    lt.add_files(fs, str(src))
+    ct = lt.create_torrent(fs, 16384)
+    lt.set_piece_hashes(ct, str(save))
+    raw = lt.bencode(ct.generate())
+    ih = str(lt.torrent_info(lt.bdecode(raw)).info_hashes().v1)
+    files = parse_torrent(raw).files
+    idx = {f.path.rsplit("/", 1)[1]: f.index for f in files if not f.pad}
+
+    cfg = Config()
+    cfg.folder, cfg.listen_port = tmp_path / "seeds", 0
+    eng = Engine(cfg, State(tmp_path / "state"), log=lambda *_: None, listen_host="127.0.0.1", dht=False)
+    eng.state.holdings[ih] = {"repo": "org/m", "save_path": str(save), "files": {
+        str(i): {"status": "verified", "prio": 4, "size": 32768, "tpath": f"m/{n}", "path": n}
+        for n, i in idx.items()}}
+    eng.torrent_dir.mkdir(parents=True, exist_ok=True)
+    (eng.torrent_dir / f"{ih}.torrent").write_bytes(raw)
+    prios = [4] * len(files)
+    h = eng._add(ih, prios, use_resume=False)
+    end = time.monotonic() + 15
+    while time.monotonic() < end and not h.status().is_seeding:   # the first add checks everything
+        time.sleep(0.05)
+        eng._handle_alerts(eng.ses.pop_alerts())
+    assert h.status().is_seeding
+
+    # A recheck would read every kept file: spoil c.bin's bytes (same size) so one would show.
+    eng._save_resume_now(ih, h)
+    (src / "c.bin").write_bytes(b"\0" * 32768)
+    prios[idx["b.bin"]] = 0
+    eng._evict_files(ih, {idx["b.bin"]}, prios)
+    h = eng.handles[ih]
+    states, end = set(), time.monotonic() + 2
+    while time.monotonic() < end:
+        st = h.status()
+        states.add(str(st.state).split(".")[-1])
+        time.sleep(0.02)
+    assert "checking_files" not in states                          # nothing was re-hashed
+    assert not (src / "b.bin").exists() and str(idx["b.bin"]) not in eng.state.holdings[ih]["files"]
+    progress = h.file_progress()
+    assert progress[idx["a.bin"]] == progress[idx["c.bin"]] == 32768 and progress[idx["b.bin"]] == 0
+    assert h.status().is_finished                                  # all it wants, and seeding it
+    eng.handles = {}
     eng.shutdown()

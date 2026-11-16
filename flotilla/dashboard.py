@@ -35,6 +35,7 @@ from .feed import REPO_RE
 from .history import RANGES
 
 MAX_BODY = 16 * 1024
+REQUEST_TIMEOUT = 30.0
 COOKIE = "flotilla_key"
 LOCAL_ONLY = "Only reachable from this computer."
 NETWORK = "Reachable from your network with this dashboard's access key."
@@ -91,6 +92,9 @@ class Dashboard:
         class Handler(BaseHTTPRequestHandler):
             server_version = "flotilla"
             sys_version = ""
+            # A connection that sends nothing is closed after this long, so idle or half-sent
+            # requests (from anyone on the network, before the key is checked) can't pile up threads.
+            timeout = REQUEST_TIMEOUT
 
             def log_message(self, *args):  # keep the terminal quiet
                 pass

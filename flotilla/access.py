@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import ipaddress
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -62,6 +63,22 @@ def tailscale_name() -> str | None:
     return name if doc.get("BackendState") == "Running" and name else None
 
 
+def tailscale_serving(port: int) -> bool | None:
+    """Is `tailscale serve` passing https://<this machine>:<port> on to the dashboard? None if we can't tell."""
+    try:
+        out = subprocess.run(["tailscale", "serve", "status", "--json"], capture_output=True, text=True, timeout=5)
+        doc = json.loads(out.stdout or "{}") if out.returncode == 0 else None
+    except (OSError, subprocess.SubprocessError, ValueError):
+        return None
+    if doc is None:
+        return None
+    for where, web in (doc.get("Web") or {}).items():
+        if where.endswith(f":{port}") and any(f":{port}" in (h.get("Proxy") or "")
+                                               for h in (web.get("Handlers") or {}).values()):
+            return True
+    return False
+
+
 def serve_command(port: int) -> str:
     """Puts the dashboard on your tailnet, with HTTPS: https://<machine>.<tailnet>.ts.net:<port>."""
     return f"tailscale serve --bg --https={port} http://127.0.0.1:{port}"
@@ -73,9 +90,14 @@ PUBLIC_WARNING = ("the dashboard is PUBLIC: anyone on the internet can reach it,
                   "to local, lan or tailnet (or run `flotilla init` again).")
 
 PLACEHOLDER = "<this computer's address>"
+PUBLIC_PLACEHOLDER = "<this server's public address>"
+# Set on a dashboard container by the host's setup: who it lets in, and its address as the host sees
+# it (a container can't see the host's home-network address or Tailscale name).
+ACCESS_ENV, URL_ENV = "FLOTILLA_DASHBOARD_ACCESS", "FLOTILLA_DASHBOARD_URL"
 
 
-def address(access: str, port: int, key: str | None, lan: str | None = None, tailnet: str | None = None) -> str:
+def address(access: str, port: int, key: str | None, lan: str | None = None, tailnet: str | None = None,
+            public: str | None = None) -> str:
     """The address to open for a dashboard with this access."""
     q = f"/?key={key}" if key else ""
     if access == "tailnet" and tailnet:
@@ -84,8 +106,41 @@ def address(access: str, port: int, key: str | None, lan: str | None = None, tai
         return f"http://127.0.0.1:{port}{q}"
     if access == "lan" and lan:
         return f"http://{lan}:{port}{q}"
-    host = "<this server's public address>" if access == "public" else PLACEHOLDER
-    return f"http://{host}:{port}{q}"
+    if access == "public":
+        return f"http://{public or PUBLIC_PLACEHOLDER}:{port}{q}"
+    return f"http://{PLACEHOLDER}:{port}{q}"
+
+
+def public_address() -> str | None:
+    """This machine's own public IPv4 address, when it has one (a VPS). Behind a home router it
+    doesn't, and finding the router's would mean asking an outside service, which Flotilla doesn't."""
+    from .netinfo import internet_route
+
+    route = internet_route()
+    if not route or not route.address or route.looks_like_vpn:
+        return None
+    try:
+        return route.address if ipaddress.ip_address(route.address).is_global else None
+    except ValueError:
+        return None
+
+
+def base_address(access: str, port: int) -> str:
+    """The dashboard's address without its key, as seen from where it's meant to be opened."""
+    given = os.environ.get(URL_ENV)
+    if given:
+        return given.rstrip("/")
+    if in_container():      # the container's own addresses mean nothing to your browser
+        return address("public" if access == "public" else "lan", port, None)
+    from .netinfo import lan_address
+
+    return address(access, port, None, lan=lan_address() if access == "lan" else None,
+                   tailnet=tailscale_name() if access == "tailnet" else None,
+                   public=public_address() if access == "public" else None)
+
+
+def full_address(access: str, port: int, key: str | None) -> str:
+    return base_address(access, port) + (f"/?key={key}" if key else "")
 
 
 def describe(access: str) -> str:

@@ -11,5 +11,10 @@ def _no_host_vpn_lookups(monkeypatch):
     monkeypatch.setattr(cli, "_split_vpns", lambda route: [])
     monkeypatch.setattr(netinfo, "lan_address", lambda: None)
     monkeypatch.setattr(access, "tailscale_name", lambda: None)
+    monkeypatch.setattr(access, "tailscale_serving", lambda port: None)
+    monkeypatch.setattr(access, "public_address", lambda: None)
+    monkeypatch.setattr(access, "in_container", lambda: False)
+    monkeypatch.delenv(access.ACCESS_ENV, raising=False)
+    monkeypatch.delenv(access.URL_ENV, raising=False)
     yield
     netsafe.pin("")

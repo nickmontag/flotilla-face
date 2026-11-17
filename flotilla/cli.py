@@ -431,9 +431,13 @@ def _offer_vpn_container(found: list, cfg: Config) -> int | None:
     lan = lan_address()
     earlier = (ours.get(dc.DASHBOARD) or node).access if ours else ""
     access = _ask_access(earlier or ("lan" if lan else "local"), cfg.dashboard_port)
+    from .access import address, public_address, tailscale_name
+
+    ts = tailscale_name() if access == "tailnet" else None
+    base = address(access, cfg.dashboard_port, None, lan, ts, public_address() if access == "public" else None)
     setup = dc.setup_command(vpn, volume)
     start = [("seeding", dc.node_command(vpn, volume)),
-             ("dashboard", dc.dashboard_command(cfg.dashboard_port, volume, access, lan))]
+             ("dashboard", dc.dashboard_command(cfg.dashboard_port, volume, access, lan, base))]
     if not sys.stdin.isatty():
         ui.note("Setup asks questions, so it needs a terminal. Run these, in order:")
         for cmd in ([["docker", "rm", "-f", *ours]] if ours else []) + [setup] + [c for _, c in start]:
@@ -465,15 +469,14 @@ def _offer_vpn_container(found: list, cfg: Config) -> int | None:
             print(f"    {dc.shell(cmd)}")
             return 1
     ui.done(f"Seeding through {vpn.name}" + (" with the new settings" if ours else ""))
-    from .access import address, key_in, serve_command, tailscale_name
+    from .access import key_in, serve_command
 
     ui.info("waiting for the dashboard to start (it installs Flotilla first, about a minute)")
     url = dc.dashboard_address()
     key = key_in(url) if url else None
     print()
     if key:
-        ts = tailscale_name() if access == "tailnet" else None
-        print(f"{ui.bold('Dashboard')}  {ui.accent(address(access, cfg.dashboard_port, key, lan, ts))}")
+        print(f"{ui.bold('Dashboard')}  {ui.accent(f'{base}/?key={key}')}")
         ui.note({"local": "Open it on this machine; your browser remembers the key.",
                  "lan": "Open it from any device on your network; your browser remembers the key. Anyone with "
                         "this address can steer the node, so keep it to yourself.",
@@ -662,27 +665,31 @@ def cmd_picks(args) -> int:
 
 
 def cmd_dashboard(args) -> int:
+    import os
     import urllib.error
     import urllib.request
     import webbrowser
 
-    from .access import address, in_container, listen_for, tailscale_name
-    from .netinfo import lan_address
+    from .access import ACCESS_ENV, full_address, listen_for, serve_command, tailscale_serving
     from .remote import dashboard_key
 
     cfg = load_config(Path(args.config))
     state_dir = Path(args.state)
     port = args.port or cfg.dashboard_port
-    access = args.access or cfg.dashboard_access
+    access = args.access or os.environ.get(ACCESS_ENV) or cfg.dashboard_access
 
-    def names() -> tuple[str | None, str | None]:
-        if in_container():      # the container's own addresses mean nothing to your browser
-            return None, None
-        return (lan_address() if access == "lan" else None), (tailscale_name() if access == "tailnet" else None)
+    def tailnet_hint() -> None:
+        if access == "tailnet" and tailscale_serving(port) is False:
+            print(f"Tailscale isn't passing this on to the dashboard yet. Run once: {serve_command(port)}",
+                  file=sys.stderr)
 
     if args.url:
-        # In a container, or for a local dashboard asked for its network address: "<this computer's address>".
-        print(address("lan" if in_container() or access == "local" else access, port, dashboard_key(state_dir), *names()))
+        _, keyed = listen_for(access)
+        from . import access as acc
+
+        on_network = args.serve or os.environ.get(ACCESS_ENV) or acc.in_container()   # a dashboard container has a key
+        print(full_address(access, port, dashboard_key(state_dir) if keyed or on_network else None))
+        tailnet_hint()
         return 0
     if args.serve:
         import signal
@@ -701,7 +708,7 @@ def cmd_dashboard(args) -> int:
             print(f"WARNING: {PUBLIC_WARNING}", file=sys.stderr, flush=True)
         if key:
             print(f"Flotilla dashboard listening on {args.listen}:{dash.port}, for the node whose state is in {state_dir}.")
-            print(f"Open http://<this computer's address>:{dash.port}/?key={key}")
+            print(f"Open {full_address(access if access != 'local' else 'lan', dash.port, key)}")
             print("Anyone with that address can steer this node; `flotilla dashboard --url` prints it again."
                   + ("" if access == "public" else " Visitors from the public internet are turned away."), flush=True)
         else:
@@ -722,8 +729,10 @@ def cmd_dashboard(args) -> int:
         print(f"The dashboard isn't up: start Flotilla with `flotilla run` or `flotilla service install`. ({url})")
         return 1
     if keyed:
-        url += f"/?key={dashboard_key(state_dir)}"
-        print(address(cfg.dashboard_access, cfg.dashboard_port, dashboard_key(state_dir), *names()))
+        key = dashboard_key(state_dir)
+        url += f"/?key={key}"
+        print(full_address(cfg.dashboard_access, cfg.dashboard_port, key))
+        tailnet_hint()
     else:
         print(url)
     if not args.no_open:

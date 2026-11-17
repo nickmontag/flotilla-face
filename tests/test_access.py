@@ -170,3 +170,77 @@ def test_serving_a_public_dashboard_warns(tmp_path, monkeypatch, capsys):
                               listen="127.0.0.1", access="public", no_open=True)
     assert cli.cmd_dashboard(args) == 0
     assert "WARNING: the dashboard is PUBLIC" in capsys.readouterr().err
+
+
+def _url(tmp_path, monkeypatch, capsys, mode, **kw):
+    path = tmp_path / f"{mode}.toml"
+    cfg = Config()
+    cfg.dashboard_access = mode
+    path.write_text(render_config(cfg))
+    args = argparse.Namespace(config=str(path), state=str(tmp_path / "state"), port=None, url=True, serve=False,
+                              listen="127.0.0.1", access=None, no_open=True, **kw)
+    assert cli.cmd_dashboard(args) == 0
+    return capsys.readouterr()
+
+
+def test_url_shows_the_real_address_for_each_choice(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(netinfo, "lan_address", lambda: "10.0.0.206")
+    monkeypatch.setattr(access, "tailscale_name", lambda: "media-server.tail1.ts.net")
+    monkeypatch.setattr(access, "public_address", lambda: "203.0.114.7")
+    assert _url(tmp_path, monkeypatch, capsys, "local").out.strip() == "http://127.0.0.1:7421"
+    out = {m: _url(tmp_path, monkeypatch, capsys, m).out.strip() for m in ("lan", "tailnet", "public")}
+    assert out["lan"].startswith("http://10.0.0.206:7421/?key=")
+    assert out["tailnet"].startswith("https://media-server.tail1.ts.net:7421/?key=")
+    assert out["public"].startswith("http://203.0.114.7:7421/?key=")
+    assert len({access.key_in(u) for u in out.values()}) == 1                # the node's one access key
+
+
+def test_url_says_when_tailscale_isnt_serving_it_yet(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(access, "tailscale_name", lambda: "box.tail1.ts.net")
+    monkeypatch.setattr(access, "tailscale_serving", lambda port: False)
+    assert "tailscale serve --bg --https=7421" in _url(tmp_path, monkeypatch, capsys, "tailnet").err
+    monkeypatch.setattr(access, "tailscale_serving", lambda port: True)
+    assert _url(tmp_path, monkeypatch, capsys, "tailnet").err == ""
+
+
+def test_url_in_a_dashboard_container_uses_the_hosts_address(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(access, "in_container", lambda: True)
+    monkeypatch.setattr(netinfo, "lan_address", lambda: "172.17.0.3")         # the container's own: useless
+    old = _url(tmp_path, monkeypatch, capsys, "local").out                     # set up before this change
+    assert old.startswith("http://<this computer's address>:7421/?key=")
+    monkeypatch.setenv(access.ACCESS_ENV, "lan")
+    monkeypatch.setenv(access.URL_ENV, "http://10.0.0.206:7421")
+    assert _url(tmp_path, monkeypatch, capsys, "local").out.startswith("http://10.0.0.206:7421/?key=")
+
+
+def test_public_address_only_when_this_machine_has_one(monkeypatch):
+    monkeypatch.undo()                                                         # the real one, not conftest's stub
+    from flotilla import access as a
+
+    for addr, iface, want in (("203.0.114.7", "eth0", "203.0.114.7"), ("10.0.0.206", "ens18", None),
+                              ("100.104.1.2", "eth0", None), ("185.1.2.3", "wg0", None)):    # a VPN's exit isn't ours
+        monkeypatch.setattr(netinfo, "internet_route", lambda addr=addr, iface=iface: netinfo.Route(iface, addr))
+        assert a.public_address() == want
+
+
+def test_tailscale_serving_reads_serve_status(monkeypatch):
+    import json
+    import subprocess
+
+    monkeypatch.undo()
+    from flotilla import access as a
+
+    status = {"TCP": {"7421": {"HTTPS": True}},
+              "Web": {"box.tail1.ts.net:7421": {"Handlers": {"/": {"Proxy": "http://127.0.0.1:7421"}}},
+                      "box.tail1.ts.net:443": {"Handlers": {"/tfc": {"Proxy": "http://127.0.0.1:8741"}}}}}
+    fake = lambda doc: (lambda *a, **k: subprocess.CompletedProcess(a, 0, json.dumps(doc), ""))
+    monkeypatch.setattr(a.subprocess, "run", fake(status))
+    assert a.tailscale_serving(7421) is True
+    assert a.tailscale_serving(8000) is False
+    monkeypatch.setattr(a.subprocess, "run", fake({}))
+    assert a.tailscale_serving(7421) is False
+
+
+def test_docker_dashboard_gets_the_hosts_address():
+    cmd = containers.dashboard_command(7421, "flotilla", "tailnet", "10.0.0.206", "https://box.tail1.ts.net:7421")
+    assert f"{access.ACCESS_ENV}=tailnet" in cmd and f"{access.URL_ENV}=https://box.tail1.ts.net:7421" in cmd

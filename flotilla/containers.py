@@ -169,7 +169,7 @@ def dashboard_address(timeout: float = 180.0, every: float = 2.0, lan_address: s
     while True:
         out = _docker("logs", DASHBOARD)
         text = (out.stdout + out.stderr) if out else ""
-        m = re.search(r"Open (http://[^\n]*?\?key=\S+)", text)
+        m = re.search(r"Open (https?://[^\n]*?\?key=\S+)", text)
         if m:
             url = m.group(1)
             return url.replace("<this computer's address>", lan_address) if lan_address else url
@@ -213,10 +213,14 @@ def publish(access: str, port: int, lan: str | None) -> str:
 
 
 def dashboard_command(port: int = 7421, volume: str = VOLUME, access: str = "lan",
-                      lan: str | None = None) -> list[str]:
-    """The dashboard, outside the VPN so your own network can reach it; it shares only the state folder."""
+                      lan: str | None = None, url: str | None = None) -> list[str]:
+    """The dashboard, outside the VPN so your own network can reach it; it shares only the state folder.
+    url is its address as this machine sees it, for its log and `flotilla dashboard --url`."""
+    from .access import ACCESS_ENV, URL_ENV
+
+    env = ["-e", f"{ACCESS_ENV}={access}"] + (["-e", f"{URL_ENV}={url}"] if url else [])
     return ["docker", "run", "-d", "--name", DASHBOARD, "--restart", "unless-stopped",
-            "-p", publish(access, port, lan), *_LOGS, "-v", f"{volume}:/root", IMAGE,
+            "-p", publish(access, port, lan), *env, *_LOGS, "-v", f"{volume}:/root", IMAGE,
             "sh", "-c", _pip_then(f"exec flotilla dashboard --serve --listen 0.0.0.0 --port {port} --access {access}")]
 
 

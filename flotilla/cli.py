@@ -1245,6 +1245,8 @@ def cmd_update(args) -> int:
     kind = _install_kind()
     native = release.newer(rel.version, here) and kind != "dev"
     try:
+        for name in dc.recover() if shutil.which("docker") else []:
+            ui.info(f"put back {name}, which an interrupted update had left renamed")
         ours = {n: e for n, e in dc.installed().items() if e.ours} if shutil.which("docker") else {}
     except Exception:          # Docker installed but not answering: nothing of ours to update there
         ours = {}

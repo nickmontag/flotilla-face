@@ -133,6 +133,7 @@ def updating(monkeypatch, tmp_path):
     monkeypatch.setattr(cli.shutil, "which", lambda n: None)                 # no Docker unless a test adds it
     monkeypatch.setattr(containers, "pull", lambda image: calls.append(("pull", image)))
     monkeypatch.setattr(containers, "replace", lambda old, image: calls.append(("replace", old.name, image)))
+    monkeypatch.setattr(containers, "recover", lambda: [])
     monkeypatch.setattr("builtins.input", lambda prompt="": "")
     return calls
 
@@ -402,3 +403,19 @@ def test_containers_are_updated_by_the_version_just_installed(updating, monkeypa
     assert cli.cmd_update(argparse.Namespace(check=False, yes=True)) == 0
     assert ran == [["/home/u/.local/bin/flotilla", "update", "--yes"]]
     assert not any(c[0] in ("pull", "replace") for c in updating)          # not by this, older, copy
+
+
+def test_a_container_left_renamed_by_an_interrupted_update_is_put_back(monkeypatch):
+    keep = dict(PIP_DASHBOARD, Name="/flotilla-dashboard-before-update")
+    calls = []
+
+    def docker(*a):
+        calls.append(a)
+        if a[0] == "inspect":
+            return subprocess.CompletedProcess(a, 1, json.dumps([keep]), "No such object: flotilla-dashboard")
+        return subprocess.CompletedProcess(a, 0, "", "")
+
+    monkeypatch.setattr(containers, "_docker", docker)
+    assert containers.recover(("flotilla-dashboard",)) == ["flotilla-dashboard"]
+    assert calls[-2:] == [("rename", "flotilla-dashboard-before-update", "flotilla-dashboard"),
+                          ("start", "flotilla-dashboard")]

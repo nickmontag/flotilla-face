@@ -322,6 +322,21 @@ def replace(old: Installed, image: str) -> None:
     _docker("rm", "-f", keep)
 
 
+def recover(names: tuple[str, ...] = (NODE, DASHBOARD)) -> list[str]:
+    """Put back a container an interrupted update left renamed `<name>-before-update` (0.2.1 could),
+    so it's found, updated and run again under its own name."""
+    back = []
+    for name in names:
+        keep = f"{name}-before-update"
+        have = installed((name, keep))
+        if keep in have and name not in have:
+            r = _docker("rename", keep, name)
+            if r and r.returncode == 0:
+                _docker("start", name)
+                back.append(name)
+    return back
+
+
 def shell(cmd: list[str]) -> str:
     return shlex.join(cmd)
 

@@ -22,7 +22,14 @@ REF="${FLOTILLA_REF:-main}"
 PACKAGE="${FLOTILLA_PACKAGE:-flotilla-face @ https://github.com/nickmontag/flotilla-face/archive/$REF.tar.gz}"
 PYTHON_VERSION="3.13" # libtorrent publishes no wheels for 3.14+ yet
 
+if [ -t 1 ] && [ -z "${NO_COLOR:-}" ] && [ "${TERM:-}" != dumb ]; then
+  B=$(printf '\033[1m') C=$(printf '\033[36m') D=$(printf '\033[2m') G=$(printf '\033[32m') R=$(printf '\033[0m')
+else
+  B="" C="" D="" G="" R=""
+fi
 say() { printf '%s\n' "$*"; }
+step() { printf '%s\n' "${D}→${R} $*"; }
+ok() { printf '%s\n' "${G}✓${R} $*"; }
 die() { printf 'flotilla install: %s\n' "$*" >&2; exit 1; }
 case "$REF" in
   *[!A-Za-z0-9._-]* | "") die "FLOTILLA_REF must be a tag, branch or commit (letters, digits, . _ -)." ;;
@@ -62,7 +69,7 @@ if ! command -v uv > /dev/null 2>&1; then
   done
 fi
 if ! command -v uv > /dev/null 2>&1; then
-  say "Installing uv, the Python package manager Flotilla uses (from astral.sh)..."
+  step "Installing uv, the Python package manager Flotilla uses (from astral.sh)"
   if [ "${FLOTILLA_NO_MODIFY_PATH:-0}" = 1 ]; then
     curl -LsSf https://astral.sh/uv/install.sh | env UV_NO_MODIFY_PATH=1 sh
   else
@@ -75,19 +82,25 @@ command -v uv > /dev/null 2>&1 || die "uv didn't install. See https://docs.astra
 
 # --- 3. Flotilla ------------------------------------------------------------
 if [ -n "${FLOTILLA_PACKAGE:-}" ]; then
-  say "Installing Flotilla ($PACKAGE) with Python $PYTHON_VERSION..."
+  step "Installing Flotilla ($PACKAGE) with Python $PYTHON_VERSION"
 else
-  say "Installing Flotilla from github.com/nickmontag/flotilla-face with Python $PYTHON_VERSION..."
+  step "Installing Flotilla from github.com/nickmontag/flotilla-face ($REF) with Python $PYTHON_VERSION"
 fi
 # --refresh-package: running the installer again picks up the newest main, not a cached download.
-uv tool install --python "$PYTHON_VERSION" --force --refresh-package flotilla-face "$PACKAGE" \
-  || die "couldn't install $PACKAGE."
+# uv's own output (every package it installs) is shown only if something goes wrong.
+uv_log=$(mktemp)
+if ! uv tool install --python "$PYTHON_VERSION" --force --refresh-package flotilla-face "$PACKAGE" > "$uv_log" 2>&1; then
+  cat "$uv_log" >&2
+  rm -f "$uv_log"
+  die "couldn't install $PACKAGE."
+fi
+rm -f "$uv_log"
 BIN="$(uv tool dir --bin)/flotilla"
 [ -x "$BIN" ] || die "installed, but $BIN is missing."
 if [ "${FLOTILLA_NO_MODIFY_PATH:-0}" != 1 ]; then
   uv tool update-shell > /dev/null 2>&1 || true
 fi
-say "Installed: flotilla $("$BIN" --version)"
+ok "Installed flotilla $("$BIN" --version)"
 
 # --- 4. Setup ---------------------------------------------------------------
 if [ "${FLOTILLA_YES:-0}" = 1 ] || ! (exec < /dev/tty) 2> /dev/null; then
@@ -96,19 +109,19 @@ if [ "${FLOTILLA_YES:-0}" = 1 ] || ! (exec < /dev/tty) 2> /dev/null; then
   exit 0
 fi
 
-say ""
 "$BIN" init < /dev/tty
 say ""
-printf 'Run Flotilla in the background now and every time you log in? [Y/n] '
+say "${B}Run in the background${R}"
+printf '%s' "  ${C}?${R} Run Flotilla now and every time you log in ${D}(Y/n)${R}: "
 read -r answer < /dev/tty || answer=n
 case "$answer" in
   [nN]*)
-    say "OK. Start it whenever you like with: flotilla run"
+    say "  Start it whenever you like with: flotilla run"
     ;;
   *)
     linger=""
     if [ "$os" = Linux ]; then
-      printf 'Keep seeding while you are logged out (good for servers)? [y/N] '
+      printf '%s' "  ${C}?${R} Keep seeding while you're logged out, good for servers ${D}(y/N)${R}: "
       read -r keep < /dev/tty || keep=n
       case "$keep" in [yY]*) linger="--linger" ;; esac
     fi
@@ -117,4 +130,4 @@ case "$answer" in
     ;;
 esac
 say ""
-say "Done. Open a new terminal so 'flotilla' is on your PATH, then: flotilla dashboard"
+ok "Done. Open a new terminal so 'flotilla' is on your PATH, then: ${B}flotilla dashboard${R}"

@@ -498,7 +498,7 @@ def test_setup_asks_and_defaults_to_off(tmp_path, monkeypatch):
     cfg = run([folder])                                          # every other answer left at its default
     assert cfg.hf_fallback is False
     asked = [p for p in seen if "Hugging Face" in p]
-    assert asked and asked[0].endswith("[y/N]: ")
+    assert asked and asked[0].endswith("(y/N): ")
     hf_prompt = asked[0]
     answers = [folder] + [""] * 20
 
@@ -506,7 +506,7 @@ def test_setup_asks_and_defaults_to_off(tmp_path, monkeypatch):
         seen.append(prompt)
         if prompt == hf_prompt:
             return "y"
-        if prompt.startswith("Most to fetch from Hugging Face"):
+        if "Most to fetch a day" in prompt:
             return "7"
         return answers.pop(0) if answers else ""
 

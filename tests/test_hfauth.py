@@ -380,6 +380,7 @@ def test_setup_offers_an_account_only_with_hugging_face_on(tmp_path, monkeypatch
 
     def answers(hf, connect):
         def ask(prompt=""):
+            prompt = prompt.lstrip().removeprefix("? ")
             seen.append(prompt)
             if prompt.startswith("Folder"):
                 return str(tmp_path / "seeds")
@@ -400,7 +401,7 @@ def test_setup_offers_an_account_only_with_hugging_face_on(tmp_path, monkeypatch
     monkeypatch.setattr("builtins.input", answers("y", ""))           # on, but no account (the default)
     assert cli.cmd_init(argparse.Namespace(config=str(cfg))) == 0
     asked = [p for p in seen if p.startswith("Connect a Hugging Face account")]
-    assert asked and asked[0].endswith("[y/N]: ") and not (tmp_path / "hf-token").exists()
+    assert asked and asked[0].endswith("(y/N): ") and not (tmp_path / "hf-token").exists()
 
     monkeypatch.setattr("builtins.input", answers("y", "y"))
     assert cli.cmd_init(argparse.Namespace(config=str(cfg))) == 0

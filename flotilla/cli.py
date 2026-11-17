@@ -10,7 +10,7 @@ import time
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from . import __version__
+from . import __version__, ui
 from .config import (BUILTIN_EDITOR_KEYS, CONFIG_PATH, REORIENT_CHOICES, STATE_DIR, Config, State, load_config,
                      render_config)
 from .feed import BUNDLED_FEED, LOCAL_EXAMPLE, FeedError, apply_local, load_feed, origin_view, parse_feed
@@ -47,20 +47,8 @@ def duration(sec: float) -> str:
 # ------------------------------------------------------------------ init
 
 
-def _ask(prompt: str, default, cast=str):
-    while True:
-        raw = input(f"{prompt} [{default}]: ").strip()
-        if not raw:
-            return default
-        try:
-            return cast(raw)
-        except ValueError:
-            print("  not understood, try again")
-
-
-def _yes(prompt: str, default: bool) -> bool:
-    raw = input(f"{prompt} [{'Y/n' if default else 'y/N'}]: ").strip().lower()
-    return default if not raw else raw.startswith("y")
+_ask = ui.ask
+_yes = ui.yes
 
 
 def parse_gb(raw: str) -> float:
@@ -74,71 +62,82 @@ def parse_gb(raw: str) -> float:
     return v
 
 
+SETUP_STEPS = 6
+
+
 def cmd_init(args) -> int:
     path = Path(args.config)
     cfg = load_config(path) if path.exists() else Config()
-    print(f"Flotilla {__version__} setup. Writes {path}\n")
-    print("Seeding shares files with strangers: peers in each swarm can see your public IP address,")
-    print("and seeding uses disk space and upload bandwidth. You can stop at any time.\n")
+    ui.title(f"Flotilla {__version__} setup", f"writes {path}")
+    ui.note("Seeding shares files with strangers: peers in each swarm can see your IP address, and seeding "
+            "uses disk space and upload bandwidth. Press Enter to keep a default. You can change any of this "
+            "later in the dashboard, or stop at any time.")
 
+    ui.section(1, SETUP_STEPS, "Storage")
     folder = Path(_ask("Folder for seeded files", str(cfg.folder))).expanduser()
     folder.mkdir(parents=True, exist_ok=True)
     du = shutil.disk_usage(folder)
-    print(f"  that drive has {human(du.free)} free of {human(du.total)}")
+    ui.info(f"that drive has {human(du.free)} free of {human(du.total)}")
     suggested = max(10.0, round((du.free / GB - cfg.reserve_gb) * 0.5))
-    budget = _ask("How much space to set aside for Flotilla, in GB", suggested if not path.exists() else cfg.budget_gb,
-                  parse_gb)
-    reserve = _ask("GB to always leave free on that drive, whatever else fills it", cfg.reserve_gb, parse_gb)
+    budget = _ask("Space for Flotilla, in GB", suggested if not path.exists() else cfg.budget_gb, parse_gb)
+    reserve = _ask("Always leave this much free on the drive, in GB", cfg.reserve_gb, parse_gb)
     if budget > du.free / GB - reserve:
-        print(f"  note: only {du.free / GB - reserve:.0f} GB is available after the reserve; the planner will stay under that")
+        ui.caution(f"only {du.free / GB - reserve:.0f} GB is free after the reserve; Flotilla will stay under that")
 
-    print("\nBandwidth (megabits per second; a speed test site will tell you).")
-    up = _ask("Upload speed, Mbit/s", cfg.upload_mbps, float)
-    down = _ask("Download speed, Mbit/s", cfg.download_mbps, float)
-    share = _ask("Share of upload to give the swarm (0.1 to 1.0)", cfg.upload_share, float)
-    dshare = _ask("Share of download to use while filling (0.1 to 1.0)", cfg.download_share, float)
-    cap = _ask("Monthly upload cap in GB (0 = none)", cfg.monthly_upload_cap_gb, float)
+    ui.section(2, SETUP_STEPS, "Bandwidth")
+    ui.note("In megabits per second. A speed test site will tell you yours.")
+    up = _ask("Upload speed", cfg.upload_mbps, float)
+    down = _ask("Download speed", cfg.download_mbps, float)
+    share = _ask("Share of upload to give the swarm, 0.1-1", cfg.upload_share, float)
+    dshare = _ask("Share of download to use while filling, 0.1-1", cfg.download_share, float)
+    cap = _ask("Monthly upload cap in GB, 0 for none", cfg.monthly_upload_cap_gb, float)
 
-    print("\nWhat the swarm needs changes. Flotilla can reorient on a schedule: drop the lowest-priority pieces")
-    print("you hold and fetch the ones the swarm needs most. Models you add or set space aside for stay.")
+    ui.section(3, SETUP_STEPS, "Reorienting")
+    ui.note("What the swarm needs changes. On a schedule, Flotilla drops the lowest-priority pieces you hold "
+            "and fetches the ones the swarm needs most. Models you add or set space aside for stay.")
 
     def every(raw: str) -> str:
         if raw.strip().lower() not in REORIENT_CHOICES:
             raise ValueError(raw)
         return raw.strip().lower()
 
-    reorient = _ask(f"How often to reorient ({', '.join(REORIENT_CHOICES)})", cfg.reorient, every)
+    reorient = _ask(f"How often: {', '.join(REORIENT_CHOICES)}", cfg.reorient, every)
     churn = cfg.churn_gb
     if reorient != "never":
         churn = max(0.0, _ask("Most to swap each time, in GB", churn, parse_gb))
 
     from .netinfo import internet_route
 
+    ui.section(4, SETUP_STEPS, "Network")
     bind, pf = cfg.bind_interface, cfg.port_forwarding
     route = internet_route()
     if route and route.looks_like_vpn:
         where = f"{route.iface}, {route.address}" if route.address else route.iface
-        print(f"\nYour internet traffic goes through a VPN ({where}).")
-        if _yes("Pin Flotilla's torrent traffic to it, so it can never fall back to your real connection", True):
+        ui.info(f"your internet traffic goes through a VPN ({where})")
+        if _yes("Pin torrent traffic to the VPN, so it never falls back to your real connection", True):
             bind, pf = route.bind_value, False
     elif bind:
-        if not _yes(f"\nKeep torrent traffic pinned to {bind}", True):
+        if not _yes(f"Keep torrent traffic pinned to {bind}", True):
             bind = ""
     else:
-        print("\nNo VPN detected: peers in each swarm will see this connection's public IP address.")
+        ui.caution("no VPN detected: peers will see this connection's public IP address")
     if not bind:
-        pf = _yes("Let Flotilla open a port on your router with UPnP/NAT-PMP (helps peers reach you)", pf)
+        ui.note("Opening a port on your router (UPnP/NAT-PMP) lets peers reach you, so you seed more. Skip it "
+                "if you've turned UPnP off on your router or use a VPN.")
+        pf = _yes("Open a port on your router", pf)
 
-    print("\nSome models have no full seeder, and the peers holding a file's last pieces aren't always online.")
-    print("Flotilla can then fetch the pieces no peer is sending from Hugging Face, while it still has the")
-    print("model, checking each against the torrent before keeping it. Hugging Face sees the address you fetch")
-    print(f"from ({bind}, your VPN)." if bind else "from (this connection's public IP).")
+    ui.section(5, SETUP_STEPS, "Pieces no peer has")
+    ui.note("Some models have no full seeder, and the peers holding a file's last pieces aren't always online. "
+            "Flotilla can fetch those pieces from Hugging Face while it still has the model, checking each "
+            "against the torrent. Hugging Face sees the address you fetch from"
+            + (f" ({bind}, your VPN)." if bind else " (this connection's public IP)."))
     hf, hf_gb = cfg.hf_fallback, cfg.hf_gb_per_day
     hf = _yes("Fetch pieces no peer has from Hugging Face", hf)
     if hf:
-        hf_gb = max(0.0, _ask("Most to fetch from Hugging Face a day, in GB (0 = no limit)", hf_gb, float))
+        hf_gb = max(0.0, _ask("Most to fetch a day, in GB, 0 for no limit", hf_gb, float))
         _setup_hf_account(path, bind)
 
+    ui.section(6, SETUP_STEPS, "Licenses")
     licenses = list(cfg.licenses)
     try:
         from .netsafe import FetchError
@@ -149,16 +148,16 @@ def cmd_init(args) -> int:
         # Licenses Flotilla's maintainers read and allow by default (see README, Safety).
         reviewed = [x for x in Config().licenses if x not in auto]
         gated = [x["label"] for x in lic if x.get("acceptFirst") and x["id"] not in reviewed]
-        print(f"\nLicenses Pirate Face lists without extra terms: {', '.join(auto)}")
+        ui.note(f"Pirate Face lists these without extra terms: {', '.join(auto)}.")
         if reviewed:
-            print(f"Also allowed by Flotilla (they let anyone redistribute; their extra terms only apply to "
-                  f"very large commercial AI services): {', '.join(reviewed)}")
+            ui.note(f"Flotilla also allows {', '.join(reviewed)}: they let anyone redistribute, and their extra "
+                    f"terms only apply to very large commercial AI services.")
         if gated:
-            print(f"Licenses that need you to accept terms first (not auto-picked): {', '.join(gated)}")
-        if _yes("Allow automatic pickup for all of these", True):
+            ui.note(f"Not picked automatically, because you must accept their terms first: {', '.join(gated)}.")
+        if _yes("Seed models under all of the allowed licenses", True):
             licenses = auto + reviewed
     except (FetchError, OSError, ValueError) as e:
-        print(f"\n(could not read Pirate Face's license list: {e}; keeping {licenses})")
+        ui.caution(f"couldn't read Pirate Face's license list ({e}); keeping {', '.join(licenses)}")
 
     cfg.folder, cfg.budget_gb, cfg.reserve_gb = folder, budget, reserve
     cfg.upload_mbps, cfg.download_mbps = up, down
@@ -170,20 +169,25 @@ def cmd_init(args) -> int:
 
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_config(cfg))
-    print(f"\nWrote {path}.")
-    print(f"With {up:g} Mbit/s up at {cfg.upload_share:.0%}, you'll serve up to {cfg.max_torrents} swarms at once.")
-    print(f"Filling {budget:g} GB at {down:g} Mbit/s × {cfg.download_share:.0%} takes about "
-          f"{duration(budget * GB / cfg.download_bps)} (rare models with few peers take longer).")
-    if hf:
-        print(f"Pieces no peer has come from Hugging Face, up to "
-              f"{f'{hf_gb:g} GB a day' if hf_gb else 'any amount'}. Turn it off any time in the dashboard's settings.")
-    else:
-        print("Pieces no peer has are waited for. To fetch them from Hugging Face instead, turn that on in the "
-              "dashboard's settings.")
-    if bind:
-        print(f"Torrent traffic is pinned to {bind}: if the VPN drops, Flotilla goes offline instead.")
-    print("Next: `flotilla plan` to preview, then `flotilla service install` to run it in the background,")
-    print(f"and watch it at http://127.0.0.1:{cfg.dashboard_port}")
+    print()
+    ui.done(f"Saved {path}")
+    fill = duration(budget * GB / cfg.download_bps)
+    ui.table([
+        ("Space", f"{budget:g} GB in {folder}, keeping {reserve:g} GB free"),
+        ("Upload", f"{up:g} Mbit/s × {cfg.upload_share:.0%}, up to {cfg.max_torrents} swarms at once"
+                   + (f", {cap:g} GB a month" if cap else "")),
+        ("Filling", f"about {fill} at {down:g} Mbit/s × {cfg.download_share:.0%} (rare models take longer)"),
+        ("Reorient", reorient if reorient == "never" else f"{reorient}, up to {churn:g} GB"),
+        ("Network", f"pinned to {bind}: if the VPN drops, Flotilla goes offline" if bind
+                    else "router port open (UPnP)" if pf else "your connection, no router port"),
+        ("Hugging Face", (f"fetches pieces no peer has, up to {f'{hf_gb:g} GB a day' if hf_gb else 'any amount'}")
+                         if hf else "off: pieces no peer has are waited for"),
+    ])
+    print(f"\n{ui.bold('Next')}")
+    ui.table([("flotilla plan", "preview what this node would seed"),
+              ("flotilla service install", "run it in the background"),
+              (f"http://127.0.0.1:{cfg.dashboard_port}", "the dashboard, once it runs")],
+             key_style=str, value_style=ui.dim)
     return 0
 
 
@@ -199,10 +203,10 @@ def _setup_hf_account(config_path: Path, bind: str) -> None:
     if have:
         if not _yes(f"A Hugging Face account token is connected ({tpath}). Keep using it for gated models", True):
             remove_token(tpath)
-            print("  disconnected; if it's no longer needed, delete it at huggingface.co/settings/tokens too")
+            ui.info("disconnected; if it's no longer needed, delete it at huggingface.co/settings/tokens too")
         return
-    print("\nSome models are gated: Hugging Face serves them only to accounts their author let in. Without an")
-    print("account, Flotilla waits for peers to send their missing pieces.")
+    ui.note("Some models are gated: Hugging Face serves them only to accounts their author let in. Without an "
+            "account, Flotilla waits for peers to send their missing pieces.")
     if _yes("Connect a Hugging Face account for those (a read-only token)", False):
         netsafe.pin(bind)      # check the token over the connection Flotilla will use
         hf_connect(tpath)

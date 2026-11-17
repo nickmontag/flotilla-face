@@ -134,6 +134,7 @@ def test_setup_moves_into_the_vpn_container(tmp_path, monkeypatch):
     monkeypatch.setattr(cli, "_vpn_containers", lambda: found)
     monkeypatch.setattr(containers, "installed", lambda: {})
     monkeypatch.setattr(cli.sys.stdin, "isatty", lambda: True, raising=False)
+    monkeypatch.setattr(containers, "dashboard_address", lambda **k: "http://10.0.0.206:7421/?key=k")
     ran = []
     monkeypatch.setattr(containers, "run", lambda cmd, interactive=False: ran.append(cmd) or 0)
     _answers(monkeypatch, [("Which one", "2")])
@@ -169,6 +170,7 @@ def test_setup_again_replaces_the_earlier_containers(tmp_path, monkeypatch, caps
     monkeypatch.setattr(cli, "_vpn_containers", lambda: found)
     monkeypatch.setattr(containers, "installed", lambda: earlier)
     monkeypatch.setattr(cli.sys.stdin, "isatty", lambda: True, raising=False)
+    monkeypatch.setattr(containers, "dashboard_address", lambda **k: "http://10.0.0.206:7421/?key=k")
     events = []
     monkeypatch.setattr(containers, "remove", lambda names: events.append(("rm", *names)) or True)
     monkeypatch.setattr(containers, "run", lambda cmd, interactive=False: events.append(("run", *cmd)) or 0)
@@ -181,6 +183,7 @@ def test_setup_again_replaces_the_earlier_containers(tmp_path, monkeypatch, caps
     kinds = [e[0] for e in events]
     assert kinds == ["run", "rm", "run", "run"]                             # setup, then replace both
     assert events[1] == ("rm", "flotilla", "flotilla-dashboard")
+    assert "Dashboard  http://10.0.0.206:7421/?key=k" in out
     for e in (events[0], events[2]):
         assert "container:gluetun" in e and "/mnt/faststorage/apps/flotilla:/root" in e
 
@@ -297,6 +300,7 @@ def test_setup_tells_the_installer_where_flotilla_went(tmp_path, monkeypatch):
     monkeypatch.setattr(cli, "_vpn_containers", lambda: [containers.VpnContainer("gluetun", "qmcgaw/gluetun")])
     monkeypatch.setattr(containers, "installed", lambda: {})
     monkeypatch.setattr(cli.sys.stdin, "isatty", lambda: True, raising=False)
+    monkeypatch.setattr(containers, "dashboard_address", lambda **k: "http://10.0.0.206:7421/?key=k")
     monkeypatch.setattr(containers, "run", lambda cmd, interactive=False: 0)
 
     _answers(monkeypatch, [])                                        # yes: into the container
@@ -306,3 +310,18 @@ def test_setup_tells_the_installer_where_flotilla_went(tmp_path, monkeypatch):
     _answers(monkeypatch, [("inside the VPN container", "n"), ("Folder", str(tmp_path / "seeds"))])
     assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "b.toml"))) == 0
     assert result.read_text() == "here"
+
+
+def test_dashboard_address_waits_for_the_key_and_fills_in_the_lan_address(monkeypatch):
+    logs = iter(["Collecting flotilla-face\n", "Installing...\n",
+                 "Flotilla dashboard listening on 0.0.0.0:7421\n"
+                 "Open http://<this computer's address>:7421/?key=AbC_123-x\nAnyone with that address...\n"])
+    monkeypatch.setattr(containers, "_docker", lambda *a: subprocess.CompletedProcess(a, 0, next(logs), ""))
+    monkeypatch.setattr("time.sleep", lambda s: None)
+    url = containers.dashboard_address(lan_address="10.0.0.206")
+    assert url == "http://10.0.0.206:7421/?key=AbC_123-x"
+
+
+def test_dashboard_address_gives_up(monkeypatch):
+    monkeypatch.setattr(containers, "_docker", lambda *a: subprocess.CompletedProcess(a, 0, "Installing...\n", ""))
+    assert containers.dashboard_address(timeout=0) is None

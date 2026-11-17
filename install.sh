@@ -118,6 +118,7 @@ rm -f "$setup_result"
 if [ "$where" = docker ]; then
   say ""
   ok "Done. Flotilla runs in Docker, which restarts it on its own: nothing to run on this machine."
+  say "  The dashboard's address is above; ${B}docker logs flotilla-dashboard${R} shows it again."
   exit 0
 fi
 say ""

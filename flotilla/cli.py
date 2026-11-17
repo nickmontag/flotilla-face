@@ -389,7 +389,20 @@ def _offer_vpn_container(found: list, cfg: Config) -> int | None:
             print(f"    {dc.shell(cmd)}")
             return 1
     ui.done(f"Seeding through {vpn.name}" + (" with the new settings" if ours else ""))
-    ui.table([(f"docker logs {dc.DASHBOARD}", "the dashboard's address with its access key (after a minute)"),
+    from .netinfo import internet_route
+
+    route = internet_route()
+    ui.info("waiting for the dashboard to start (it installs Flotilla first, about a minute)")
+    url = dc.dashboard_address(lan_address=route.address if route else None)
+    print()
+    if url:
+        print(f"{ui.bold('Dashboard')}  {ui.accent(url)}")
+        ui.note("Open it from any device on your network; your browser remembers the key. Anyone with this "
+                "address can steer the node, so keep it to your home network.")
+    else:
+        ui.caution(f"the dashboard hasn't started yet: docker logs {dc.DASHBOARD} shows its address once it has")
+    print(f"\n{ui.bold('Later')}")
+    ui.table([(f"docker logs {dc.DASHBOARD}", "the dashboard's address again"),
               (f"docker exec {dc.NODE} flotilla status", "what the node is doing"),
               (f"docker logs -f {dc.NODE}", "its log")],
              key_style=str, value_style=ui.dim)

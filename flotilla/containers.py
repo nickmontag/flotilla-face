@@ -157,6 +157,24 @@ def remove(names: list[str]) -> bool:
     return bool(out) and out.returncode == 0
 
 
+def dashboard_address(timeout: float = 180.0, every: float = 2.0, lan_address: str | None = None) -> str | None:
+    """The dashboard container's address with its access key, once it has started (it installs
+    Flotilla first, which takes a minute or so). None if it hasn't said within the timeout."""
+    import time
+
+    deadline = time.monotonic() + timeout
+    while True:
+        out = _docker("logs", DASHBOARD)
+        text = (out.stdout + out.stderr) if out else ""
+        m = re.search(r"Open (http://[^\n]*?\?key=\S+)", text)
+        if m:
+            url = m.group(1)
+            return url.replace("<this computer's address>", lan_address) if lan_address else url
+        if time.monotonic() >= deadline:
+            return None
+        time.sleep(every)
+
+
 def _pip_then(cmd: str) -> str:
     # No pip cache: in a host folder root doesn't own pip can't use one and warns, and each
     # container starts fresh anyway. No version check either: the pip in the image is fine.

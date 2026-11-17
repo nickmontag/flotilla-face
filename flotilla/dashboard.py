@@ -12,11 +12,16 @@ Security, since anything on localhost is reachable from a browser tab:
   it must be ours.
 * No CORS headers, ever.
 
-Reachable from other computers (`flotilla dashboard --serve --listen 0.0.0.0`, for a node in a
-VPN container): then every request also needs the dashboard's access key. Opening the address
+Reachable from other computers (dashboard.access = "lan", "tailnet" or "public"; or `flotilla
+dashboard --serve --listen 0.0.0.0`, for a node in a VPN container): then every request also needs
+the dashboard's access key. Opening the address
 with ?key=... once sets it as a cookie (HttpOnly, SameSite=Strict) and drops it from the URL.
 Any Host is accepted then; the key is what keeps others out, and a rebinding site never gets
 the cookie.
+
+Unless access is "public", connections from public internet addresses are dropped before a byte is
+read or sent (see access.py): not even the "needs its access key" page, which would tell a scanner
+this address runs Flotilla.
 """
 
 from __future__ import annotations
@@ -31,6 +36,7 @@ from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from importlib import resources
 
+from .access import allows
 from .feed import REPO_RE
 from .history import RANGES
 
@@ -39,16 +45,21 @@ REQUEST_TIMEOUT = 30.0
 COOKIE = "flotilla_key"
 LOCAL_ONLY = "Only reachable from this computer."
 NETWORK = "Reachable from your network with this dashboard's access key."
+TAILNET = "Reachable from your Tailscale devices with this dashboard's access key."
+PUBLIC = ("<strong style='color:#d29922'>Public: anyone on the internet can reach this page. Only its access "
+          "key keeps them out.</strong>")
 NEED_KEY = (b"<!doctype html><meta charset=utf-8><title>Flotilla Face</title><body style='font:15px system-ui;"
             b"margin:3em'><h1 style='font-size:18px'>This dashboard needs its access key</h1><p>On the "
             b"computer running it, <code>flotilla dashboard --url</code> prints the address to open.</p>")
 
 
 class Dashboard:
-    def __init__(self, engine, port: int, host: str = "127.0.0.1", key: str | None = None):
+    def __init__(self, engine, port: int, host: str = "127.0.0.1", key: str | None = None,
+                 access: str = "local"):
         self.engine = engine
         self.host = host
         self.key = key
+        self.access = access
         self.token = secrets.token_urlsafe(24)
         self.allowed_hosts = {f"127.0.0.1:{port}", f"localhost:{port}"}
         self._page_file = resources.files("flotilla").joinpath("static/dashboard.html")
@@ -58,6 +69,8 @@ class Dashboard:
         handler = self._make_handler()
         self.httpd = ThreadingHTTPServer((host, port), handler)
         self.httpd.daemon_threads = True
+        # Dropped without a reply: a visitor from the internet learns nothing, not even that this is Flotilla.
+        self.httpd.verify_request = lambda request, client: allows(client[0], self.access)
         self.port = self.httpd.server_address[1]
         self.allowed_hosts = {f"127.0.0.1:{self.port}", f"localhost:{self.port}"}
         self.thread = threading.Thread(target=self.httpd.serve_forever, name="dashboard", daemon=True)
@@ -65,7 +78,7 @@ class Dashboard:
     def _render(self, html: str) -> bytes:
         html = html.replace("__FLOTILLA_TOKEN__", self.token)
         if self.key:
-            html = html.replace(LOCAL_ONLY, NETWORK)
+            html = html.replace(LOCAL_ONLY, {"public": PUBLIC, "tailnet": TAILNET}.get(self.access, NETWORK))
         return html.encode()
 
     @property

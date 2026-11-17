@@ -85,8 +85,8 @@ thousands of partial seeders add up to complete copies no one volunteer could ho
 - **Polite guest.** Hard disk budget and reserve, bandwidth shares, a monthly upload cap, a memory
   budget.
 - **Runs anywhere.** macOS, Linux, a Raspberry Pi, or Docker behind gluetun. No sudo.
-- **Local dashboard.** Traffic history, piece maps and the priority list on `127.0.0.1`, never exposed
-  unless you ask.
+- **Local dashboard.** Traffic history, piece maps and the priority list on `127.0.0.1`. Your home
+  network or Tailscale devices only if you choose, and never the internet unless you type it out.
 
 Flotilla is an independent open-source project. It isn't affiliated with or endorsed by Pirate Face or
 Hugging Face. It works with Pirate Face's torrents, trackers and API as they are today.
@@ -114,7 +114,8 @@ Open the dashboard any time:
 flotilla dashboard
 ```
 
-The dashboard (http://127.0.0.1:7421, only reachable from your own computer) shows:
+The dashboard (http://127.0.0.1:7421, only reachable from your own computer unless you choose
+otherwise; see [Who can reach the dashboard](#who-can-reach-the-dashboard)) shows:
 
 - how much of your space is used;
 - upload and download over time: the last hour up to all time, for every model or just one, with
@@ -316,6 +317,7 @@ Found a hole? See [SECURITY.md](SECURITY.md).
 | `flotilla add <link>` / `remove <link>` / `picks` | Prioritize a model by its Hugging Face or Pirate Face link, take it off, list your picks |
 | `flotilla dashboard` | Open the local dashboard |
 | `flotilla dashboard --serve --listen 0.0.0.0` | Serve the dashboard on your network for a node in a VPN container (see Behind gluetun) |
+| `flotilla dashboard --url` | The dashboard's address with its access key |
 | `flotilla status` | Text summary of the running node |
 | `flotilla hf connect` / `disconnect` / `status` | Connect a Hugging Face account (a read-only token) for [gated models](#gated-models), remove it, check it |
 | `flotilla history [--range 30d] [--model author/model] [--csv]` | Upload and download over time; `--csv` for a spreadsheet |
@@ -364,10 +366,11 @@ docker run -d --name flotilla --network container:gluetun --restart unless-stopp
   --memory 3g --memory-swap 3g --log-opt max-size=10m --log-opt max-file=3 -v flotilla:/root \
   python:3.13-slim sh -c "pip install -q --no-cache-dir --disable-pip-version-check --root-user-action=ignore $F && exec flotilla run"
 
-# 3. Dashboard: outside gluetun, reachable from your network.
-docker run -d --name flotilla-dashboard --restart unless-stopped -p 7421:7421 \
+# 3. Dashboard: outside gluetun, reachable from your home network. Put this machine's own address on
+#    that network (here 192.168.1.20) in -p, not just the port: see "Who can reach the dashboard".
+docker run -d --name flotilla-dashboard --restart unless-stopped -p 192.168.1.20:7421:7421 \
   --log-opt max-size=10m --log-opt max-file=3 -v flotilla:/root \
-  python:3.13-slim sh -c "pip install -q --no-cache-dir --disable-pip-version-check --root-user-action=ignore $F && exec flotilla dashboard --serve --listen 0.0.0.0"
+  python:3.13-slim sh -c "pip install -q --no-cache-dir --disable-pip-version-check --root-user-action=ignore $F && exec flotilla dashboard --serve --listen 0.0.0.0 --access lan"
 docker logs flotilla-dashboard     # the address to open, with its access key
 ```
 
@@ -384,6 +387,28 @@ it, it needs an access key, included in the address `docker logs` shows. Open th
 your browser remembers it. `docker exec flotilla-dashboard flotilla dashboard --url` prints it again.
 The dashboard speaks plain HTTP, so the key is only as private as your network: keep it to your home
 network, and don't forward its port to the internet.
+
+### Who can reach the dashboard
+
+`flotilla init` asks, and keeps the answer as `access` under `[dashboard]` in your config:
+
+| Choice | Reachable from | How |
+|---|---|---|
+| `local` | this machine | `127.0.0.1`; elsewhere through `ssh -L 7421:localhost:7421 <this machine>` |
+| `lan` | your home or office network | offered only when this machine has an address on one |
+| `tailnet` | your Tailscale devices, anywhere | `tailscale serve --bg --https=7421 http://127.0.0.1:7421`, which adds HTTPS |
+| `public` | anyone on the internet | never the default; setup makes you type `public` |
+
+Anything but `local` needs the access key. Anything but `public` also turns away visitors from public
+internet addresses before answering, however they reached the port (a VPS, a router port forwarded by
+mistake): they don't even learn the address runs Flotilla. If you do make it public, put a proxy with
+HTTPS and a login in front of it; a proxy on the same machine works with any choice.
+
+With Docker, setup publishes the dashboard's port only where you chose: `127.0.0.1` for `local` and
+`tailnet`, your home-network address for `lan`, every address only for `public`. Publishing every
+address (`-p 7421:7421`) isn't the same as `lan`: Docker also accepts IPv6 there and hands those
+connections to the container from its own private address, past the check above, and Docker's
+published ports skip firewalls like `ufw`.
 Without the dashboard, `docker exec flotilla flotilla status` and `flotilla history` work too.
 
 ### Memory

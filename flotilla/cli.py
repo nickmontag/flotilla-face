@@ -63,7 +63,7 @@ def parse_gb(raw: str) -> float:
     return v
 
 
-SETUP_STEPS = 6
+SETUP_STEPS = 7
 
 
 def cmd_init(args) -> int:
@@ -165,7 +165,14 @@ def cmd_init(args) -> int:
         hf_gb = max(0.0, _ask("Most to fetch a day, in GB, 0 for no limit", hf_gb, float))
         _setup_hf_account(path, bind)
 
-    ui.section(6, SETUP_STEPS, "Licenses")
+    ui.section(6, SETUP_STEPS, "Dashboard")
+    if docker:    # its container is outside the VPN; the host's setup asks about it
+        access = cfg.dashboard_access
+        ui.info("the dashboard runs in a container of its own; setup on the host asks who can reach it")
+    else:
+        access = _ask_access(cfg.dashboard_access, cfg.dashboard_port)
+
+    ui.section(7, SETUP_STEPS, "Licenses")
     licenses = list(cfg.licenses)
     try:
         from .netsafe import FetchError
@@ -194,6 +201,7 @@ def cmd_init(args) -> int:
     cfg.bind_interface = bind
     cfg.hf_fallback, cfg.hf_gb_per_day = hf, hf_gb
     cfg.reorient, cfg.churn_gb = reorient, churn
+    cfg.dashboard_access = access
 
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_config(cfg))
@@ -211,15 +219,77 @@ def cmd_init(args) -> int:
                     else "router port open (UPnP)" if pf else "your connection, no router port"),
         ("Hugging Face", (f"fetches pieces no peer has, up to {f'{hf_gb:g} GB a day' if hf_gb else 'any amount'}")
                          if hf else "off: pieces no peer has are waited for"),
+        ("Dashboard", _describe_access(access)),
     ])
+    if access == "public":
+        from .access import PUBLIC_WARNING
+
+        ui.caution(PUBLIC_WARNING[0].upper() + PUBLIC_WARNING[1:])
     if docker:     # the host starts the seeding and dashboard containers next
         return 0
     print(f"\n{ui.bold('Next')}")
     ui.table([("flotilla plan", "preview what this node would seed"),
               ("flotilla service install", "run it in the background"),
-              (f"http://127.0.0.1:{cfg.dashboard_port}", "the dashboard, once it runs")],
+              ("flotilla dashboard", "open the dashboard, once it runs"
+               + ("" if access == "local" else "; `flotilla dashboard --url` prints its address with the key"))],
              key_style=str, value_style=ui.dim)
     return 0
+
+
+def _describe_access(access: str) -> str:
+    from .access import describe
+
+    return describe(access) + ("" if access in ("local", "public") else ", with its access key")
+
+
+def _ask_access(default: str, port: int) -> str:
+    """Who can reach the dashboard. Public has to be asked for, and typed out."""
+    import socket
+
+    from .access import describe, serve_command, tailscale_name
+    from .netinfo import lan_address
+
+    lan, ts = lan_address(), tailscale_name()
+    options = [("local", "This machine only (from elsewhere, through an SSH tunnel)")]
+    if lan:
+        options.append(("lan", f"Devices on your home network, at {lan}"))
+    if ts:
+        options.append(("tailnet", f"Your Tailscale devices, from anywhere, at {ts}"))
+    options.append(("public", "Anyone on the internet (not recommended)"))
+    keys = [k for k, _ in options]
+    ui.note("The dashboard steers Flotilla. Anything beyond this machine needs its access key, and unless you "
+            "make it public, visitors from the internet are turned away even if they find its port.")
+    for i, (_, label) in enumerate(options, 1):
+        ui.info(f"{i}. {label}")
+    if default not in keys or default == "public":
+        default = "local"
+
+    def pick(raw: str) -> str:
+        raw = raw.strip().lower()
+        if raw in keys:
+            return raw
+        n = int(raw)
+        if not 1 <= n <= len(keys):
+            raise ValueError(raw)
+        return keys[n - 1]
+
+    choice = pick(str(_ask(f"Who can reach the dashboard, 1-{len(keys)}", keys.index(default) + 1, pick)))
+    if choice == "public":
+        ui.caution("Anyone who finds its address sees a Flotilla dashboard. Internet scanners will, and that ties "
+                   "this address to seeding these models. The page is plain HTTP, so the access key crosses the "
+                   "internet unencrypted the first time you open it.")
+        ui.note("To reach it from away from home, Tailscale or an SSH tunnel is safer. If you do make it public, "
+                "put a proxy with HTTPS and a login in front of it.")
+        if str(_ask("To make it public anyway, type public", "no", str)).strip().lower() != "public":
+            choice = default
+            ui.info(f"kept to {describe(choice)}")
+    if choice == "local":
+        ui.info(f"from another computer: ssh -L {port}:localhost:{port} {socket.gethostname()}, "
+                f"then open http://localhost:{port}")
+    elif choice == "tailnet":
+        ui.info(f"run this once to put it on your tailnet (it changes Tailscale's settings, and HTTPS must be on "
+                f"for your tailnet): {serve_command(port)}")
+    return choice
 
 
 def _in_setup_container() -> dict | None:
@@ -355,9 +425,15 @@ def _offer_vpn_container(found: list, cfg: Config) -> int | None:
                       dc.VOLUME, where)
         if volume.startswith("/"):
             ui.info(f"that drive has {human(shutil.disk_usage(volume).free)} free")
+    from .netinfo import lan_address
+
+    print(f"\n{ui.bold('Dashboard')}")
+    lan = lan_address()
+    earlier = (ours.get(dc.DASHBOARD) or node).access if ours else ""
+    access = _ask_access(earlier or ("lan" if lan else "local"), cfg.dashboard_port)
     setup = dc.setup_command(vpn, volume)
     start = [("seeding", dc.node_command(vpn, volume)),
-             ("dashboard", dc.dashboard_command(cfg.dashboard_port, volume))]
+             ("dashboard", dc.dashboard_command(cfg.dashboard_port, volume, access, lan))]
     if not sys.stdin.isatty():
         ui.note("Setup asks questions, so it needs a terminal. Run these, in order:")
         for cmd in ([["docker", "rm", "-f", *ours]] if ours else []) + [setup] + [c for _, c in start]:
@@ -389,16 +465,25 @@ def _offer_vpn_container(found: list, cfg: Config) -> int | None:
             print(f"    {dc.shell(cmd)}")
             return 1
     ui.done(f"Seeding through {vpn.name}" + (" with the new settings" if ours else ""))
-    from .netinfo import internet_route
+    from .access import address, key_in, serve_command, tailscale_name
 
-    route = internet_route()
     ui.info("waiting for the dashboard to start (it installs Flotilla first, about a minute)")
-    url = dc.dashboard_address(lan_address=route.address if route else None)
+    url = dc.dashboard_address()
+    key = key_in(url) if url else None
     print()
-    if url:
-        print(f"{ui.bold('Dashboard')}  {ui.accent(url)}")
-        ui.note("Open it from any device on your network; your browser remembers the key. Anyone with this "
-                "address can steer the node, so keep it to your home network.")
+    if key:
+        ts = tailscale_name() if access == "tailnet" else None
+        print(f"{ui.bold('Dashboard')}  {ui.accent(address(access, cfg.dashboard_port, key, lan, ts))}")
+        ui.note({"local": "Open it on this machine; your browser remembers the key.",
+                 "lan": "Open it from any device on your network; your browser remembers the key. Anyone with "
+                        "this address can steer the node, so keep it to yourself.",
+                 "tailnet": f"Open it from any of your Tailscale devices once you've run "
+                            f"`{serve_command(cfg.dashboard_port)}`; your browser remembers the key.",
+                 "public": "Anyone with this address can steer the node."}[access])
+        if access == "public":
+            from .access import PUBLIC_WARNING
+
+            ui.caution(PUBLIC_WARNING[0].upper() + PUBLIC_WARNING[1:])
     else:
         ui.caution(f"the dashboard hasn't started yet: docker logs {dc.DASHBOARD} shows its address once it has")
     print(f"\n{ui.bold('Later')}")
@@ -577,32 +662,48 @@ def cmd_picks(args) -> int:
 
 
 def cmd_dashboard(args) -> int:
+    import urllib.error
     import urllib.request
     import webbrowser
+
+    from .access import address, in_container, listen_for, tailscale_name
+    from .netinfo import lan_address
+    from .remote import dashboard_key
 
     cfg = load_config(Path(args.config))
     state_dir = Path(args.state)
     port = args.port or cfg.dashboard_port
-    on_network = args.listen not in ("127.0.0.1", "localhost", "::1")
-    if args.url:
-        from .remote import dashboard_key
+    access = args.access or cfg.dashboard_access
 
-        print(f"http://<this computer's address>:{port}/?key={dashboard_key(state_dir)}")
+    def names() -> tuple[str | None, str | None]:
+        if in_container():      # the container's own addresses mean nothing to your browser
+            return None, None
+        return (lan_address() if access == "lan" else None), (tailscale_name() if access == "tailnet" else None)
+
+    if args.url:
+        # In a container, or for a local dashboard asked for its network address: "<this computer's address>".
+        print(address("lan" if in_container() or access == "local" else access, port, dashboard_key(state_dir), *names()))
         return 0
     if args.serve:
         import signal
         import threading
 
         from .dashboard import Dashboard
-        from .remote import RemoteEngine, dashboard_key
+        from .remote import RemoteEngine
 
-        key = dashboard_key(state_dir) if on_network else None
-        dash = Dashboard(RemoteEngine(state_dir), port, host=args.listen, key=key)
+        on_network = args.listen not in ("127.0.0.1", "localhost", "::1")
+        key = dashboard_key(state_dir) if on_network or access != "local" else None
+        dash = Dashboard(RemoteEngine(state_dir), port, host=args.listen, key=key, access=access)
         dash.start()
+        if access == "public":
+            from .access import PUBLIC_WARNING
+
+            print(f"WARNING: {PUBLIC_WARNING}", file=sys.stderr, flush=True)
         if key:
             print(f"Flotilla dashboard listening on {args.listen}:{dash.port}, for the node whose state is in {state_dir}.")
             print(f"Open http://<this computer's address>:{dash.port}/?key={key}")
-            print("Anyone with that address can steer this node; `flotilla dashboard --url` prints it again.", flush=True)
+            print("Anyone with that address can steer this node; `flotilla dashboard --url` prints it again."
+                  + ("" if access == "public" else " Visitors from the public internet are turned away."), flush=True)
         else:
             print(f"Flotilla dashboard: {dash.url} (for the node whose state is in {state_dir})", flush=True)
         stop = threading.Event()
@@ -611,13 +712,20 @@ def cmd_dashboard(args) -> int:
         stop.wait()
         dash.stop()
         return 0
+    _, keyed = listen_for(cfg.dashboard_access)
     url = f"http://127.0.0.1:{cfg.dashboard_port}"
     try:
         urllib.request.urlopen(url + "/api/state", timeout=3).read()
+    except urllib.error.HTTPError:
+        pass                       # it answered (asking for its key): it's up
     except OSError:
         print(f"The dashboard isn't up: start Flotilla with `flotilla run` or `flotilla service install`. ({url})")
         return 1
-    print(url)
+    if keyed:
+        url += f"/?key={dashboard_key(state_dir)}"
+        print(address(cfg.dashboard_access, cfg.dashboard_port, dashboard_key(state_dir), *names()))
+    else:
+        print(url)
     if not args.no_open:
         webbrowser.open(url)
     return 0
@@ -1425,6 +1533,9 @@ def main(argv: list[str] | None = None) -> int:
                         "(then it needs its access key)")
     p.add_argument("--port", type=int, help="with --serve: port (default: the config's dashboard port)")
     p.add_argument("--url", action="store_true", help="print the network dashboard's address with its access key")
+    p.add_argument("--access", choices=["local", "lan", "tailnet", "public"],
+                   help="who may reach it (default: the config's dashboard.access); anything but public turns "
+                        "away visitors from public internet addresses")
     p = sub.add_parser("hf", help="connect a Hugging Face account (a read-only token) for gated models")
     p.add_argument("action", choices=["connect", "disconnect", "status"])
     p.add_argument("--from-file", metavar="PATH",

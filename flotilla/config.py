@@ -85,9 +85,13 @@ class Config:
     hf_fallback: bool = False
     hf_gb_per_day: float = 20.0
 
-    # Local web dashboard (http://127.0.0.1:7421). Only reachable from this machine.
+    # Web dashboard to watch and steer Flotilla, on http://127.0.0.1:7421.
     dashboard: bool = True
     dashboard_port: int = 7421
+    # Who can reach it: "local" (this machine), "lan" (your home network), "tailnet" (your Tailscale
+    # devices, through `tailscale serve`) or "public" (anyone on the internet). Anything but "local"
+    # needs the access key, and anything but "public" refuses visitors from public internet addresses.
+    dashboard_access: str = "local"
 
     # Each lets anyone copy and redistribute the weights. glm-5.3 and qwen-community-1.0 are MIT-style
     # with extra conditions only for very large commercial AI services.
@@ -145,7 +149,7 @@ _SECTIONS = {
     "feed": ["urls", "trusted_keys", "allowed_hosts", "local"],
     "net": ["allowed_hosts"],
     "tuning": ["refresh_hours", "probe_seconds", "spread", "hold_bonus", "min_hold_days"],
-    "dashboard": ["enabled", "port"],
+    "dashboard": ["enabled", "port", "access"],
 }
 
 
@@ -165,7 +169,8 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
                 continue
             attr = {("feed", "urls"): "feed_urls", ("feed", "allowed_hosts"): "feed_allowed_hosts",
                     ("feed", "local"): "local_feed", ("reorient", "every"): "reorient",
-                    ("dashboard", "enabled"): "dashboard", ("dashboard", "port"): "dashboard_port"}.get((section, k), k)
+                    ("dashboard", "enabled"): "dashboard", ("dashboard", "port"): "dashboard_port",
+                    ("dashboard", "access"): "dashboard_access"}.get((section, k), k)
             v = sec[k]
             if attr in ("folder", "local_feed"):
                 v = Path(os.path.expanduser(v))
@@ -180,6 +185,10 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
         raise ValueError("storage.budget_gb must be positive")
     if cfg.hf_gb_per_day < 0:
         raise ValueError("network.hf_gb_per_day can't be negative")
+    from .access import ACCESS_CHOICES
+
+    if cfg.dashboard_access not in ACCESS_CHOICES:
+        raise ValueError(f"dashboard.access must be one of: {', '.join(ACCESS_CHOICES)}")
     if cfg.reorient not in REORIENT_CHOICES:
         raise ValueError(f"reorient.every must be one of: {', '.join(REORIENT_CHOICES)}")
     if isinstance(cfg.churn_gb, bool) or not isinstance(cfg.churn_gb, (int, float)) or cfg.churn_gb < 0:
@@ -249,7 +258,8 @@ local = {_toml_str(cfg.local_feed)}   # your own changes to the list (`flotilla 
 
 [dashboard]
 enabled = {_toml_str(cfg.dashboard)}         # local web page to watch and steer Flotilla
-port = {_toml_str(cfg.dashboard_port)}           # http://127.0.0.1:<port>, this machine only
+port = {_toml_str(cfg.dashboard_port)}
+access = {_toml_str(cfg.dashboard_access)}     # local, lan (home network), tailnet, or public (anyone on the internet)
 
 [tuning]
 refresh_hours = {_toml_str(cfg.refresh_hours)}

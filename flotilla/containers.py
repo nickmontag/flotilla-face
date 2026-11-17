@@ -130,6 +130,7 @@ class Installed:
     running: bool
     network_mode: str          # the node's: "container:<the VPN container>"
     storage: str               # what's mounted at /root: a volume name or a host folder
+    access: str = ""           # the dashboard's: who it lets in (set by setup since dashboard access)
 
 
 def installed(names: tuple[str, ...] = (NODE, DASHBOARD)) -> dict[str, Installed]:
@@ -145,9 +146,11 @@ def installed(names: tuple[str, ...] = (NODE, DASHBOARD)) -> dict[str, Installed
         cmd = " ".join((d.get("Config") or {}).get("Cmd") or [])
         root = next((m for m in d.get("Mounts") or [] if m.get("Destination") == "/root"), {})
         storage = root.get("Name") if root.get("Type") == "volume" else root.get("Source", "")
+        access = re.search(r"--access (\w+)", cmd)
         found[name] = Installed(name, re.search(r"\bflotilla (run|dashboard)\b", cmd) is not None,
                                 bool((d.get("State") or {}).get("Running")),
-                                (d.get("HostConfig") or {}).get("NetworkMode", ""), storage or "")
+                                (d.get("HostConfig") or {}).get("NetworkMode", ""), storage or "",
+                                access.group(1) if access else "")
     return found
 
 
@@ -198,11 +201,23 @@ def node_command(vpn: VpnContainer, volume: str = VOLUME, memory: str = "3g") ->
             "sh", "-c", _pip_then("exec flotilla run")]
 
 
-def dashboard_command(port: int = 7421, volume: str = VOLUME) -> list[str]:
+def publish(access: str, port: int, lan: str | None) -> str:
+    """Docker's -p for the dashboard. Never every network unless it's public: Docker hands IPv6
+    visitors to the container from its own private address, which would get them past the
+    dashboard's check for public addresses."""
+    if access == "public":
+        return f"{port}:{port}"
+    if access == "lan" and lan:
+        return f"{lan}:{port}:{port}"
+    return f"127.0.0.1:{port}:{port}"       # local, and tailnet (`tailscale serve` on this machine)
+
+
+def dashboard_command(port: int = 7421, volume: str = VOLUME, access: str = "lan",
+                      lan: str | None = None) -> list[str]:
     """The dashboard, outside the VPN so your own network can reach it; it shares only the state folder."""
-    return ["docker", "run", "-d", "--name", DASHBOARD, "--restart", "unless-stopped", "-p", f"{port}:{port}",
-            *_LOGS, "-v", f"{volume}:/root", IMAGE,
-            "sh", "-c", _pip_then(f"exec flotilla dashboard --serve --listen 0.0.0.0 --port {port}")]
+    return ["docker", "run", "-d", "--name", DASHBOARD, "--restart", "unless-stopped",
+            "-p", publish(access, port, lan), *_LOGS, "-v", f"{volume}:/root", IMAGE,
+            "sh", "-c", _pip_then(f"exec flotilla dashboard --serve --listen 0.0.0.0 --port {port} --access {access}")]
 
 
 def shell(cmd: list[str]) -> str:

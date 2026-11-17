@@ -109,7 +109,7 @@ def test_container_commands_use_the_vpn_network():
     for cmd in (setup, node):
         assert cmd[cmd.index("--network") + 1] == "container:gluetun_seed"
         assert cmd[cmd.index("-v") + 1] == "/srv/flotilla:/root"
-    assert "--network" not in dash and "7421:7421" in dash
+    assert "--network" not in dash and "127.0.0.1:7421:7421" in dash     # no LAN address given: this machine only
     assert "flotilla init" in setup[-1] and "exec flotilla run" in node[-1]
 
 
@@ -174,10 +174,12 @@ def test_setup_again_replaces_the_earlier_containers(tmp_path, monkeypatch, caps
     events = []
     monkeypatch.setattr(containers, "remove", lambda names: events.append(("rm", *names)) or True)
     monkeypatch.setattr(containers, "run", lambda cmd, interactive=False: events.append(("run", *cmd)) or 0)
+    monkeypatch.setattr(netinfo, "lan_address", lambda: "10.0.0.206")
     seen = _answers(monkeypatch, [])
     assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 0
     out = capsys.readouterr().out
     assert "Flotilla already runs in Docker: flotilla (running) on gluetun's network" in out
+    assert "10.0.0.206:7421:7421" in events[3] and "--access lan" in events[3][-1]   # home network by default
     assert not any("Folder for Flotilla's files" in q for q in seen)        # keeps the earlier folder
     assert any("(gluetun)" in q for q in seen if "Which one" in q)          # and the earlier VPN by default
     kinds = [e[0] for e in events]

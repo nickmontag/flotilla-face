@@ -184,3 +184,25 @@ def other_vpns(current: Route | None) -> list[Route]:
     skip = current.iface if current else None
     return [r for r in _interfaces()
             if r.iface != skip and r.looks_like_vpn and carries_internet(r)]
+
+
+# Interfaces that hold private addresses but aren't your network: containers, VMs, Apple's own links.
+_NOT_LAN = re.compile(r"^(lo\d*|docker\d*|br-\w+|veth\w*|virbr\d*|cni\d*|flannel[\w.]*|podman\d*|lxc\w*|"
+                      r"lxdbr\d*|vmnet\d*|bridge\d+|awdl\d*|llw\d*|anpi\d*|ap\d+)$")
+
+
+def lan_address() -> str | None:
+    """This machine's address on your home or office network, if it has one (a private IPv4 address
+    that isn't a VPN, a mesh network, or a container or VM bridge)."""
+    import ipaddress
+
+    def lan(r: Route) -> bool:
+        if not r.address or _NOT_LAN.match(r.iface) or _MESH_IFACE.match(r.iface) or r.looks_like_vpn:
+            return False
+        a = ipaddress.ip_address(r.address)
+        return a.is_private and not a.is_loopback and not a.is_link_local and not _CGNAT.match(r.address)
+
+    found = [r for r in _interfaces() if lan(r)]
+    route = internet_route()
+    best = next((r for r in found if route and r.iface == route.iface), found[0] if found else None)
+    return best.address if best else None

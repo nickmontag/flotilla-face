@@ -1198,6 +1198,15 @@ class Engine:
     ACTIONS = ("settings", "pause", "resume", "replan", "reorient", "drop", "add", "remove", "order", "allot", "skip",
                "unskip", "hf_disconnect")
 
+    @staticmethod
+    def _dashboard_names(access: str) -> tuple[str | None, str | None]:
+        from .access import in_container, tailscale_name
+        from .netinfo import lan_address
+
+        if in_container():
+            return None, None
+        return (lan_address() if access == "lan" else None), (tailscale_name() if access == "tailnet" else None)
+
     def _bind_up(self) -> bool | None:
         if not self.cfg.bind_interface:
             return None
@@ -1752,10 +1761,24 @@ class Engine:
         if self.cfg.dashboard:
             from .dashboard import Dashboard
 
+            from .access import address, describe, listen_for
+            from .remote import dashboard_key
+
+            access = self.cfg.dashboard_access
+            host, keyed = listen_for(access)
             try:
-                self.dashboard = Dashboard(self, self.cfg.dashboard_port)
+                key = dashboard_key(self.state.dir) if keyed else None
+                self.dashboard = Dashboard(self, self.cfg.dashboard_port, host=host, key=key, access=access)
                 self.dashboard.start()
-                self.log(f"dashboard: {self.dashboard.url}")
+                if access == "public":
+                    from .access import PUBLIC_WARNING
+
+                    self.log(f"WARNING: {PUBLIC_WARNING}")
+                if key:   # the key stays out of the log; `flotilla dashboard --url` prints it
+                    self.log(f"dashboard: {address(access, self.dashboard.port, None, *self._dashboard_names(access))}"
+                             f" ({describe(access)}; `flotilla dashboard --url` prints it with its access key)")
+                else:
+                    self.log(f"dashboard: {self.dashboard.url}")
             except OSError as e:
                 self.log(f"dashboard not started (port {self.cfg.dashboard_port}: {e})")
         self.resume_holdings()

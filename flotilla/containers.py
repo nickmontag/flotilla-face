@@ -302,10 +302,18 @@ def replace(old: Installed, image: str) -> None:
     cmd = run_args(old, image)
     keep = f"{old.name}-before-update"
     _docker("rm", "-f", keep)
-    for step in (("rename", old.name, keep), ("stop", keep)):
-        r = _docker(*step)
-        if not r or r.returncode:
-            raise DockerError(f"docker {' '.join(step)} failed: {(r.stderr if r else '').strip()}")
+    r = _docker("rename", old.name, keep)
+    if not r or r.returncode:
+        raise DockerError(f"couldn't rename {old.name} to make way for the new one: {(r.stderr if r else '').strip()}")
+    # Up to a minute for Flotilla to save its state and exit; Docker's own wait, then its kill, inside that.
+    try:
+        r = subprocess.run(["docker", "stop", "-t", "60", keep], capture_output=True, text=True, timeout=120)
+    except (OSError, subprocess.SubprocessError) as e:
+        r = subprocess.CompletedProcess([], 1, "", str(e))
+    if r.returncode:
+        _docker("rename", keep, old.name)
+        _docker("start", old.name)
+        raise DockerError(f"couldn't stop {old.name} ({(r.stderr or '').strip()}); it's running as before")
     if run(cmd) != 0:
         _docker("rm", "-f", old.name)
         _docker("rename", keep, old.name)

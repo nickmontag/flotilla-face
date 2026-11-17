@@ -19,5 +19,6 @@ def _no_host_vpn_lookups(monkeypatch):
     monkeypatch.delenv(access.ACCESS_ENV, raising=False)
     monkeypatch.delenv(access.URL_ENV, raising=False)
     monkeypatch.setattr(containers, "release_image", lambda: (TEST_IMAGE, "0.2.0"))
+    monkeypatch.setattr(containers, "_docker", lambda *a: None)     # never the machine's real Docker
     yield
     netsafe.pin("")

@@ -1209,9 +1209,13 @@ def _uv() -> str | None:
 def _install_wheel(kind: str, wheel: Path) -> bool:
     import subprocess
 
+    import importlib.util
+
     if kind == "uv-tool":
         cmd = [_uv() or "uv", "tool", "install", "--force", "--python",
                f"{sys.version_info.major}.{sys.version_info.minor}", str(wheel)]
+    elif importlib.util.find_spec("pip") is None and _uv():     # environments uv made have no pip
+        cmd = [_uv(), "pip", "install", "--python", sys.executable, "--upgrade", str(wheel)]
     else:
         cmd = [sys.executable, "-m", "pip", "install", "--upgrade", "--disable-pip-version-check", str(wheel)]
     ui.info("installing: " + " ".join(cmd[:4]) + " …")
@@ -1262,8 +1266,12 @@ def cmd_update(args) -> int:
         ui.info("run `flotilla update` to install it")
         return 0
     print()
-    if not args.yes and not _yes("Update now", True):
-        return 0
+    try:
+        if not args.yes and not _yes("Update now", True):
+            return 0
+    except EOFError:            # no one to ask (input closed): don't update unasked
+        print("\nNot updating: no answer. Run `flotilla update --yes` to update without being asked.")
+        return 1
 
     failed = False
     if native:
@@ -1278,6 +1286,11 @@ def cmd_update(args) -> int:
             if service.installed():
                 ok = service.execute(service.restart_plan(), dry_run=False, say=ui.info)
                 failed |= not ok
+            if stale:   # the containers are updated by the version just installed, not this one
+                import subprocess
+
+                r = subprocess.run([*service.executable(), "update", "--yes"])
+                return 1 if failed or r.returncode else 0
         else:
             failed = True
     if stale:

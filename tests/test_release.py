@@ -244,20 +244,41 @@ def test_recreated_with_the_same_settings_on_the_new_image(monkeypatch):
     assert "3221225472" in node and "flotilla:/root" in node and node[-2:] == [new, "run"]
 
 
+def _stop(monkeypatch, calls, rc=0):
+    def run(cmd, **kw):
+        calls.append(tuple(cmd[1:]))
+        return subprocess.CompletedProcess(cmd, rc, "", "timed out" if rc else "")
+
+    monkeypatch.setattr(containers.subprocess, "run", run)
+
+
 def test_a_new_container_that_wont_start_puts_the_old_one_back(monkeypatch):
     calls = []
     monkeypatch.setattr(containers, "_docker", lambda *a: calls.append(a) or subprocess.CompletedProcess(a, 0, "", ""))
+    _stop(monkeypatch, calls)
     monkeypatch.setattr(containers, "run", lambda cmd, interactive=False: 125)
     with pytest.raises(containers.DockerError, match="old one is running again"):
         containers.replace(_from(PIP_DASHBOARD), IMG)
     keep = "flotilla-dashboard-before-update"
-    assert ("rename", "flotilla-dashboard", keep) in calls and ("stop", keep) in calls
+    assert ("rename", "flotilla-dashboard", keep) in calls and ("stop", "-t", "60", keep) in calls
+    assert calls[-2:] == [("rename", keep, "flotilla-dashboard"), ("start", "flotilla-dashboard")]
+
+
+def test_an_old_container_that_wont_stop_keeps_running_under_its_name(monkeypatch):
+    calls = []
+    monkeypatch.setattr(containers, "_docker", lambda *a: calls.append(a) or subprocess.CompletedProcess(a, 0, "", ""))
+    _stop(monkeypatch, calls, rc=1)
+    monkeypatch.setattr(containers, "run", lambda *a, **k: pytest.fail("started a new one"))
+    with pytest.raises(containers.DockerError, match="running as before"):
+        containers.replace(_from(PIP_DASHBOARD), IMG)
+    keep = "flotilla-dashboard-before-update"
     assert calls[-2:] == [("rename", keep, "flotilla-dashboard"), ("start", "flotilla-dashboard")]
 
 
 def test_a_new_container_that_starts_replaces_the_old_one(monkeypatch):
     calls = []
     monkeypatch.setattr(containers, "_docker", lambda *a: calls.append(a) or subprocess.CompletedProcess(a, 0, "", ""))
+    _stop(monkeypatch, calls)
     monkeypatch.setattr(containers, "run", lambda cmd, interactive=False: calls.append(("run",)) or 0)
     containers.replace(_from(PIP_DASHBOARD), IMG)
     assert calls[-2:] == [("run",), ("rm", "-f", "flotilla-dashboard-before-update")]
@@ -350,3 +371,34 @@ def test_editor_release_refuses_a_wrong_wheel(tmp_path, key, monkeypatch):
     with pytest.raises(ValueError, match="expected the 0.9.0 wheel"):
         cli.cmd_editor(argparse.Namespace(file="v0.9.0", secret=str(secret), dry_run=False, action="release",
                                           config="x"))
+
+
+def test_no_answer_means_no_update(updating, monkeypatch, capsys):
+    def closed(prompt=""):
+        raise EOFError
+
+    monkeypatch.setattr("builtins.input", closed)
+    assert cli.cmd_update(argparse.Namespace(check=False, yes=False)) == 1
+    assert updating == [] and "--yes" in capsys.readouterr().out
+
+
+def test_an_environment_without_pip_installs_with_uv(monkeypatch, tmp_path):
+    import importlib.util
+
+    ran = []
+    monkeypatch.setattr(importlib.util, "find_spec", lambda name: None if name == "pip" else object())
+    monkeypatch.setattr(cli, "_uv", lambda: "/usr/local/bin/uv")
+    monkeypatch.setattr(subprocess, "run", lambda cmd, **kw: ran.append(cmd) or subprocess.CompletedProcess(cmd, 0, "", ""))
+    assert cli._install_wheel("pip", tmp_path / "w.whl")
+    assert ran[0][:3] == ["/usr/local/bin/uv", "pip", "install"]
+
+
+def test_containers_are_updated_by_the_version_just_installed(updating, monkeypatch):
+    monkeypatch.setattr(cli.shutil, "which", lambda n: "/usr/bin/docker" if n == "docker" else None)
+    monkeypatch.setattr(containers, "installed", lambda: {"flotilla": _installed("flotilla", "old", ["run"])})
+    monkeypatch.setattr(service, "executable", lambda: ["/home/u/.local/bin/flotilla"])
+    ran = []
+    monkeypatch.setattr(subprocess, "run", lambda cmd, **kw: ran.append(cmd) or subprocess.CompletedProcess(cmd, 0))
+    assert cli.cmd_update(argparse.Namespace(check=False, yes=True)) == 0
+    assert ran == [["/home/u/.local/bin/flotilla", "update", "--yes"]]
+    assert not any(c[0] in ("pull", "replace") for c in updating)          # not by this, older, copy

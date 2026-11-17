@@ -132,7 +132,7 @@ def test_setup_moves_into_the_vpn_container(tmp_path, monkeypatch):
              containers.VpnContainer("gluetun", "qmcgaw/gluetun", "healthy", ["transmission"])]
     monkeypatch.setattr(netinfo, "internet_route", lambda: netinfo.Route("ens18", "10.0.0.206"))
     monkeypatch.setattr(cli, "_vpn_containers", lambda: found)
-    monkeypatch.setattr(containers, "existing", lambda: [])
+    monkeypatch.setattr(containers, "installed", lambda: {})
     monkeypatch.setattr(cli.sys.stdin, "isatty", lambda: True, raising=False)
     ran = []
     monkeypatch.setattr(containers, "run", lambda cmd, interactive=False: ran.append(cmd) or 0)
@@ -144,16 +144,101 @@ def test_setup_moves_into_the_vpn_container(tmp_path, monkeypatch):
     assert any("flotilla-dashboard" in c for c in ran) and len(ran) == 3
 
 
-def test_setup_prints_commands_when_names_are_taken(tmp_path, monkeypatch, capsys):
+def test_setup_stops_on_someone_elses_container_name(tmp_path, monkeypatch, capsys):
     found = [containers.VpnContainer("gluetun", "qmcgaw/gluetun")]
     monkeypatch.setattr(netinfo, "internet_route", lambda: netinfo.Route("ens18", "10.0.0.206"))
     monkeypatch.setattr(cli, "_vpn_containers", lambda: found)
-    monkeypatch.setattr(containers, "existing", lambda: ["flotilla"])
+    monkeypatch.setattr(containers, "installed",
+                        lambda: {"flotilla": containers.Installed("flotilla", False, True, "bridge", "")})
     monkeypatch.setattr(containers, "run", lambda *a, **k: pytest.fail("ran docker"))
     _answers(monkeypatch, [])
     assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 1
     out = capsys.readouterr().out
-    assert "docker rm -f flotilla" in out and "--network container:gluetun" in out
+    assert "isn't Flotilla's" in out and "docker rename flotilla flotilla-old" in out
+    assert "Run these" not in out
+
+
+def test_setup_again_replaces_the_earlier_containers(tmp_path, monkeypatch, capsys):
+    found = [containers.VpnContainer("gluetun_seed", "qmcgaw/gluetun", "healthy", ["transmission_seed"], "f" * 64),
+             containers.VpnContainer("gluetun", "qmcgaw/gluetun", "healthy", ["flotilla", "transmission"], "d" * 64)]
+    earlier = {"flotilla": containers.Installed("flotilla", True, True, "container:" + "d" * 64,
+                                                "/mnt/faststorage/apps/flotilla"),
+               "flotilla-dashboard": containers.Installed("flotilla-dashboard", True, True, "bridge",
+                                                          "/mnt/faststorage/apps/flotilla")}
+    monkeypatch.setattr(netinfo, "internet_route", lambda: netinfo.Route("ens18", "10.0.0.206"))
+    monkeypatch.setattr(cli, "_vpn_containers", lambda: found)
+    monkeypatch.setattr(containers, "installed", lambda: earlier)
+    monkeypatch.setattr(cli.sys.stdin, "isatty", lambda: True, raising=False)
+    events = []
+    monkeypatch.setattr(containers, "remove", lambda names: events.append(("rm", *names)) or True)
+    monkeypatch.setattr(containers, "run", lambda cmd, interactive=False: events.append(("run", *cmd)) or 0)
+    seen = _answers(monkeypatch, [])
+    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 0
+    out = capsys.readouterr().out
+    assert "Flotilla already runs in Docker: flotilla (running) on gluetun's network" in out
+    assert not any("Folder for Flotilla's files" in q for q in seen)        # keeps the earlier folder
+    assert any("(gluetun)" in q for q in seen if "Which one" in q)          # and the earlier VPN by default
+    kinds = [e[0] for e in events]
+    assert kinds == ["run", "rm", "run", "run"]                             # setup, then replace both
+    assert events[1] == ("rm", "flotilla", "flotilla-dashboard")
+    for e in (events[0], events[2]):
+        assert "container:gluetun" in e and "/mnt/faststorage/apps/flotilla:/root" in e
+
+
+def test_setup_again_declined_changes_nothing(tmp_path, monkeypatch):
+    found = [containers.VpnContainer("gluetun", "qmcgaw/gluetun", "healthy", [], "d" * 64)]
+    earlier = {"flotilla": containers.Installed("flotilla", True, True, "container:" + "d" * 64, "flotilla")}
+    monkeypatch.setattr(netinfo, "internet_route", lambda: netinfo.Route("ens18", "10.0.0.206"))
+    monkeypatch.setattr(cli, "_vpn_containers", lambda: found)
+    monkeypatch.setattr(containers, "installed", lambda: earlier)
+    monkeypatch.setattr(containers, "run", lambda *a, **k: pytest.fail("ran docker"))
+    monkeypatch.setattr(containers, "remove", lambda *a, **k: pytest.fail("removed containers"))
+    _answers(monkeypatch, [("Set it up again", "n")])
+    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 0
+
+
+def test_installed_reads_an_earlier_setup(monkeypatch):
+    docs = [{"Name": "/flotilla", "Config": {"Cmd": ["sh", "-c", "pip install x && exec flotilla run"]},
+             "State": {"Running": True}, "HostConfig": {"NetworkMode": "container:abc123abc123"},
+             "Mounts": [{"Type": "bind", "Source": "/mnt/faststorage/apps/flotilla", "Destination": "/root"}]},
+            {"Name": "/flotilla-dashboard", "Config": {"Cmd": ["nginx"]}, "State": {"Running": False},
+             "HostConfig": {"NetworkMode": "bridge"},
+             "Mounts": [{"Type": "volume", "Name": "web", "Destination": "/root"}]}]
+    monkeypatch.setattr(containers, "_docker",
+                        lambda *a: subprocess.CompletedProcess(a, 1, json.dumps(docs), "No such object"))
+    got = containers.installed()
+    assert got["flotilla"].ours and got["flotilla"].running and got["flotilla"].storage == "/mnt/faststorage/apps/flotilla"
+    assert not got["flotilla-dashboard"].ours and got["flotilla-dashboard"].storage == "web"
+    vpn = containers.VpnContainer("gluetun", "qmcgaw/gluetun", id="abc123abc123" + "0" * 52)
+    assert vpn.is_target("container:abc123abc123") and vpn.is_target("container:gluetun")
+    assert not vpn.is_target("container:other") and not vpn.is_target("bridge")
+
+
+def test_setup_inside_the_container_skips_what_the_host_chose(tmp_path, monkeypatch, capsys):
+    _no_licenses(monkeypatch)
+    monkeypatch.setenv("HOME", str(tmp_path))
+    monkeypatch.setenv(containers.STORAGE_ENV, "/mnt/faststorage/apps/flotilla")
+    monkeypatch.setenv(containers.VPN_ENV, "gluetun")
+    monkeypatch.setattr(netinfo, "internet_route", lambda: netinfo.Route("tun0", "10.8.0.2"))
+    monkeypatch.setattr(cli.Path, "home", classmethod(lambda cls: tmp_path))
+    from flotilla.config import Config
+
+    monkeypatch.setattr(cli, "Config", lambda: Config(folder=tmp_path / "flotilla-seeds"))
+    seen = _answers(monkeypatch, [])
+    path = tmp_path / ".config" / "flotilla" / "config.toml"
+    assert cli.cmd_init(argparse.Namespace(config=str(path))) == 0
+    out = capsys.readouterr().out
+    assert not any("Folder for seeded files" in q for q in seen)
+    assert "seeded files go in /mnt/faststorage/apps/flotilla/flotilla-seeds" in out
+    assert "Saved /mnt/faststorage/apps/flotilla/.config/flotilla/config.toml" in out
+    assert "service install" not in out
+
+
+def test_container_pip_is_quiet():
+    vpn = containers.VpnContainer("gluetun", "qmcgaw/gluetun")
+    cmd = containers.setup_command(vpn, "flotilla")
+    assert "--no-cache-dir" in cmd[-1] and "--disable-pip-version-check" in cmd[-1]
+    assert f"{containers.STORAGE_ENV}=flotilla" in cmd and f"{containers.VPN_ENV}=gluetun" in cmd
 
 
 def _no_licenses(monkeypatch):
@@ -210,7 +295,7 @@ def test_setup_tells_the_installer_where_flotilla_went(tmp_path, monkeypatch):
     monkeypatch.setenv("FLOTILLA_SETUP_RESULT", str(result))
     monkeypatch.setattr(netinfo, "internet_route", lambda: netinfo.Route("ens18", "10.0.0.206"))
     monkeypatch.setattr(cli, "_vpn_containers", lambda: [containers.VpnContainer("gluetun", "qmcgaw/gluetun")])
-    monkeypatch.setattr(containers, "existing", lambda: [])
+    monkeypatch.setattr(containers, "installed", lambda: {})
     monkeypatch.setattr(cli.sys.stdin, "isatty", lambda: True, raising=False)
     monkeypatch.setattr(containers, "run", lambda cmd, interactive=False: 0)
 

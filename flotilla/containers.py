@@ -19,6 +19,8 @@ SOURCE = "https://github.com/nickmontag/flotilla-face/archive/main.tar.gz"
 IMAGE = "python:3.13-slim"
 VOLUME = "flotilla"
 NODE, DASHBOARD = "flotilla", "flotilla-dashboard"
+# Set on the setup container, so `flotilla init` inside knows the host already chose where files go.
+STORAGE_ENV, VPN_ENV = "FLOTILLA_DOCKER_STORAGE", "FLOTILLA_DOCKER_VPN"
 
 # Images that are a VPN client for the containers sharing their network. Ones with "vpn" in the name
 # usually are too (binhex/arch-qbittorrentvpn, haugene/transmission-openvpn), except VPN *servers*.
@@ -36,10 +38,18 @@ class VpnContainer:
     image: str
     health: str = ""                       # "healthy", "unhealthy", "starting", or "" (no healthcheck)
     shared_by: list[str] = field(default_factory=list)
+    id: str = ""
 
     @property
     def network(self) -> str:
         return f"container:{self.name}"
+
+    def is_target(self, network_mode: str) -> bool:
+        """Is a container with this NetworkMode ("container:<id or name>") on our network?"""
+        if not network_mode.startswith("container:"):
+            return False
+        t = network_mode.split(":", 1)[1]
+        return t == self.name or bool(self.id and len(t) >= 12 and self.id.startswith(t))
 
 
 def _repo(image: str) -> str:
@@ -105,27 +115,58 @@ def vpn_containers() -> list[VpnContainer]:
             cid = by_key.get(target) or next((c for c in by_key.values() if c.startswith(target)), None)
             if cid:
                 users.setdefault(cid, []).append(name)
-    found = [VpnContainer(name, image, health, sorted(users.get(cid, [])))
+    found = [VpnContainer(name, image, health, sorted(users.get(cid, [])), cid)
              for cid, name, image, _, health in rows
              if is_vpn_client(image, name, bool(users.get(cid)))]
     found.sort(key=lambda c: (c.health == "unhealthy", -len(c.shared_by), c.name))
     return found
 
 
-def existing(names: tuple[str, ...] = (NODE, DASHBOARD)) -> list[str]:
-    """Which of these container names are already taken (running or not)."""
-    out = _docker("ps", "-a", "--format", "{{.Names}}")
-    taken = set(out.stdout.split()) if out and out.returncode == 0 else set()
-    return [n for n in names if n in taken]
+@dataclass
+class Installed:
+    """A container already using one of Flotilla's container names."""
+    name: str
+    ours: bool                 # Flotilla's own node or dashboard (a previous setup)
+    running: bool
+    network_mode: str          # the node's: "container:<the VPN container>"
+    storage: str               # what's mounted at /root: a volume name or a host folder
+
+
+def installed(names: tuple[str, ...] = (NODE, DASHBOARD)) -> dict[str, Installed]:
+    """The containers already using Flotilla's names, from an earlier setup or not."""
+    out = _docker("inspect", *names)          # exits 1 when some don't exist, still lists the others
+    try:
+        docs = json.loads(out.stdout) if out and out.stdout.strip() else []
+    except ValueError:
+        return {}
+    found = {}
+    for d in docs:
+        name = d.get("Name", "").lstrip("/")
+        cmd = " ".join((d.get("Config") or {}).get("Cmd") or [])
+        root = next((m for m in d.get("Mounts") or [] if m.get("Destination") == "/root"), {})
+        storage = root.get("Name") if root.get("Type") == "volume" else root.get("Source", "")
+        found[name] = Installed(name, re.search(r"\bflotilla (run|dashboard)\b", cmd) is not None,
+                                bool((d.get("State") or {}).get("Running")),
+                                (d.get("HostConfig") or {}).get("NetworkMode", ""), storage or "")
+    return found
+
+
+def remove(names: list[str]) -> bool:
+    """Remove containers (a previous setup's, to recreate them). Their files stay in the volume or folder."""
+    out = _docker("rm", "-f", *names)
+    return bool(out) and out.returncode == 0
 
 
 def _pip_then(cmd: str) -> str:
-    return f"pip install -q --root-user-action=ignore {SOURCE} && {cmd}"
+    # No pip cache: in a host folder root doesn't own pip can't use one and warns, and each
+    # container starts fresh anyway. No version check either: the pip in the image is fine.
+    return f"pip install -q --no-cache-dir --disable-pip-version-check --root-user-action=ignore {SOURCE} && {cmd}"
 
 
 def setup_command(vpn: VpnContainer, volume: str = VOLUME) -> list[str]:
     """`flotilla init` inside the VPN container's network: it sees the tunnel as the default route."""
-    return ["docker", "run", "-it", "--rm", "--network", vpn.network, "-v", f"{volume}:/root", IMAGE,
+    return ["docker", "run", "-it", "--rm", "--network", vpn.network, "-v", f"{volume}:/root",
+            "-e", f"{STORAGE_ENV}={volume}", "-e", f"{VPN_ENV}={vpn.name}", IMAGE,
             "sh", "-c", _pip_then("flotilla init")]
 
 

@@ -69,7 +69,8 @@ SETUP_STEPS = 6
 def cmd_init(args) -> int:
     path = Path(args.config)
     cfg = load_config(path) if path.exists() else Config()
-    ui.title(f"Flotilla {__version__} setup", f"writes {path}")
+    docker = _in_setup_container()
+    ui.title(f"Flotilla {__version__} setup", f"writes {_host_path(path, docker)}")
     ui.note("Seeding shares files with strangers: peers in each swarm can see your IP address, and seeding "
             "uses disk space and upload bandwidth. Press Enter to keep a default. You can change any of this "
             "later in the dashboard, or stop at any time.")
@@ -87,7 +88,11 @@ def cmd_init(args) -> int:
                 return handled
 
     ui.section(1, SETUP_STEPS, "Storage")
-    folder = Path(_ask("Folder for seeded files", str(cfg.folder))).expanduser()
+    if docker:     # the folder was chosen on the host; seeded files go in it
+        folder = cfg.folder
+        ui.info(f"seeded files go in {_host_path(folder, docker)}")
+    else:
+        folder = Path(_ask("Folder for seeded files", str(cfg.folder))).expanduser()
     folder.mkdir(parents=True, exist_ok=True)
     du = shutil.disk_usage(folder)
     ui.info(f"that drive has {human(du.free)} free of {human(du.total)}")
@@ -194,10 +199,10 @@ def cmd_init(args) -> int:
     path.write_text(render_config(cfg))
     _setup_result("here")
     print()
-    ui.done(f"Saved {path}")
+    ui.done(f"Saved {_host_path(path, docker)}")
     fill = duration(budget * GB / cfg.download_bps)
     ui.table([
-        ("Space", f"{budget:g} GB in {folder}, keeping {reserve:g} GB free"),
+        ("Space", f"{budget:g} GB in {_host_path(folder, docker)}, keeping {reserve:g} GB free"),
         ("Upload", f"{up:g} Mbit/s × {cfg.upload_share:.0%}, up to {cfg.max_torrents} swarms at once"
                    + (f", {cap:g} GB a month" if cap else "")),
         ("Filling", f"about {fill} at {down:g} Mbit/s × {cfg.download_share:.0%} (rare models take longer)"),
@@ -207,12 +212,38 @@ def cmd_init(args) -> int:
         ("Hugging Face", (f"fetches pieces no peer has, up to {f'{hf_gb:g} GB a day' if hf_gb else 'any amount'}")
                          if hf else "off: pieces no peer has are waited for"),
     ])
+    if docker:     # the host starts the seeding and dashboard containers next
+        return 0
     print(f"\n{ui.bold('Next')}")
     ui.table([("flotilla plan", "preview what this node would seed"),
               ("flotilla service install", "run it in the background"),
               (f"http://127.0.0.1:{cfg.dashboard_port}", "the dashboard, once it runs")],
              key_style=str, value_style=ui.dim)
     return 0
+
+
+def _in_setup_container() -> dict | None:
+    """When the host's setup runs us in a VPN container's network: where it keeps our files there
+    (a Docker volume name or a folder on the host) and which VPN container it is."""
+    import os
+    from . import containers
+
+    storage = os.environ.get(containers.STORAGE_ENV)
+    return {"storage": storage, "vpn": os.environ.get(containers.VPN_ENV, "")} if storage else None
+
+
+def _host_path(p: Path, docker: dict | None) -> str:
+    """A path inside the setup container as the host sees it: /root is the host's chosen folder."""
+    if not docker:
+        return str(p)
+    try:
+        rel = Path(p).relative_to(Path.home())
+    except ValueError:
+        return str(p)
+    storage = docker["storage"]
+    if storage.startswith("/"):
+        return str(Path(storage) / rel)
+    return f"{rel} in the {storage} Docker volume"
 
 
 def _setup_result(where: str) -> None:
@@ -248,21 +279,46 @@ def _split_vpns(route) -> list:
 
 
 def _offer_vpn_container(found: list, cfg: Config) -> int | None:
-    """Offer to set Flotilla up inside a VPN container's network instead of on this machine. Returns
-    init's exit code when it did (or printed how to), None to go on with setup here."""
+    """Offer to set Flotilla up inside a VPN container's network instead of on this machine, or to set
+    up again a node an earlier setup put there. Returns init's exit code when it did (or printed how
+    to), None to go on with setup here."""
     from . import containers as dc
+
+    have = dc.installed()
+    foreign = [n for n, e in have.items() if not e.ours]
+    ours = {n: e for n, e in have.items() if e.ours}
+    node = ours.get(dc.NODE)
+    previous = next((c for c in found if node and c.is_target(node.network_mode)), None)
 
     print(f"\n{ui.bold('Found a VPN container' if len(found) == 1 else f'Found {len(found)} VPN containers')}")
     for i, c in enumerate(found, 1):
-        users = f"; {', '.join(c.shared_by)} use{'s' if len(c.shared_by) == 1 else ''} its network" if c.shared_by else ""
+        others = [n for n in c.shared_by if n not in ours]
+        users = f"; {', '.join(others)} use{'s' if len(others) == 1 else ''} its network" if others else ""
         health = f", {c.health}" if c.health and c.health != "healthy" else ""
         ui.info(f"{f'{i}. ' if len(found) > 1 else ''}{c.name} ({c.image}{health}){users}")
-    ui.note(f"This machine's own internet traffic doesn't go through {'it' if len(found) == 1 else 'them'}, so Flotilla set up here would show "
-            "peers your real IP address. Inside the VPN container's network, every connection goes through "
-            "the VPN, and the dashboard runs in a container of its own, reachable from your network.")
-    if not _yes("Set Flotilla up inside the VPN container", True):
-        return None
-    vpn = found[0]
+    if foreign:
+        ui.caution(f"Docker already has a container named {' and '.join(foreign)} that isn't Flotilla's. Rename "
+                   f"it ({'; '.join(f'docker rename {n} {n}-old' for n in foreign)}) and run setup again.")
+        return 1
+    storage = node.storage if node and node.storage else ""
+    if ours:
+        state = "running" if node and node.running else "stopped" if node else "dashboard only"
+        on = f" on {previous.name}'s network" if previous else ""
+        ui.info(f"Flotilla already runs in Docker: {dc.NODE} ({state}){on}" + (f", files in {storage}" if storage else ""))
+        ui.note("Setting it up again keeps everything it has seeded, with its current settings as the defaults. "
+                "Its containers are then replaced with new ones. (Most settings can also be changed in the "
+                "dashboard, without any of this.)")
+        if not _yes("Set it up again", True):
+            ui.info("nothing changed")
+            return 0
+    else:
+        ui.note(f"This machine's own internet traffic doesn't go through {'it' if len(found) == 1 else 'them'}, "
+                "so Flotilla set up here would show peers your real IP address. Inside the VPN container's "
+                "network, every connection goes through the VPN, and the dashboard runs in a container of its "
+                "own, reachable from your network.")
+        if not _yes("Set Flotilla up inside the VPN container", True):
+            return None
+    vpn = previous or found[0]
     if len(found) > 1:
         def pick(raw: str):
             for c in found:
@@ -289,40 +345,50 @@ def _offer_vpn_container(found: list, cfg: Config) -> int | None:
             raise ValueError(raw)
         return raw
 
-    volume = _ask("Keep Flotilla's files in a Docker volume, or a folder on this machine (/path)",
-                  dc.VOLUME, where)
-    steps = [("setup", dc.setup_command(vpn, volume)),
-             ("seeding", dc.node_command(vpn, volume)),
+    if storage:
+        volume = storage           # where the earlier setup's files are; moving them isn't setup's job
+    else:
+        ui.note("Flotilla keeps its settings and the pieces it seeds in one place: a folder on this machine, or "
+                "a Docker volume, which Docker keeps in its own folder on the drive it's installed on. Seeded "
+                "models are large, so a folder on a drive with room to spare is usually best.")
+        volume = _ask("Folder for Flotilla's files (a /path), or Enter for a Docker volume named",
+                      dc.VOLUME, where)
+        if volume.startswith("/"):
+            ui.info(f"that drive has {human(shutil.disk_usage(volume).free)} free")
+    setup = dc.setup_command(vpn, volume)
+    start = [("seeding", dc.node_command(vpn, volume)),
              ("dashboard", dc.dashboard_command(cfg.dashboard_port, volume))]
-    taken = dc.existing()
-    if not sys.stdin.isatty() or taken:
-        if taken:
-            ui.caution(f"Docker already has a container named {' and '.join(taken)}: remove "
-                       f"{'them' if len(taken) > 1 else 'it'} first (docker rm -f {' '.join(taken)}), or run these "
-                       f"with other names")
-        ui.note("Run these, in order:")
-        for _, cmd in steps:
-            print(f"    {dc.shell(cmd)}")
-        return 0 if not taken else 1
-
-    ui.info(f"installing Flotilla in a container on {vpn.name}'s network; the setup questions follow there")
-    if dc.run(steps[0][1], interactive=True) != 0:
-        ui.caution("setup inside the container didn't finish. To try again by hand:")
-        print(f"    {dc.shell(steps[0][1])}")
-        return 1
-    print()
-    if not _yes(f"Start seeding through {vpn.name} now, with its dashboard (containers {dc.NODE} and "
-                f"{dc.DASHBOARD}, restarted with Docker)", True):
-        ui.note("To start them later:")
-        for _, cmd in steps[1:]:
+    if not sys.stdin.isatty():
+        ui.note("Setup asks questions, so it needs a terminal. Run these, in order:")
+        for cmd in ([["docker", "rm", "-f", *ours]] if ours else []) + [setup] + [c for _, c in start]:
             print(f"    {dc.shell(cmd)}")
         return 0
-    for what, cmd in steps[1:]:
+
+    ui.info(f"installing Flotilla in a container on {vpn.name}'s network; the setup questions follow there")
+    if dc.run(setup, interactive=True) != 0:
+        ui.caution("setup inside the container didn't finish" + ("; the running node is unchanged" if ours else ""))
+        return 1
+    print()
+    verb = "Restart seeding" if ours else "Start seeding"
+    if not _yes(f"{verb} through {vpn.name} now, with its dashboard (containers {dc.NODE} and "
+                f"{dc.DASHBOARD}, restarted with Docker)", True):
+        if ours:
+            ui.note(f"The running node keeps its old settings until you restart it: docker restart {dc.NODE}")
+        else:
+            ui.note("To start them later:")
+            for _, cmd in start:
+                print(f"    {dc.shell(cmd)}")
+        return 0
+    if ours and not dc.remove(list(ours)):
+        ui.caution(f"couldn't remove the old containers ({', '.join(ours)}); remove them with "
+                   f"docker rm -f {' '.join(ours)} and run setup again")
+        return 1
+    for what, cmd in start:
         if dc.run(cmd) != 0:
             ui.caution(f"couldn't start the {what} container. The command was:")
             print(f"    {dc.shell(cmd)}")
             return 1
-    ui.done(f"Seeding through {vpn.name}")
+    ui.done(f"Seeding through {vpn.name}" + (" with the new settings" if ours else ""))
     ui.table([(f"docker logs {dc.DASHBOARD}", "the dashboard's address with its access key (after a minute)"),
               (f"docker exec {dc.NODE} flotilla status", "what the node is doing"),
               (f"docker logs -f {dc.NODE}", "its log")],

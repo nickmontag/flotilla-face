@@ -347,25 +347,27 @@ share one folder.
 
 `flotilla init` on the Docker host does this for you: it lists the VPN containers it finds (and which
 containers already use each), asks which one to use, runs the setup questions inside it, then starts
-the two containers below. Or run them by hand:
+the two containers below. Run it again later and it finds those containers: it sets them up again with
+your current settings as the defaults, keeps everything already seeded, and replaces the containers.
+Or run them by hand:
 
 ```bash
 F=https://github.com/nickmontag/flotilla-face/archive/main.tar.gz
 
 # 1. Setup: the usual questions. It finds gluetun's tunnel and pins to it.
 docker run -it --rm --network container:gluetun -v flotilla:/root python:3.13-slim \
-  sh -c "pip install -q --root-user-action=ignore $F && flotilla init"
+  sh -c "pip install -q --no-cache-dir --disable-pip-version-check --root-user-action=ignore $F && flotilla init"
 
 # 2. Seeding: every connection goes through gluetun. The memory limit keeps it from crowding out
 #    anything else on the machine (see "Memory" below); the log limit keeps its log to 30 MB.
 docker run -d --name flotilla --network container:gluetun --restart unless-stopped \
   --memory 3g --memory-swap 3g --log-opt max-size=10m --log-opt max-file=3 -v flotilla:/root \
-  python:3.13-slim sh -c "pip install -q --root-user-action=ignore $F && exec flotilla run"
+  python:3.13-slim sh -c "pip install -q --no-cache-dir --disable-pip-version-check --root-user-action=ignore $F && exec flotilla run"
 
 # 3. Dashboard: outside gluetun, reachable from your network.
 docker run -d --name flotilla-dashboard --restart unless-stopped -p 7421:7421 \
   --log-opt max-size=10m --log-opt max-file=3 -v flotilla:/root \
-  python:3.13-slim sh -c "pip install -q --root-user-action=ignore $F && exec flotilla dashboard --serve --listen 0.0.0.0"
+  python:3.13-slim sh -c "pip install -q --no-cache-dir --disable-pip-version-check --root-user-action=ignore $F && exec flotilla dashboard --serve --listen 0.0.0.0"
 docker logs flotilla-dashboard     # the address to open, with its access key
 ```
 

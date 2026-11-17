@@ -98,7 +98,7 @@ class Config:
     seed_code_files: bool = False
     allow_pickle: bool = False
     whole_model_under_gb: float = 25.0
-    max_candidates: int = 40
+    max_candidates: int = 20      # unlisted models (rescued, new torrents) looked at per refresh
 
     feed_urls: list[str] = field(default_factory=lambda: list(DEFAULT_FEED_URLS))
     # Your own changes to the priority list (unsigned; it's your file). See README.
@@ -234,12 +234,12 @@ hf_gb_per_day = {_toml_str(cfg.hf_gb_per_day)}        # most to fetch from Huggi
 
 [policy]
 licenses = {_toml_str(cfg.licenses)}
-include_unlisted = {_toml_str(cfg.include_unlisted)}   # also help models the editorial feed doesn't list
+include_unlisted = {_toml_str(cfg.include_unlisted)}   # also help models the list doesn't name (Pirate Face's rescued models and new torrents)
 include_rescue = {_toml_str(cfg.include_rescue)}     # consider Pirate Face's rescued models
 seed_code_files = {_toml_str(cfg.seed_code_files)}   # .py etc. in model repos (never executed either way)
 allow_pickle = {_toml_str(cfg.allow_pickle)}      # formats that can run code when loaded: pickle (.bin/.pt/.ckpt), Keras .h5/.keras, NumPy .npz/.npy
 whole_model_under_gb = {_toml_str(cfg.whole_model_under_gb)}  # seed small models whole instead of by shard
-max_candidates = {_toml_str(cfg.max_candidates)}
+max_candidates = {_toml_str(cfg.max_candidates)}   # most unlisted models to consider (on top of the list)
 
 [feed]
 urls = {_toml_str(cfg.feed_urls)}

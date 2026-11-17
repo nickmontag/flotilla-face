@@ -87,7 +87,7 @@ class FakePF:
     def torrent_file(self, ih):
         return self.raw_overrides.get(ih) or self.by_ih[ih].raw
 
-    def trending(self, pages=2):
+    def new_torrents(self):
         return []
 
     def rescue(self):

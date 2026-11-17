@@ -501,6 +501,23 @@ copy, a node spends space on official releases only after the at-risk models' fi
 license of the model it's built on. Nodes never read the page themselves: they only ever follow the
 signed list.
 
+**Fill in with popular refusal-removed models.** Once the hand-picked models are well seeded, nodes
+need something else worth carrying. To add the most-downloaded abliterated, heretic, obliterated and
+uncensored builds on Hugging Face that Pirate Face has torrents for:
+
+```bash
+flotilla editor sync-fallback flotilla/data/priorities.json --dry-run   # see what would change
+flotilla editor sync-fallback flotilla/data/priorities.json
+flotilla editor sign flotilla/data/priorities.json
+```
+
+It groups each build with its quantisations, picks one copy per group (the full-precision release
+when Pirate Face has it), keeps at most two per base model and at most 40 in all (`--max`). The license
+must be allowed by default, and so must the base model's when a build relabels it. Entries are marked
+`"via": "huggingface/refusal-removed"` and rank at a priority of about 0.2-0.3, below every
+hand-picked model, so nodes turn to them once the hand-picked models have a couple of copies each.
+DESIGN.md explains the ranking.
+
 Installs fetch updates to this file from GitHub between releases and check the signature, so pushing a
 newly signed version updates everyone. If the fetch fails, they use the copy they shipped with. That
 shipped copy is trusted even after its `expires` date; fetched copies must be unexpired, and clients

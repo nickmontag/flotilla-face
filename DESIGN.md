@@ -20,8 +20,10 @@ These facts shaped the design. All of them were checked against the live service
 - `GET /api/torrents?repo=` returns the magnet, infohash, pinned revision, seeder and leecher counts, a
   `hf` flag and a per-file SHA-256 manifest. `GET /api/torrents/{infohash}.torrent` returns the
   metainfo.
-- `GET /api/models` (trending catalogue with `seed`, `leech`, `hfBacked`, `license`), `/api/rescue`
-  (rescue queue) and `/api/licenses` (with `acceptFirst` for licenses whose terms must be accepted).
+- `GET /api/feeds/new-torrents.xml` (RSS: the newest torrents with at most one seeder, the feed Pirate
+  Face's own seeding agents follow), `/api/rescue` (rescue queue) and `/api/licenses` (with
+  `acceptFirst` for licenses whose terms must be accepted). The old `/api/models` catalogue now returns
+  a web page, so Flotilla no longer reads it.
 - Hugging Face's `GET /api/models/{repo}/tree/{revision}?recursive=true` independently gives size plus
   LFS SHA-256 for big files, and git blob SHA-1 for small ones. On GLM-5.2 all 283 LFS hashes matched
   Pirate Face's manifest.
@@ -459,6 +461,46 @@ the capability ranking. It writes entries into the priority list for the editor 
   of the lowest at-risk model. The planner divides a file's value by 1 + its copies, so an official
   release loses to any at-risk file with one copy and fills in once those have two.
 
+## The fallback list
+
+`fallback.py`, an editor tool for when the hand-picked models are well seeded. Once they have a few
+copies each, a node's spare space should go to the models most at risk of takedown that people
+actually use: the refusal-removed builds (abliterated, heretic, obliterated, uncensored) of strong
+models. `flotilla editor sync-fallback`:
+
+1. **Searches Hugging Face** for those terms, most downloaded in the last month first. Only language
+   and vision-language models count: image, video and audio generators and LoRA adapters are left out.
+2. **Groups each build with its quantisations**, through Hugging Face's "quantized" links and by name
+   within one publisher, and ranks the groups by their combined downloads. Hugging Face has thousands
+   of these, mostly re-quantisations of a few weights.
+3. **Keeps at most 2 builds per base model**, so one popular base doesn't take every place.
+4. **Picks one copy per group** that Pirate Face has a .torrent for, preferring the full-precision
+   release (anyone can re-quantise from it), and pins it to Pirate Face's commit. The license must be
+   allowed by default, and so must the base model's license when the build relabels a custom one.
+5. **Writes at most 40 entries** (`--max`), marked `"via": "huggingface/refusal-removed"`, and removes
+   its own entries that dropped out. Entries on the list for another reason are left alone.
+
+**Where they rank.** Each entry's capability is its base model's score on the list (60 if the base
+isn't scored), with cyber 40 and takedown risk 80 (70 when the name says only "uncensored", which may
+mean fine-tuning). The boost runs from 0.30 at 1k downloads a month to 0.40 at 1M. That puts them at a
+priority of about 0.2-0.3: around the official releases, about half the lowest hand-picked model
+(0.56), and above Pirate Face's unranked new torrents (0.15). The planner divides a file's value by
+1 + its copies, so these fill in once the hand-picked models have about two copies each, and take
+over completely once those reach their target (where their value drops to a tenth).
+
+**Why it's built by an editor and signed.** Nodes never search Hugging Face. Every model a node carries
+is still reviewed and pinned to a commit, every node sees the same pool (so the planner's per-node draw
+spreads copies across the fleet instead of every node picking the same models), and a thousand nodes
+don't each query Hugging Face and Pirate Face for hundreds of models.
+
+## Unlisted models
+
+With `policy.include_unlisted` on (the default), a node also looks at Pirate Face's rescued models and
+its new torrents that need seeders, least-seeded first, at priority 0.15. Everything on the list and
+everything held is always looked at; `policy.max_candidates` (default 20) caps only these extras,
+since each costs Pirate Face lookups on every refresh. (Until November 2026 the cap counted the list
+too, so a list longer than 40 models crowded these out entirely.)
+
 ## Known limitations / next steps
 
 1. **Credit for partial seeders.** Pirate Face counts only full seeders. Partial seeds announce with
@@ -476,7 +518,7 @@ the capability ranking. It writes entries into the priority list for the editor 
 4. **Gated licenses** (`acceptFirst`) are never auto-picked. Supporting them would need the user's
    Pirate Face key and an explicit, recorded acceptance per license, as Pirate Face's own agent skill
    describes.
-5. **Probe cost scales with candidates** (default cap 40): about 40 swarms × 90 s × ≤ 4 KB/s. Fine
+5. **Probe cost scales with candidates** (the list plus up to 20 unlisted): about 40 swarms × 90 s × ≤ 4 KB/s. Fine
    for now. With a coverage endpoint (item 1) the probe could be skipped entirely.
 6. **Feed key management.** One key list compiled into the client. A threshold of 2-of-N editor
    signatures would be a cheap upgrade, and would let a second editor confirm each ledger record against

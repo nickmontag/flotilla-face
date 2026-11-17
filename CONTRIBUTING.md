@@ -36,6 +36,7 @@ The test suite never touches the internet. `tests/test_swarm.py` runs real libto
 | `service.py` | launchd / systemd user service install |
 | `netinfo.py` | Read-only network facts: is traffic going through a VPN? |
 | `worthrescuing.py` | Editor tool: bring the list in line with Pirate Face's Worth Rescuing page |
+| `fallback.py` | Editor tool: the fallback list of popular refusal-removed models on Hugging Face |
 | `cli.py` | Commands |
 
 `DESIGN.md` explains the trust model and the planner maths. Read it before changing either.

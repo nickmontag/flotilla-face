@@ -9,10 +9,12 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import time
 import urllib.parse
 from dataclasses import dataclass
 from pathlib import Path
+from xml.etree import ElementTree
 
 from .netsafe import FetchError, fetch, fetch_json, parse_link_next
 
@@ -23,6 +25,30 @@ MAX_TORRENT_BYTES = 64 << 20
 
 TORRENT_CACHE_DAYS = 30
 SERVER_ERRORS_BEFORE_BACKOFF = 3
+NEW_TORRENTS_MAX_BYTES = 1 << 20
+_REPO = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}/[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
+_DESC = re.compile(r"([0-9.]+)\s*GB.*?(\d+)\s*seeder", re.I)
+
+
+def parse_new_torrents(body: bytes) -> list[dict]:
+    """Items of Pirate Face's new-torrents RSS feed. Anything malformed is skipped; a document
+    declaring entities is refused outright (no entity expansion from a remote feed)."""
+    if b"<!DOCTYPE" in body[:4096].upper() or b"<!ENTITY" in body.upper():
+        raise FetchError("new-torrents.xml", None, "feed declares a DOCTYPE or entities; refused")
+    try:
+        root = ElementTree.fromstring(body)
+    except ElementTree.ParseError as e:
+        raise FetchError("new-torrents.xml", None, f"not RSS: {e}") from e
+    out = []
+    for item in root.iter("item"):
+        repo = (item.findtext("title") or "").strip()
+        ih = (item.findtext("guid") or "").strip().lower()
+        if not _REPO.match(repo) or len(ih) != 40 or any(c not in "0123456789abcdef" for c in ih):
+            continue
+        m = _DESC.search(item.findtext("description") or "")
+        out.append({"repo": repo, "infohash": ih,
+                    "gb": float(m.group(1)) if m else None, "seeders": int(m.group(2)) if m else None})
+    return out
 
 
 class PirateFace:
@@ -62,16 +88,19 @@ class PirateFace:
     def licenses(self) -> list[dict]:
         return self._get("/api/licenses").get("licenses", [])
 
-    def trending(self, pages: int = 2) -> list[dict]:
-        """Catalog entries (repo, license, size, seed/leech counts, hfBacked)."""
-        out, cursor = [], None
-        for _ in range(pages):
-            doc = self._get("/api/models", cursor=cursor)
-            out.extend(doc.get("models", []))
-            cursor = doc.get("nextCursor")
-            if not cursor:
-                break
-        return out
+    def new_torrents(self) -> list[dict]:
+        """Pirate Face's feed of new torrents that need seeders (the one its own seeding agents
+        follow): [{"repo", "infohash", "gb", "seeders"}], newest first. Its /api/models catalog
+        became a web page, so this RSS feed is the machine-readable list left."""
+        self._guard()
+        try:
+            body = fetch(f"{self.base}/api/feeds/new-torrents.xml", max_bytes=NEW_TORRENTS_MAX_BYTES,
+                         allowed=self.allowed, accept="application/rss+xml").body
+        except FetchError as e:
+            self._note(e)
+            raise
+        self._server_errors = 0
+        return parse_new_torrents(body)
 
     def rescue(self) -> dict:
         return self._get("/api/rescue")
@@ -242,6 +271,26 @@ class HuggingFace:
             cache.write_text(json.dumps({p: vars(v) for p, v in out.items()}))
         return out
 
+
+    SEARCH_FIELDS = ("downloads", "likes", "cardData", "tags", "baseModels", "safetensors", "gguf", "pipeline_tag")
+
+    def search(self, term: str, limit: int = 100) -> list[dict]:
+        """Models whose names contain `term`, most downloaded (last 30 days) first. Editor tools only."""
+        q = urllib.parse.urlencode([("search", term), ("sort", "downloads"), ("limit", str(limit))]
+                                   + [("expand[]", f) for f in self.SEARCH_FIELDS])
+        doc = fetch_json(f"{self.base}/api/models?{q}", allowed=self.allowed, max_bytes=64 << 20)
+        return [m for m in doc if isinstance(m, dict) and isinstance(m.get("id"), str)] if isinstance(doc, list) else []
+
+    def model_info(self, repo: str) -> dict | None:
+        """One model's search fields (as `search` returns them), or None if Hugging Face doesn't have it."""
+        q = urllib.parse.urlencode([("expand[]", f) for f in self.SEARCH_FIELDS])
+        try:
+            doc = fetch_json(f"{self.base}/api/models/{repo}?{q}", allowed=self.allowed, max_bytes=16 << 20)
+        except FetchError as e:
+            if e.status in (401, 403, 404, 410, 451):
+                return None
+            raise
+        return doc if isinstance(doc, dict) else None
 
     def prune_cache(self, days: float = TORRENT_CACHE_DAYS) -> None:
         """Forget file lists not used for `days` (models no longer on the list, old revisions)."""

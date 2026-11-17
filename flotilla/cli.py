@@ -873,42 +873,8 @@ def cmd_editor(args) -> int:
         return _ledger_capture(args)
     if args.action == "stamp":
         return _ledger_stamp(args)
-    if args.action == "sync-worth-rescuing":
-        import tempfile
-
-        from .config import Config
-        from .netsafe import DEFAULT_ALLOWED_HOSTS, fetch
-        from .sources import HuggingFace, PirateFace
-        from .worthrescuing import PAGE_URL, license_mismatches, parse_page, sync
-
-        path = Path(args.file)
-        doc = json.loads(path.read_text())
-        html = fetch(PAGE_URL, allowed=DEFAULT_ALLOWED_HOSTS, max_bytes=8 << 20, accept="text/html").body
-        page = parse_page(html.decode("utf-8", "replace"))
-        print(f"{PAGE_URL}: {len(page)} models")
-        with tempfile.TemporaryDirectory() as tmp:
-            pf, hf = PirateFace(DEFAULT_ALLOWED_HOSTS), HuggingFace(DEFAULT_ALLOWED_HOSTS, Path(tmp))
-            summary = sync(doc, page, pf, hf, set(Config().licenses))
-            mismatches = license_mismatches(doc, hf)
-        for k in ("added", "updated", "removed", "kept", "skipped"):
-            for line in summary[k]:
-                print(f"  {k:8} {line}")
-        for line in mismatches:
-            print(f"  license  {line}")
-        if not (summary["added"] or summary["updated"] or summary["removed"]):
-            print("No changes to the list.")
-            return 0
-        if args.dry_run:
-            print("Dry run: nothing written.")
-            return 0
-        now = datetime.now(timezone.utc).replace(microsecond=0, second=0)
-        doc["version"] = int(doc.get("version", 0)) + 1
-        doc["issued"], doc["expires"] = now.isoformat(), (now + timedelta(days=90)).isoformat()
-        parse_feed(json.dumps(doc).encode())   # refuse to write something clients would reject
-        path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n")
-        print(f"Wrote {path} (v{doc['version']}). Review it, then: flotilla editor sign {path}\n"
-              f"(signing also records new models in the hash ledger)")
-        return 0
+    if args.action in ("sync-worth-rescuing", "sync-fallback"):
+        return _editor_sync(args)
     if args.action == "template":
         now = datetime.now(timezone.utc).replace(microsecond=0)
         doc = {
@@ -922,6 +888,55 @@ def cmd_editor(args) -> int:
         print(json.dumps(doc, indent=2))
         return 0
     return 2
+
+
+def _editor_sync(args) -> int:
+    """sync-worth-rescuing / sync-fallback: update the list's automatically chosen entries."""
+    import tempfile
+
+    from .config import Config
+    from .netsafe import DEFAULT_ALLOWED_HOSTS, fetch
+    from .sources import HuggingFace, PirateFace
+    from .worthrescuing import license_mismatches
+
+    path = Path(args.file)
+    doc = json.loads(path.read_text())
+    licenses = set(Config().licenses)
+    with tempfile.TemporaryDirectory() as tmp:
+        pf, hf = PirateFace(DEFAULT_ALLOWED_HOSTS), HuggingFace(DEFAULT_ALLOWED_HOSTS, Path(tmp))
+        if args.action == "sync-worth-rescuing":
+            from .worthrescuing import PAGE_URL, parse_page, sync
+
+            html = fetch(PAGE_URL, allowed=DEFAULT_ALLOWED_HOSTS, max_bytes=8 << 20, accept="text/html").body
+            page = parse_page(html.decode("utf-8", "replace"))
+            print(f"{PAGE_URL}: {len(page)} models")
+            summary = sync(doc, page, pf, hf, licenses)
+        else:
+            from . import fallback
+
+            groups = fallback.group_hits(fallback.gather_hits(hf))
+            print(f"{len(groups)} refusal-removed builds on Hugging Face (quantisations grouped with their source)")
+            summary = fallback.sync(doc, groups, pf, hf, licenses, max_entries=args.max)
+        mismatches = license_mismatches(doc, hf)
+    for k in ("added", "updated", "removed", "kept", "skipped"):
+        for line in summary[k]:
+            print(f"  {k:8} {line}")
+    for line in mismatches:
+        print(f"  license  {line}")
+    if not (summary["added"] or summary["updated"] or summary["removed"]):
+        print("No changes to the list.")
+        return 0
+    if args.dry_run:
+        print("Dry run: nothing written.")
+        return 0
+    now = datetime.now(timezone.utc).replace(microsecond=0, second=0)
+    doc["version"] = int(doc.get("version", 0)) + 1
+    doc["issued"], doc["expires"] = now.isoformat(), (now + timedelta(days=90)).isoformat()
+    parse_feed(json.dumps(doc).encode())   # refuse to write something clients would reject
+    path.write_text(json.dumps(doc, indent=2, ensure_ascii=False) + "\n")
+    print(f"Wrote {path} (v{doc['version']}). Review it, then: flotilla editor sign {path}\n"
+          f"(signing also records new models in the hash ledger)")
+    return 0
 
 
 def _is_ledger(data: bytes) -> bool:
@@ -1213,13 +1228,16 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--init-local", action="store_true", help="create your own my-priorities.json to edit")
     p = sub.add_parser("editor", help="tools for feed editors")
     p.add_argument("action", choices=["keygen", "sign", "check", "template", "sync-worth-rescuing",
-                                      "ledger-capture", "stamp"],
+                                      "sync-fallback", "ledger-capture", "stamp"],
                    help="sync-worth-rescuing: update FILE from Pirate Face's Worth Rescuing page; "
+                        "sync-fallback: update FILE's fallback entries (popular refusal-removed models "
+                        "on Hugging Face that Pirate Face has torrents for); "
                         "ledger-capture: record hashes for FILE's pinned models in the hash ledger; "
                         "stamp: OpenTimestamps proofs for new ledger entries")
     p.add_argument("file", nargs="?", help="feed JSON or ledger index.json (sign/check), feed JSON "
-                                           "(sync-worth-rescuing/ledger-capture), ledger index.json (stamp)")
-    p.add_argument("--dry-run", action="store_true", help="sync-worth-rescuing/ledger-capture: show changes, write nothing")
+                                           "(sync-*/ledger-capture), ledger index.json (stamp)")
+    p.add_argument("--dry-run", action="store_true", help="sync-*/ledger-capture: show changes, write nothing")
+    p.add_argument("--max", type=int, default=40, help="sync-fallback: most fallback entries (default 40)")
     p.add_argument("--ledger", help="ledger-capture/stamp: the ledger index.json (default: next to the feed)")
     p.add_argument("--repo", help="ledger-capture: only this model")
     p.add_argument("--upgrade", action="store_true", help="stamp: complete proofs stamped a few hours ago")

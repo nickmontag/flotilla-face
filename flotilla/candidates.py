@@ -333,7 +333,8 @@ def gather(cfg: Config, feed: Feed, pf: PirateFace, hf: HuggingFace, held_repos:
     """Decide which repos to look at, then build candidates for each.
 
     Order: the signed feed's models, models we already hold, then (if enabled)
-    Pirate Face's rescued and trending models. Capped at policy.max_candidates.
+    Pirate Face's rescued models and its new torrents that need seeders, at most
+    policy.max_candidates of those.
     """
     wanted: list[tuple[str, str | None, FeedModel | None]] = []
     seen: set[tuple[str, str | None]] = set()
@@ -350,15 +351,13 @@ def gather(cfg: Config, feed: Feed, pf: PirateFace, hf: HuggingFace, held_repos:
     for repo in sorted(held_repos):
         add(repo, None, (by_repo.get(repo) or [None])[0])
 
-    catalog: dict[str, dict] = {}
+    fresh: list[dict] = []
     if cfg.include_unlisted:
         try:
-            for m in pf.trending():
-                if isinstance(m, dict) and m.get("id"):
-                    catalog[m["id"]] = m
+            fresh = pf.new_torrents()
         except (FetchError, UnsafeURL) as e:
-            _warn_once(log, "trending", f"catalog: could not read Pirate Face's trending list ({e}); "
-                                    f"carrying on with the priority list. Not repeated until Flotilla restarts.")
+            _warn_once(log, "new-torrents", f"catalog: could not read Pirate Face's new-torrents feed ({e}); "
+                                            f"carrying on with the priority list. Not repeated until Flotilla restarts.")
     rescued: list[str] = []
     if cfg.include_unlisted and cfg.include_rescue:
         try:
@@ -367,22 +366,20 @@ def gather(cfg: Config, feed: Feed, pf: PirateFace, hf: HuggingFace, held_repos:
         except (FetchError, UnsafeURL) as e:
             _warn_once(log, "rescue", f"catalog: could not read Pirate Face's rescue list ({e}); "
                                     f"carrying on with the priority list. Not repeated until Flotilla restarts.")
+    # Everything on the list and everything held is always looked at; policy.max_candidates caps
+    # only the unlisted models added below (each costs Pirate Face lookups on every refresh).
+    listed = len(wanted)
     if cfg.include_unlisted:
         for repo in rescued:
             add(repo, None, None)
-        # Least-seeded first: that's where a new seeder helps most.
-        for m in sorted(catalog.values(), key=lambda m: (m.get("seed") or 0)):
-            if m.get("seeded") or m.get("seed"):
-                add(m["id"], None, None)
+        # Least-seeded first, newest first among equals: that's where a new seeder helps most.
+        for m in sorted(fresh, key=lambda m: m.get("seeders") or 0):
+            add(m["repo"], None, None)
 
-    wanted = wanted[: max(cfg.max_candidates, len(feed.models) + len(held_repos))]
+    wanted = wanted[: listed + max(0, cfg.max_candidates)]
     cands: list[TorrentCand] = []
     rejected: list[Rejection] = []
     for repo, quant, entry in wanted:
-        cat = catalog.get(repo, {})
-        lic = cat.get("license")
-        c = build_candidate(repo, quant, feed, entry, pf, hf, cfg,
-                            license_hint=lic.lower() if isinstance(lic, str) else None,
-                            catalog_hf_backed=cat.get("hfBacked"), ledger=ledger)
+        c = build_candidate(repo, quant, feed, entry, pf, hf, cfg, ledger=ledger)
         (cands if isinstance(c, TorrentCand) else rejected).append(c)
     return cands, rejected

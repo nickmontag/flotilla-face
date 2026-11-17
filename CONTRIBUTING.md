@@ -61,8 +61,29 @@ models in the hash ledger). A test checks that the shipped list verifies with th
 
 ## Releasing (maintainers)
 
-The installer and the Docker recipe install from `main`, so what's on `main` is what people get. Keep
-it green. Flotilla isn't published to PyPI: people install from the source they can read here.
+Installs follow releases, not `main`, so `main` can be mid-change. A release:
 
-To mark a version, bump `version` in `pyproject.toml` and `flotilla/__init__.py`, then tag `vX.Y.Z` and
-push the tag.
+1. Set the version in `flotilla/__init__.py` (`pyproject.toml` reads it from there) and push to `main`.
+2. Tag it with the release notes as the tag's message, and push the tag:
+
+   ```bash
+   git tag -a v0.3.0 -m "What changed, for people updating"
+   git push origin v0.3.0
+   ```
+
+   `.github/workflows/release.yml` runs the tests, builds the wheel and source archive and the Docker
+   image (amd64 and arm64, pushed to `ghcr.io/nickmontag/flotilla-face`), and makes a **draft**
+   release holding them and the image's digest. Nobody sees a draft.
+3. Sign and publish it, on the machine with the project key:
+
+   ```bash
+   flotilla editor release v0.3.0            # --dry-run to sign without publishing
+   ```
+
+   It downloads the draft's files, checks the wheel is that version, writes `release.json` (the
+   files' SHA-256s and the image digest), signs it with `~/.config/flotilla/editor.key`, checks the
+   signature against the key built into Flotilla, uploads it and publishes the release.
+
+From then on `flotilla update` offers it, and nodes say a new release is out within a day. The key
+never goes to GitHub: CI builds, only you sign.
+

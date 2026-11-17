@@ -138,8 +138,10 @@ def test_docker_publishes_the_dashboard_only_where_chosen():
     assert containers.publish("lan", 7421, "10.0.0.206") == "10.0.0.206:7421:7421"
     assert containers.publish("lan", 7421, None) == "127.0.0.1:7421:7421"      # no home network: stay local
     assert containers.publish("public", 7421, None) == "7421:7421"
-    cmd = containers.dashboard_command(7421, "flotilla", "tailnet", "10.0.0.206")
-    assert "--access tailnet" in cmd[-1] and "127.0.0.1:7421:7421" in cmd
+    cmd = containers.dashboard_command(7421, "flotilla", "tailnet", "10.0.0.206", None, "img")
+    assert cmd[-8:] == ["img", "dashboard", "--serve", "--listen", "0.0.0.0", "--port", "7421", "--access"] \
+        or cmd[-9:-1] == ["img", "dashboard", "--serve", "--listen", "0.0.0.0", "--port", "7421", "--access"]
+    assert cmd[-1] == "tailnet" and "127.0.0.1:7421:7421" in cmd
 
 
 def test_a_public_dashboard_says_so_on_the_page():
@@ -242,5 +244,5 @@ def test_tailscale_serving_reads_serve_status(monkeypatch):
 
 
 def test_docker_dashboard_gets_the_hosts_address():
-    cmd = containers.dashboard_command(7421, "flotilla", "tailnet", "10.0.0.206", "https://box.tail1.ts.net:7421")
+    cmd = containers.dashboard_command(7421, "flotilla", "tailnet", "10.0.0.206", "https://box.tail1.ts.net:7421", "img")
     assert f"{access.ACCESS_ENV}=tailnet" in cmd and f"{access.URL_ENV}=https://box.tail1.ts.net:7421" in cmd

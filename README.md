@@ -325,6 +325,7 @@ Found a hole? See [SECURITY.md](SECURITY.md).
 | `flotilla verify <folder>` | Check a model you downloaded (with any client) against the hash ledger |
 | `flotilla ledger` | Show the hash ledger in use, and any conflicts between copies of it |
 | `flotilla feed` | Show the priority list in use and who signed it (`--init-local` to start your own changes) |
+| `flotilla update [--check]` | Install the newest signed release, on this machine and in Flotilla's Docker containers (see [Updating](#updating)) |
 | `flotilla uninstall [--delete-data]` | Stop the service and, if asked, delete everything Flotilla downloaded |
 
 Settings live in `~/.config/flotilla/config.toml`; `flotilla init` writes it and you can edit it by hand.
@@ -354,23 +355,22 @@ your current settings as the defaults, keeps everything already seeded, and repl
 Or run them by hand:
 
 ```bash
-F=https://github.com/nickmontag/flotilla-face/archive/main.tar.gz
+# Each release's image, by the digest its signed release.json names (or :latest, less carefully).
+IMG=ghcr.io/nickmontag/flotilla-face:latest
 
 # 1. Setup: the usual questions. It finds gluetun's tunnel and pins to it.
-docker run -it --rm --network container:gluetun -v flotilla:/root python:3.13-slim \
-  sh -c "pip install -q --no-cache-dir --disable-pip-version-check --root-user-action=ignore $F && flotilla init"
+docker run -it --rm --network container:gluetun -v flotilla:/root $IMG init
 
 # 2. Seeding: every connection goes through gluetun. The memory limit keeps it from crowding out
 #    anything else on the machine (see "Memory" below); the log limit keeps its log to 30 MB.
 docker run -d --name flotilla --network container:gluetun --restart unless-stopped \
-  --memory 3g --memory-swap 3g --log-opt max-size=10m --log-opt max-file=3 -v flotilla:/root \
-  python:3.13-slim sh -c "pip install -q --no-cache-dir --disable-pip-version-check --root-user-action=ignore $F && exec flotilla run"
+  --memory 3g --memory-swap 3g --log-opt max-size=10m --log-opt max-file=3 -v flotilla:/root $IMG run
 
 # 3. Dashboard: outside gluetun, reachable from your home network. Put this machine's own address on
 #    that network (here 192.168.1.20) in -p, not just the port: see "Who can reach the dashboard".
 docker run -d --name flotilla-dashboard --restart unless-stopped -p 192.168.1.20:7421:7421 \
   --log-opt max-size=10m --log-opt max-file=3 -v flotilla:/root \
-  python:3.13-slim sh -c "pip install -q --no-cache-dir --disable-pip-version-check --root-user-action=ignore $F && exec flotilla dashboard --serve --listen 0.0.0.0 --access lan"
+  $IMG dashboard --serve --listen 0.0.0.0 --access lan
 docker logs flotilla-dashboard     # the address to open, with its access key
 ```
 
@@ -611,6 +611,33 @@ flotilla editor sign flotilla/data/ledger/index.json           # sign the ledger
 flotilla editor stamp flotilla/data/ledger/index.json          # timestamp new records, complete ready proofs
 flotilla editor stamp --upgrade flotilla/data/ledger/index.json   # only complete proofs
 ```
+
+## Updating
+
+```bash
+flotilla update
+```
+
+It shows what's new and asks first. Then it updates whatever Flotilla runs here: this machine's own
+copy (restarting the background service), and the `flotilla` and `flotilla-dashboard` containers if
+setup made them, keeping their settings. If a new container won't start, the old one is put back.
+`flotilla update --check` only says whether there's a newer release.
+
+Nothing updates by itself. Once a day a node checks whether a newer release is out, and the dashboard
+and `flotilla status` say so; turn that off with `check = false` under `[updates]` in your config.
+
+Every release is signed with the project's key, the same one that signs the priority list. That key
+is kept offline by the maintainer and never given to GitHub, so someone who took over the GitHub
+account or its build system could publish files but not sign them. Before installing anything,
+`flotilla update` checks:
+
+- the signature on the release's `release.json`, against the key built into Flotilla;
+- that the wheel it downloads has exactly the SHA-256 that file names;
+- for Docker, it pulls the image by the digest that file names, never by a tag that could be moved.
+
+It only ever moves to a newer version, so an old signed release served again can't take you back.
+Your first install comes from the installer, which trusts GitHub's copy the one time; every update
+after that is checked.
 
 ## Uninstall
 

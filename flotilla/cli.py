@@ -435,9 +435,19 @@ def _offer_vpn_container(found: list, cfg: Config) -> int | None:
 
     ts = tailscale_name() if access == "tailnet" else None
     base = address(access, cfg.dashboard_port, None, lan, ts, public_address() if access == "public" else None)
-    setup = dc.setup_command(vpn, volume)
-    start = [("seeding", dc.node_command(vpn, volume)),
-             ("dashboard", dc.dashboard_command(cfg.dashboard_port, volume, access, lan, base))]
+    from .netsafe import FetchError
+    from .release import ReleaseError
+
+    try:
+        image, version = dc.release_image()
+    except (ReleaseError, FetchError) as e:
+        ui.caution(f"couldn't get the newest signed Flotilla release ({e}); Docker setup needs it. Check this "
+                   f"machine's internet connection and try again.")
+        return 1
+    ui.info(f"Flotilla {version}, image {image}")
+    setup = dc.setup_command(vpn, volume, image)
+    start = [("seeding", dc.node_command(vpn, volume, image)),
+             ("dashboard", dc.dashboard_command(cfg.dashboard_port, volume, access, lan, base, image))]
     if not sys.stdin.isatty():
         ui.note("Setup asks questions, so it needs a terminal. Run these, in order:")
         for cmd in ([["docker", "rm", "-f", *ours]] if ours else []) + [setup] + [c for _, c in start]:
@@ -471,7 +481,7 @@ def _offer_vpn_container(found: list, cfg: Config) -> int | None:
     ui.done(f"Seeding through {vpn.name}" + (" with the new settings" if ours else ""))
     from .access import key_in, serve_command
 
-    ui.info("waiting for the dashboard to start (it installs Flotilla first, about a minute)")
+    ui.info("waiting for the dashboard to start")
     url = dc.dashboard_address()
     key = key_in(url) if url else None
     print()
@@ -1019,6 +1029,10 @@ def cmd_status(args) -> int:
           f"status {age:.0f}s old  uploaded this month {human(up.get('bytes', 0))}")
     if doc.get("feed"):
         print(f"feed v{doc['feed']['version']} from {doc['feed']['source']}")
+    up = doc.get("update")
+    if up:
+        how = "on the machine running Docker: flotilla update" if up.get("where") == "docker" else "flotilla update"
+        print(f"Flotilla {up['version']} is out ({up['page']}). To install it, {how}")
     print(f"\n{'model':<48} {'state':<20} {'verified':>9} {'held':>10} {'up/s':>9} {'total up':>10} {'peers':>5}")
     for t in sorted(doc["torrents"], key=lambda t: -t["bytes"]):
         prog = f"{t['done'] / t['wanted']:.0%}" if t["wanted"] else "-"
@@ -1159,7 +1173,178 @@ def cmd_feed(args) -> int:
     return 0
 
 
+# ------------------------------------------------------------------ update
+
+
+def _install_kind() -> str:
+    """How this copy of Flotilla was installed: "uv-tool" (the installer), "pip", or "dev" (a checkout)."""
+    import subprocess
+
+    import flotilla
+
+    here = Path(flotilla.__file__).resolve()
+    if "site-packages" not in here.parts:
+        return "dev"
+    uv = _uv()
+    if uv:
+        try:
+            tools = subprocess.run([uv, "tool", "dir"], capture_output=True, text=True, timeout=10).stdout.strip()
+        except (OSError, subprocess.SubprocessError):
+            tools = ""
+        if tools and Path(sys.prefix).resolve().is_relative_to(Path(tools).resolve()):
+            return "uv-tool"
+    return "pip"
+
+
+def _uv() -> str | None:
+    found = shutil.which("uv")
+    if found:
+        return found
+    for p in (Path.home() / ".local" / "bin" / "uv", Path.home() / ".cargo" / "bin" / "uv"):
+        if p.exists():
+            return str(p)
+    return None
+
+
+def _install_wheel(kind: str, wheel: Path) -> bool:
+    import subprocess
+
+    if kind == "uv-tool":
+        cmd = [_uv() or "uv", "tool", "install", "--force", "--python",
+               f"{sys.version_info.major}.{sys.version_info.minor}", str(wheel)]
+    else:
+        cmd = [sys.executable, "-m", "pip", "install", "--upgrade", "--disable-pip-version-check", str(wheel)]
+    ui.info("installing: " + " ".join(cmd[:4]) + " …")
+    r = subprocess.run(cmd, capture_output=True, text=True)
+    if r.returncode:
+        ui.caution(f"install failed:\n{(r.stderr or r.stdout).strip()[-2000:]}")
+        return False
+    return True
+
+
+def cmd_update(args) -> int:
+    from . import containers as dc
+    from . import release, service
+    from .access import in_container
+    from .netsafe import FetchError
+
+    if in_container():
+        print("This is Flotilla inside a Docker container. Update from the machine running Docker, where you "
+              "set it up: flotilla update")
+        return 2
+    try:
+        rel = release.latest()
+    except (release.ReleaseError, FetchError) as e:
+        print(f"Couldn't check for a new release: {e}", file=sys.stderr)
+        return 1
+    here = release.current()
+    kind = _install_kind()
+    native = release.newer(rel.version, here) and kind != "dev"
+    try:
+        ours = {n: e for n, e in dc.installed().items() if e.ours} if shutil.which("docker") else {}
+    except Exception:          # Docker installed but not answering: nothing of ours to update there
+        ours = {}
+    stale = {n: e for n, e in ours.items() if e.image != rel.image}
+
+    ui.title(f"Flotilla {rel.version}", rel.page)
+    ui.table([("This machine", f"{here}" + (" (a development checkout: update it with git)" if kind == "dev"
+                                            else " → " + rel.version if native else ", up to date"))]
+             + [(f"Docker: {n}", ("→ " + rel.version) if n in stale else "up to date") for n in ours])
+    if not native and not stale:
+        ui.done("Everything is up to date")
+        return 0
+    if rel.notes:
+        print()
+        for line in rel.notes.splitlines()[:40]:
+            print(f"  {line}")
+    if args.check:
+        print()
+        ui.info("run `flotilla update` to install it")
+        return 0
+    print()
+    if not args.yes and not _yes("Update now", True):
+        return 0
+
+    failed = False
+    if native:
+        try:
+            wheel = release.download(rel, rel.wheel)
+        except (release.ReleaseError, FetchError) as e:
+            ui.caution(str(e))
+            return 1
+        ui.done(f"downloaded {wheel.name}, matching the signed release")
+        if _install_wheel(kind, wheel):
+            ui.done(f"Flotilla {rel.version} installed")
+            if service.installed():
+                ok = service.execute(service.restart_plan(), dry_run=False, say=ui.info)
+                failed |= not ok
+        else:
+            failed = True
+    if stale:
+        try:
+            ui.info(f"downloading the {rel.version} image")
+            dc.pull(rel.image)
+            for name in (dc.DASHBOARD, dc.NODE):       # dashboard first: a failed node update stays visible
+                if name in stale:
+                    dc.replace(stale[name], rel.image)
+                    ui.done(f"{name} now runs {rel.version}")
+        except dc.DockerError as e:
+            ui.caution(str(e))
+            failed = True
+    return 1 if failed else 0
+
+
+def _editor_release(args) -> int:
+    """Check, sign and publish the draft release CI built for a tag (see .github/workflows/release.yml)."""
+    import subprocess
+    import tempfile
+
+    from . import release
+
+    tag = (args.file or "").strip()
+    if not re.fullmatch(r"v\d+\.\d+\.\d+", tag):
+        raise ValueError("give the release tag, e.g. flotilla editor release v0.2.0")
+    version = tag[1:]
+    if not shutil.which("gh"):
+        raise ValueError("needs the GitHub CLI (gh), logged in to the repository")
+
+    def gh(*a: str, capture: bool = True) -> str:
+        r = subprocess.run(["gh", *a, "--repo", release.REPO], capture_output=capture, text=True)
+        if r.returncode:
+            raise ValueError(f"gh {' '.join(a)} failed: {(r.stderr or '').strip()}")
+        return r.stdout or ""
+
+    work = Path(tempfile.mkdtemp(prefix="flotilla-release-"))
+    dist = work / "dist"
+    dist.mkdir()
+    gh("release", "download", tag, "--dir", str(dist), "--pattern", "*.whl", "--pattern", "*.tar.gz",
+       "--pattern", "image.txt")
+    image = (dist / "image.txt").read_text().strip()
+    (dist / "image.txt").unlink()
+    wheels = [p.name for p in dist.glob("*.whl")]
+    if wheels != [f"flotilla_face-{version}-py3-none-any.whl"]:
+        raise ValueError(f"expected the {version} wheel in the draft release, found {wheels}")
+    notes = gh("release", "view", tag, "--json", "body", "-q", ".body")
+    manifest = release.make_manifest(version, notes, image, dist)
+    sk = SecretKey.load(Path(args.secret).expanduser())
+    sig = sk.sign(manifest, trusted_comment=release.trusted_comment(version),
+                  untrusted_comment=f"Flotilla {version} release, signed with key {sk.public.key_id_hex}")
+    rel = release.parse(manifest, sig, release.builtin_keys())   # what every install will check
+    (work / release.MANIFEST).write_bytes(manifest)
+    (work / release.SIGNATURE).write_text(sig)
+    print(f"Flotilla {rel.version}: {', '.join(rel.files)}; image {rel.image}")
+    if args.dry_run:
+        print(f"Not published (--dry-run). Signed manifest: {work / release.MANIFEST}")
+        return 0
+    gh("release", "upload", tag, str(work / release.MANIFEST), str(work / release.SIGNATURE), "--clobber")
+    gh("release", "edit", tag, "--draft=false", "--latest")
+    print(f"Published {rel.page}")
+    return 0
+
+
 def cmd_editor(args) -> int:
+    if args.action == "release":
+        return _editor_release(args)
     if args.action == "keygen":
         sk = SecretKey.generate()
         out = Path(args.secret).expanduser()
@@ -1545,6 +1730,10 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--access", choices=["local", "lan", "tailnet", "public"],
                    help="who may reach it (default: the config's dashboard.access); anything but public turns "
                         "away visitors from public internet addresses")
+    p = sub.add_parser("update", help="update to the newest signed release: this machine's Flotilla, "
+                                      "and Flotilla's Docker containers if it set any up")
+    p.add_argument("--check", action="store_true", help="only say whether there's a newer release")
+    p.add_argument("--yes", action="store_true", help="don't ask before updating")
     p = sub.add_parser("hf", help="connect a Hugging Face account (a read-only token) for gated models")
     p.add_argument("action", choices=["connect", "disconnect", "status"])
     p.add_argument("--from-file", metavar="PATH",
@@ -1570,15 +1759,18 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--init-local", action="store_true", help="create your own my-priorities.json to edit")
     p = sub.add_parser("editor", help="tools for feed editors")
     p.add_argument("action", choices=["keygen", "sign", "check", "template", "sync-worth-rescuing",
-                                      "sync-fallback", "ledger-capture", "stamp"],
+                                      "sync-fallback", "ledger-capture", "stamp", "release"],
                    help="sync-worth-rescuing: update FILE from Pirate Face's Worth Rescuing page; "
                         "sync-fallback: update FILE's fallback entries (popular refusal-removed models "
                         "on Hugging Face that Pirate Face has torrents for); "
                         "ledger-capture: record hashes for FILE's pinned models in the hash ledger; "
-                        "stamp: OpenTimestamps proofs for new ledger entries")
+                        "stamp: OpenTimestamps proofs for new ledger entries; "
+                        "release: check, sign and publish the draft release CI built for a tag")
     p.add_argument("file", nargs="?", help="feed JSON or ledger index.json (sign/check), feed JSON "
-                                           "(sync-*/ledger-capture), ledger index.json (stamp)")
-    p.add_argument("--dry-run", action="store_true", help="sync-*/ledger-capture: show changes, write nothing")
+                                           "(sync-*/ledger-capture), ledger index.json (stamp), "
+                                           "release tag like v0.2.0 (release)")
+    p.add_argument("--dry-run", action="store_true",
+                   help="sync-*/ledger-capture: show changes, write nothing; release: sign but don't publish")
     p.add_argument("--max", type=int, default=40, help="sync-fallback: most fallback entries (default 40)")
     p.add_argument("--ledger", help="ledger-capture/stamp: the ledger index.json (default: next to the feed)")
     p.add_argument("--repo", help="ledger-capture: only this model")
@@ -1593,7 +1785,7 @@ def main(argv: list[str] | None = None) -> int:
                 "service": cmd_service, "uninstall": cmd_uninstall, "dashboard": cmd_dashboard,
                 "add": cmd_add, "remove": cmd_remove, "picks": cmd_picks,
                 "verify": cmd_verify, "history": cmd_history, "feed": cmd_feed, "editor": cmd_editor,
-                "ledger": cmd_ledger, "hf": cmd_hf}
+                "ledger": cmd_ledger, "hf": cmd_hf, "update": cmd_update}
     try:
         return handlers[args.cmd](args)
     except (FeedError, SignatureError, ValueError) as e:

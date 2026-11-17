@@ -51,6 +51,8 @@
   .brand { display: inline-flex; align-items: center; gap: 10px; font: 650 19px/1 var(--display); letter-spacing: -.015em; margin-right: 6px; }
   .brand svg { width: 36px; height: 36px; flex: none; filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--accent) 35%, transparent)); }
   .brand b { font-weight: 650; } .brand i { font-style: normal; color: var(--accent); }
+  a.pill { text-decoration: none; cursor: pointer; }
+  .pill[hidden] { display: none; }
   .pill { display: inline-flex; align-items: center; gap: 7px; padding: 4px 11px 4px 9px; border-radius: 999px;
           font-size: 12px; font-weight: 600; border: 1px solid var(--border); background: color-mix(in srgb, var(--card) 80%, transparent);
           backdrop-filter: blur(6px); }
@@ -503,6 +505,7 @@
     </span>
     <span id="status" class="pill"><span class="dot"></span><span>Connecting…</span></span>
     <span id="vpn" class="pill" hidden><span class="dot"></span><span></span></span>
+    <a id="update" class="pill warn" hidden target="_blank" rel="noopener noreferrer"><span class="dot"></span><span></span></a>
     <span class="spacer"></span>
     <span id="node" class="node"></span>
     <button id="pause">Pause</button>
@@ -926,6 +929,14 @@ function render(s) {
   else setPill("status", "", "Idle");
   if (net.bind) setPill("vpn", net.bind_up ? "ok" : "bad", (net.bind_up ? "VPN pinned · " : "Waiting for VPN · ") + net.bind);
   else setPill("vpn", "warn", "No VPN pin");
+  const up = s.update;
+  $("update").hidden = !up;
+  if (up) {
+    $("update").href = up.page;
+    $("update").title = up.where === "docker" ? "To install it, run flotilla update on the machine running Docker"
+                                              : "To install it, run flotilla update";
+    $("update").lastElementChild.textContent = "Flotilla " + up.version + " is out: flotilla update";
+  }
   $("node").textContent = "node " + s.node + " · v" + s.version;
   $("foot-ver").textContent = "v" + s.version;
   $("pause").textContent = s.user_paused ? "Resume" : "Pause";

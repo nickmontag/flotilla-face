@@ -356,6 +356,7 @@ class Engine:
         self._last_pct = -1
         # This run: when it started/ends, bytes uploaded, and who we uploaded to.
         self.run_started = time.time()
+        self.update_available: dict | None = None    # a newer signed release, from _update_loop
         self.run_until: float | None = None
         self.session_up_start = 0
         self.upload_peers: set[bytes] = set()
@@ -1184,6 +1185,7 @@ class Engine:
                         "uploaded": self.session_uploaded, "upload_peers": len(self.upload_peers)},
             }
         doc["hf_gated"] = self.hf.gated_list()
+        doc["update"] = self.update_available
         return doc
 
     # ---------------------------------------------------------- dashboard
@@ -1373,6 +1375,39 @@ class Engine:
         while not self.stop.is_set():
             self.serve_remote(time.time(), act=False)
             self.stop.wait(1.0)
+
+    UPDATE_FIRST, UPDATE_EVERY = 120.0, 86400.0
+
+    def _update_loop(self) -> None:
+        """Once a day, is a newer signed release out? Only noted (dashboard, status, log once per
+        version); installing is `flotilla update`, run by the user."""
+        self.stop.wait(self.UPDATE_FIRST)
+        while not self.stop.is_set():
+            self.check_update()
+            self.stop.wait(self.UPDATE_EVERY)
+
+    def check_update(self) -> None:
+        """Goes through the network pin like every other request, and fails quietly: it's only a notice."""
+        from . import release
+        from .access import in_container
+        from .netsafe import FetchError
+
+        if not self.cfg.check_updates:
+            self.update_available = None
+            return
+        try:
+            rel = release.latest()
+        except (release.ReleaseError, FetchError, OSError):
+            return
+        if not release.newer(rel.version, __version__):
+            self.update_available = None
+            return
+        where = "docker" if in_container() else "here"
+        told = (self.update_available or {}).get("version")
+        self.update_available = {"version": rel.version, "page": rel.page, "where": where}
+        if told != rel.version:
+            how = "run `flotilla update` on the machine running Docker" if where == "docker" else "run `flotilla update`"
+            self.log(f"Flotilla {rel.version} is out ({rel.page}): {how}")
 
     def _memory_loop(self) -> None:
         """The memory budget on its own thread: the first refresh holds up the main loop for
@@ -1775,6 +1810,7 @@ class Engine:
         self.resume_holdings()
         threading.Thread(target=self._remote_loop, name="remote-dashboard", daemon=True).start()
         threading.Thread(target=self._memory_loop, name="memory", daemon=True).start()
+        threading.Thread(target=self._update_loop, name="updates", daemon=True).start()
         # Always running: it does nothing while hf_fallback is off, and the dashboard can turn it on.
         threading.Thread(target=self.hf.run, name="hugging-face", daemon=True).start()
         self._sampler = threading.Thread(target=self._sample_loop, name="history", daemon=True)

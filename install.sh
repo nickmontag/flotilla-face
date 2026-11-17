@@ -8,18 +8,20 @@
 # isolated environment, then walks you through setup and offers to run
 # Flotilla in the background. Nothing needs sudo.
 #
+# It installs the newest release. Later, `flotilla update` installs newer ones, checking each
+# against the project's signature first.
+#
 # Environment variables:
-#   FLOTILLA_REF=...            a tag or commit of this repo to install instead of main, e.g. v0.1.0
-#                               (a commit hash pins exactly what you run)
+#   FLOTILLA_REF=...            a tag, branch or commit of this repo to install instead of the newest
+#                               release, e.g. main (a commit hash pins exactly what you run)
 #   FLOTILLA_PACKAGE=...        what to install instead of this repo (a git URL, wheel or folder)
 #   FLOTILLA_YES=1              no questions: install only, set up later with `flotilla init`
 #   FLOTILLA_NO_MODIFY_PATH=1   don't add ~/.local/bin to your shell profile
 set -eu
 
-# Straight from the source on GitHub, as a tarball (no git needed). Flotilla isn't published to
-# a package index, so what you install is what you can read in the repo.
-REF="${FLOTILLA_REF:-main}"
-PACKAGE="${FLOTILLA_PACKAGE:-flotilla-face @ https://github.com/nickmontag/flotilla-face/archive/$REF.tar.gz}"
+# Straight from GitHub (no package index): the newest release's wheel, or the source of FLOTILLA_REF.
+REPO="nickmontag/flotilla-face"
+REF="${FLOTILLA_REF:-}"
 PYTHON_VERSION="3.13" # libtorrent publishes no wheels for 3.14+ yet
 
 if [ -t 1 ] && [ -z "${NO_COLOR:-}" ] && [ "${TERM:-}" != dumb ]; then
@@ -32,7 +34,7 @@ step() { printf '%s\n' "${D}→${R} $*"; }
 ok() { printf '%s\n' "${G}✓${R} $*"; }
 die() { printf 'flotilla install: %s\n' "$*" >&2; exit 1; }
 case "$REF" in
-  *[!A-Za-z0-9._-]* | "") die "FLOTILLA_REF must be a tag, branch or commit (letters, digits, . _ -)." ;;
+  *[!A-Za-z0-9._-]*) die "FLOTILLA_REF must be a tag, branch or commit (letters, digits, . _ -)." ;;
 esac
 
 # --- 1. Is this system supported? ------------------------------------------
@@ -82,11 +84,29 @@ command -v uv > /dev/null 2>&1 || die "uv didn't install. See https://docs.astra
 
 # --- 3. Flotilla ------------------------------------------------------------
 if [ -n "${FLOTILLA_PACKAGE:-}" ]; then
-  step "Installing Flotilla ($PACKAGE) with Python $PYTHON_VERSION"
+  PACKAGE="$FLOTILLA_PACKAGE"
+  what="Flotilla ($PACKAGE)"
+elif [ -n "$REF" ]; then
+  PACKAGE="flotilla-face @ https://github.com/$REPO/archive/$REF.tar.gz"
+  what="Flotilla from github.com/$REPO ($REF)"
 else
-  step "Installing Flotilla from github.com/nickmontag/flotilla-face ($REF) with Python $PYTHON_VERSION"
+  # The newest release: GitHub redirects /releases/latest to /releases/tag/vX.Y.Z.
+  tag=$(curl -fsSLI -o /dev/null -w '%{url_effective}' "https://github.com/$REPO/releases/latest" 2> /dev/null \
+    | sed -n 's#.*/releases/tag/##p') || tag=""
+  case "$tag" in *[!A-Za-z0-9.]*) tag="" ;; esac
+  case "$tag" in
+    v[0-9]*.[0-9]*.[0-9]*)
+      PACKAGE="flotilla-face @ https://github.com/$REPO/releases/download/$tag/flotilla_face-${tag#v}-py3-none-any.whl"
+      what="Flotilla ${tag#v}, the newest release"
+      ;;
+    *)
+      PACKAGE="flotilla-face @ https://github.com/$REPO/archive/main.tar.gz"
+      what="Flotilla from github.com/$REPO (main: couldn't find a release)"
+      ;;
+  esac
 fi
-# --refresh-package: running the installer again picks up the newest main, not a cached download.
+step "Installing $what with Python $PYTHON_VERSION"
+# --refresh-package: running the installer again picks up what's newest, not a cached download.
 # uv's own output (every package it installs) is shown only if something goes wrong.
 uv_log=$(mktemp)
 if ! uv tool install --python "$PYTHON_VERSION" --force --refresh-package flotilla-face "$PACKAGE" > "$uv_log" 2>&1; then

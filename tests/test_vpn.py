@@ -103,14 +103,18 @@ def test_vpn_containers_docker_refuses(monkeypatch):
 
 def test_container_commands_use_the_vpn_network():
     vpn = containers.VpnContainer("gluetun_seed", "qmcgaw/gluetun")
-    setup = containers.setup_command(vpn, "/srv/flotilla")
-    node = containers.node_command(vpn, "/srv/flotilla")
-    dash = containers.dashboard_command(7421, "/srv/flotilla")
+    img = "ghcr.io/nickmontag/flotilla-face@sha256:" + "b" * 64
+    setup = containers.setup_command(vpn, "/srv/flotilla", img)
+    node = containers.node_command(vpn, "/srv/flotilla", img)
+    dash = containers.dashboard_command(7421, "/srv/flotilla", "lan", None, None, img)
     for cmd in (setup, node):
         assert cmd[cmd.index("--network") + 1] == "container:gluetun_seed"
         assert cmd[cmd.index("-v") + 1] == "/srv/flotilla:/root"
     assert "--network" not in dash and "127.0.0.1:7421:7421" in dash     # no LAN address given: this machine only
-    assert "flotilla init" in setup[-1] and "exec flotilla run" in node[-1]
+    assert setup[-2:] == [img, "init"] and node[-2:] == [img, "run"]      # the signed release's image, by digest
+    assert dash[dash.index(img) + 1:] == ["dashboard", "--serve", "--listen", "0.0.0.0", "--port", "7421",
+                                          "--access", "lan"]
+    assert not any("pip install" in part for cmd in (setup, node, dash) for part in cmd)
 
 
 def _answers(monkeypatch, replies):
@@ -179,7 +183,7 @@ def test_setup_again_replaces_the_earlier_containers(tmp_path, monkeypatch, caps
     assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 0
     out = capsys.readouterr().out
     assert "Flotilla already runs in Docker: flotilla (running) on gluetun's network" in out
-    assert "10.0.0.206:7421:7421" in events[3] and "--access lan" in events[3][-1]   # home network by default
+    assert "10.0.0.206:7421:7421" in events[3] and events[3][-2:] == ("--access", "lan")   # home network by default
     assert not any("Folder for Flotilla's files" in q for q in seen)        # keeps the earlier folder
     assert any("(gluetun)" in q for q in seen if "Which one" in q)          # and the earlier VPN by default
     kinds = [e[0] for e in events]
@@ -239,10 +243,9 @@ def test_setup_inside_the_container_skips_what_the_host_chose(tmp_path, monkeypa
     assert "service install" not in out
 
 
-def test_container_pip_is_quiet():
+def test_setup_container_knows_what_the_host_chose():
     vpn = containers.VpnContainer("gluetun", "qmcgaw/gluetun")
-    cmd = containers.setup_command(vpn, "flotilla")
-    assert "--no-cache-dir" in cmd[-1] and "--disable-pip-version-check" in cmd[-1]
+    cmd = containers.setup_command(vpn, "flotilla", "img")
     assert f"{containers.STORAGE_ENV}=flotilla" in cmd and f"{containers.VPN_ENV}=gluetun" in cmd
 
 

@@ -291,3 +291,23 @@ def execute(plan: Plan, dry_run: bool, say=print) -> bool:
     for n in plan.notes:
         say(n)
     return ok
+
+
+def installed(home: Path | None = None) -> bool:
+    """Is Flotilla set up as a background service here?"""
+    home = home or Path.home()
+    if sys.platform == "darwin":
+        return _launchd_paths(home)[0].exists()
+    if sys.platform.startswith("linux"):
+        return _unit_path(home).exists()
+    return False
+
+
+def restart_plan(home: Path | None = None) -> Plan:
+    """Restart the background service, so it runs the code just installed."""
+    home = home or Path.home()
+    if sys.platform == "darwin":
+        _, domain = _launchd_paths(home)
+        return Plan([Step("restart the background service",
+                          cmd=["launchctl", "kickstart", "-k", f"{domain}/{LABEL}"], check=True)])
+    return Plan([Step("restart the background service", cmd=["systemctl", "--user", "restart", UNIT], check=True)])

@@ -93,6 +93,10 @@ class Config:
     # needs the access key, and anything but "public" refuses visitors from public internet addresses.
     dashboard_access: str = "local"
 
+    # Once a day, see whether a newer signed release is out. The dashboard and `flotilla status` say
+    # so; nothing installs by itself (`flotilla update` does, when you run it).
+    check_updates: bool = True
+
     # Each lets anyone copy and redistribute the weights. glm-5.3 and qwen-community-1.0 are MIT-style
     # with extra conditions only for very large commercial AI services.
     licenses: list[str] = field(default_factory=lambda: ["mit", "apache-2.0", "wtfpl", "openmdw-1.1",
@@ -150,6 +154,7 @@ _SECTIONS = {
     "net": ["allowed_hosts"],
     "tuning": ["refresh_hours", "probe_seconds", "spread", "hold_bonus", "min_hold_days"],
     "dashboard": ["enabled", "port", "access"],
+    "updates": ["check"],
 }
 
 
@@ -170,7 +175,8 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
             attr = {("feed", "urls"): "feed_urls", ("feed", "allowed_hosts"): "feed_allowed_hosts",
                     ("feed", "local"): "local_feed", ("reorient", "every"): "reorient",
                     ("dashboard", "enabled"): "dashboard", ("dashboard", "port"): "dashboard_port",
-                    ("dashboard", "access"): "dashboard_access"}.get((section, k), k)
+                    ("dashboard", "access"): "dashboard_access",
+                    ("updates", "check"): "check_updates"}.get((section, k), k)
             v = sec[k]
             if attr in ("folder", "local_feed"):
                 v = Path(os.path.expanduser(v))
@@ -260,6 +266,9 @@ local = {_toml_str(cfg.local_feed)}   # your own changes to the list (`flotilla 
 enabled = {_toml_str(cfg.dashboard)}         # local web page to watch and steer Flotilla
 port = {_toml_str(cfg.dashboard_port)}
 access = {_toml_str(cfg.dashboard_access)}     # local, lan (home network), tailnet, or public (anyone on the internet)
+
+[updates]
+check = {_toml_str(cfg.check_updates)}        # daily: is a newer signed release out? Only says so; `flotilla update` installs it
 
 [tuning]
 refresh_hours = {_toml_str(cfg.refresh_hours)}

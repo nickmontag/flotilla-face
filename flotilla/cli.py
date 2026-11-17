@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import sys
 import time
@@ -73,6 +74,17 @@ def cmd_init(args) -> int:
             "uses disk space and upload bandwidth. Press Enter to keep a default. You can change any of this "
             "later in the dashboard, or stop at any time.")
 
+    from .netinfo import internet_route
+
+    route = internet_route()
+    vpn_containers: list = []
+    if not (route and route.looks_like_vpn) and not cfg.bind_interface:
+        vpn_containers = _vpn_containers()
+        if vpn_containers:
+            handled = _offer_vpn_container(vpn_containers, cfg)
+            if handled is not None:
+                return handled
+
     ui.section(1, SETUP_STEPS, "Storage")
     folder = Path(_ask("Folder for seeded files", str(cfg.folder))).expanduser()
     folder.mkdir(parents=True, exist_ok=True)
@@ -106,21 +118,31 @@ def cmd_init(args) -> int:
     if reorient != "never":
         churn = max(0.0, _ask("Most to swap each time, in GB", churn, parse_gb))
 
-    from .netinfo import internet_route
-
     ui.section(4, SETUP_STEPS, "Network")
     bind, pf = cfg.bind_interface, cfg.port_forwarding
-    route = internet_route()
     if route and route.looks_like_vpn:
         where = f"{route.iface}, {route.address}" if route.address else route.iface
         ui.info(f"your internet traffic goes through a VPN ({where})")
-        if _yes("Pin torrent traffic to the VPN, so it never falls back to your real connection", True):
+        if _yes("Bind torrent traffic to the VPN, so Flotilla goes offline if the VPN drops instead of "
+                "using your real connection", True):
             bind, pf = route.bind_value, False
     elif bind:
-        if not _yes(f"Keep torrent traffic pinned to {bind}", True):
+        if not _yes(f"Keep torrent traffic bound to {bind} (offline whenever it's down)", True):
             bind = ""
     else:
-        ui.caution("no VPN detected: peers will see this connection's public IP address")
+        for other in _split_vpns(route):
+            ui.info(f"a VPN is connected ({other.iface}, {other.address}), but this machine's internet "
+                    f"traffic doesn't go through it unless asked to")
+            if _yes(f"Bind torrent traffic to {other.iface}, so peers see the VPN's address and Flotilla goes "
+                    f"offline if the VPN drops", True):
+                bind, pf = other.bind_value, False
+                break
+        if not bind and vpn_containers:
+            ui.caution(f"{vpn_containers[0].name} is a VPN container, but Flotilla set up here doesn't use it: "
+                       f"peers will see this connection's public IP address. Run `flotilla init` again to set "
+                       f"Flotilla up inside it.")
+        elif not bind:
+            ui.caution("no VPN detected: peers will see this connection's public IP address")
     if not bind:
         ui.note("Opening a port on your router (UPnP/NAT-PMP) lets peers reach you, so you seed more. Skip it "
                 "if you've turned UPnP off on your router or use a VPN.")
@@ -187,6 +209,108 @@ def cmd_init(args) -> int:
     ui.table([("flotilla plan", "preview what this node would seed"),
               ("flotilla service install", "run it in the background"),
               (f"http://127.0.0.1:{cfg.dashboard_port}", "the dashboard, once it runs")],
+             key_style=str, value_style=ui.dim)
+    return 0
+
+
+def _vpn_containers() -> list:
+    """VPN containers (gluetun & co) on this machine, when we're not inside one ourselves."""
+    from . import containers
+
+    if Path("/.dockerenv").exists() or Path("/run/.containerenv").exists():
+        return []
+    try:
+        return containers.vpn_containers()
+    except containers.DockerUnavailable as e:
+        ui.caution(f"couldn't ask Docker about VPN containers on this machine ({e})")
+        return []
+
+
+def _split_vpns(route) -> list:
+    from .netinfo import other_vpns
+
+    return other_vpns(route)
+
+
+def _offer_vpn_container(found: list, cfg: Config) -> int | None:
+    """Offer to set Flotilla up inside a VPN container's network instead of on this machine. Returns
+    init's exit code when it did (or printed how to), None to go on with setup here."""
+    from . import containers as dc
+
+    print(f"\n{ui.bold('Found a VPN container' if len(found) == 1 else f'Found {len(found)} VPN containers')}")
+    for i, c in enumerate(found, 1):
+        users = f"; {', '.join(c.shared_by)} use{'s' if len(c.shared_by) == 1 else ''} its network" if c.shared_by else ""
+        health = f", {c.health}" if c.health and c.health != "healthy" else ""
+        ui.info(f"{f'{i}. ' if len(found) > 1 else ''}{c.name} ({c.image}{health}){users}")
+    ui.note(f"This machine's own internet traffic doesn't go through {'it' if len(found) == 1 else 'them'}, so Flotilla set up here would show "
+            "peers your real IP address. Inside the VPN container's network, every connection goes through "
+            "the VPN, and the dashboard runs in a container of its own, reachable from your network.")
+    if not _yes("Set Flotilla up inside the VPN container", True):
+        return None
+    vpn = found[0]
+    if len(found) > 1:
+        def pick(raw: str):
+            for c in found:
+                if raw.strip() == c.name:
+                    return c
+            n = int(raw)
+            if not 1 <= n <= len(found):
+                raise ValueError(raw)
+            return found[n - 1]
+
+        vpn = _ask(f"Which one, 1-{len(found)} or its name", vpn.name, pick)
+        if isinstance(vpn, str):
+            vpn = next(c for c in found if c.name == vpn)
+    if vpn.health == "unhealthy":
+        ui.caution(f"{vpn.name} reports itself unhealthy: Flotilla will stay offline until its VPN is up")
+
+    def where(raw: str) -> str:
+        raw = raw.strip()
+        if raw.startswith(("/", "~", ".")):
+            folder = Path(raw).expanduser().resolve()
+            folder.mkdir(parents=True, exist_ok=True)
+            return str(folder)
+        if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]*", raw):
+            raise ValueError(raw)
+        return raw
+
+    volume = _ask("Keep Flotilla's files in a Docker volume, or a folder on this machine (/path)",
+                  dc.VOLUME, where)
+    steps = [("setup", dc.setup_command(vpn, volume)),
+             ("seeding", dc.node_command(vpn, volume)),
+             ("dashboard", dc.dashboard_command(cfg.dashboard_port, volume))]
+    taken = dc.existing()
+    if not sys.stdin.isatty() or taken:
+        if taken:
+            ui.caution(f"Docker already has a container named {' and '.join(taken)}: remove "
+                       f"{'them' if len(taken) > 1 else 'it'} first (docker rm -f {' '.join(taken)}), or run these "
+                       f"with other names")
+        ui.note("Run these, in order:")
+        for _, cmd in steps:
+            print(f"    {dc.shell(cmd)}")
+        return 0 if not taken else 1
+
+    ui.info(f"installing Flotilla in a container on {vpn.name}'s network; the setup questions follow there")
+    if dc.run(steps[0][1], interactive=True) != 0:
+        ui.caution("setup inside the container didn't finish. To try again by hand:")
+        print(f"    {dc.shell(steps[0][1])}")
+        return 1
+    print()
+    if not _yes(f"Start seeding through {vpn.name} now, with its dashboard (containers {dc.NODE} and "
+                f"{dc.DASHBOARD}, restarted with Docker)", True):
+        ui.note("To start them later:")
+        for _, cmd in steps[1:]:
+            print(f"    {dc.shell(cmd)}")
+        return 0
+    for what, cmd in steps[1:]:
+        if dc.run(cmd) != 0:
+            ui.caution(f"couldn't start the {what} container. The command was:")
+            print(f"    {dc.shell(cmd)}")
+            return 1
+    ui.done(f"Seeding through {vpn.name}")
+    ui.table([(f"docker logs {dc.DASHBOARD}", "the dashboard's address with its access key (after a minute)"),
+              (f"docker exec {dc.NODE} flotilla status", "what the node is doing"),
+              (f"docker logs -f {dc.NODE}", "its log")],
              key_style=str, value_style=ui.dim)
     return 0
 

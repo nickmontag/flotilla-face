@@ -7,9 +7,16 @@ import subprocess
 import sys
 from dataclasses import dataclass
 
-# Interface names that are almost always full-tunnel VPNs.
-_VPN_IFACE = re.compile(r"^(utun\d+|ipsec\d+|ppp\d+|tun\d+|tap\d+|wg\w*|nordlynx|proton\w*|mullvad\w*|pia\w*|"
-                        r"vpn\w*)$")
+# Interface names that are almost always VPN tunnels: the generic kinds (tun0, wg0, utun4), the names
+# VPN apps give theirs (nordlynx, proton0, wg0-mullvad, wg-windscribe) and wg-quick configs named after
+# a server (us-nyc-wg-001, home-vpn).
+_VPN_IFACE = re.compile(r"^(utun\d+|ipsec\d+|ppp\d+|tun\d+|tap\d+|wg[\w.-]*|nordlynx|nordtun|proton[\w.-]*|"
+                        r"pvpn[\w.-]*|mullvad[\w.-]*|pia[\w.-]*|surfshark[\w.-]*|ivpn[\w.-]*|vpn[\w.-]*|"
+                        r"[\w.-]*vpn|[\w.-]+[-_](wg|vpn|tun)([-_.][\w.-]*)?)$", re.I)
+# Mesh overlays (Tailscale, ZeroTier, Nebula) are tunnels too, but they reach your own devices, not the
+# internet: peers would never see them, and pinning to one would cut Flotilla off.
+_MESH_IFACE = re.compile(r"^(tailscale\d*|zt\w+|nebula\w*|netbird\w*|wt\d+)$", re.I)
+_CGNAT = re.compile(r"^100\.(6[4-9]|[7-9]\d|1[01]\d|12[0-7])\.")    # 100.64.0.0/10: Tailscale's addresses
 
 
 @dataclass
@@ -19,6 +26,10 @@ class Route:
 
     @property
     def looks_like_vpn(self) -> bool:
+        if _MESH_IFACE.match(self.iface):
+            return False
+        if sys.platform == "darwin" and self.address and _CGNAT.match(self.address):
+            return False      # Tailscale on macOS is a utun too
         return bool(_VPN_IFACE.match(self.iface))
 
     @property
@@ -129,3 +140,47 @@ def address_present(value: str) -> bool:
         return "inet " in _run(["ifconfig", value])
     out = _run(["ip", "-4", "addr", "show", "dev", value])
     return "inet " in out if out else _iface_ipv4(value) is not None
+
+
+def _interfaces() -> list[Route]:
+    """Every interface with an IPv4 address."""
+    if sys.platform == "darwin":
+        found, iface = [], None
+        for line in _run(["ifconfig"]).splitlines():
+            m = re.match(r"^(\S+?):\s", line)
+            if m:
+                iface = m.group(1)
+                continue
+            a = re.match(r"\s+inet (\d+\.\d+\.\d+\.\d+)", line)
+            if a and iface:
+                found.append(Route(iface, a.group(1)))
+        return found
+    import os
+
+    try:
+        names = sorted(os.listdir("/sys/class/net"))
+    except OSError:
+        return []
+    return [Route(n, a) for n in names if (a := _iface_ipv4(n))]
+
+
+def carries_internet(route: Route, probe: str = "1.1.1.1") -> bool:
+    """Would traffic leaving from this interface's address reach the internet through it? A VPN that's
+    connected but isn't the default route (split tunnel, policy routing) often does; one that only
+    reaches a work network doesn't, and pinning to it would leave Flotilla with no internet at all."""
+    if not route.address:
+        return False
+    if sys.platform == "darwin":
+        out = _run(["route", "-n", "get", "-ifscope", route.iface, probe])
+    else:
+        out = _run(["ip", "-4", "route", "get", probe, "from", route.address])
+    m = re.search(r"interface:\s*(\S+)", out) or re.search(r"\bdev (\S+)", out)
+    return bool(m) and m.group(1) == route.iface
+
+
+def other_vpns(current: Route | None) -> list[Route]:
+    """VPN tunnels that are up and can reach the internet, but that this machine's internet traffic
+    doesn't use by default (a VPN app in split-tunnel mode, a WireGuard tunnel without a default route)."""
+    skip = current.iface if current else None
+    return [r for r in _interfaces()
+            if r.iface != skip and r.looks_like_vpn and carries_internet(r)]

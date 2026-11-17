@@ -329,7 +329,12 @@ Settings live in `~/.config/flotilla/config.toml`; `flotilla init` writes it and
 
 ## Seeding through a VPN
 
-Run `flotilla init` while your VPN is connected and it will offer to pin Flotilla to it. Seeding through
+Run `flotilla init` while your VPN is connected and it will offer to bind Flotilla to it (the default).
+Bound, every peer, tracker and Hugging Face connection leaves through the VPN's interface: if the VPN
+drops, Flotilla goes offline instead of falling back to your real connection. It finds a VPN that carries
+this machine's internet traffic, one that's connected but split-tunneled (WireGuard without a default
+route, an app's split-tunnel mode), and, on a machine with Docker, a VPN container such as gluetun.
+Mesh networks (Tailscale, ZeroTier) aren't VPNs here: peers never see them. Seeding through
 a VPN works fine: your computer connects out to other peers and uploads to them. VPNs without port
 forwarding (many popular ones) only stop other peers from *starting* a connection to you. A VPN with port
 forwarding, with `listen_port` set to the forwarded port, lets more peers reach you.
@@ -339,6 +344,10 @@ forwarding, with `listen_port` set to the forwarded port, lets more peers reach 
 If your torrents already go through a [gluetun](https://github.com/qdm12/gluetun) container, run
 Flotilla's seeding inside gluetun's network and its dashboard outside it, on your own network. The two
 share one folder.
+
+`flotilla init` on the Docker host does this for you: it lists the VPN containers it finds (and which
+containers already use each), asks which one to use, runs the setup questions inside it, then starts
+the two containers below. Or run them by hand:
 
 ```bash
 F=https://github.com/nickmontag/flotilla-face/archive/main.tar.gz

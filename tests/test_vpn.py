@@ -201,3 +201,23 @@ def test_setup_binds_to_the_default_route_vpn_by_default(tmp_path, monkeypatch):
     assert cli.cmd_init(argparse.Namespace(config=str(path))) == 0
     assert any("Bind torrent traffic to the VPN" in p and "(Y/n)" in p for p in seen)
     assert load_config(path).bind_interface in ("tun0", "10.8.0.2")
+
+
+def test_setup_tells_the_installer_where_flotilla_went(tmp_path, monkeypatch):
+    """install.sh offers a background service only when setup put Flotilla on this machine."""
+    _no_licenses(monkeypatch)
+    result = tmp_path / "result"
+    monkeypatch.setenv("FLOTILLA_SETUP_RESULT", str(result))
+    monkeypatch.setattr(netinfo, "internet_route", lambda: netinfo.Route("ens18", "10.0.0.206"))
+    monkeypatch.setattr(cli, "_vpn_containers", lambda: [containers.VpnContainer("gluetun", "qmcgaw/gluetun")])
+    monkeypatch.setattr(containers, "existing", lambda: [])
+    monkeypatch.setattr(cli.sys.stdin, "isatty", lambda: True, raising=False)
+    monkeypatch.setattr(containers, "run", lambda cmd, interactive=False: 0)
+
+    _answers(monkeypatch, [])                                        # yes: into the container
+    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "a.toml"))) == 0
+    assert result.read_text() == "docker"
+
+    _answers(monkeypatch, [("inside the VPN container", "n"), ("Folder", str(tmp_path / "seeds"))])
+    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "b.toml"))) == 0
+    assert result.read_text() == "here"

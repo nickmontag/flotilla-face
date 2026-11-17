@@ -109,7 +109,17 @@ if [ "${FLOTILLA_YES:-0}" = 1 ] || ! (exec < /dev/tty) 2> /dev/null; then
   exit 0
 fi
 
-"$BIN" init < /dev/tty
+# Setup can move into a VPN container (gluetun) instead of this machine. Then Docker keeps the
+# containers running and there's nothing to install here; init says which it did in this file.
+setup_result=$(mktemp)
+FLOTILLA_SETUP_RESULT="$setup_result" "$BIN" init < /dev/tty
+where=$(cat "$setup_result")
+rm -f "$setup_result"
+if [ "$where" = docker ]; then
+  say ""
+  ok "Done. Flotilla runs in Docker, which restarts it on its own: nothing to run on this machine."
+  exit 0
+fi
 say ""
 say "${B}Run in the background${R}"
 printf '%s' "  ${C}?${R} Run Flotilla now and every time you log in ${D}(Y/n)${R}: "

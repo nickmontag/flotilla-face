@@ -83,6 +83,7 @@ def cmd_init(args) -> int:
         if vpn_containers:
             handled = _offer_vpn_container(vpn_containers, cfg)
             if handled is not None:
+                _setup_result("docker")
                 return handled
 
     ui.section(1, SETUP_STEPS, "Storage")
@@ -191,6 +192,7 @@ def cmd_init(args) -> int:
 
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_config(cfg))
+    _setup_result("here")
     print()
     ui.done(f"Saved {path}")
     fill = duration(budget * GB / cfg.download_bps)
@@ -211,6 +213,19 @@ def cmd_init(args) -> int:
               (f"http://127.0.0.1:{cfg.dashboard_port}", "the dashboard, once it runs")],
              key_style=str, value_style=ui.dim)
     return 0
+
+
+def _setup_result(where: str) -> None:
+    """Tell install.sh where setup put Flotilla: "here" (run it as a service) or "docker" (the
+    containers run themselves). It passes a file to write that to."""
+    import os
+
+    target = os.environ.get("FLOTILLA_SETUP_RESULT")
+    if target:
+        try:
+            Path(target).write_text(where)
+        except OSError:
+            pass
 
 
 def _vpn_containers() -> list:

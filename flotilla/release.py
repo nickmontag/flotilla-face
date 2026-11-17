@@ -136,8 +136,8 @@ def latest(base: str | None = None, keys=None) -> Release:
     from . import netsafe
 
     base = base or f"https://github.com/{REPO}/releases/latest/download"
-    manifest = netsafe.fetch(f"{base}/{MANIFEST}", max_bytes=MAX_MANIFEST, allowed=RELEASE_HOSTS).data
-    sig = netsafe.fetch(f"{base}/{SIGNATURE}", max_bytes=8192, allowed=RELEASE_HOSTS).data
+    manifest = netsafe.fetch(f"{base}/{MANIFEST}", max_bytes=MAX_MANIFEST, allowed=RELEASE_HOSTS).body
+    sig = netsafe.fetch(f"{base}/{SIGNATURE}", max_bytes=8192, allowed=RELEASE_HOSTS).body
     return parse(manifest, sig.decode("utf-8", "replace"), keys if keys is not None else builtin_keys())
 
 
@@ -148,7 +148,7 @@ def download(rel: Release, name: str, into: Path | None = None) -> Path:
     want = rel.files.get(name)
     if not want:
         raise ReleaseError(f"{name} isn't part of release {rel.version}")
-    data = netsafe.fetch(rel.url(name), max_bytes=MAX_FILE, allowed=RELEASE_HOSTS, timeout=120).data
+    data = netsafe.fetch(rel.url(name), max_bytes=MAX_FILE, allowed=RELEASE_HOSTS, timeout=120).body
     if len(data) != want.get("size", len(data)) or hashlib.sha256(data).hexdigest() != want["sha256"]:
         raise ReleaseError(f"{name} doesn't match the signed release: not installing it")
     into = into or Path(tempfile.mkdtemp(prefix="flotilla-update-"))

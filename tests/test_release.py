@@ -12,6 +12,7 @@ import pytest
 
 import flotilla
 from flotilla import cli, containers, release, service
+from flotilla.netsafe import Response
 from flotilla.signing import SecretKey
 
 IMG = release.IMAGE_REPO + "@sha256:" + "c" * 64
@@ -86,7 +87,7 @@ def test_download_checks_the_hash(tmp_path, key, monkeypatch):
     manifest, sig = _signed(tmp_path, key)
     rel = release.parse(manifest, sig, [key.public])
     served = {rel.url(rel.wheel): b"wheel 9.9.9"}
-    monkeypatch.setattr("flotilla.netsafe.fetch", lambda url, **kw: types.SimpleNamespace(data=served[url]))
+    monkeypatch.setattr("flotilla.netsafe.fetch", lambda url, **kw: Response(url, 200, {}, served[url]))
     assert release.download(rel, rel.wheel, tmp_path).read_bytes() == b"wheel 9.9.9"
     served[rel.url(rel.wheel)] = b"wheel 9.9.9 with something extra"
     with pytest.raises(release.ReleaseError, match="doesn't match the signed release"):
@@ -99,7 +100,7 @@ def test_latest_fetches_both_files_from_github_only(tmp_path, key, monkeypatch):
 
     def fetch(url, **kw):
         asked.append((url, kw["allowed"]))
-        return types.SimpleNamespace(data=manifest if url.endswith(".json") else sig.encode())
+        return Response(url, 200, {}, manifest if url.endswith(".json") else sig.encode())
 
     monkeypatch.setattr("flotilla.netsafe.fetch", fetch)
     assert release.latest(keys=[key.public]).version == "9.9.9"

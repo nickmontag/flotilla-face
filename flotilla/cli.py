@@ -1291,6 +1291,7 @@ def cmd_update(args) -> int:
             if stale:   # the containers are updated by the version just installed, not this one
                 import subprocess
 
+                sys.stdout.flush()      # so this copy's output comes before the new one's, even in a log
                 r = subprocess.run([*service.executable(), "update", "--yes"])
                 return 1 if failed or r.returncode else 0
         else:

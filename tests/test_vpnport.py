@@ -1,6 +1,7 @@
 import json
 import socket
 import struct
+import subprocess
 import threading
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from types import SimpleNamespace
@@ -328,3 +329,45 @@ def test_reachable_for_days_after_a_peer_connected_in_or_with_a_forwarded_port()
     assert not e.reachable()
     e.vpn_forward = vpnport.Forward(5914, "gluetun")
     assert e.reachable()
+
+
+@pytest.mark.parametrize("provider,says", [
+    ("nordvpn", "NordVPN forwards no ports"),
+    ("", "If its VPN forwards ports"),
+    ("private internet access", "couldn't ask gluetun which port PIA forwards"),
+    ("airvpn", "goes in listen_port"),
+])
+def test_gluetun_that_wants_a_key_explained_by_its_provider(monkeypatch, provider, says):
+    srv, base = _control_server({"/v1/portforward": {"port": 5914}}, need_key="k")
+    monkeypatch.setattr(vpnport.gluetun_port, "__defaults__", ("", base, 3.0))
+    monkeypatch.setattr(vpnport, "NATPMP_PORT", 9)
+    f = _finder(monkeypatch)
+    f.gluetun, f.provider = True, provider
+    fw = f.find(6881)
+    assert fw.port == 0 and says in fw.note
+    if provider == "nordvpn":
+        assert "key" not in fw.note          # a key wouldn't help: Nord has no port to give
+    srv.shutdown()
+
+
+def test_update_passes_gluetuns_provider_and_current_key(monkeypatch):
+    from tests.test_release import IMAGE_NODE, _from
+
+    gluetun = {"Name": "/gluetun", "Config": {"Image": "qmcgaw/gluetun", "Env": [
+        "VPN_SERVICE_PROVIDER=nordvpn", "HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE={\"auth\":\"apikey\",\"apikey\":\"new\"}",
+        "OPENVPN_PASSWORD=never-copied"]}}
+    old = _from({**IMAGE_NODE, "Config": {**IMAGE_NODE["Config"], "Env": [
+        "HOME=/root", f"{vpnport.GLUETUN_AUTH_ENV}=stale", "FLOTILLA_IMAGE=x"]}})
+
+    def docker(*a):
+        if a[:2] == ("inspect", "--format"):
+            return subprocess.CompletedProcess(a, 0, "/gluetun\n", "")
+        return subprocess.CompletedProcess(a, 0, json.dumps([gluetun]), "")
+
+    monkeypatch.setattr(containers, "_docker", docker)
+    cmd = containers.run_args(old, "img")
+    assert f"{vpnport.PROVIDER_ENV}=nordvpn" in cmd
+    assert f'{vpnport.GLUETUN_AUTH_ENV}={{"auth":"apikey","apikey":"new"}}' in cmd
+    assert f"{vpnport.GLUETUN_AUTH_ENV}=stale" not in cmd and "FLOTILLA_IMAGE=x" in cmd
+    assert not any("never-copied" in part for part in cmd)
+    assert cmd[-2:] == ["img", "run"]

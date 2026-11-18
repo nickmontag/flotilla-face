@@ -15,6 +15,8 @@ import shutil
 import subprocess
 from dataclasses import dataclass, field
 
+from .vpnport import GLUETUN_FORWARDS, provider_name
+
 VOLUME = "flotilla"
 # For trying an unreleased build (`docker build` of your own): use this image instead of the release's.
 IMAGE_ENV = "FLOTILLA_IMAGE"
@@ -28,9 +30,7 @@ _CLIENT_IMAGE = re.compile(r"(^|/)(gluetun|private-internet-access|openvpn-clien
                            r"docker-wireguard-pia|[\w.-]*vpn)$")
 _SERVER_IMAGE = re.compile(r"(wg-easy|kylemanna/openvpn|openvpn-as|pivpn|firezone|headscale|netbird|"
                            r"tailscale|zerotier|softether|ipsec-vpn-server)")
-# gluetun's providers that forward a port (VPN_SERVICE_PROVIDER values), and the settings Flotilla reads.
-GLUETUN_FORWARDS = {"private internet access": "PIA", "protonvpn": "ProtonVPN", "perfect privacy": "Perfect Privacy",
-                    "privatevpn": "PrivateVPN"}
+# The settings Flotilla reads from a gluetun container.
 GLUETUN_ENV = ("VPN_SERVICE_PROVIDER", "VPN_PORT_FORWARDING", "VPN_PORT_FORWARDING_PROVIDER",
                "HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE", "HTTP_CONTROL_SERVER_ADDRESS")
 # Ambiguous images (client or server): only a VPN client when other containers route through them.
@@ -56,7 +56,7 @@ class VpnContainer:
             return None, ""
         provider = (self.env.get("VPN_PORT_FORWARDING_PROVIDER") or self.env.get("VPN_SERVICE_PROVIDER")
                     or "private internet access").strip().lower()
-        label = GLUETUN_FORWARDS.get(provider) or provider
+        label = provider_name(provider)
         on = self.env.get("VPN_PORT_FORWARDING", "off").strip().lower() in ("on", "yes", "true", "1")
         if provider not in GLUETUN_FORWARDS:
             return False, (f"{self.name} uses {label}, which forwards no ports, so peers can't start "
@@ -104,6 +104,12 @@ def is_vpn_client(image: str, name: str, shared: bool) -> bool:
     return shared and bool(_MAYBE_IMAGE.search(repo) or re.search(r"vpn|wireguard", name, re.I))
 
 
+def _gluetun_settings(doc: dict) -> dict:
+    """The GLUETUN_ENV settings from a container's `docker inspect`."""
+    env = dict(e.split("=", 1) for e in (doc.get("Config") or {}).get("Env") or [] if "=" in e)
+    return {k: v for k, v in env.items() if k in GLUETUN_ENV}
+
+
 def _docker(*args: str) -> subprocess.CompletedProcess | None:
     try:
         return subprocess.run(["docker", *args], capture_output=True, text=True, timeout=10)
@@ -137,10 +143,10 @@ def vpn_containers() -> list[VpnContainer]:
     rows = []
     for d in docs:
         state = d.get("State") or {}
-        env = dict(e.split("=", 1) for e in (d.get("Config") or {}).get("Env") or [] if "=" in e)
+        env = _gluetun_settings(d)
         rows.append((d.get("Id", ""), d.get("Name", "").lstrip("/"), (d.get("Config") or {}).get("Image", ""),
                      (d.get("HostConfig") or {}).get("NetworkMode", ""), (state.get("Health") or {}).get("Status", ""),
-                     {k: v for k, v in env.items() if k in GLUETUN_ENV}))
+                     env))
     # A container sharing another's network has NetworkMode "container:<id or name>".
     users: dict[str, list[str]] = {}
     by_key = {k: cid for cid, name, *_ in rows for k in (cid, name)}
@@ -237,9 +243,12 @@ def node_command(vpn: VpnContainer, volume: str, image: str, memory: str = "3g")
 def gluetun_env(vpn: VpnContainer) -> list[str]:
     """What the node needs to ask gluetun's control server for the forwarded port (vpnport.py): its
     key, and its address when it isn't the default."""
-    from .vpnport import GLUETUN_AUTH_ENV
+    from .vpnport import GLUETUN_AUTH_ENV, PROVIDER_ENV
 
     out = []
+    provider = (vpn.env.get("VPN_PORT_FORWARDING_PROVIDER") or vpn.env.get("VPN_SERVICE_PROVIDER") or "").strip()
+    if provider and vpn.is_gluetun:
+        out += ["-e", f"{PROVIDER_ENV}={provider.lower()}"]
     role = vpn.env.get("HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE", "")
     if role:
         out += ["-e", f"{GLUETUN_AUTH_ENV}={role}"]
@@ -297,6 +306,20 @@ def flotilla_args(doc: dict) -> list[str]:
     return shlex.split(m.group(1)) if m else []
 
 
+def _gluetun_env_now(ref: str) -> list[str] | None:
+    """gluetun_env for the VPN container `ref` as Docker has it now; None when Docker won't say (then
+    the node keeps what it had)."""
+    out = _docker("inspect", ref)
+    try:
+        doc = json.loads(out.stdout)[0] if out and out.returncode == 0 else None
+    except (ValueError, IndexError, KeyError):
+        doc = None
+    if not isinstance(doc, dict):
+        return None
+    vpn = VpnContainer(ref, (doc.get("Config") or {}).get("Image", ""), env=_gluetun_settings(doc))
+    return gluetun_env(vpn) if vpn.is_gluetun else []
+
+
 def _container_name(ref: str) -> str:
     out = _docker("inspect", "--format", "{{.Name}}", ref)
     return out.stdout.strip().lstrip("/") if out and out.returncode == 0 and out.stdout.strip() else ref
@@ -309,8 +332,11 @@ def run_args(old: Installed, image: str) -> list[str]:
     hc, cfg = d.get("HostConfig") or {}, d.get("Config") or {}
     cmd = ["docker", "run", "-d", "--name", old.name]
     mode = hc.get("NetworkMode") or ""
+    vpn_env: list[str] = []
     if mode.startswith("container:"):      # by name: an id goes stale when the VPN container is recreated
-        cmd += ["--network", "container:" + _container_name(mode.split(":", 1)[1])]
+        vpn_name = _container_name(mode.split(":", 1)[1])
+        cmd += ["--network", "container:" + vpn_name]
+        vpn_env = _gluetun_env_now(vpn_name)
     elif mode and mode not in ("default", "bridge"):
         cmd += ["--network", mode]
     policy = (hc.get("RestartPolicy") or {}).get("Name")
@@ -326,9 +352,15 @@ def run_args(old: Installed, image: str) -> list[str]:
             cmd += ["-p", f"{ip + ':' if ip else ''}{b.get('HostPort') or cport.split('/')[0]}:{cport.split('/')[0]}"]
     for k, v in ((hc.get("LogConfig") or {}).get("Config") or {}).items():
         cmd += ["--log-opt", f"{k}={v}"]
+    # What the node knows about its gluetun comes from gluetun as it is now (its provider, its
+    # control-server key), so an update picks up a key or provider changed since setup.
+    from .vpnport import GLUETUN_AUTH_ENV, PROVIDER_ENV
+
+    fresh = {"FLOTILLA_GLUETUN_URL", GLUETUN_AUTH_ENV, PROVIDER_ENV} if vpn_env is not None else set()
     for e in cfg.get("Env") or []:
-        if e.startswith("FLOTILLA_"):
+        if e.startswith("FLOTILLA_") and e.split("=", 1)[0] not in fresh:
             cmd += ["-e", e]
+    cmd += vpn_env or []
     if old.storage:
         cmd += ["-v", f"{old.storage}:/root"]
     return cmd + [image, *old.args]

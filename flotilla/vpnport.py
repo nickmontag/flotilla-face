@@ -39,6 +39,23 @@ GLUETUN = os.environ.get("FLOTILLA_GLUETUN_URL", "http://127.0.0.1:8000").rstrip
 # gluetun's control server wants a key (since v3.40). Either the key itself or the role JSON from
 # gluetun's HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE ({"auth":"apikey","apikey":...} or basic).
 GLUETUN_AUTH_ENV = "FLOTILLA_GLUETUN_AUTH"
+# The VPN provider gluetun uses (its VPN_SERVICE_PROVIDER), which the host's setup and updates pass on:
+# from inside, gluetun won't say without a key.
+PROVIDER_ENV = "FLOTILLA_VPN_PROVIDER"
+# gluetun providers and the names to show for them. Those in FORWARDS can forward a port through gluetun.
+GLUETUN_FORWARDS = {"private internet access": "PIA", "protonvpn": "ProtonVPN", "perfect privacy": "Perfect Privacy",
+                    "privatevpn": "PrivateVPN"}
+_PROVIDER_NAMES = {"nordvpn": "NordVPN", "mullvad": "Mullvad", "surfshark": "Surfshark", "expressvpn": "ExpressVPN",
+                   "ivpn": "IVPN", "windscribe": "Windscribe", "airvpn": "AirVPN", "cyberghost": "CyberGhost",
+                   "ipvanish": "IPVanish", "purevpn": "PureVPN", "torguard": "TorGuard", "vyprvpn": "VyprVPN",
+                   "hidemyass": "HideMyAss", "privado": "Privado", "fastestvpn": "FastestVPN", "giganews": "Giganews",
+                   "slickvpn": "SlickVPN", "vpn secure": "VPN Secure", "vpn unlimited": "VPN Unlimited",
+                   "custom": "a custom VPN", **GLUETUN_FORWARDS}
+
+
+def provider_name(provider: str) -> str:
+    p = provider.strip().lower()
+    return _PROVIDER_NAMES.get(p) or provider.strip()
 NATPMP_PORT = 5351
 LIFETIME = 60          # NAT-PMP mapping lifetime asked for, seconds
 RENEW = 45.0           # ask again this often while a port is forwarded
@@ -271,10 +288,30 @@ class PortFinder:
 
         self.bind, self.port_file, self.log = bind, port_file, log
         self.gluetun_auth = os.environ.get(GLUETUN_AUTH_ENV, "") if gluetun_auth is None else gluetun_auth
+        self.provider = os.environ.get(PROVIDER_ENV, "")
         self.address = address or (lambda: interface_address(bind))
         self.natpmp_gw: str | None = None     # the gateway that answered
         self._translated: tuple[str, int, int] | None = None   # (gateway, here, public)
         self.gluetun = in_container()         # worth asking until it's clearly not there
+
+    def _gluetun_note(self, wants_key: bool) -> str:
+        """Why gluetun forwards no port (or won't say which), going by its provider when the host passed it on."""
+        provider = self.provider.strip().lower()
+        if provider and provider not in GLUETUN_FORWARDS:
+            if provider in ("custom", "windscribe", "airvpn"):
+                return (f"gluetun's {provider_name(provider)} has no port forwarding Flotilla can ask for. A fixed "
+                        f"forwarded port goes in listen_port, and in gluetun's FIREWALL_VPN_INPUT_PORTS")
+            return (f"{provider_name(provider)} forwards no ports, so peers can't start connections to you: you "
+                    f"upload over the ones you open. VPNs that forward one: {FORWARDING_VPNS}")
+        if wants_key:
+            vpn = provider_name(provider) if provider else "your VPN"
+            maybe = "" if provider else " If its VPN forwards ports (PIA, ProtonVPN, Perfect Privacy, PrivateVPN),"
+            return (f"couldn't ask gluetun which port {vpn} forwards: its control server wants a key.{maybe} give "
+                    f"gluetun HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE and run `flotilla update` or `flotilla init` "
+                    f"on the Docker host, which passes it to this container as {GLUETUN_AUTH_ENV}")
+        vpn = provider_name(provider) if provider else "Its provider needs port forwarding (PIA, ProtonVPN, " \
+                                                       "Perfect Privacy or PrivateVPN), and gluetun"
+        return f"gluetun forwards no port. {vpn} needs VPN_PORT_FORWARDING=on"
 
     def find(self, current: int) -> Forward:
         notes = []
@@ -283,12 +320,9 @@ class PortFinder:
                 port = gluetun_port(self.gluetun_auth)
                 if port:
                     return Forward(port, "gluetun", renew=60.0)
-                return Forward(note="gluetun forwards no port. Its provider needs port forwarding "
-                               "(PIA, ProtonVPN, Perfect Privacy or PrivateVPN) and gluetun needs "
-                               "VPN_PORT_FORWARDING=on")
+                return Forward(note=self._gluetun_note(False))
             except GluetunAuth:
-                notes.append(f"gluetun's control server wants a key: set {GLUETUN_AUTH_ENV} on this container "
-                             f"to gluetun's HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE (`flotilla init` does)")
+                notes.append(self._gluetun_note(True))
             except GluetunAbsent:
                 self.gluetun = False
         fw = self._natpmp(current)

@@ -62,6 +62,7 @@ PROBE_PREFIX = "-FP0100-"
 # Peer ids of Flotilla nodes (-FL0100-<node>) and probes (-FP0100-), whatever the version: they hold
 # pieces to seed them, so they're never demand, even while Pirate Face's tracker calls them leechers.
 FLOTILLA_PEER = re.compile(rb"^-F[LP]\d{4}-")
+SETTLE = 3.0    # seconds a probe watches a peer before counting it as a downloader
 STATUS_EVERY = 10.0
 SAVE_EVERY = 300.0          # state.json is written this often (and at once after real changes)
 STATUS_FILE_EVERY = 60.0    # status.json (for `flotilla status`) is written this often
@@ -278,9 +279,10 @@ def probe(cands: list[TorrentCand], cfg: Config, scratch: Path, seconds: float, 
     log(f"probe: watching {len(handles)} swarm(s) for {seconds:.0f}s (peers can see your IP address)")
 
     seen: dict[str, dict[bytes, object]] = {ih: {} for ih in handles}
-    # Each peer's latest word on whether it still wants pieces: a peer looks like it does until its
-    # piece map arrives, so only the last sample counts.
-    wanting: dict[str, dict[bytes, bool]] = {ih: {} for ih in handles}
+    # Each peer's latest word on whether it still wants pieces, and when it was first seen: a peer looks
+    # like it does until its piece map arrives, so only the last sample counts, and only for a peer seen
+    # for SETTLE seconds (one that connected at the very end would otherwise count, seed or not).
+    wanting: dict[str, dict[bytes, list]] = {ih: {} for ih in handles}   # key -> [first seen, wants, last seen]
     started = time.monotonic()
     deadline = started + seconds
     while True:
@@ -296,7 +298,9 @@ def probe(cands: list[TorrentCand], cfg: Config, scratch: Path, seconds: float, 
                 bits = b"" if seed else bytes(p.pieces)   # one byte per piece, not an 8-byte list slot
                 seed = seed or (bool(bits) and all(bits))
                 if not FLOTILLA_PEER.match(pid) and not (p.flags & (lt.peer_info.connecting | lt.peer_info.handshake)):
-                    wanting[ih][key] = not (seed or p.flags & lt.peer_info.upload_only)
+                    t = time.monotonic()
+                    w = wanting[ih].setdefault(key, [t, True, t])
+                    w[1], w[2] = not (seed or p.flags & lt.peer_info.upload_only), t
                 if seed:
                     seen[ih][key] = True
                 elif any(bits):
@@ -319,7 +323,8 @@ def probe(cands: list[TorrentCand], cfg: Config, scratch: Path, seconds: float, 
                 1 for b in peers.values() if b is not True and all(b[f.first_piece : f.last_piece + 1])
             )
         out[c.infohash] = {"seeds": seeds, "partial": partial, "peers": len(peers),
-                           "downloaders": sum(wanting[c.infohash].values())}
+                           "downloaders": sum(1 for first, wants, last in wanting[c.infohash].values()
+                                              if wants and last - first >= SETTLE)}
     for h in handles.values():
         ses.remove_torrent(h, lt.session.delete_files)
     end = time.monotonic() + 5

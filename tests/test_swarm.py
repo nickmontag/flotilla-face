@@ -116,7 +116,9 @@ def test_partial_seed_probe_verify_resume(tmp_path):
 
     # A third node probing the swarm sees exactly which shards we hold, and one real downloader: the
     # Flotilla node, a partial seeder the tracker would call a leecher, isn't demand.
-    obs = probe([candidate(repo)], cfg, tmp_path / "observer", 6, b"-FL0100-ffffff", log=lambda *_: None,
+    # (10 s, so a peer that connects late still has time to send its piece map: on a busy machine
+    # one connection can take seconds.)
+    obs = probe([candidate(repo)], cfg, tmp_path / "observer", 10, b"-FL0100-ffffff", log=lambda *_: None,
                 listen_host="127.0.0.1", dht=False,
                 connect=[a_addr, ("127.0.0.1", eng.ses.listen_port()), ("127.0.0.1", L.listen_port())])
     del L

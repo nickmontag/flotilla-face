@@ -282,11 +282,12 @@ class _Reach:
         self.announced += 1
 
 
-def _peer(ip, outgoing, *more):
+def _peer(ip, outgoing, *more, traded=1 << 20):
     flags = (lt.peer_info.outgoing_connection if outgoing else 0)
     for f in more:
         flags |= f
-    return SimpleNamespace(ip=(ip, 51413), flags=flags, total_upload=0, pid=lt.sha1_hash(b"\0" * 20))
+    return SimpleNamespace(ip=(ip, 51413), flags=flags, total_upload=0, total_download=traded,
+                           pid=lt.sha1_hash(b"\0" * 20))
 
 
 def test_only_dialed_peers_means_dial_out_harder(monkeypatch):
@@ -294,11 +295,13 @@ def test_only_dialed_peers_means_dial_out_harder(monkeypatch):
 
     e = _Reach([_peer("185.10.1.2", True), _peer("185.10.1.3", True),
                 _peer("192.168.1.9", False),                              # LAN peer: says nothing
+                _peer("15.235.117.43", False, traded=0),                  # a DHT crawler: says nothing
                 _peer("185.10.1.4", False, lt.peer_info.connecting)])      # not connected yet
     e.scan_upload_peers(1000.0)
     assert (e.peers_in, e.peers_out) == (0, 2)
     assert e.dialing_out and e.applied == [DIAL_OUT]
     assert DIAL_OUT["enable_outgoing_utp"] and DIAL_OUT["seeding_outgoing_connections"]
+    assert DIAL_OUT["close_redundant_connections"] is False       # keep seeds: PEX and hole-punch relays
     e.dial_out_announce(5000.0)
     e.dial_out_announce(5000.0 + 60)                 # not again so soon
     assert e.announced == 1

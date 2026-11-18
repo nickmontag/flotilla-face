@@ -387,8 +387,9 @@ to Flotilla's container. (ProtonVPN in gluetun works without one: Flotilla asks 
 
 With no port forwarded, Flotilla makes up for it. It notices that no peer has connected in for three
 days (`flotilla status` and the dashboard count peers that connected in and peers it dialed), then
-dials more peers, faster, and asks trackers for new peers every 15 minutes instead of every half
-hour. Two nodes that both lack a forwarded port can still meet through a third peer connected to both
+dials more peers, faster, asks trackers for new peers every 15 minutes instead of every half hour, and
+stays connected to other seeds that will have it (other Flotilla nodes do), which can tell it about
+leechers it can't reach on its own. Two nodes that both lack a forwarded port can still meet through a third peer connected to both
 (hole punching over uTP), though not every VPN allows it. Nodes that peers *can* reach also lean
 harder toward the pieces with at most one other copy, so the last copies end up where everyone can
 reach them.

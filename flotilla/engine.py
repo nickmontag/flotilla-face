@@ -75,8 +75,16 @@ SAMPLE_EVERY = 5.0   # history thread wake-ups; sample() itself records once per
 # own minimum interval still holds), to hear about new leechers sooner. uTP and PEX stay on: they're
 # what libtorrent's hole punching (BEP 55) needs to link two nodes neither of which can be reached.
 REACHABLE_FOR = 3 * 86400.0
+# It also keeps connections to other seeds, which libtorrent drops as useless ("upload to upload"): a
+# seed that stays connected can tell it about leechers it can't reach (PEX) and introduce the two for
+# hole punching. Most clients still hang up from their side (Pirate Face's own seeder does); other
+# unreachable Flotilla nodes keep the connection too.
 DIAL_OUT = {"connection_speed": 60, "torrent_connect_boost": 60, "peer_connect_timeout": 10,
-            "seeding_outgoing_connections": True, "enable_outgoing_utp": True, "enable_incoming_utp": True}
+            "seeding_outgoing_connections": True, "enable_outgoing_utp": True, "enable_incoming_utp": True,
+            "close_redundant_connections": False}
+# A peer that connected in only counts once it has traded at least a block: DHT crawlers connect in
+# with made-up infohashes and leave, and they say nothing about whether real peers can reach us.
+INBOUND_MIN_BYTES = 16 * 1024
 DIAL_OUT_ANNOUNCE = 15 * 60.0
 RESUME_EVERY = 30 * 60.0
 
@@ -1994,8 +2002,8 @@ class Engine:
                     punched += 1
                 if p.flags & lt.peer_info.outgoing_connection:
                     outbound += 1
-                elif _from_internet(p.ip[0]):    # one on your own network says nothing about the internet
-                    inbound += 1
+                elif _from_internet(p.ip[0]) and p.total_upload + p.total_download >= INBOUND_MIN_BYTES:
+                    inbound += 1    # (one on your own network says nothing about the internet)
         self.peers_in, self.peers_out, self.peers_holepunched = inbound, outbound, punched
         if inbound:
             self.state.data["inbound"]["last"] = time.time()   # (`now` runs ahead at shutdown)

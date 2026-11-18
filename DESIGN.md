@@ -274,9 +274,10 @@ and `min_hold_days`. Now the user sets how often it happens and how much moves: 
   listen socket there with `apply_settings`, sets `announce_port` when the VPN maps a different public
   port, and re-announces so the swarm learns it at once.
 - **Reachability.** The once-a-minute peer scan counts connections peers started (from internet
-  addresses; LAN peers don't count) and ones this node dialed. No inbound peer for `REACHABLE_FOR`
+  addresses, and only after a block traded: LAN peers and DHT crawlers don't count) and ones this node dialed. No inbound peer for `REACHABLE_FOR`
   (3 days) and no forwarded port: the node is unreachable, applies `DIAL_OUT` (faster, more outgoing
-  connections, uTP on for BEP 55 hole punching) and force-reannounces every 15 min, within the
+  connections, uTP on for BEP 55 hole punching, seed-to-seed connections kept so a seed connected to
+  unreachable leechers can pass them on by PEX and relay the hole punch) and force-reannounces every 15 min, within the
   tracker's own minimum interval. A reachable node plans with `Params.reachable`, which weights
   scarcity ×1.4 for files with at most one other copy (below `hold_bonus`, so a change in reachability
   alone doesn't swap held files).

@@ -90,6 +90,7 @@ DIAL_OUT = {"connection_speed": 60, "torrent_connect_boost": 60, "peer_connect_t
 # with made-up infohashes and leave, and they say nothing about whether real peers can reach us.
 INBOUND_MIN_BYTES = 16 * 1024
 DIAL_OUT_ANNOUNCE = 15 * 60.0
+STUCK_FOR = 86400.0   # a torrent Hugging Face wouldn't serve stays out of plans this long (see _stuck)
 RESUME_EVERY = 30 * 60.0
 
 
@@ -511,10 +512,24 @@ class Engine:
     def mark_held(self, cands: list[TorrentCand]) -> None:
         for c in cands:
             files = (self.state.holdings.get(c.infohash) or {}).get("files", {})
+            h = self.handles.get(c.infohash)
+            progress = None
             for f in c.files:
                 e = files.get(str(f.index))
                 held = bool(e and e["status"] in ("wanted", "flushing", "verifying", "verified"))
                 f.held, f.held_since = held, (e.get("since") if held else None)
+                if not held:
+                    f.done = 0.0
+                elif e["status"] == "verified":
+                    f.done = 1.0
+                else:
+                    if progress is None:
+                        try:
+                            progress = h.file_progress(lt.torrent_handle.piece_granularity) if h else []
+                        except RuntimeError:
+                            progress = []
+                    got = progress[f.index] if f.index < len(progress) else 0
+                    f.done = min(1.0, got / f.size) if f.size else 1.0
 
     def budget_bytes(self) -> int:
         self.cfg.folder.mkdir(parents=True, exist_ok=True)
@@ -539,7 +554,20 @@ class Engine:
             now=time.time(), allot={r: int(gb * GB) for r, gb in (self.feed.allot_gb if self.feed else {}).items()},
             churn_bytes=churn_bytes, manual=self.feed.manual if self.feed else frozenset(),
             reachable=self.reachable(), focus=self.cfg.focus,
+            stuck=self._stuck(),
         )
+
+    def _stuck(self) -> frozenset[str]:
+        """Torrents Hugging Face wouldn't serve a file no peer was sending, now or within STUCK_FOR. Kept
+        a while: dropping the file clears the gated mark, and the plan would pick it again at once."""
+        now = time.time()
+        mem = self.state.data.setdefault("stuck", {})
+        for ih in list(getattr(self.hf, "gated", {}) or {}):
+            mem[ih] = now
+        for ih, t in list(mem.items()):
+            if now - t > STUCK_FOR:
+                del mem[ih]
+        return frozenset(mem)
 
     def replan(self, cands: list[TorrentCand], rejected: list[Rejection],
                probe_seconds: float | None = None) -> Plan | None:
@@ -593,9 +621,14 @@ class Engine:
             elif not churn:
                 self.log("reorient: nothing swapped, the churn size is 0 GB")
             else:
+                swappable = any(u.held and not u.forced and u.cand.repo not in base.manual
+                                for pk in p.picks.values() for u in pk.units)
+                days = f"{self.cfg.min_hold_days:g} day{'' if self.cfg.min_hold_days == 1 else 's'}"
                 self.log("reorient: nothing to swap"
                          + (f": the smallest swap worth making is {p.churn_short / GB:.1f} GB, more than the "
                             f"{self.cfg.churn_gb:g} GB allowed each time" if p.churn_short
+                            else f": everything held is a model you chose, or was picked less than {days} ago and is coming in"
+                            if not swappable
                             else ": nothing in the swarm needs the space more than what's held"))
         else:
             ro.setdefault("last", now)       # a new node's first reorientation comes one period after it starts
@@ -719,7 +752,7 @@ class Engine:
             "out": self._swap_groups(p.swap_out), "in": self._swap_groups(p.swap_in),
             "lowest": self._swap_groups(p.lowest), "top": self._swap_groups(p.top),
             "short": p.churn_short,
-            # What a swap may take from: held, past min_hold_days, and not a model the user chose.
+            # What a swap may take from: held, not picked within min_hold_days (or not coming in), not a model the user chose.
             "swappable": sum(u.size for u in swappable),
             "held": sum(f.size for c in self._last_cands for f in c.files if f.held),
         }

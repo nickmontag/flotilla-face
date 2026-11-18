@@ -1276,7 +1276,7 @@ function renderReorient(r) {
     else if (pv.short) why = "Nothing fits yet: the smallest swap worth making is " + human(pv.short) + ", more than your " + r.churn_gb + " GB.";
     else if (!pv.held) why = "You hold nothing yet, so there is nothing to swap.";
     else if (!pv.swappable) why = "Nothing can go out yet: everything you hold is a model you chose, or was picked less than " +
-                                  plural(Math.round(r.min_hold_days), "day") + " ago.";
+                                  plural(Math.round(r.min_hold_days), "day") + " ago and is coming in.";
     else why = "Nothing to swap right now: nothing in the swarm needs the space more than what you hold.";
     sum.append(b("Nothing to swap"), never ? " · reorienting is off" : due ? " · next look " + due.replace(/^On /, "").replace(/^At the next look at the swarm$/, "soon") : "");
     say.append((never ? "Reorienting is off: what you hold stays until you change it. " : due ? "Next: " + due.replace(/^On /, "") + ". " : "") + why);

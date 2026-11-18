@@ -74,6 +74,7 @@ class FileCand:
     availability: float | None = None   # peers (not us) holding every piece of it
     held: bool = False
     held_since: float | None = None
+    done: float = 0.0              # share of it this node has (1.0 once verified)
     skip_reason: str = ""
 
 

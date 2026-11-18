@@ -335,7 +335,7 @@ def test_held_files_are_sticky_and_forced():
     for f in c.files:
         f.availability = 3
     held = [f for f in c.files if f.repo_path == "model-00019.safetensors"][0]
-    held.held, held.held_since = True, 1e9 - 3600  # an hour ago
+    held.held, held.held_since, held.done = True, 1e9 - 3600, 0.5  # an hour ago, half here
     for f in c.files:
         if f.repo_path == "model-00002.safetensors":
             f.availability = 0
@@ -580,3 +580,45 @@ def test_focus_is_checked_in_the_config(tmp_path):
     path.write_text(render_config(cfg()).replace('focus = "at-risk"', 'focus = "popular"'))
     with pytest.raises(ValueError, match="policy.focus"):
         load_config(path)
+
+
+def _young_download(done, stuck=False):
+    """One shard picked an hour ago, `done` of it here, and a much needier shard not held."""
+    c = cand("org/m", n_shards=4)
+    for f in c.files:
+        f.availability = 3
+    held = next(f for f in c.files if f.repo_path == "model-00003.safetensors")
+    held.held, held.held_since, held.done = True, 1e9 - 3600, done
+    if stuck:
+        held.availability = 0                  # rare as can be, and nobody can send it
+    need = next(f for f in c.files if f.repo_path == "model-00001.safetensors")
+    need.availability = 0 if not stuck else 2
+    return c, held
+
+
+def test_the_hold_starts_once_a_file_is_coming_in():
+    for done, kept in [(0.0, False), (0.05, False), (0.1, True), (1.0, True)]:
+        c, held = _young_download(done)
+        p = plan([c], shards(6, hold_bonus=1.0, churn_bytes=None), "node-a")   # room for one shard
+        names = weights(p, c)
+        assert (held.repo_path in names) is kept, (done, names)
+
+
+def test_a_download_nobody_can_send_holds_no_space():
+    c, held = _young_download(0.0, stuck=True)
+    # Not stuck: the held shard is the rarest there is, so it stays even at a reorientation.
+    p = plan([c], shards(6, churn_bytes=None), "node-a")
+    assert held.repo_path in weights(p, c)
+    # Stuck (no peer sends it, Hugging Face won't): worth nothing, so it's dropped even between
+    # reorientations (nothing has arrived to lose), and its space goes to a shard that can come.
+    p = plan([c], shards(6, churn_bytes=0, stuck=frozenset({c.infohash})), "node-a")
+    names = weights(p, c)
+    assert held.repo_path not in names and len(names) == 1
+    assert [f.repo_path for _, f in p.drops] == [held.repo_path]
+    # ...and it isn't picked again while the torrent is still stuck.
+    held.held, held.held_since = False, None
+    assert held.repo_path not in weights(p := plan([c], shards(6, stuck=frozenset({c.infohash})), "node-a"), c)
+    # A file of a stuck torrent that's already here keeps its worth.
+    held.done = 1.0
+    p = plan([c], shards(6, churn_bytes=None, stuck=frozenset({c.infohash})), "node-a")
+    assert held.repo_path in weights(p, c)

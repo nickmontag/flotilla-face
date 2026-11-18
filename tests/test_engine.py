@@ -1,5 +1,6 @@
 """Engine behaviour that doesn't need a swarm."""
 
+import time
 import pytest
 
 pytest.importorskip("libtorrent")
@@ -630,3 +631,36 @@ def test_apply_probe_takes_the_downloaders_it_saw():
         seen.infohash: {"seeds": 2, "partial": {}, "peers": 5, "downloaders": 3},
         unseen.infohash: {"seeds": 0, "partial": {}, "peers": 0, "downloaders": 0}})   # saw nobody at all
     assert seen.downloaders == 3 and unseen.downloaders is None
+
+
+def test_stuck_torrents_are_remembered_for_a_day(monkeypatch):
+    from types import SimpleNamespace
+
+    from flotilla import engine as E
+
+    fake = SimpleNamespace(state=SimpleNamespace(data={}), hf=SimpleNamespace(gated={"ih1": {}}))
+    assert E.Engine._stuck(fake) == {"ih1"}
+    fake.hf.gated = {}                                  # dropped: Hugging Face's mark is gone
+    assert E.Engine._stuck(fake) == {"ih1"}             # still out of plans
+    later = time.time() + E.STUCK_FOR + 60
+    monkeypatch.setattr(E.time, "time", lambda: later)
+    assert E.Engine._stuck(fake) == frozenset()
+
+
+def test_mark_held_records_how_much_has_arrived():
+    from types import SimpleNamespace
+
+    from flotilla import engine as E
+    from tests.test_candidates_planner import cand
+
+    c = cand("org/a", n_shards=2)
+    w0, w1 = [f for f in c.files if f.kind == "weight"]
+    holdings = {c.infohash: {"files": {str(w0.index): {"status": "verified", "since": 1.0},
+                                       str(w1.index): {"status": "wanted", "since": 2.0}}}}
+    progress = [0] * len(c.files)
+    progress[w1.index] = w1.size // 4
+    h = SimpleNamespace(file_progress=lambda flags=0: progress)
+    fake = SimpleNamespace(state=SimpleNamespace(holdings=holdings), handles={c.infohash: h})
+    E.Engine.mark_held(fake, [c])
+    assert (w0.held, w0.done) == (True, 1.0) and (w1.held, w1.done) == (True, 0.25)
+    assert not any(f.held for f in c.files if f not in (w0, w1))

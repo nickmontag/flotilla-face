@@ -233,8 +233,9 @@ The dashboard's settings (the gear button) show both ends ahead of time under **
 would go out, what would come in, and when. **Reorient now**, there too, does one right away.
 
 - Models you added yourself, or set space aside for, are never swapped out.
-- A piece stays at least a week after it's picked (`min_hold_days`), and a swap has to be clearly
-  better, so nothing is fetched twice over a small difference.
+- A piece stays at least a week after it's picked (`min_hold_days`) once it has started arriving, and a
+  download nobody can send (no peer has it, and Hugging Face won't serve it to you) is the first to go.
+  A swap has to be clearly better, so nothing is fetched twice over a small difference.
 - With **never**, what you hold stays until you change it or press Reorient now.
 - Between reorientations Flotilla still fills free space, and your own changes still apply at once:
   a model you add, skip, drop or set space aside for, or a different amount of space.

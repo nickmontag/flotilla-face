@@ -42,9 +42,11 @@ What a node holds stays put. A plan keeps every held file that still fits, fills
 free space, and only then *swaps*: the held unit worth least per GB goes out for
 an unheld unit worth more, until `churn_bytes` have been swapped out. The engine
 allows that on the user's schedule (daily, weekly, monthly, or only when asked)
-and passes 0 in between. Files held for less than min_hold_days are never
-swapped out, a held unit counts for hold_bonus times its value (so a swap has to
-be clearly better), and models the user chose by hand (`manual`) are never
+and passes 0 in between. Files picked less than min_hold_days ago are never
+swapped out once a tenth of them has arrived (HOLD_FROM), a held unit counts for
+hold_bonus times its value (so a swap has to be clearly better), a file that isn't
+arriving and has no full copy anywhere, in a torrent Hugging Face won't serve this
+node (`stuck`), is worth nothing, and models the user chose by hand (`manual`) are never
 swapped out and never wait for the schedule to come in.
 """
 
@@ -85,6 +87,9 @@ class Params:
     reachable: bool = False
     # What to favour: "at-risk", "balanced" or "in-demand" (FOCUS_WEIGHTS).
     focus: str = "at-risk"
+    # Torrents some of whose files no peer is sending and Hugging Face won't serve this node (gated, lately):
+    # a file of theirs that isn't arriving, with no full copy in the swarm, is worth nothing until that changes.
+    stuck: frozenset[str] = frozenset()
 
 
 @dataclass
@@ -221,6 +226,9 @@ def _avail(f: FileCand, c: TorrentCand) -> float:
 
 
 WHOLE_BONUS = 1.25
+# min_hold_days protects bandwidth already spent: it holds a file once this share of it has arrived.
+# A file that hasn't come in (nobody is sending it) can go at the next reorientation.
+HOLD_FROM = 0.1
 # A piece no one else holds, or one other node, is only as reachable as the nodes holding it. Two
 # nodes behind VPNs without port forwarding can never connect to each other, so the last copies
 # should sit where anyone can reach them: reachable nodes count those pieces' scarcity this much
@@ -253,10 +261,12 @@ def build_units(cands: list[TorrentCand], p: Params, node_id: str) -> list[Unit]
             units.append(Unit(c, [f], f.size, _edge_overhead(c, f), a, rate, held=f.held))
 
     for u in units:
+        if u.cand.infohash in p.stuck and all(f.done < HOLD_FROM and _avail(f, u.cand) == 0 for f in u.files):
+            u.rate = 0.0                     # not here, no full copy anywhere, and HF won't serve it: no space
         u.value = u.rate * (u.size / GB) * (WHOLE_BONUS if u.whole else 1.0)
         if u.held:
             u.value *= p.hold_bonus
-            since = [f.held_since for f in u.files if f.held_since is not None]
+            since = [f.held_since for f in u.files if f.held_since is not None and f.done >= HOLD_FROM]
             if since and (p.now - min(since)) < p.min_hold_days * 86400:
                 u.forced = True
         u.density = u.value / max((u.size + u.overhead) / GB, 1e-3)

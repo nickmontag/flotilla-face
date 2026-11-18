@@ -189,6 +189,7 @@ scarcity    = 1/(1+a)            if a < T     (a = availability, T = target repl
             = 0.1/(1+a)          otherwise
             × 1.4 on a reachable node when a ≤ 1
 risk        = 2.5  HF original gone   | 1.5 unknown | 1.0 HF still serves it
+rate        = 0 for a file under a tenth here with no full copy seen, in a torrent HF wouldn't serve (24 h)
 demand      = min(1, log2(1+d) / log2(33)) × d / (d + seeders)
               d = downloaders the probe saw (Flotilla nodes left out), or tracker leechers / 2
 uplink      = 0.25 + 0.75 × min(1, upload / 100 Mbit/s)
@@ -200,7 +201,8 @@ key         = density^spread × (−1 / ln u),  u = H(node_id ‖ infohash ‖ p
 
 A plan is built in this order, each step taking units while they fit the budget and the swarm limit:
 
-1. files held for less than `min_hold_days`, unconditionally;
+1. files picked less than `min_hold_days` ago that are coming in (a tenth or more has arrived),
+   unconditionally;
 2. space the user set aside for a model: what's held of it, then its other units by `key`;
 3. everything else that's held, the user's own models first, then the highest `density` first (so when
    the space shrinks, the least valuable goes);
@@ -260,7 +262,8 @@ and `min_hold_days`. Now the user sets how often it happens and how much moves: 
   count against `churn_bytes`, and a swap that would go past it is skipped, never trimmed: the limit is
   a hard one. `Plan.churn_short` records the smallest swap that was skipped for that reason, so the
   dashboard can say that the churn size is smaller than one piece.
-- **Never victims.** Files held for less than `min_hold_days`, and models the user chose by hand
+- **Never victims.** Files picked less than `min_hold_days` ago once a tenth of them has arrived (a
+  file nobody is sending holds no space for a week), and models the user chose by hand
   (`Feed.manual`: models in their own list file, and models with space set aside). Reordering the list
   is not choosing a model: it changes priorities, which the next reorientation follows.
 - **The user's own models don't wait.** An unheld unit of a `manual` model may displace victims at any

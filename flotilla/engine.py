@@ -291,14 +291,16 @@ def probe(cands: list[TorrentCand], cfg: Config, scratch: Path, seconds: float, 
                 if pid.startswith(exclude_pid_prefix) or pid.startswith(PROBE_PREFIX.encode()):
                     continue
                 key = pid if any(pid) else str(p.ip).encode()
+                # A seed by its flag, or by a piece map with every piece (the flag can come later).
+                seed = bool(p.flags & lt.peer_info.seed)
+                bits = b"" if seed else bytes(p.pieces)   # one byte per piece, not an 8-byte list slot
+                seed = seed or (bool(bits) and all(bits))
                 if not FLOTILLA_PEER.match(pid) and not (p.flags & (lt.peer_info.connecting | lt.peer_info.handshake)):
-                    wanting[ih][key] = not (p.flags & (lt.peer_info.seed | lt.peer_info.upload_only))
-                if p.flags & lt.peer_info.seed:
+                    wanting[ih][key] = not (seed or p.flags & lt.peer_info.upload_only)
+                if seed:
                     seen[ih][key] = True
-                else:
-                    bits = bytes(p.pieces)   # one byte per piece, not an 8-byte list slot
-                    if any(bits):
-                        seen[ih][key] = bits
+                elif any(bits):
+                    seen[ih][key] = bits
         now = time.monotonic()
         if now >= deadline:
             break

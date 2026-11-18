@@ -281,7 +281,8 @@ What Flotilla does with it:
 
 - **Only talks to `pirateface.co` and `huggingface.co`** over HTTPS, plus Hugging Face's download
   servers (`hf.co`) for [pieces no peer has](#when-no-peer-has-a-piece). Redirects are re-checked, so
-  none of them can bounce it somewhere else.
+  none of them can bounce it somewhere else. A node bound to a VPN also asks the VPN, inside the tunnel,
+  which port it forwards (NAT-PMP to its private gateway address, or gluetun on `127.0.0.1`).
 - **Only joins torrents on Pirate Face's tracker.** A torrent whose web seeds point anywhere but Pirate
   Face or Hugging Face is refused, and Flotilla doesn't use the web seeds either way.
 - **A torrent must match the Hugging Face repo exactly**: same files, same sizes. Nothing extra can be
@@ -364,8 +365,25 @@ this machine's internet traffic, one that's connected but split-tunneled (WireGu
 route, an app's split-tunnel mode), and, on a machine with Docker, a VPN container such as gluetun.
 Mesh networks (Tailscale, ZeroTier) aren't VPNs here: peers never see them. Seeding through
 a VPN works fine: your computer connects out to other peers and uploads to them. VPNs without port
-forwarding (many popular ones) only stop other peers from *starting* a connection to you. A VPN with port
-forwarding, with `listen_port` set to the forwarded port, lets more peers reach you.
+forwarding (NordVPN, Mullvad, Surfshark, ExpressVPN and most others) only stop other peers from
+*starting* a connection to you.
+
+A VPN that forwards a port lets those peers in too, and a bound node finds that port by itself and
+listens on it, following it when the VPN hands out a new one (`flotilla status` and the dashboard's VPN
+badge show it). It asks, in turn:
+
+| Where | Covers |
+| --- | --- |
+| gluetun's control server, from inside its network | PIA, ProtonVPN, Perfect Privacy and PrivateVPN in gluetun, with `VPN_PORT_FORWARDING=on` |
+| NAT-PMP to the VPN's own gateway, inside the tunnel | ProtonVPN (Plus, P2P servers) in its app or a WireGuard config, and other VPNs that hand ports out this way |
+| PIA's app (`piactl`) | PIA with Request Port Forwarding on |
+| `vpn_port_file` | anything that writes the port to a file (a script, gluetun's `VPN_PORT_FORWARDING_STATUS_FILE` on a shared folder) |
+
+A VPN that gives you one fixed port (AirVPN, Windscribe) needs it in `listen_port`. gluetun has
+wanted a key for its control server since v3.40: give it one with
+`HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE='{"auth":"apikey","apikey":"..."}'` and `flotilla init` passes it
+to Flotilla's container. (ProtonVPN in gluetun works without one: Flotilla asks Proton itself.) Set
+`vpn_port_forwarding = false` to keep `listen_port` as it is.
 
 ### Behind gluetun (Docker)
 

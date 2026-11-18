@@ -28,6 +28,11 @@ _CLIENT_IMAGE = re.compile(r"(^|/)(gluetun|private-internet-access|openvpn-clien
                            r"docker-wireguard-pia|[\w.-]*vpn)$")
 _SERVER_IMAGE = re.compile(r"(wg-easy|kylemanna/openvpn|openvpn-as|pivpn|firezone|headscale|netbird|"
                            r"tailscale|zerotier|softether|ipsec-vpn-server)")
+# gluetun's providers that forward a port (VPN_SERVICE_PROVIDER values), and the settings Flotilla reads.
+GLUETUN_FORWARDS = {"private internet access": "PIA", "protonvpn": "ProtonVPN", "perfect privacy": "Perfect Privacy",
+                    "privatevpn": "PrivateVPN"}
+GLUETUN_ENV = ("VPN_SERVICE_PROVIDER", "VPN_PORT_FORWARDING", "VPN_PORT_FORWARDING_PROVIDER",
+               "HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE", "HTTP_CONTROL_SERVER_ADDRESS")
 # Ambiguous images (client or server): only a VPN client when other containers route through them.
 _MAYBE_IMAGE = re.compile(r"(^|/)(wireguard|openvpn|[\w.-]*wireguard[\w.-]*)$")
 
@@ -39,6 +44,34 @@ class VpnContainer:
     health: str = ""                       # "healthy", "unhealthy", "starting", or "" (no healthcheck)
     shared_by: list[str] = field(default_factory=list)
     id: str = ""
+    env: dict = field(default_factory=dict)  # its gluetun settings (GLUETUN_ENV), when it's gluetun
+
+    @property
+    def is_gluetun(self) -> bool:
+        return "gluetun" in _repo(self.image) or any(k.startswith("VPN_SERVICE") for k in self.env)
+
+    def forwarding(self) -> tuple[bool | None, str]:
+        """Will this VPN container forward a port to Flotilla? (True/False/None for can't tell, why)"""
+        if not self.is_gluetun:
+            return None, ""
+        provider = (self.env.get("VPN_PORT_FORWARDING_PROVIDER") or self.env.get("VPN_SERVICE_PROVIDER")
+                    or "private internet access").strip().lower()
+        label = GLUETUN_FORWARDS.get(provider) or provider
+        on = self.env.get("VPN_PORT_FORWARDING", "off").strip().lower() in ("on", "yes", "true", "1")
+        if provider not in GLUETUN_FORWARDS:
+            return False, (f"{self.name} uses {label}, which forwards no ports, so peers can't start "
+                           f"connections to Flotilla (it still uploads over the ones it opens). gluetun "
+                           f"forwards ports for {', '.join(GLUETUN_FORWARDS.values())}.")
+        if not on:
+            return False, (f"{label} can forward a port, but {self.name} doesn't ask for one: add "
+                           f"VPN_PORT_FORWARDING=on to its settings and recreate it, then Flotilla listens on it.")
+        if not self.env.get("HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE") and provider != "protonvpn":
+            # (ProtonVPN's own NAT-PMP gives Flotilla the same port gluetun opened, no key needed.)
+            return None, (f"{self.name} forwards a port, but its control server needs a key before it tells "
+                          f"Flotilla which: add HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE="
+                          f"'{{\"auth\":\"apikey\",\"apikey\":\"<a long random key>\"}}' to it, recreate it, "
+                          f"and run setup again.")
+        return True, f"{self.name} forwards a port from {label}: Flotilla listens on it, so peers can connect in."
 
     @property
     def network(self) -> str:
@@ -104,19 +137,21 @@ def vpn_containers() -> list[VpnContainer]:
     rows = []
     for d in docs:
         state = d.get("State") or {}
+        env = dict(e.split("=", 1) for e in (d.get("Config") or {}).get("Env") or [] if "=" in e)
         rows.append((d.get("Id", ""), d.get("Name", "").lstrip("/"), (d.get("Config") or {}).get("Image", ""),
-                     (d.get("HostConfig") or {}).get("NetworkMode", ""), (state.get("Health") or {}).get("Status", "")))
+                     (d.get("HostConfig") or {}).get("NetworkMode", ""), (state.get("Health") or {}).get("Status", ""),
+                     {k: v for k, v in env.items() if k in GLUETUN_ENV}))
     # A container sharing another's network has NetworkMode "container:<id or name>".
     users: dict[str, list[str]] = {}
     by_key = {k: cid for cid, name, *_ in rows for k in (cid, name)}
-    for _, name, _, mode, _ in rows:
+    for _, name, _, mode, _, _ in rows:
         if mode.startswith("container:"):
             target = mode.split(":", 1)[1]
             cid = by_key.get(target) or next((c for c in by_key.values() if c.startswith(target)), None)
             if cid:
                 users.setdefault(cid, []).append(name)
-    found = [VpnContainer(name, image, health, sorted(users.get(cid, [])), cid)
-             for cid, name, image, _, health in rows
+    found = [VpnContainer(name, image, health, sorted(users.get(cid, [])), cid, env)
+             for cid, name, image, _, health, env in rows
              if is_vpn_client(image, name, bool(users.get(cid)))]
     found.sort(key=lambda c: (c.health == "unhealthy", -len(c.shared_by), c.name))
     return found
@@ -195,7 +230,24 @@ _LOGS = ["--log-opt", "max-size=10m", "--log-opt", "max-file=3"]
 def node_command(vpn: VpnContainer, volume: str, image: str, memory: str = "3g") -> list[str]:
     """The seeding node, every connection through the VPN container."""
     return ["docker", "run", "-d", "--name", NODE, "--network", vpn.network, "--restart", "unless-stopped",
-            "--memory", memory, "--memory-swap", memory, *_LOGS, "-v", f"{volume}:/root", image, "run"]
+            "--memory", memory, "--memory-swap", memory, *_LOGS, *gluetun_env(vpn), "-v", f"{volume}:/root",
+            image, "run"]
+
+
+def gluetun_env(vpn: VpnContainer) -> list[str]:
+    """What the node needs to ask gluetun's control server for the forwarded port (vpnport.py): its
+    key, and its address when it isn't the default."""
+    from .vpnport import GLUETUN_AUTH_ENV
+
+    out = []
+    role = vpn.env.get("HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE", "")
+    if role:
+        out += ["-e", f"{GLUETUN_AUTH_ENV}={role}"]
+    addr = vpn.env.get("HTTP_CONTROL_SERVER_ADDRESS", "").strip()
+    m = re.fullmatch(r"(?:[\w.\[\]:]*):(\d+)", addr)
+    if m and m.group(1) != "8000":
+        out += ["-e", f"FLOTILLA_GLUETUN_URL=http://127.0.0.1:{m.group(1)}"]
+    return out
 
 
 def publish(access: str, port: int, lan: str | None) -> str:

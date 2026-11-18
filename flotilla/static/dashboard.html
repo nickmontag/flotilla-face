@@ -950,8 +950,12 @@ function render(s) {
   else if (wanted && done < wanted) setPill("status", "ok", "Downloading " + Math.floor(100 * done / wanted) + "%", true);
   else if (ts.length) setPill("status", "ok", "Seeding", true);
   else setPill("status", "", "Idle");
-  if (net.bind) setPill("vpn", net.bind_up ? "ok" : "bad", (net.bind_up ? "VPN pinned · " : "Waiting for VPN · ") + net.bind);
+  const fwd = net.vpn_port;
+  if (net.bind) setPill("vpn", net.bind_up ? "ok" : "bad", (net.bind_up ? "VPN pinned · " : "Waiting for VPN · ") + net.bind
+                        + (net.bind_up && fwd ? (fwd.port ? " · port " + fwd.port + " open" : " · no inbound port") : ""));
   else setPill("vpn", "warn", "No VPN pin");
+  $("vpn").title = fwd ? (fwd.port ? "Peers can connect in: " + fwd.source + " forwards port " + fwd.port
+                                   : "Peers can't connect in: " + fwd.note) : "";
   const rel = s.update;
   $("update").hidden = !rel;
   if (rel) {
@@ -1624,7 +1628,9 @@ function fillDrawer() {
   [
     ["Files", state.disk.folder],
     ["Traffic", net.bind ? "pinned to " + net.bind + (net.bind_up ? "" : " (not up right now)") : "any interface (no VPN pin)"],
-    ["Port", String(state.listen_port)],
+    ["Port", String(state.listen_port) + (net.vpn_port ? (net.vpn_port.port
+        ? " · forwarded by " + net.vpn_port.source + (net.vpn_port.port !== net.vpn_port.listen ? " as " + net.vpn_port.port : "")
+        : " · not forwarded: " + net.vpn_port.note) : "")],
     ["Priority list", (feed.version ? "v" + feed.version + " · signed by " + feed.signer + " · " + feed.source
                        : "none published (all models equal)") + (feed.local ? " · plus your changes in " + feed.local : "")],
     ["Config", state.config_path || "–"],

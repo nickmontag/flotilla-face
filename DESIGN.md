@@ -269,7 +269,10 @@ and `min_hold_days`. Now the user sets how often it happens and how much moves: 
 - **Main session.** Torrents are not auto-managed, so libtorrent's queue never pauses them. Rate-based
   choker, `anti_leech` seed choking (it favours peers that are just starting or nearly done, which
   spreads rare pieces), global up/down limits from the user's numbers, and UPnP/NAT-PMP only if
-  enabled.
+  enabled. A node bound to a VPN runs a `vpn-port` thread instead (vpnport.py): it finds the port the
+  VPN forwards (gluetun's control server, NAT-PMP to the tunnel's gateway, `piactl`, a file), moves the
+  listen socket there with `apply_settings`, sets `announce_port` when the VPN maps a different public
+  port, and re-announces so the swarm learns it at once.
 - **Housekeeping cadence.** Every 10 s the main loop settles upload totals and seed-hours. Torrent
   status is read with only the accurate byte counters (`STATUS_FLAGS`), and one read per torrent is
   shared for 2 s by everything that asks. `state.json` is written every 5 minutes, at once after a plan,

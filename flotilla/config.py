@@ -74,6 +74,11 @@ class Config:
     memory_gb: float = 0.0
     listen_port: int = 6881
     port_forwarding: bool = False
+    # On a node bound to a VPN: find the port the VPN forwards (gluetun, NAT-PMP, PIA's app; see
+    # vpnport.py) and listen on it, so peers can connect in. vpn_port_file: a file holding the port
+    # number, for a VPN client that writes one.
+    vpn_port_forwarding: bool = True
+    vpn_port_file: str = ""
     # Pin all torrent traffic to one interface or address, e.g. a VPN's
     # (e.g. "10.8.0.2" or "wg0"). If the VPN drops, the address
     # vanishes and the seeder goes offline instead of using your real IP.
@@ -151,7 +156,8 @@ _SECTIONS = {
     "storage": ["folder", "budget_gb", "reserve_gb"],
     "reorient": ["every", "churn_gb"],
     "network": ["upload_mbps", "download_mbps", "upload_share", "download_share", "monthly_upload_cap_gb",
-                "memory_gb", "listen_port", "port_forwarding", "bind_interface", "hf_fallback", "hf_gb_per_day"],
+                "memory_gb", "listen_port", "port_forwarding", "vpn_port_forwarding", "vpn_port_file",
+                "bind_interface", "hf_fallback", "hf_gb_per_day"],
     "policy": ["licenses", "include_unlisted", "include_rescue", "seed_code_files", "allow_pickle",
                "whole_model_under_gb", "max_candidates"],
     "feed": ["urls", "trusted_keys", "allowed_hosts", "local"],
@@ -202,6 +208,10 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
         raise ValueError(f"dashboard.access must be one of: {', '.join(ACCESS_CHOICES)}")
     if cfg.reorient not in REORIENT_CHOICES:
         raise ValueError(f"reorient.every must be one of: {', '.join(REORIENT_CHOICES)}")
+    if not isinstance(cfg.vpn_port_forwarding, bool):
+        raise ValueError("network.vpn_port_forwarding must be true or false")
+    if not isinstance(cfg.vpn_port_file, str):
+        raise ValueError("network.vpn_port_file must be a path, or \"\"")
     if isinstance(cfg.churn_gb, bool) or not isinstance(cfg.churn_gb, (int, float)) or cfg.churn_gb < 0:
         raise ValueError("reorient.churn_gb must be a number of GB, 0 or more")
     # Flotilla's own requests (listings, pieces from Hugging Face) leave by the same pin as torrent traffic.
@@ -248,6 +258,8 @@ monthly_upload_cap_gb = {_toml_str(cfg.monthly_upload_cap_gb)}  # 0 = no cap; pa
 memory_gb = {_toml_str(cfg.memory_gb)}             # most memory to use; no new downloads start above it. 0 = automatic
 listen_port = {_toml_str(cfg.listen_port)}
 port_forwarding = {_toml_str(cfg.port_forwarding)}   # UPnP/NAT-PMP on your router
+vpn_port_forwarding = {_toml_str(cfg.vpn_port_forwarding)}   # bound to a VPN: find the port it forwards and listen on it
+vpn_port_file = {_toml_str(cfg.vpn_port_file)}      # or read that port from this file; "" = don't
 bind_interface = {_toml_str(cfg.bind_interface)}      # e.g. your VPN's address; "" = any interface
 hf_fallback = {_toml_str(cfg.hf_fallback)}       # fetch pieces no peer has from Hugging Face (checked against the torrent)
 hf_gb_per_day = {_toml_str(cfg.hf_gb_per_day)}        # most to fetch from Hugging Face a day; 0 = no limit

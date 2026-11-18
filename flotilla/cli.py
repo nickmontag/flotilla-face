@@ -149,9 +149,18 @@ def cmd_init(args) -> int:
                        f"Flotilla up inside it.")
         elif not bind:
             ui.caution("no VPN detected: peers will see this connection's public IP address")
+    if bind:
+        from .vpnport import FORWARDING_VPNS, no_forward_vpn
+
+        if name := no_forward_vpn(bind):
+            ui.note(f"{name} forwards no ports, so peers can't start connections to you: Flotilla uploads over "
+                    f"the ones it opens. VPNs that forward one: {FORWARDING_VPNS}.")
+        else:
+            ui.note("If your VPN forwards a port (gluetun, ProtonVPN, PIA's app), Flotilla finds it and listens on "
+                    "it, so peers can connect in.")
     if not bind:
         ui.note("Opening a port on your router (UPnP/NAT-PMP) lets peers reach you, so you seed more. Skip it "
-                "if you've turned UPnP off on your router or use a VPN.")
+                "if you've turned UPnP off on your router.")
         pf = _yes("Open a port on your router", pf)
 
     ui.section(5, SETUP_STEPS, "Pieces no peer has")
@@ -409,6 +418,9 @@ def _offer_vpn_container(found: list, cfg: Config) -> int | None:
             vpn = next(c for c in found if c.name == vpn)
     if vpn.health == "unhealthy":
         ui.caution(f"{vpn.name} reports itself unhealthy: Flotilla will stay offline until its VPN is up")
+    forwards, why = vpn.forwarding()
+    if why:
+        (ui.info if forwards else ui.note)(why)
 
     def where(raw: str) -> str:
         raw = raw.strip()
@@ -1199,6 +1211,11 @@ def cmd_status(args) -> int:
     up = doc.get("upload_month", {})
     print(f"node {doc['node']}  port {doc['listen_port']}  {'PAUSED  ' if doc.get('paused') else ''}"
           f"status {age:.0f}s old  uploaded this month {human(up.get('bytes', 0))}")
+    fwd = doc.get("vpn_port")
+    if fwd and fwd.get("port"):
+        print(f"inbound: {fwd['source']} forwards port {fwd['port']}: peers can connect in")
+    elif fwd:
+        print(f"inbound: no port forwarded: {fwd['note']}")
     if doc.get("feed"):
         print(f"feed v{doc['feed']['version']} from {doc['feed']['source']}")
     up = doc.get("update")

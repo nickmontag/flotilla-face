@@ -46,6 +46,7 @@ from .feed import (BUNDLED_FEED, REPO_RE, Feed, FeedError, add_pick, apply_local
 from .netinfo import address_present
 from .magnetindex import INDEX_REPO, MagnetIndex
 from .perfile import PerFile
+from .vpnport import Forward, PortFinder
 from .hfauth import remove_token, save_secret
 from .pfaccount import Account, clean_key, key_path, kind_of
 from .planner import GB, Params, Plan, Unit, plan as make_plan
@@ -86,18 +87,22 @@ def _ih(h: lt.torrent_handle) -> str:
     return str(h.info_hashes().v1)
 
 
-def session_settings(cfg: Config, *, port: int, fingerprint: str, listen_host: str | None = None,
-                     dht: bool = True, probe: bool = False) -> dict:
+def listen_interfaces(cfg: Config, port: int, listen_host: str | None = None) -> str:
     if listen_host:
         hosts = [listen_host]
     elif cfg.bind_interface:
         hosts = [cfg.bind_interface]
     else:
         hosts = ["0.0.0.0", "[::]"]
+    return ",".join(f"{h}:{port}" for h in hosts)
+
+
+def session_settings(cfg: Config, *, port: int, fingerprint: str, listen_host: str | None = None,
+                     dht: bool = True, probe: bool = False) -> dict:
     s = {
         "user_agent": f"{USER_AGENT} libtorrent/{lt.__version__}",
         "peer_fingerprint": fingerprint,
-        "listen_interfaces": ",".join(f"{h}:{port}" for h in hosts),
+        "listen_interfaces": listen_interfaces(cfg, port, listen_host),
         "enable_dht": dht,
         "enable_lsd": dht,
         "enable_upnp": cfg.port_forwarding and not probe,
@@ -328,6 +333,9 @@ class Engine:
         self.pf_account = Account(key_path(cfg.path), lambda: PirateFace(tuple(cfg.allowed_hosts)), log=self.log)
         self._pf_nudge = threading.Event()      # set to look at the account file now, not in a minute
         self._tracker_in_use: tuple[int, str | None] = (0, None)
+        # The port the VPN forwards to this node (vpnport.py), and the one it listens on for it.
+        self.vpn_forward: Forward | None = None
+        self.listening_on = cfg.listen_port
         self.perfile = PerFile(self)
         self.index = MagnetIndex(self)
         self.last_plan: Plan | None = None
@@ -1267,6 +1275,7 @@ class Engine:
                 "feed": {"version": self.feed.version, "source": self.feed.source, "signer": self.feed.signer,
                          "local": self.feed.local_source,
                          "expires": self.feed.expires.isoformat() if self.feed.version else None} if self.feed else None,
+                "vpn_port": self.vpn_forward.view() if self.vpn_forward else None,
                 "upload_month": dict(self.state.data["upload"]), "next_refresh": self.next_refresh,
                 "budget_bytes": self.last_plan.budget_bytes if self.last_plan else None, "torrents": rows,
                 "run": {"started": self.run_started, "until": self.run_until,
@@ -1356,7 +1365,8 @@ class Engine:
                 "disk": {"free": free, "total": total, "held": sum(t["done"] for t in doc["torrents"]),
                          "folder": str(self.cfg.folder), "paused": self.disk_paused},
                 "network": {"bind": self.cfg.bind_interface, "bind_up": self._bind_up(),
-                            "port_forwarding": self.cfg.port_forwarding},
+                            "port_forwarding": self.cfg.port_forwarding, "listen_port": self.listening_on,
+                            "vpn_port": self.vpn_forward.view() if self.vpn_forward else None},
                 "config_path": str(self.cfg.path) if self.cfg.path else None,
                 "user_paused": self.user_paused,
                 "log": [{"t": t, "msg": m} for t, m in list(self.log_ring)[-100:]],
@@ -1876,6 +1886,42 @@ class Engine:
             self._pf_nudge.wait(60)
             self._pf_nudge.clear()
 
+    def _vpn_port_loop(self) -> None:
+        """Keep listening on the port the VPN forwards, as it hands out new ones (vpnport.py). Own thread."""
+        finder = PortFinder(self.cfg.bind_interface, port_file=self.cfg.vpn_port_file, log=self.log)
+        said = None
+        while not self.stop.is_set():
+            try:
+                fw = finder.find(self.listening_on)
+            except Exception as e:      # never let a surprise end the thread
+                fw = Forward(note=f"couldn't look for a forwarded port: {e}")
+            self.vpn_forward = fw
+            if fw.port:
+                if (fw.listen, fw.port) != (self.listening_on, self._announced):
+                    self._listen_on(fw)
+                said = None
+            elif fw.note != said:
+                self.log(f"vpn port: none forwarded ({fw.note})")
+                said = fw.note
+            self.stop.wait(fw.renew)
+
+    _announced = 0
+
+    def _listen_on(self, fw: Forward) -> None:
+        """Listen on the forwarded port (and tell trackers the public one, when the VPN maps it to
+        another port here), then announce again so the swarm learns it now, not in half an hour."""
+        self.ses.apply_settings({"listen_interfaces": listen_interfaces(self.cfg, fw.listen),
+                                 "announce_port": fw.port if fw.port != fw.listen else 0})
+        self.listening_on, self._announced = fw.listen, fw.port
+        where = f" (to {fw.listen} here)" if fw.port != fw.listen else ""
+        self.log(f"vpn port: {fw.source} forwards port {fw.port}{where}; peers can connect in")
+        for h in self.ses.get_torrents():
+            try:
+                h.force_reannounce()
+                h.force_dht_announce()
+            except RuntimeError:        # removed meanwhile
+                pass
+
     def guard_disk(self, free: int | None = None) -> None:
         """Keep the reserve free *while running*, not just at plan time: other
         programs fill disks too. Below the reserve, torrents still downloading
@@ -1978,6 +2024,8 @@ class Engine:
         threading.Thread(target=self._memory_loop, name="memory", daemon=True).start()
         threading.Thread(target=self._update_loop, name="updates", daemon=True).start()
         threading.Thread(target=self._pirateface_loop, name="pirate-face", daemon=True).start()
+        if self.cfg.bind_interface and self.cfg.vpn_port_forwarding and not self.listen_host:
+            threading.Thread(target=self._vpn_port_loop, name="vpn-port", daemon=True).start()
         threading.Thread(target=self.perfile.run, name="per-file", daemon=True).start()
         # Always running: it does nothing while hf_fallback is off, and the dashboard can turn it on.
         threading.Thread(target=self.hf.run, name="hugging-face", daemon=True).start()

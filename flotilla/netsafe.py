@@ -10,6 +10,7 @@ Every HTTP request Flotilla makes goes through `fetch` (listings, metadata) or
   allowed host cannot bounce us somewhere else.
 * No credentials in URLs, no non-default ports.
 * A hard byte cap on every response, so a hostile server cannot fill memory.
+* `post_json` (a rescue request) follows the same rules and never follows a redirect.
 * The same network pin as torrent traffic (`pin`): with `bind_interface` set,
   every connection leaves from that interface or address, and none is made
   while it is down. Name lookups still use the system resolver.
@@ -242,6 +243,28 @@ def fetch(
             hdrs = {k.lower(): v for k, v in resp.headers.items()}
             return Response(url, resp.status, hdrs, b"".join(chunks))
     raise FetchError(url, None, "too many redirects")
+
+
+def post_json(url: str, body: dict, *, max_bytes: int = 64 << 10,
+              allowed: tuple[str, ...] = DEFAULT_ALLOWED_HOSTS, timeout: float = 30.0) -> Response:
+    """POST a JSON body under the same rules as fetch. Redirects aren't followed: a request that
+    sends something is never re-sent somewhere else. Raises FetchError on HTTP errors."""
+    check_url(url, allowed)
+    req = urllib.request.Request(url, data=json.dumps(body).encode(), method="POST")
+    req.add_header("User-Agent", USER_AGENT)
+    req.add_header("Content-Type", "application/json")
+    req.add_header("Accept", "application/json")
+    try:
+        resp = _opener().open(req, timeout=timeout)
+    except urllib.error.HTTPError as e:
+        raise FetchError(url, e.code, f"HTTP {e.code}", _retry_after(e.headers), e.headers) from e
+    except (urllib.error.URLError, TimeoutError, OSError) as e:
+        raise FetchError(url, None, str(e)) from e
+    with resp:
+        data = resp.read(max_bytes + 1)
+        if len(data) > max_bytes:
+            raise FetchError(url, resp.status, f"response exceeds cap {max_bytes}")
+        return Response(url, resp.status, {k.lower(): v for k, v in resp.headers.items()}, data)
 
 
 def fetch_json(url: str, *, max_bytes: int = 8 << 20, **kw):

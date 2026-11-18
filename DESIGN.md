@@ -76,6 +76,10 @@ malicious files, inflates or deflates priorities, replays an old feed, or makes 
 | Content | Every torrent file must exist in the HF tree at the pinned revision with the same size. HF's hash is the expected hash. If Pirate Face's SHA-256 disagrees, HF `main` is checked: same file there → accept, flag for reporting; different or unreadable → refuse as ambiguous | Torrents that smuggle in extra files; Pirate Face packaging a newer upload under an old revision label |
 | Bytes | libtorrent piece hashes, then a file-level SHA-256 (LFS) or git blob SHA-1 against HF after the write cache is flushed; one failure blocks the infohash and deletes its data | Torrents that don't match the model |
 | HF pieces | Only for files peers aren't sending, of models HF has at the pinned commit; the reply must be exactly the byte range asked for; each piece's SHA-1 must equal the torrent's own v1 piece hash before `add_piece`; two mismatches stop HF for that file | HF, its CDN or someone in the middle serving bytes that don't match the torrent; one bad piece making libtorrent discard a whole v2 file |
+| Magnet index | A build must hash to the listed infohash, hold only the license and dated shards, be small, and pass the tracker allowlist; shard lines must pass the magnet allowlist and name a 40-hex commit; an unreadable removals file disables the copy; metadata from the swarm must match the infohash; Hugging Face / ledger checks unchanged | A forged or tampered index steering nodes to other torrents, or bringing back a removed one |
+| Replaced pins | Followed only when Pirate Face's record of the pin names the listed torrent as its successor, and Hugging Face or the hash ledger vouches for every file | A compromised index swapping a pinned model's torrent while nothing else anchors it |
+| Pirate Face account | Only a key the user connected (`pirateface-key`, 0600, or `FLOTILLA_PF_KEY_FILE`; never `PIRATEFACE_KEY` or `pf`'s saved key); sent only to `pirateface.co` (`auth` is host-exact, never a redirect target) for `/api/trackers`; the seeding tracker must be `:6970/<token>/announce` on the tracker allowlist, and only its host is ever logged or shown | The key or the tracker token leaking; an answer steering announces to a foreign tracker |
+| Per-file torrents | Pure v2, exactly one file whose pieces root and size match a verified file of ours, infohash as listed; trackers filtered to the allowlist, web seeds dropped; the added piece layer must hash up to the root; seeded in upload mode from our own copy | A listing pointing our upload at other bytes; foreign trackers or seeds; a bad piece layer misleading peers |
 | HF account | Only a token the user connected (`hf-token`, 0600, or `FLOTILLA_HF_TOKEN_FILE`; never `HF_TOKEN`); whoami must show a read-only token (role `read`, or fine-grained with only `*.read` permissions) of a user; sent only after an anonymous request is refused, only to `huggingface.co` (never a redirect target); 401 on a download stops using it | A leaked token file changing the user's account or spending on it; the account being tied to public models it isn't needed for; the token reaching the CDN |
 | Policy | Code files and weight formats that can run code when loaded (pickle, Keras HDF5/.keras, NumPy .npz/.npy) are not selected by default; nothing downloaded is ever executed; licenses must be on the user's allowlist | Turning seeders into a malware distribution network |
 | Disk | Budget = `min(budget, held + free − reserve)` | Filling the user's drive |
@@ -440,12 +444,73 @@ for shards it never downloads.
 
 ## Points ledger
 
-Pirate Face's seeding points aren't live yet. Their published formula: 1 point per 3 seed-hours for a
-10 GB torrent, scaled by √(GB/10), added hourly. Flotilla records, per torrent, seed-hours,
-GB-hours of verified data, and a points estimate. It only counts time when the session isn't paused
-and the torrent is in a seeding or finished state, and caps gaps at 10 minutes so sleep or crashes
-don't inflate it. When Proof of Seed ships, this is the evidence a submitter will use, including for
-partial (shard) holdings.
+Pirate Face's published formula: 1 point per 3 seed-hours for a 10 GB torrent, scaled by √(GB/10).
+Flotilla records, per torrent, seed-hours, GB-hours of verified data, and a points estimate. It only
+counts time when the session isn't paused and the torrent is in a seeding or finished state, and caps
+gaps at 10 minutes so sleep or crashes don't inflate it. It's Flotilla's own count; Pirate Face counts
+the real points through each account's seeding tracker (below).
+
+## Seeding credit and per-file swarms
+
+`pfaccount.py`, `perfile.py`, `v2hash.py`.
+
+**Seeding credit.** `/api/trackers`, asked with an account's key, ends with that account's own tracker
+(`http://tracker.pirateface.co:6970/<token>/announce`). Torrents that also announce to it count toward the
+account's points. With a key connected, the engine adds it, in a tier of its own, to every model and
+per-file torrent, and sets `announce_to_all_tiers` so the public trackers keep hearing from it too.
+Trackers are outside the info dict, so no infohash changes. A thread re-reads the key file every minute
+and asks for the tracker every 12 hours; while Pirate Face can't be reached it keeps the tracker it has.
+
+**Per-file swarms.** Pirate Face lists a pure v2 torrent per file of its hybrid torrents
+(`/api/files/<pieces root>`), shared by every upload with the same bytes. A node holding some shards is a
+leecher in the model's swarm but a complete seeder in each shard's own. A worker thread, for each
+verified file of 1 MB or more in a hybrid torrent: looks up its swarm (one lookup a second; "not listed"
+is remembered for a day), fetches the torrent and checks it (pure v2, exactly one file with this pieces
+root and size, the infohash the listing named), keeps only allowlisted trackers, drops web seeds, and
+adds the piece layer Pirate Face leaves out. The layer comes from the leaf hashes libtorrent saved in the
+model's resume data (libtorrent keeps a downloaded or checked file's block hashes, not its piece
+layer; they're folded up per piece, for whatever piece length the per-file torrent uses), or from hashing the file when those aren't there and it wasn't verified in the
+last two hours. Either way it must hash up to the pieces root. The main loop adds the result in seed mode
+and upload mode with the file renamed to the model's own copy, so it's never downloaded, copied or
+written; libtorrent checks each piece against the tree the first time a peer asks for it. Per-file
+torrents are taken out before `_remove` or `_evict_files` deletes their file, and when the file stops
+being verified. Their uploads count as the model's in the history, the monthly cap and the upload-peer
+count. Their torrents (with piece layers) are kept under `state/per-file/`, so a restart doesn't look them
+up or hash them again.
+
+## Replaced torrents
+
+`/api/torrents/<infohash>` gives Pirate Face's record of a torrent, `supersededBy` included. A signed pin
+that the listing no longer matches is followed to its successor only if that record (followed for up to
+three hops) leads to the listed infohash, and only if Hugging Face or the hash ledger vouches for every
+file: the pin was an anchor independent of Pirate Face, and they take its place. Separately, whenever a
+held model's listing moves to another torrent of the same repo (a repack or a new revision), the engine
+moves each verified file whose path, size and expected hash the new candidate shares into the new
+torrent's folder before planning (`_carry_over`). The new torrent finds them when libtorrent checks it,
+and they're verified against the new candidate's hashes like any download; the old torrent and anything
+left of it are then removed.
+
+## Magnet index
+
+`magnetindex.py`. The index (`pirateface/magnet-index`) is a listing like any other: once a day the
+refresh asks for it, and a new build's .torrent must hash to the listed infohash, hold only `LICENSE` and
+`shards/[removed-]YYYY-MM-DD.txt`, stay under 256 MB and pass the tracker allowlist. It's seeded from
+`state/index/files`; a new build is added over the old one's folder (it only downloads new shards) and
+the old one is let go once the new one is complete. Shards are read like Pirate Face's CLI reads them:
+dates in order, each date's removals applied after its shard, the last line for a repo winning, and a
+removals file that isn't all 40-hex lines makes the whole copy answer nothing. A line counts only if it
+passes `validate_magnet` and has exactly one web seed naming `api/ws/<owner>/<name>/<40-hex commit>`.
+When `/api/torrents` can't be reached, `build_candidate` takes the listing from the copy (no Pirate Face
+manifest) and the .torrent from the swarm: BEP 9 metadata in a short-lived session with the probe's
+settings, the magnet's trackers added back, checked against the infohash, then cached. Every later check
+runs unchanged; a pin the copy disagrees with is a transient rejection, since the replacement can't be
+asked about.
+
+## Rescue requests
+
+`flotilla add` (asking first, or `--rescue`) and the dashboard's button send `POST /api/rescue
+{"repoId": ...}`, as Pirate Face's CLI does: the model's name only, no account. `netsafe.post_json` uses
+the same host allowlist and network pin as `fetch` and never follows a redirect.
 
 ## Worth Rescuing sync
 

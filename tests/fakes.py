@@ -77,6 +77,8 @@ class FakePF:
         self.by_ih = {r.infohash: r for r in repos}
         self.overrides: dict[str, dict] = {}
         self.raw_overrides: dict[str, bytes] = {}
+        self.replaced: dict[str, str] = {}
+        self.remembered: dict[str, bytes] = {}
 
     def torrent(self, repo, quant=None):
         if repo in self.overrides:
@@ -89,6 +91,12 @@ class FakePF:
 
     def new_torrents(self):
         return []
+
+    def replacement(self, ih):
+        return self.replaced.get(ih)
+
+    def remember_torrent(self, ih, raw):
+        self.remembered[ih] = raw
 
     def rescue(self):
         return {"rescued": []}

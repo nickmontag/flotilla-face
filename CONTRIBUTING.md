@@ -30,6 +30,9 @@ The test suite never touches the internet. `tests/test_swarm.py` runs real libto
 | `engine.py` | libtorrent: probe swarms, apply plans, verify, seed, disk guard |
 | `hfpieces.py` | Pieces no peer is sending, fetched from Hugging Face and checked against the torrent |
 | `hfauth.py` | The Hugging Face account for gated models: the token file, the read-only check, when the token is sent |
+| `pfaccount.py` | The Pirate Face account for points: the key file, the account's seeding tracker |
+| `magnetindex.py` | Pirate Face's magnet index: keeping and seeding it, reading its shards, listings from it while Pirate Face is down |
+| `perfile.py`, `v2hash.py` | Per-file swarms: looking up and checking each shard's own torrent, supplying its BitTorrent v2 piece layer |
 | `history.py` | Upload and download history (SQLite) |
 | `dashboard.py` | Local web dashboard and its JSON API |
 | `remote.py` | The dashboard as a separate process, through the shared state folder |
@@ -44,7 +47,7 @@ The test suite never touches the internet. `tests/test_swarm.py` runs real libto
 ## Ground rules
 
 - **Security-relevant changes need a test.** Anything touching `netsafe`, `signing`, `feed`, `ledger`,
-  `magnet`, `torrentmeta`, `candidates` or `hfauth` should come with a test showing the attack it blocks.
+  `magnet`, `torrentmeta`, `candidates`, `hfauth`, `pfaccount`, `perfile` or `magnetindex` should come with a test showing the attack it blocks.
 - **Never execute downloaded content**, and don't add a code path that could.
 - **No new runtime dependencies** without a good reason. Easy install is a feature.
 - **Keep the planner pure.** No I/O in `planner.py`, so it stays testable.

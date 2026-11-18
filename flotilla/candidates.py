@@ -17,6 +17,9 @@ when all of these hold:
    manifest is cross-checked: a disagreement is accepted (and flagged for
    reporting) only if HF's current main still has the same file as the pinned
    revision; otherwise the torrent is refused as ambiguous.
+   When Pirate Face replaced a pinned torrent (its record of the pin names a successor), the
+   successor is followed, but only if Hugging Face or the hash ledger vouches for every file:
+   the pin's job, an anchor independent of the index, passes to them.
 6. The signed hash ledger (ledger.py), when it records this repo at this
    revision: every torrent file must be in the record with the same size, and
    Hugging Face must agree with it. When HF no longer has the repo, the ledger's
@@ -24,6 +27,10 @@ when all of these hold:
    cross-checked. A ledger that knows the repo only at other revisions refuses
    the torrent. With no ledger record either, Pirate Face's manifest is the only
    source and the candidate is marked "pirateface-only".
+
+While Pirate Face can't be reached, the listing (magnet, infohash, revision) can come from the node's
+copy of its magnet index (magnetindex.py) and the .torrent from the swarm. There's no Pirate Face
+manifest then; everything else above applies unchanged.
 """
 
 from __future__ import annotations
@@ -88,6 +95,8 @@ class TorrentCand:
     verify_source: str = "huggingface"
     pinned: bool = False
     listed: bool = False
+    replaces: str = ""             # the pinned torrent Pirate Face replaced with this one
+    index_build: str = ""          # listed from the magnet index copy (Pirate Face unreachable)
     note: str = ""
     # Files where Pirate Face's manifest SHA-256 disagrees with Hugging Face (or, once Hugging Face
     # no longer has the repo, with the hash ledger). We verify against those; this list is for
@@ -167,13 +176,18 @@ def build_candidate(
     license_hint: str | None = None,
     catalog_hf_backed: bool | None = None,
     ledger: Ledger | None = None,
+    index=None,
 ) -> TorrentCand | Rejection:
     if repo.lower() in feed.deny:
         return Rejection(repo, "on the feed's deny list")
+    from_index = ""
     try:
         info = pf.torrent(repo, quant)
     except (FetchError, UnsafeURL) as e:
-        return Rejection(repo, f"Pirate Face lookup failed: {e}", transient=True)
+        info = index.listing(repo) if index is not None and quant is None else None
+        if info is None:
+            return Rejection(repo, f"Pirate Face lookup failed: {e}", transient=True)
+        from_index = info["index_build"]
     if not info or not info.get("magnet") or not info.get("infohash"):
         return Rejection(repo, "no magnet listed (no torrent yet, or terms must be accepted first)")
 
@@ -187,10 +201,20 @@ def build_candidate(
     if ih in feed.deny:
         return Rejection(repo, "infohash on the feed's deny list")
     revision = str(info.get("revision") or "")
-    pinned = False
+    pinned, replaces = False, ""
     if entry and entry.infohash:
         if entry.infohash != ih:
-            return Rejection(repo, f"listed infohash {ih[:12]}… does not match the signed pin {entry.infohash[:12]}…")
+            if from_index:
+                return Rejection(repo, f"the magnet index lists {ih[:12]}…, not the signed pin {entry.infohash[:12]}…, "
+                                       f"and Pirate Face can't be asked whether it replaced the pin", transient=True)
+            try:
+                successor = pf.replacement(entry.infohash)
+            except (FetchError, UnsafeURL) as e:
+                return Rejection(repo, f"listed infohash {ih[:12]}… isn't the signed pin {entry.infohash[:12]}…, "
+                                       f"and Pirate Face couldn't be asked whether it replaced it: {e}", transient=True)
+            if successor != ih:
+                return Rejection(repo, f"listed infohash {ih[:12]}… does not match the signed pin {entry.infohash[:12]}…")
+            replaces = entry.infohash
         pinned = True
     if entry and entry.revision and entry.revision != revision:
         return Rejection(repo, "listed revision does not match the signed pin")
@@ -208,7 +232,16 @@ def build_candidate(
     try:
         raw = pf.torrent_file(ih)
     except FetchError as e:
-        return Rejection(repo, f".torrent download failed: {e}", transient=True)
+        if index is None or not from_index:
+            return Rejection(repo, f".torrent download failed: {e}", transient=True)
+        from .magnetindex import Unavailable
+
+        try:
+            raw = index.torrent(info["magnet"])     # libtorrent checks it against the infohash
+        except (Unavailable, MagnetError) as e2:
+            return Rejection(repo, f"Pirate Face can't be reached and the swarm didn't send the .torrent: {e2}",
+                             transient=True)
+        pf.remember_torrent(ih, raw)
     try:
         meta = parse_torrent(raw)
     except (TorrentError, ValueError) as e:
@@ -230,6 +263,9 @@ def build_candidate(
         known = ", ".join(r[:12] for r in ledger.revisions(repo))
         return Rejection(repo, f"Hugging Face no longer has it, and the hash ledger records it at {known}, "
                                f"not at the listed {revision[:12]} (refused)")
+    if replaces and tree is None and record is None:
+        return Rejection(repo, f"Pirate Face replaced the signed pin {replaces[:12]}… with {ih[:12]}…, but with Hugging "
+                               f"Face gone and no hash-ledger record nothing independent vouches for the new torrent")
 
     files: list[FileCand] = []
     mismatches: list[dict] = []
@@ -324,12 +360,12 @@ def build_candidate(
         license=license_, priority=priority, target_replicas=target, hf_backed=hf_backed,
         seeders=int(info.get("seeders") or 0), leechers=int(info.get("leechers") or 0), meta=meta, files=files,
         verify_source=source, pinned=pinned, listed=entry is not None, note=entry.note if entry else "",
-        manifest_mismatches=mismatches,
+        manifest_mismatches=mismatches, replaces=replaces, index_build=from_index,
     )
 
 
 def gather(cfg: Config, feed: Feed, pf: PirateFace, hf: HuggingFace, held_repos: set[str], log=print,
-           ledger: Ledger | None = None):
+           ledger: Ledger | None = None, index=None):
     """Decide which repos to look at, then build candidates for each.
 
     Order: the signed feed's models, models we already hold, then (if enabled)
@@ -380,6 +416,6 @@ def gather(cfg: Config, feed: Feed, pf: PirateFace, hf: HuggingFace, held_repos:
     cands: list[TorrentCand] = []
     rejected: list[Rejection] = []
     for repo, quant, entry in wanted:
-        c = build_candidate(repo, quant, feed, entry, pf, hf, cfg, ledger=ledger)
+        c = build_candidate(repo, quant, feed, entry, pf, hf, cfg, ledger=ledger, index=index)
         (cands if isinstance(c, TorrentCand) else rejected).append(c)
     return cands, rejected

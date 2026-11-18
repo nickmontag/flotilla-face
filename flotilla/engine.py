@@ -44,10 +44,14 @@ from .remote import WRITE_EVERY, snapshot_wanted, take_requests, write_snapshot
 from .feed import (BUNDLED_FEED, REPO_RE, Feed, FeedError, add_pick, apply_local, list_picks, load_feed, origin_view,
                    parse_model_ref, rank_priority, read_allot, read_order, remove_pick, set_allot, set_order)
 from .netinfo import address_present
+from .magnetindex import INDEX_REPO, MagnetIndex
+from .perfile import PerFile
+from .pfaccount import Account, key_path
 from .planner import GB, Params, Plan, Unit, plan as make_plan
 from .signing import PublicKey, SignatureError
 from .sources import HuggingFace, PirateFace, git_blob_sha1, sha256_file
 from .torrentmeta import parse_torrent
+from .v2hash import NO_TREE, piece_layer_tree
 
 PROBE_RATE = 4096          # bytes/s per probed torrent
 PROBE_PREFIX = "-FP0100-"
@@ -143,47 +147,19 @@ def _atp(raw: bytes, save_path: Path, prios: list[int]) -> lt.add_torrent_params
     return atp
 
 
-BLOCK = 16 * 1024
-# An empty saved tree. libtorrent stops reading the saved trees at the first entry without
-# "hashes", so a bare {} there throws away the trees of every file after it.
-NO_TREE = {b"hashes": b""}
-
-
-def _bits_set(mask: bytes, lo: int, hi: int) -> int:
-    """Set bits in [lo, hi) of a resume-data bitfield (bit 0 is the top bit of byte 0)."""
-    total = len(mask) * 8
-    hi = min(hi, total)
-    if hi <= lo:
-        return 0
-    return ((int.from_bytes(mask, "big") >> (total - hi)) & ((1 << (hi - lo)) - 1)).bit_count()
-
-
-def _piece_layer_tree(tree: dict, size: int, piece_length: int) -> dict:
-    """A saved v2 hash tree cut down to its piece layer, or NO_TREE if it doesn't hold all of it.
-
-    libtorrent loads a tree holding exactly the piece layer at 32 bytes a piece (2 KB per GB with
-    16 MB pieces), checked against the file's root hash; any other saved tree is rebuilt at full
-    size, 4-8 MB per GB."""
-    if size <= piece_length or piece_length <= BLOCK:
-        return dict(NO_TREE)
-    pieces = -(-size // piece_length)
-    start = (1 << (pieces - 1).bit_length()) - 1      # first node of the piece layer
-    end = start + pieces
-    hashes = tree.get(b"hashes") or b""
-    mask = tree.get(b"mask")
-    if mask:
-        if _bits_set(mask, start, end) != pieces:
-            return dict(NO_TREE)
-        first = _bits_set(mask, 0, start)              # hashes are stored for set bits only
-    else:                                             # a full tree: every node, in order
-        first = start
-    layer = hashes[first * 32:(first + pieces) * 32]
-    if len(layer) != pieces * 32:
-        return dict(NO_TREE)
-    new_mask = bytearray((end + 7) // 8)
-    for i in range(start, end):
-        new_mask[i >> 3] |= 0x80 >> (i & 7)
-    return {b"hashes": layer, b"mask": bytes(new_mask)}
+def _set_tracker(h: lt.torrent_handle, old: str | None, new: str | None) -> None:
+    """Replace tracker `old` with `new` on a torrent (either may be None), in a tier of its own."""
+    entries = []
+    for t in h.trackers():
+        if t["url"] != old and t["url"] != new:
+            e = lt.announce_entry(t["url"])
+            e.tier = t["tier"]
+            entries.append(e)
+    if new:
+        e = lt.announce_entry(new)
+        e.tier = max((x.tier for x in entries), default=-1) + 1
+        entries.append(e)
+    h.replace_trackers(entries)
 
 
 def _compact_trees(raw: bytes, prios: list[int], sizes: list[int], piece_length: int) -> bytes:
@@ -208,7 +184,7 @@ def _compact_trees(raw: bytes, prios: list[int], sizes: list[int], piece_length:
         if not isinstance(t, dict) or b"hashes" not in t:
             new = dict(NO_TREE)
         elif i < len(prios) and prios[i] == 0 and t[b"hashes"]:
-            new = _piece_layer_tree(t, sizes[i], piece_length) if bitfields and i < len(sizes) else dict(NO_TREE)
+            new = piece_layer_tree(t, sizes[i], piece_length) if bitfields and i < len(sizes) else dict(NO_TREE)
         else:
             continue
         if new != t:
@@ -347,6 +323,11 @@ class Engine:
         self.stop = threading.Event()
         self.resume_dir = state.dir / "resume"
         self.torrent_dir = state.dir / "torrents"
+        # Seeding credit (an opt-in Pirate Face account key) and per-file swarms.
+        self.pf_account = Account(key_path(cfg.path), lambda: PirateFace(tuple(cfg.allowed_hosts)), log=self.log)
+        self._tracker_in_use: tuple[int, str | None] = (0, None)
+        self.perfile = PerFile(self)
+        self.index = MagnetIndex(self)
         self.last_plan: Plan | None = None
         self.feed: Feed | None = None
         self.ledger: Ledger | None = None
@@ -363,7 +344,7 @@ class Engine:
         self._last_peer_scan = 0.0
         self.state.data.setdefault("blocklist", [])
         self.state.data.setdefault("dropped", [])      # repos the user removed from the dashboard
-        self.state.data.setdefault("ledger", {})       # seed-hours per torrent (future Pirate Face points)
+        self.state.data.setdefault("ledger", {})       # seed-hours per torrent (a points estimate)
         # Reorienting: when this node last swapped held pieces for needier ones, and what it swapped.
         self.state.data.setdefault("reorient", {})
         self._reorient_now = False                     # the user asked for one, whatever the schedule
@@ -452,7 +433,19 @@ class Engine:
         with self.lock:
             held_repos = {h["repo"] for h in self.state.holdings.values()}
         self.ledger = load_ledger(self.trusted_keys(), self.state.dir, tuple(self.cfg.feed_allowed_hosts), log=self.log)
-        cands, rejected = gather(self.cfg, self.feed, pf, hf, held_repos, log=self.log, ledger=self.ledger)
+        try:
+            self.index.sync(pf)
+        except (netsafe.FetchError, netsafe.UnsafeURL, ValueError) as e:
+            self.log(f"magnet index: couldn't check for a new build ({e})")
+        cands, rejected = gather(self.cfg, self.feed, pf, hf, held_repos, log=self.log, ledger=self.ledger,
+                                 index=self.index)
+        for c in cands:
+            if c.index_build:
+                self.log(f"{c.repo}: Pirate Face can't be reached; listed from the magnet index (build "
+                         f"{c.index_build}), checked against {c.verify_source}")
+            if c.replaces:
+                self.log(f"{c.repo}: Pirate Face replaced the pinned torrent {c.replaces[:12]}… with "
+                         f"{c.infohash[:12]}…; following it ({c.verify_source} vouches for every file)")
         with self.lock:
             block, dropped = set(self.state.data["blocklist"]), set(self.state.data["dropped"])
         return [c for c in cands if c.infohash not in block and c.repo not in dropped], rejected
@@ -523,6 +516,9 @@ class Engine:
         ro = self.state.data["reorient"]
         asked, self._reorient_now = self._reorient_now, False
         due = asked or self.reorient_due(now)
+        if self._carry_over(cands):
+            with self.lock:
+                self.mark_held(cands)
         base = self.params()
         churn = int(self.cfg.churn_gb * GB)
         p = make_plan(cands, dataclasses.replace(base, churn_bytes=churn if due else 0), self.state.node_id)
@@ -553,6 +549,65 @@ class Engine:
         self._update_preview(base, now)
         self._snap = None      # a new plan: the dashboard's next poll shows it
         return p
+
+    def _carry_over(self, cands: list[TorrentCand]) -> int:
+        """A held model whose torrent changed (Pirate Face replaced it, or listed a new revision): move
+        the files already held and verified into the new torrent's folder, so they're checked again
+        against the new torrent and its hashes instead of downloaded again. Main loop only."""
+        listed = {c.infohash for c in cands}
+        moved_total = 0
+        for old, hold in list(self.state.holdings.items()):
+            if old in listed:
+                continue
+            new = [c for c in cands if c.repo == hold["repo"] and c.infohash not in self.state.holdings]
+            if len(new) > 1:
+                new = [c for c in new if c.quant == hold.get("quant")]
+            if len(new) != 1:
+                continue
+            c = new[0]
+            by_path = {f.repo_path: f for f in c.files if f.kind != "skip"}
+            moves = []
+            for k, e in hold["files"].items():
+                f = by_path.get(e["path"])
+                same = f is not None and f.size == e["size"] and (
+                    (f.sha256 and (e.get("sha256") or "").lower() == f.sha256.lower())
+                    or (f.git_oid and (e.get("git_oid") or "").lower() == f.git_oid.lower()))
+                if e["status"] == "verified" and same:
+                    moves.append((e, f))
+            if not moves:
+                continue
+            self.perfile.drop(old)                   # they point at the old folder
+            h = self.handles.get(old)
+            if h is not None:
+                self._take_out(old, h)
+            src, dest = Path(hold["save_path"]), self.save_path(c.repo, c.infohash)
+            files = {}
+            for e, f in moves:
+                to = dest / c.meta.files[f.index].path
+                try:
+                    to.parent.mkdir(parents=True, exist_ok=True)
+                    os.replace(src / e["tpath"], to)
+                except OSError as err:
+                    self.log(f"{c.repo}: couldn't move {e['path']} over ({err}); it's downloaded again")
+                    continue
+                files[str(f.index)] = {"path": f.repo_path, "tpath": c.meta.files[f.index].path, "size": f.size,
+                                       "sha256": f.sha256, "git_oid": f.git_oid, "status": "wanted",
+                                       "since": e.get("since") or time.time(), "prio": 4}
+            self.torrent_dir.mkdir(parents=True, exist_ok=True)
+            (self.torrent_dir / f"{c.infohash}.torrent").write_bytes(c.meta.raw)
+            with self.lock:
+                self.state.holdings[c.infohash] = {"repo": c.repo, "quant": c.quant, "revision": c.revision,
+                                                   "save_path": str(dest), "files": files}
+                led = self.state.data["ledger"]
+                if old in led and c.infohash not in led:
+                    led[c.infohash] = led.pop(old)
+            self._remove(old, delete=True)          # what's left of the old torrent
+            why = (f"Pirate Face replaced its torrent ({old[:12]}… → {c.infohash[:12]}…)"
+                   if hold.get("revision") == c.revision else f"it's listed at a new revision ({c.revision[:12]})")
+            self.log(f"{c.repo}: {why}; moved {len(files)} verified file(s) over to be checked against the new "
+                     f"torrent instead of downloading them again")
+            moved_total += len(files)
+        return moved_total
 
     # ---------------------------------------------------------- reorienting
 
@@ -700,8 +755,35 @@ class Engine:
             h.connect_peer(addr)
         if self.disk_paused:
             h.pause()
+        self.add_seeding_tracker(h)
         self.handles[ih] = h
         return h
+
+    def extra_handles(self) -> list[tuple[str, str, object]]:
+        """(status key, history key, handle) of the torrents besides the models: per-file swarms (counted
+        as their model's) and the magnet index."""
+        return [*self.perfile.handles(), *self.index.handles()]
+
+    def add_seeding_tracker(self, h: lt.torrent_handle) -> None:
+        """Announce to the connected account's seeding tracker too, so this torrent counts toward its
+        Pirate Face points. Trackers sit outside the info dict: the infohash doesn't change."""
+        url = self._tracker_in_use[1]
+        if url:
+            _set_tracker(h, None, url)
+
+    def _apply_seeding_tracker(self) -> None:
+        """Follow the account: add, swap or remove its seeding tracker on every torrent."""
+        gen, url = self.pf_account.tracker()
+        if gen == self._tracker_in_use[0]:
+            return
+        old = self._tracker_in_use[1]
+        self._tracker_in_use = (gen, url)
+        if url == old:
+            return
+        # Every tier, so the public trackers keep hearing from us as well as the account's own.
+        self.ses.apply_settings({"announce_to_all_tiers": bool(url)})
+        for h in [*self.handles.values(), *(c[2] for c in self.extra_handles())]:
+            _set_tracker(h, old, url)
 
     def _wait_gone(self, ih: str, want_deleted: bool, timeout: float = 15.0) -> None:
         end = time.monotonic() + timeout
@@ -721,6 +803,7 @@ class Engine:
             time.sleep(0.1)
 
     def _remove(self, ih: str, delete: bool) -> None:
+        self.perfile.drop(ih)                      # before the files can go
         h = self.handles.pop(ih, None)
         self._up_seen.pop(ih, None)
         self._st.pop(ih, None)
@@ -744,6 +827,7 @@ class Engine:
         so the rest isn't re-hashed: a full recheck read every byte the torrent holds. Without
         resume data it falls back to that recheck."""
         hold = self.state.holdings[ih]
+        self.perfile.drop(ih, indices)                # before the files go
         rf = self.resume_dir / f"{ih}.fastresume"
         h = self.handles.get(ih)
         saved = h is not None and self._save_resume_now(ih, h)
@@ -818,6 +902,8 @@ class Engine:
             self._add(ih, prios)
         if self.handles:
             self.log(f"resumed seeding {len(self.handles)} torrent(s)")
+        self.perfile.resume()
+        self.index.resume()
 
     # ---------------------------------------------------------- applying
 
@@ -1140,10 +1226,10 @@ class Engine:
             if self.ses.is_paused() and not self.user_paused:
                 self.ses.resume()
                 self.log("new month: upload cap reset, seeding resumed")
-        for ih, h in self.handles.items():
-            total = self.status(ih, h).total_payload_upload
-            up["bytes"] += max(0, total - self._up_seen.get(ih, 0))
-            self._up_seen[ih] = total
+        for key, _, h in [*((ih, ih, h) for ih, h in self.handles.items()), *self.extra_handles()]:
+            total = self.status(key, h).total_payload_upload
+            up["bytes"] += max(0, total - self._up_seen.get(key, 0))
+            self._up_seen[key] = total
         cap = self.cfg.monthly_upload_cap_gb * GB
         if cap and up["bytes"] >= cap and not self.ses.is_paused():
             self.ses.pause()
@@ -1171,7 +1257,7 @@ class Engine:
                     "down_rate": st.download_payload_rate, "uploaded": st.all_time_upload,
                     "peers": st.num_peers, "seeds": st.num_seeds, "verify_source": hold.get("verify_source"),
                     "manifest_mismatches": hold.get("manifest_mismatches", []),
-                    "hf_bytes": hold.get("hf_bytes", 0),
+                    "hf_bytes": hold.get("hf_bytes", 0), "per_file": self.perfile.count(ih),
                 })
             doc = {
                 "at": datetime.now(timezone.utc).isoformat(), "node": self.state.node_id[:8],
@@ -1186,6 +1272,9 @@ class Engine:
             }
         doc["hf_gated"] = self.hf.gated_list()
         doc["update"] = self.update_available
+        doc["per_file"] = self.perfile.info()
+        doc["pirateface"] = self.pf_account.info()
+        doc["magnet_index"] = self.index.info()
         return doc
 
     # ---------------------------------------------------------- dashboard
@@ -1198,7 +1287,7 @@ class Engine:
     SWITCHES = ("hf_fallback",)   # on/off settings
     CHOICES = {"reorient": REORIENT_CHOICES}   # one-of settings
     ACTIONS = ("settings", "pause", "resume", "replan", "reorient", "drop", "add", "remove", "order", "allot", "skip",
-               "unskip", "hf_disconnect")
+               "unskip", "hf_disconnect", "rescue")
 
     def _bind_up(self) -> bool | None:
         if not self.cfg.bind_interface:
@@ -1345,6 +1434,15 @@ class Engine:
             self.log(f"set aside {gb:g} GB for {repo}; replanning" if gb else f"cleared the space set aside for {repo}")
             self.commands.put(("replan_soon", {}))
             return "saved"
+        elif action == "rescue":
+            repo = body.get("repo")
+            if not isinstance(repo, str) or not REPO_RE.fullmatch(repo):
+                raise ValueError("not a model name")
+            listed = {m.repo for m in self.feed.models} if self.feed else set()
+            if repo not in listed and repo not in {m["repo"] for m in self.local_view()[0]}:
+                raise ValueError(f"{repo} isn't on your list")
+            threading.Thread(target=self._ask_rescue, args=(repo,), name="rescue", daemon=True).start()
+            return "asking"
         elif action in ("add", "remove"):
             # Picks are just a file: save right away (so the page shows it at once),
             # and let the main loop do the replan when it's free.
@@ -1367,6 +1465,19 @@ class Engine:
             body = {}
         self.commands.put((action, body))
         return "queued"
+
+    def _ask_rescue(self, repo: str) -> None:
+        """Ask Pirate Face to add a model it has no torrent for (sends only its name). Own thread."""
+        try:
+            PirateFace(tuple(self.cfg.allowed_hosts)).request_rescue(repo)
+        except (netsafe.FetchError, ValueError) as e:
+            self.log(f"couldn't ask Pirate Face to add {repo} ({e})")
+            return
+        with self.lock:
+            self.state.data.setdefault("rescue_asked", {})[repo] = time.time()
+            self._dirty = True
+        self._snap = None
+        self.log(f"asked Pirate Face to add {repo}; Flotilla picks it up once it's listed")
 
     def _remote_loop(self) -> None:
         """On its own thread, so a dashboard outside this process works from the moment the node
@@ -1553,7 +1664,8 @@ class Engine:
         out = []
         for repo, prio, source, note, origin in sorted(entries, key=lambda e: -e[1]):
             row = {"repo": repo, "priority": round(prio, 3), "source": source, "note": note, "origin": origin,
-                   "allot_gb": allot.get(repo), "held_bytes": held[repo]["done"] if repo in held else 0}
+                   "allot_gb": allot.get(repo), "held_bytes": held[repo]["done"] if repo in held else 0,
+                   "rescue_asked": self.state.data.get("rescue_asked", {}).get(repo)}
             i = info.get(repo)
             if i:
                 avail = [f["avail"] for f in i["files"] if f["avail"] is not None]
@@ -1656,19 +1768,24 @@ class Engine:
         self._last_sample = now
         moved, names = {}, {}
         with self.lock:
-            for ih, h in self.handles.items():
-                st = self.status(ih, h, fresh=True)      # the minute's totals, to the second
+            # A model's per-file swarms count as the model's own upload.
+            every = [*((ih, ih, h) for ih, h in self.handles.items()), *self.extra_handles()]
+            for key, ih, h in every:
+                st = self.status(key, h, fresh=True)      # the minute's totals, to the second
                 u, d = st.total_payload_upload, st.total_payload_download
-                pu, pd = self._hist_seen.get(ih, (0, 0))
+                pu, pd = self._hist_seen.get(key, (0, 0))
                 du, dd = (u - pu if u >= pu else u), (d - pd if d >= pd else d)
-                self._hist_seen[ih] = (u, d)
+                self._hist_seen[key] = (u, d)
                 if du or dd:
-                    moved[ih] = (du, dd)
+                    mu, md = moved.get(ih, (0, 0))
+                    moved[ih] = (mu + du, md + dd)
                     hold = self.state.holdings.get(ih)
                     if hold:
                         names[ih] = hold["repo"]
-            for ih in set(self._hist_seen) - set(self.handles):
-                del self._hist_seen[ih]
+                    elif key.startswith("index:"):
+                        names[ih] = INDEX_REPO
+            for key in set(self._hist_seen) - {k for k, _, _ in every}:
+                del self._hist_seen[key]
             # Pieces from Hugging Face reach libtorrent through add_piece, which its download
             # counters don't count: add them here so the history shows everything fetched.
             for ih, n in self.hf.take_new().items():
@@ -1684,8 +1801,8 @@ class Engine:
 
     def update_ledger(self, now: float) -> None:
         """Seed-hours per torrent and a points estimate with Pirate Face's published
-        formula: 1 point per 3 seed-hours for a 10 GB torrent, scaled by sqrt(GB/10).
-        Points aren't live on Pirate Face yet; this is a local record to show later."""
+        formula: 1 point per 3 seed-hours for a 10 GB torrent, scaled by sqrt(GB/10). Flotilla's
+        own count: Pirate Face counts the real one through the account's seeding tracker."""
         last = self.state.data.get("ledger_at") or now
         self.state.data["ledger_at"] = now
         dt_h = max(0.0, min(now - last, 600)) / 3600   # cap gaps from sleep or crashes
@@ -1709,6 +1826,18 @@ class Engine:
         self._handle_alerts(self.ses.pop_alerts())
         self._handle_failures()
         self.process_commands()
+        self._apply_seeding_tracker()
+        self.perfile.tick(time.time())
+        self.index.tick()
+
+    def _pirateface_loop(self) -> None:
+        """The account key: re-read when it changes, its seeding tracker asked for when due."""
+        while not self.stop.is_set():
+            try:
+                self.pf_account.poll()
+            except Exception as e:      # never let a surprise end the thread
+                self.log(f"pirate face: {e}")
+            self.stop.wait(60)
 
     def guard_disk(self, free: int | None = None) -> None:
         """Keep the reserve free *while running*, not just at plan time: other
@@ -1744,7 +1873,7 @@ class Engine:
         if now - self._last_peer_scan < 60:
             return
         self._last_peer_scan = now
-        for h in self.handles.values():
+        for h in [*self.handles.values(), *(c[2] for c in self.extra_handles())]:
             for p in h.get_peer_info():
                 if p.total_upload > 0 and len(self.upload_peers) < UPLOAD_PEERS_MAX:
                     pid = p.pid.to_bytes()
@@ -1811,6 +1940,8 @@ class Engine:
         threading.Thread(target=self._remote_loop, name="remote-dashboard", daemon=True).start()
         threading.Thread(target=self._memory_loop, name="memory", daemon=True).start()
         threading.Thread(target=self._update_loop, name="updates", daemon=True).start()
+        threading.Thread(target=self._pirateface_loop, name="pirate-face", daemon=True).start()
+        threading.Thread(target=self.perfile.run, name="per-file", daemon=True).start()
         # Always running: it does nothing while hf_fallback is off, and the dashboard can turn it on.
         threading.Thread(target=self.hf.run, name="hugging-face", daemon=True).start()
         self._sampler = threading.Thread(target=self._sample_loop, name="history", daemon=True)

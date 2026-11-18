@@ -145,6 +145,99 @@ class PirateFace:
                 pass
         return raw
 
+    def torrent_status(self, infohash: str) -> dict | None:
+        """Pirate Face's record of one torrent (GET /api/torrents/<infohash>): {"infohash", "repo",
+        "status", "supersededBy"}, or None if it has none."""
+        if not re.fullmatch(r"[0-9a-f]{40}", infohash):
+            raise ValueError(f"not an infohash: {infohash!r}")
+        try:
+            doc = self._get(f"/api/torrents/{infohash}")
+        except FetchError as e:
+            if e.status in (400, 404):
+                return None
+            raise
+        return doc if isinstance(doc, dict) else None
+
+    def replacement(self, infohash: str, hops: int = 3) -> str | None:
+        """The torrent Pirate Face replaced this one with (following a chain of replacements), or None."""
+        seen, ih = {infohash}, infohash
+        for _ in range(hops):
+            doc = self.torrent_status(ih) or {}
+            nxt = str(doc.get("supersededBy") or "").lower()
+            if not re.fullmatch(r"[0-9a-f]{40}", nxt) or nxt in seen:
+                break
+            seen.add(nxt)
+            ih = nxt
+        return ih if ih != infohash else None
+
+    def request_rescue(self, repo: str) -> dict:
+        """Ask Pirate Face to add a model it doesn't have yet (POST /api/rescue, as its own CLI does).
+        Sends only the model's name; no account."""
+        if not _REPO.match(repo):
+            raise ValueError(f"not a model name: {repo!r}")
+        from .netsafe import post_json
+
+        resp = post_json(f"{self.base}/api/rescue", {"repoId": repo}, allowed=self.allowed)
+        try:
+            doc = json.loads(resp.body or b"{}")
+        except ValueError:
+            doc = {}
+        return doc if isinstance(doc, dict) else {}
+
+    def remember_torrent(self, infohash: str, raw: bytes) -> None:
+        """Cache a .torrent obtained elsewhere (from the swarm, while Pirate Face is down)."""
+        from .torrentmeta import TorrentError, parse_torrent
+
+        if not self.cache_dir:
+            return
+        try:
+            if parse_torrent(raw).infohash_v1 != infohash:
+                return
+        except (TorrentError, ValueError):
+            return
+        cached = self.cache_dir / "torrents" / f"{infohash}.torrent"
+        cached.parent.mkdir(parents=True, exist_ok=True)
+        cached.write_bytes(raw)
+
+    def file_swarm(self, root: str) -> dict | None:
+        """The per-file swarm for one file, by its BEP 52 pieces root (GET /api/files/<root>):
+        {"root", "name", "length", "infohashV2", "torrent", "siblings", ...}, or None if Pirate Face
+        doesn't list one. Raises FetchError when it can't be reached."""
+        if not re.fullmatch(r"[0-9a-f]{64}", root):
+            raise ValueError(f"not a pieces root: {root!r}")
+        self._guard()
+        try:
+            doc = fetch_json(f"{self.base}/api/files/{root}", allowed=self.allowed, max_bytes=1 << 20)
+        except FetchError as e:
+            if e.status in (404, 410):
+                return None
+            self._note(e)
+            raise
+        self._server_errors = 0
+        return doc if isinstance(doc, dict) else None
+
+    def file_torrent(self, path: str) -> bytes:
+        """A per-file .torrent, by the path /api/files gave for it."""
+        if not re.fullmatch(r"/api/files/[0-9a-f]{64}\.torrent", path):
+            raise ValueError(f"unexpected per-file torrent path {path!r}")
+        self._guard()
+        try:
+            raw = fetch(f"{self.base}{path}", max_bytes=1 << 20, allowed=self.allowed,
+                        accept="application/x-bittorrent").body
+        except FetchError as e:
+            self._note(e)
+            raise
+        self._server_errors = 0
+        return raw
+
+    def trackers(self, key: str) -> list[str]:
+        """The trackers Pirate Face gives this account (GET /api/trackers with its key): the public
+        ones, then the account's own seeding tracker. The key goes to pirateface.co only."""
+        host = (urllib.parse.urlsplit(self.base).hostname or "").lower()
+        body = fetch(f"{self.base}/api/trackers", max_bytes=16 << 10, allowed=self.allowed,
+                     auth=(host, f"Bearer {key}")).body
+        return body.decode("utf-8", "replace").split()
+
     def prune_cache(self, days: float = TORRENT_CACHE_DAYS) -> None:
         if not self.cache_dir or not (self.cache_dir / "torrents").exists():
             return

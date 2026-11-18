@@ -152,12 +152,32 @@ flotilla add https://huggingface.co/author/model
 
 Your picks go to the top of the list, ahead of the published priorities. Plain `author/model` and Pirate
 Face magnet links work too. Only models that already have a torrent on Pirate Face can be seeded. If one
-doesn't yet, the dashboard says so, and you can request it at
-[pirateface.co/submit](https://pirateface.co/submit).
+doesn't yet, `flotilla add` offers to ask Pirate Face to add it (`--rescue` asks without the question),
+and the dashboard shows an **Ask Pirate Face** button next to it. The request carries only the model's
+name; Pirate Face's volunteers build the torrent from Hugging Face, and Flotilla picks it up once it's
+listed. You can also upload one yourself at [pirateface.co/submit](https://pirateface.co/submit).
 
 `flotilla remove <link>` takes a pick off, and `flotilla picks` lists them. Picks are stored in
 `~/.config/flotilla/my-priorities.json`, together with your order, GB amounts and any other changes you
 make to the list.
+
+### When Pirate Face replaces a torrent
+
+Pirate Face sometimes repacks a model, say to turn an older v1-only torrent into a hybrid one with
+per-file swarms, and lists the new torrent instead. A model can also be listed again at a new revision.
+Either way, the files you hold that the new torrent also has, with the same hashes, are moved over to it
+and checked again; only what changed is downloaded. For a model the signed priority list pins to a
+torrent, Flotilla follows the replacement only if Pirate Face's own record says the pinned torrent was
+replaced by this one and Hugging Face or the hash ledger vouches for every file in it.
+
+### When Pirate Face is down
+
+Pirate Face publishes every model's magnet as a torrent of its own, the magnet index (about 10 MB, a new
+build each week). Flotilla keeps the newest build and seeds it, so a copy of the index outlives the site.
+While Pirate Face can't be reached, models come from that copy: the magnet from the index, the .torrent
+from the swarm (libtorrent checks it against the infohash), and every file is still checked against
+Hugging Face or the hash ledger before anything is downloaded. A model the index has removed is never
+brought back. Set `keep_magnet_index = false` under `[pirateface]` to turn this off.
 
 ## How Flotilla decides what to carry
 
@@ -292,6 +312,10 @@ What Flotilla does with it:
   hash, and the whole file is checked against Hugging Face's hash afterwards like any other.
 - **Your Hugging Face account only if you connect it**, with a read-only token, sent only to
   `huggingface.co` and only for [gated models](#gated-models).
+- **Survives Pirate Face going down.** A copy of its magnet index is kept and seeded; while the site
+  is down, models come from that copy and the swarm, checked the same way.
+- **Your Pirate Face account only if you connect it**, for [points](#pirate-face-points). Its key is
+  sent only to `pirateface.co`.
 - **Honest about the costs.** Other peers can see the IP address you seed from, and seeding uses your
   upload bandwidth. Router port forwarding (UPnP) is off unless you turn it on.
 
@@ -314,12 +338,13 @@ Found a hole? See [SECURITY.md](SECURITY.md).
 | `flotilla plan` | Preview what you'd carry, without downloading (`--probe` looks at the live swarm) |
 | `flotilla run` | Run in the foreground (`--hours N` to seed for a set time) |
 | `flotilla service install` / `uninstall` / `status` | Run in the background: launchd on macOS, systemd on Linux (`--linger` keeps it running while you're logged out). Logs: `~/Library/Logs/flotilla.log` on macOS, rotated at 10 MB with three old copies kept; `journalctl --user -u flotilla` on Linux |
-| `flotilla add <link>` / `remove <link>` / `picks` | Prioritize a model by its Hugging Face or Pirate Face link, take it off, list your picks |
+| `flotilla add <link>` / `remove <link>` / `picks` | Prioritize a model by its Hugging Face or Pirate Face link (`--rescue`: ask Pirate Face to add it if it has no torrent), take it off, list your picks |
 | `flotilla dashboard` | Open the local dashboard |
 | `flotilla dashboard --serve --listen 0.0.0.0` | Serve the dashboard on your network for a node in a VPN container (see Behind gluetun) |
 | `flotilla dashboard --url` | The dashboard's address with its access key |
 | `flotilla status` | Text summary of the running node |
 | `flotilla hf connect` / `disconnect` / `status` | Connect a Hugging Face account (a read-only token) for [gated models](#gated-models), remove it, check it |
+| `flotilla points [connect / disconnect]` | Connect a Pirate Face account so your seeding [earns points](#pirate-face-points), remove it, or check it |
 | `flotilla history [--range 30d] [--model author/model] [--csv]` | Upload and download over time; `--csv` for a spreadsheet |
 | `flotilla verify` | Re-check every file you hold against its published hash |
 | `flotilla verify <folder>` | Check a model you downloaded (with any client) against the hash ledger |
@@ -429,14 +454,59 @@ ever reaches it, Docker restarts it and it picks up where it left off.
 
 ## Pirate Face points
 
-Pirate Face has announced seeding points but they aren't live yet. Flotilla already keeps a local
-record of your seed-hours per model, and the dashboard shows an estimate using Pirate Face's published
-formula: 1 point per 3 seed-hours for a 10 GB torrent, scaled by √(GB/10). When Pirate Face's Proof of
-Seed goes live, Flotilla will be able to submit it.
+Pirate Face gives points for seeding: 1 point per 3 hours of seeding a 10 GB model, faster for bigger
+ones (×√(GB/10)), plus points for other kinds of help. Points go to an account's handle, and Pirate Face
+counts them through a tracker of each account's own. Flotilla can earn them for you:
 
-One open question is worth raising with Pirate Face. Their tracker only counts peers that hold an
-*entire* torrent as seeders, so piece-level seeders show up as leechers. Flotilla's per-piece record is
-the evidence that they're contributing.
+```bash
+flotilla points connect
+```
+
+It asks for your key from [pirateface.co/settings](https://pirateface.co/settings) (Community torrent
+key, starting `pfct_`), checks it with Pirate Face, and saves it in `pirateface-key` next to the config,
+readable only by you. Setup asks too; the answer defaults to no. From then on, every torrent Flotilla seeds
+also announces to your account's tracker, and the dashboard says so. With Docker, run it in the node's
+container: `docker exec -it flotilla flotilla points connect`.
+
+What connecting means:
+
+- **Pirate Face sees what this node seeds, under your account**, from the address peers see (your VPN's,
+  if Flotilla is pinned to one). Without a key, Flotilla never tells Pirate Face who you are.
+- **The key goes only to `pirateface.co`**, only to ask for your tracker. That tracker's address carries
+  a token of its own, so Flotilla never logs or shows it, only its host. It's accepted only on
+  `tracker.pirateface.co`.
+- `flotilla points` shows whether it's working. `flotilla points disconnect` removes the key, and
+  torrents stop announcing to your tracker within a minute.
+
+**Per-file swarms.** Pirate Face's tracker counts a peer as a seeder only if it holds a whole torrent, so
+a node holding some of a model's shards shows up as a leecher. But Pirate Face also runs a swarm for every
+file of its newer (hybrid) torrents, shared by every upload holding the same bytes, and in those Flotilla
+is a complete seeder of each shard it holds. So for every shard it has verified (1 MB or more), Flotilla
+also joins that file's own swarm:
+
+- It looks the file up on Pirate Face, fetches its per-file torrent and checks it is exactly that file:
+  same BitTorrent v2 root hash, same size, and the infohash Pirate Face named.
+- Pirate Face's per-file torrents leave out their piece hashes, so a peer can't check what it downloads
+  until someone supplies them. Flotilla adds them, from the hashes it already saved while downloading
+  the file, or by reading the file once if it has none. They're used only if they add up to the file's
+  root hash, so peers can download the shard from a Flotilla node alone.
+- It seeds from the model's own copy of the file: nothing is downloaded or stored twice, and nothing is
+  ever written to it. It leaves a file's swarm before the file is deleted.
+
+Its uploads count in your history and monthly cap like any other. Older torrents that are v1 only have no
+per-file swarms. Set `per_file_swarms = false` under `[pirateface]` in the config to turn it off.
+
+Flotilla also keeps its own record of seed-hours per model, and the dashboard shows an estimate with the
+formula above. That's Flotilla's count; Pirate Face keeps the real one. Seeding the magnet index counts
+too, with an account connected.
+
+**Other ways to help.** Pirate Face's own CLI has a job Flotilla doesn't do: `pf work` takes models from
+its rescue queue, streams them from Hugging Face, checks them, and lists their torrents (3 points per GB,
+no disk space needed). If you have bandwidth to spare, run it next to Flotilla with the same key:
+
+```bash
+uvx -p 3.13 --from pirateface@latest pf work
+```
 
 ## The priority list
 

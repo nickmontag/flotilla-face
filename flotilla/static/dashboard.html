@@ -929,13 +929,13 @@ function render(s) {
   else setPill("status", "", "Idle");
   if (net.bind) setPill("vpn", net.bind_up ? "ok" : "bad", (net.bind_up ? "VPN pinned · " : "Waiting for VPN · ") + net.bind);
   else setPill("vpn", "warn", "No VPN pin");
-  const up = s.update;
-  $("update").hidden = !up;
-  if (up) {
-    $("update").href = up.page;
-    $("update").title = up.where === "docker" ? "To install it, run flotilla update on the machine running Docker"
-                                              : "To install it, run flotilla update";
-    $("update").lastElementChild.textContent = "Flotilla " + up.version + " is out: flotilla update";
+  const rel = s.update;
+  $("update").hidden = !rel;
+  if (rel) {
+    $("update").href = rel.page;
+    $("update").title = rel.where === "docker" ? "To install it, run flotilla update on the machine running Docker"
+                                               : "To install it, run flotilla update";
+    $("update").lastElementChild.textContent = "Flotilla " + rel.version + " is out: flotilla update";
   }
   $("node").textContent = "node " + s.node + " · v" + s.version;
   $("foot-ver").textContent = "v" + s.version;
@@ -965,7 +965,14 @@ function render(s) {
   if (hf.retry_at)
     $("downsub").textContent += " · Hugging Face busy, trying again at " + new Date(hf.retry_at * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   setNum("swarm", ts.length, (x) => { const n = Math.round(x); return [String(n), n === 1 ? "model" : "models"]; });
-  $("swarmsub").textContent = plural(sum("peers"), "peer") + " connected · ≈ " + (s.points_est_total || 0).toFixed(1) + " points (est.)";
+  const pfs = s.per_file || {}, acct = s.pirateface || {}, earning = acct.state === "ok";
+  $("swarmsub").textContent = plural(sum("peers"), "peer") + " connected" +
+    (pfs.joined ? " · " + (pfs.joined === 1 ? "1 shard in its own swarm" : pfs.joined + " shards in their own swarms") : "") +
+    " · ≈ " + (s.points_est_total || 0).toFixed(1) + " points (est.)" + (earning ? "" : ", not earning");
+  $("swarmsub").title = earning
+    ? "Your seeding counts toward your Pirate Face account's points (" + acct.tracker + "). The estimate is Flotilla's own; Pirate Face keeps the real count."
+    : (acct.why ? acct.why.charAt(0).toUpperCase() + acct.why.slice(1) + ". " : "") +
+      "No Pirate Face account is connected, so this seeding earns no points. Run `flotilla points connect` where Flotilla runs.";
 
   renderReorient(s.reorient || {});
   renderCarrying(ts);
@@ -1425,6 +1432,18 @@ function renderPriorities(list, st) {
     const need = el("span", "need" + (n.dot ? " hot" : ""));
     if (n.dot) need.append(el("i", "d " + n.dot));
     const nt = el("span", "t", n.text); nt.title = n.title || n.text; need.append(nt);
+    if (p.status === "no torrent on Pirate Face yet") {
+      if (p.rescue_asked) {
+        const a = el("span", "muted", " · asked " + new Date(p.rescue_asked * 1000).toLocaleDateString());
+        a.title = "You asked Pirate Face to add it. Flotilla picks it up once it's listed."; need.append(a);
+      } else {
+        const ask = el("button", "ghost", "Ask Pirate Face");
+        ask.type = "button";
+        ask.title = "Ask Pirate Face to add this model (sends only its name; its volunteers build the torrent from Hugging Face)";
+        ask.onclick = () => post("rescue", { repo: p.repo }, "Asking Pirate Face…", "Asked Pirate Face to add it.", "priomsg");
+        need.append(ask);
+      }
+    }
 
     const swarm = p.seeders != null ? cell(String(p.seeders), (p.seeders === 1 ? " seed · " : " seeds · ") + p.leechers + " dl")
                                      : el("span", "cell", "–");

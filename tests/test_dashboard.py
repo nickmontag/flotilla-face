@@ -241,3 +241,24 @@ def test_config_refuses_an_unknown_reorient_schedule(tmp_path):
         load_config(path)
     path.write_text(render_config(Config()).replace('every = "weekly"', 'every = "never"'))
     assert load_config(path).reorient == "never"
+
+
+def test_the_dashboard_script_parses(tmp_path):
+    """A syntax error anywhere in the page's script (0.2.0-0.2.3 declared `up` twice in render)
+    leaves the dashboard empty, and nothing else here runs the script."""
+    import re
+    import shutil
+    import subprocess
+    from pathlib import Path
+
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("needs Node.js to parse the script")
+    html = (Path(__file__).parent.parent / "flotilla" / "static" / "dashboard.html").read_text()
+    scripts = re.findall(r"<script(?![^>]*\bsrc=)[^>]*>(.*?)</script>", html, re.S)
+    assert scripts
+    for i, js in enumerate(scripts):
+        f = tmp_path / f"s{i}.js"
+        f.write_text(js)
+        r = subprocess.run([node, "--check", str(f)], capture_output=True, text=True)
+        assert r.returncode == 0, r.stderr

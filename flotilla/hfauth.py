@@ -74,11 +74,16 @@ def read_token(path: Path | None) -> str | None:
 
 def save_token(path: Path, token: str) -> None:
     """Write the token readable by this user only, replacing any earlier one."""
+    save_secret(path, clean_token(token))
+
+
+def save_secret(path: Path, value: str) -> None:
+    """Write a secret (a token, a key) to its own file, readable by this user only."""
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_name(path.name + ".tmp")
     fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
     with os.fdopen(fd, "w") as f:
-        f.write(clean_token(token) + "\n")
+        f.write(value + "\n")
     os.chmod(tmp, 0o600)        # in case a leftover .tmp had another mode
     os.replace(tmp, path)
 

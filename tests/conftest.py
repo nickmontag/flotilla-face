@@ -4,6 +4,15 @@ TEST_IMAGE = "ghcr.io/nickmontag/flotilla-face@sha256:" + "a" * 64
 
 
 @pytest.fixture(autouse=True)
+def _no_real_config_folder(monkeypatch, tmp_path):
+    """Defaults that point into the config folder (your picks, my-priorities.json) point into a
+    temporary one: a test must never read or change the real ~/.config/flotilla."""
+    from flotilla import config
+
+    monkeypatch.setattr(config, "_default_config_dir", lambda: tmp_path / "config-home")
+
+
+@pytest.fixture(autouse=True)
 def _no_host_vpn_lookups(monkeypatch):
     """Setup tests must not depend on the test machine's VPN tunnels, Docker containers, home network
     or Tailscale, and a setup that binds to a VPN mustn't leave its network pin behind for the next test."""
@@ -18,6 +27,7 @@ def _no_host_vpn_lookups(monkeypatch):
     monkeypatch.setattr(access, "in_container", lambda: False)
     monkeypatch.delenv(access.ACCESS_ENV, raising=False)
     monkeypatch.delenv(access.URL_ENV, raising=False)
+    monkeypatch.delenv("FLOTILLA_PF_KEY_FILE", raising=False)
     monkeypatch.setattr(containers, "release_image", lambda: (TEST_IMAGE, "0.2.0"))
     monkeypatch.setattr(containers, "_docker", lambda *a: None)     # never the machine's real Docker
     yield

@@ -96,6 +96,10 @@ class Config:
     # Once a day, see whether a newer signed release is out. The dashboard and `flotilla status` say
     # so; nothing installs by itself (`flotilla update` does, when you run it).
     check_updates: bool = True
+    # Pirate Face's per-file swarms: each verified shard also seeds in its own swarm (see perfile.py).
+    per_file_swarms: bool = True
+    # Keep and seed Pirate Face's magnet index, and list models from it while the site is down (magnetindex.py).
+    keep_magnet_index: bool = True
 
     # Each lets anyone copy and redistribute the weights. glm-5.3 and qwen-community-1.0 are MIT-style
     # with extra conditions only for very large commercial AI services.
@@ -155,6 +159,7 @@ _SECTIONS = {
     "tuning": ["refresh_hours", "probe_seconds", "spread", "hold_bonus", "min_hold_days"],
     "dashboard": ["enabled", "port", "access"],
     "updates": ["check"],
+    "pirateface": ["per_file_swarms", "keep_magnet_index"],
 }
 
 
@@ -269,6 +274,11 @@ access = {_toml_str(cfg.dashboard_access)}     # local, lan (home network), tail
 
 [updates]
 check = {_toml_str(cfg.check_updates)}        # daily: is a newer signed release out? Only says so; `flotilla update` installs it
+
+[pirateface]
+per_file_swarms = {_toml_str(cfg.per_file_swarms)}   # also seed each shard in its own swarm, where Pirate Face counts you as a full seeder
+keep_magnet_index = {_toml_str(cfg.keep_magnet_index)}   # keep and seed Pirate Face's magnet index (about 10 MB); used while the site is down
+# Seeding credit for Pirate Face points: `flotilla points connect` (your key goes in its own file, not here)
 
 [tuning]
 refresh_hours = {_toml_str(cfg.refresh_hours)}

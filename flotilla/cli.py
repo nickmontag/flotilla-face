@@ -63,7 +63,7 @@ def parse_gb(raw: str) -> float:
     return v
 
 
-SETUP_STEPS = 7
+SETUP_STEPS = 8
 
 
 def cmd_init(args) -> int:
@@ -172,7 +172,10 @@ def cmd_init(args) -> int:
     else:
         access = _ask_access(cfg.dashboard_access, cfg.dashboard_port)
 
-    ui.section(7, SETUP_STEPS, "Licenses")
+    ui.section(7, SETUP_STEPS, "Pirate Face points")
+    credit = _setup_points(path, bind, tuple(cfg.allowed_hosts))
+
+    ui.section(8, SETUP_STEPS, "Licenses")
     licenses = list(cfg.licenses)
     try:
         from .netsafe import FetchError
@@ -220,6 +223,8 @@ def cmd_init(args) -> int:
         ("Hugging Face", (f"fetches pieces no peer has, up to {f'{hf_gb:g} GB a day' if hf_gb else 'any amount'}")
                          if hf else "off: pieces no peer has are waited for"),
         ("Dashboard", _describe_access(access)),
+        ("Points", "your seeding counts toward your Pirate Face account" if credit
+                   else "not earning: no Pirate Face account connected (`flotilla points connect`)"),
     ])
     if access == "public":
         from .access import PUBLIC_WARNING
@@ -528,6 +533,141 @@ def _setup_hf_account(config_path: Path, bind: str) -> None:
         hf_connect(tpath)
 
 
+def _setup_points(config_path: Path, bind: str, allowed: tuple[str, ...]) -> bool:
+    """Setup's question about seeding credit. True if an account is connected afterwards."""
+    from . import netsafe
+    from .pfaccount import PFKeyError, key_path, read_key
+
+    kpath = key_path(config_path)
+    try:
+        have = read_key(kpath) is not None
+    except (PFKeyError, OSError):
+        have = True
+    ui.note("Flotilla seeds each shard it holds in that file's own swarm too, where Pirate Face counts you as a "
+            "full seeder. Pirate Face gives points for seeding to accounts that connect their key; the "
+            "account then sees what this node seeds, from the address peers see"
+            + (f" ({bind}, your VPN)." if bind else "."))
+    if have:
+        if _yes(f"A Pirate Face account is connected ({kpath}). Keep earning points with it", True):
+            return True
+        from .hfauth import remove_token
+
+        remove_token(kpath)
+        ui.info("disconnected: seeding no longer earns points")
+        return False
+    if not _yes("Connect your Pirate Face account to earn points", False):
+        return False
+    netsafe.pin(bind)          # check the key over the connection Flotilla will use
+    return points_connect(kpath, allowed)
+
+
+def points_connect(kpath: Path, allowed: tuple[str, ...], source: str | None = None) -> bool:
+    """Ask for a Pirate Face key (or read it from `source`, a file or - for stdin), check it, save it."""
+    import getpass
+
+    from .hfauth import save_secret
+    from .netsafe import FetchError
+    from .pfaccount import SETTINGS_PAGE, PFKeyError, check, clean_key, tracker_host
+    from .sources import PirateFace
+
+    if source is None:
+        print("\nPirate Face counts seeding through a tracker of your account's own:")
+        print(f"  * Your key is at {SETTINGS_PAGE}, under Community torrent key (it starts with pfct_). Points go")
+        print("    to your handle: an account without one earns none.")
+        print("  * Every torrent Flotilla seeds also announces to that tracker, so Pirate Face sees what this node")
+        print("    seeds, and from which address, under your account.")
+        print(f"  * The key is saved in {kpath}, readable only by you, and sent only to pirateface.co.")
+        raw = getpass.getpass("Paste the key (it won't show): ")
+    elif source == "-":
+        raw = sys.stdin.readline()
+    else:
+        raw = Path(source).expanduser().read_text()
+    try:
+        key = clean_key(raw)
+        print("Checking it with Pirate Face...")
+        url = check(key, PirateFace(allowed))
+    except PFKeyError as e:
+        print(f"Not connected: {e}")
+        return False
+    except FetchError as e:
+        print(f"Not connected: couldn't reach Pirate Face to check the key ({e}). Try again in a while.")
+        return False
+    try:
+        save_secret(kpath, key)
+    except OSError as e:
+        print(f"Not connected: couldn't save the key to {kpath} ({e})")
+        return False
+    print(f"Connected: your seeding tracker is on {tracker_host(url)}. Saved to {kpath}.")
+    print("A running node starts announcing to it within a minute.")
+    return True
+
+
+def cmd_points(args) -> int:
+    from .hfauth import readable_by_others, remove_token
+    from .netsafe import FetchError
+    from .pfaccount import PFKeyError, check, key_path, read_key, tracker_host
+    from .sources import PirateFace
+
+    cfg_path = Path(args.config)
+    cfg = load_config(cfg_path)              # sets the network pin, so Pirate Face sees the address Flotilla uses
+    kpath = key_path(cfg_path)
+    if args.action == "connect":
+        return 0 if points_connect(kpath, tuple(cfg.allowed_hosts), args.from_file) else 1
+    if args.action == "disconnect":
+        try:
+            gone = remove_token(kpath)
+        except OSError as e:
+            print(f"Couldn't remove {kpath}: {e}")
+            return 1
+        print(f"Disconnected: removed {kpath}. Seeding no longer earns points." if gone
+              else "No Pirate Face account was connected.")
+        return 0
+    try:
+        key = read_key(kpath)
+    except (PFKeyError, OSError) as e:
+        print(f"The key file {kpath} can't be used: {e}")
+        return 1
+    if not key:
+        print("No Pirate Face account connected: seeding earns no points. Connect one with `flotilla points connect`.")
+    else:
+        print(f"Key file: {kpath}")
+        if readable_by_others(kpath):
+            print(f"  others on this computer can read it: chmod 600 {kpath}")
+        try:
+            url = check(key, PirateFace(tuple(cfg.allowed_hosts)))
+            print(f"Connected: seeding counts toward your account's points (tracker {tracker_host(url)}).")
+        except PFKeyError as e:
+            print(f"Not used: {e}")
+        except FetchError as e:
+            print(f"Couldn't check it with Pirate Face: {e}")
+    status = Path(args.state) / "status.json"
+    if status.exists():
+        _print_per_file(json.loads(status.read_text()))
+    if not cfg.per_file_swarms:
+        print("Per-file swarms are off (per_file_swarms under [pirateface] in the config).")
+    return 0
+
+
+def _print_per_file(doc: dict) -> None:
+    pf = doc.get("per_file") or {}
+    if pf.get("enabled"):
+        line = f"Per-file swarms: seeding {pf.get('joined', 0)} file(s) in their own swarms"
+        if pf.get("waiting"):
+            line += f", {pf['waiting']} to look up"
+        if pf.get("hashing"):
+            line += f", hashing {pf['hashing']}"
+        print(line)
+    mi = doc.get("magnet_index") or {}
+    if mi.get("enabled") and mi.get("build"):
+        print(f"Magnet index: keeping build {mi['build']} ({mi.get('models') or 0} models)"
+              + (", seeding it" if mi.get("seeding") else ", fetching it") + "; used if Pirate Face can't be reached")
+    acct = doc.get("pirateface") or {}
+    if acct.get("state") == "ok":
+        print(f"Points: seeding counts toward your Pirate Face account ({acct.get('tracker')})")
+    elif acct.get("why"):
+        print(f"Points: {acct['why']}")
+
+
 def hf_connect(tpath: Path, source: str | None = None) -> bool:
     """Ask for a token (or read it from `source`, a file or - for stdin), check it, save it."""
     import getpass
@@ -637,17 +777,37 @@ def cmd_add(args) -> int:
     cfg = load_config(Path(args.config))
     repo, new = add_pick(cfg.local_feed, args.link, args.priority, args.note or "")
     print(f"{'Added' if new else 'Updated'} {repo} in your picks ({cfg.local_feed}).")
+    pf = PirateFace(tuple(cfg.allowed_hosts))
     try:
-        info = PirateFace(tuple(cfg.allowed_hosts)).torrent(repo)
+        info = pf.torrent(repo)
         if not info or not info.get("magnet"):
-            print("Note: Pirate Face has no torrent for it yet, so there's nothing to seed until someone adds one "
-                  "(https://pirateface.co/submit).")
+            print("Pirate Face has no torrent for it yet, so there's nothing to seed until someone adds one.")
+            if args.rescue or (sys.stdin.isatty() and _yes(
+                    "Ask Pirate Face to add it? (sends only the model's name; its volunteers build the torrent "
+                    "from Hugging Face)", False)):
+                _ask_rescue(pf, repo)
+            else:
+                print("  To ask later: flotilla add --rescue " + repo + "  (or upload it: https://pirateface.co/submit)")
         else:
             print(f"Pirate Face has it: {info.get('seeders', 0)} seeders, {info.get('leechers', 0)} leechers.")
     except FetchError:
         pass
     print("Flotilla picks it up at its next replan; press Replan now in the dashboard to do it right away.")
     return 0
+
+
+def _ask_rescue(pf, repo: str) -> bool:
+    from .netsafe import FetchError
+
+    try:
+        doc = pf.request_rescue(repo)
+    except FetchError as e:
+        print(f"Couldn't ask Pirate Face to add it ({e}). Try again later, or upload it at https://pirateface.co/submit")
+        return False
+    status = doc.get("status") or doc.get("message")
+    print(f"Asked Pirate Face to add {repo}" + (f" ({status})." if isinstance(status, str) and status else ".")
+          + " Flotilla picks it up once it's listed.")
+    return True
 
 
 def cmd_remove(args) -> int:
@@ -1045,6 +1205,8 @@ def cmd_status(args) -> int:
         print("\nPirate Face's manifest disagrees with Hugging Face for these (verified against Hugging Face):")
         for t in flagged:
             print(f"  {t['repo']}: {', '.join(m['path'] for m in t['manifest_mismatches'])}")
+    print()
+    _print_per_file(doc)
     _print_gated(doc.get("hf_gated") or [])
     return 0
 
@@ -1730,6 +1892,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("link")
     p.add_argument("--priority", type=float, default=100, help="0-100 (default 100: top priority)")
     p.add_argument("--note", help="why you care about it")
+    p.add_argument("--rescue", action="store_true",
+                   help="if Pirate Face has no torrent for it, ask Pirate Face to add it without asking first")
     p = sub.add_parser("remove", help="remove a model you added with `flotilla add`")
     p.add_argument("link")
     sub.add_parser("picks", help="list the models you added")
@@ -1754,6 +1918,10 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("action", choices=["connect", "disconnect", "status"])
     p.add_argument("--from-file", metavar="PATH",
                    help="connect: read the token from this file, or - for standard input, instead of asking")
+    p = sub.add_parser("points", help="connect a Pirate Face account so your seeding earns points")
+    p.add_argument("action", nargs="?", default="status", choices=["connect", "disconnect", "status"])
+    p.add_argument("--from-file", metavar="PATH",
+                   help="connect: read the key from this file, or - for standard input, instead of asking")
     p = sub.add_parser("service", help="run Flotilla in the background (launchd on macOS, systemd on Linux)")
     p.add_argument("action", choices=["install", "uninstall", "status"])
     p.add_argument("--dry-run", action="store_true", help="show what would be written and run")
@@ -1801,7 +1969,8 @@ def main(argv: list[str] | None = None) -> int:
                 "service": cmd_service, "uninstall": cmd_uninstall, "dashboard": cmd_dashboard,
                 "add": cmd_add, "remove": cmd_remove, "picks": cmd_picks,
                 "verify": cmd_verify, "history": cmd_history, "feed": cmd_feed, "editor": cmd_editor,
-                "ledger": cmd_ledger, "hf": cmd_hf, "update": cmd_update}
+                "ledger": cmd_ledger, "hf": cmd_hf, "update": cmd_update,
+                "points": cmd_points}
     try:
         return handlers[args.cmd](args)
     except (FeedError, SignatureError, ValueError) as e:

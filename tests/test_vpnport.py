@@ -254,3 +254,77 @@ def test_engine_listens_on_the_forwarded_port():
 def test_listen_interfaces():
     assert listen_interfaces(Config(bind_interface="wg0"), 5914) == "wg0:5914"
     assert listen_interfaces(Config(), 6881) == "0.0.0.0:6881,[::]:6881"
+
+
+# ---------------------------------------------------------------- nobody can reach this node: dial out
+
+
+class _Reach:
+    from flotilla.engine import Engine as _E
+    scan_upload_peers, reachable, set_dial_out, dial_out_announce = (
+        _E.scan_upload_peers, _E.reachable, _E.set_dial_out, _E.dial_out_announce)
+    reach_view = _E.reach_view
+
+    def __init__(self, peers, last_inbound=0.0):
+        self.applied, self.logs, self.announced = [], [], 0
+        self.ses = SimpleNamespace(apply_settings=self.applied.append)
+        self.handles = {"ih": SimpleNamespace(get_peer_info=lambda: peers, force_reannounce=self._announce)}
+        self.extra_handles = lambda: []
+        self.state = SimpleNamespace(data={"inbound": {"last": last_inbound}})
+        self.upload_peers, self._last_peer_scan, self._last_dial_announce = set(), 0.0, 0.0
+        self.peers_in = self.peers_out = self.peers_holepunched = 0
+        self.vpn_forward, self.dialing_out = None, False
+        self._dial_defaults = {"connection_speed": 30}
+        self.log = self.logs.append
+
+    def _announce(self):
+        self.announced += 1
+
+
+def _peer(ip, outgoing, *more):
+    flags = (lt.peer_info.outgoing_connection if outgoing else 0)
+    for f in more:
+        flags |= f
+    return SimpleNamespace(ip=(ip, 51413), flags=flags, total_upload=0, pid=lt.sha1_hash(b"\0" * 20))
+
+
+def test_only_dialed_peers_means_dial_out_harder(monkeypatch):
+    from flotilla.engine import DIAL_OUT, DIAL_OUT_ANNOUNCE
+
+    e = _Reach([_peer("185.10.1.2", True), _peer("185.10.1.3", True),
+                _peer("192.168.1.9", False),                              # LAN peer: says nothing
+                _peer("185.10.1.4", False, lt.peer_info.connecting)])      # not connected yet
+    e.scan_upload_peers(1000.0)
+    assert (e.peers_in, e.peers_out) == (0, 2)
+    assert e.dialing_out and e.applied == [DIAL_OUT]
+    assert DIAL_OUT["enable_outgoing_utp"] and DIAL_OUT["seeding_outgoing_connections"]
+    e.dial_out_announce(5000.0)
+    e.dial_out_announce(5000.0 + 60)                 # not again so soon
+    assert e.announced == 1
+    e.dial_out_announce(5000.0 + DIAL_OUT_ANNOUNCE)
+    assert e.announced == 2
+    assert e.reach_view()["dialing_out"] is True
+
+
+def test_a_peer_connecting_in_makes_the_node_reachable():
+    e = _Reach([_peer("185.10.1.2", False, lt.peer_info.holepunched)])
+    e.dialing_out = True
+    e.scan_upload_peers(1000.0)
+    assert (e.peers_in, e.peers_holepunched) == (1, 1)
+    assert not e.dialing_out and e.applied == [{"connection_speed": 30}]
+    assert e.state.data["inbound"]["last"] > 0
+    e.dial_out_announce(10_000.0)
+    assert e.announced == 0
+
+
+def test_reachable_for_days_after_a_peer_connected_in_or_with_a_forwarded_port():
+    import time
+
+    from flotilla.engine import REACHABLE_FOR
+
+    e = _Reach([], last_inbound=time.time() - REACHABLE_FOR / 2)
+    assert e.reachable()
+    e.state.data["inbound"]["last"] = time.time() - REACHABLE_FOR - 1
+    assert not e.reachable()
+    e.vpn_forward = vpnport.Forward(5914, "gluetun")
+    assert e.reachable()

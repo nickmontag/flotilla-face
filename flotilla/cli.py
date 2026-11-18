@@ -1211,11 +1211,16 @@ def cmd_status(args) -> int:
     up = doc.get("upload_month", {})
     print(f"node {doc['node']}  port {doc['listen_port']}  {'PAUSED  ' if doc.get('paused') else ''}"
           f"status {age:.0f}s old  uploaded this month {human(up.get('bytes', 0))}")
-    fwd = doc.get("vpn_port")
+    fwd, reach = doc.get("vpn_port"), doc.get("reach") or {}
     if fwd and fwd.get("port"):
         print(f"inbound: {fwd['source']} forwards port {fwd['port']}: peers can connect in")
     elif fwd:
         print(f"inbound: no port forwarded: {fwd['note']}")
+    if reach:
+        how = ("dialing out harder, as peers can't connect in" if reach.get("dialing_out")
+               else "peers can connect in")
+        punched = f" ({reach['peers_holepunched']} hole-punched)" if reach.get("peers_holepunched") else ""
+        print(f"peers: {reach.get('peers_in', 0)} connected in, {reach.get('peers_out', 0)} dialed{punched}; {how}")
     if doc.get("feed"):
         print(f"feed v{doc['feed']['version']} from {doc['feed']['source']}")
     up = doc.get("update")

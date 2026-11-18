@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import collections
 import dataclasses
+import ipaddress
 import json
 import math
 import os
@@ -68,7 +69,23 @@ STATUS_MAX_AGE = 2.0
 SNAPSHOT_FRESH = 1.5        # seconds one dashboard snapshot is shared between requests (several tabs)
 UPLOAD_PEERS_MAX = 100_000  # distinct peers remembered per run (the count shows "at least" past it)
 SAMPLE_EVERY = 5.0   # history thread wake-ups; sample() itself records once per clock minute
+# Reachable: a peer started a connection to this node within REACHABLE_FOR, or the VPN forwards it a
+# port. A node nobody can reach only ever talks to peers it dials itself, so it dials harder
+# (DIAL_OUT, in place of libtorrent's defaults) and announces every DIAL_OUT_ANNOUNCE (the tracker's
+# own minimum interval still holds), to hear about new leechers sooner. uTP and PEX stay on: they're
+# what libtorrent's hole punching (BEP 55) needs to link two nodes neither of which can be reached.
+REACHABLE_FOR = 3 * 86400.0
+DIAL_OUT = {"connection_speed": 60, "torrent_connect_boost": 60, "peer_connect_timeout": 10,
+            "seeding_outgoing_connections": True, "enable_outgoing_utp": True, "enable_incoming_utp": True}
+DIAL_OUT_ANNOUNCE = 15 * 60.0
 RESUME_EVERY = 30 * 60.0
+
+
+def _from_internet(host: str) -> bool:
+    try:
+        return ipaddress.ip_address(host).is_global
+    except ValueError:
+        return False
 
 
 def _slug(repo: str) -> str:
@@ -352,6 +369,13 @@ class Engine:
         self.session_up_start = 0
         self.upload_peers: set[bytes] = set()
         self._last_peer_scan = 0.0
+        # Who started the connections: peers that connected in (seen last at inbound["last"]), and
+        # whether this node is dialing harder because nobody can reach it.
+        self.state.data.setdefault("inbound", {"last": 0.0})
+        self.peers_in = self.peers_out = self.peers_holepunched = 0
+        self.dialing_out = False
+        self._dial_defaults = {k: self.ses.get_settings()[k] for k in DIAL_OUT}
+        self._last_dial_announce = 0.0
         self.state.data.setdefault("blocklist", [])
         self.state.data.setdefault("dropped", [])      # repos the user removed from the dashboard
         self.state.data.setdefault("ledger", {})       # seed-hours per torrent (a points estimate)
@@ -492,6 +516,7 @@ class Engine:
             min_hold_days=self.cfg.min_hold_days, whole_model_under_bytes=int(self.cfg.whole_model_under_gb * GB),
             now=time.time(), allot={r: int(gb * GB) for r, gb in (self.feed.allot_gb if self.feed else {}).items()},
             churn_bytes=churn_bytes, manual=self.feed.manual if self.feed else frozenset(),
+            reachable=self.reachable(),
         )
 
     def replan(self, cands: list[TorrentCand], rejected: list[Rejection],
@@ -1275,7 +1300,7 @@ class Engine:
                 "feed": {"version": self.feed.version, "source": self.feed.source, "signer": self.feed.signer,
                          "local": self.feed.local_source,
                          "expires": self.feed.expires.isoformat() if self.feed.version else None} if self.feed else None,
-                "vpn_port": self.vpn_forward.view() if self.vpn_forward else None,
+                "vpn_port": self.vpn_forward.view() if self.vpn_forward else None, "reach": self.reach_view(),
                 "upload_month": dict(self.state.data["upload"]), "next_refresh": self.next_refresh,
                 "budget_bytes": self.last_plan.budget_bytes if self.last_plan else None, "torrents": rows,
                 "run": {"started": self.run_started, "until": self.run_until,
@@ -1366,7 +1391,8 @@ class Engine:
                          "folder": str(self.cfg.folder), "paused": self.disk_paused},
                 "network": {"bind": self.cfg.bind_interface, "bind_up": self._bind_up(),
                             "port_forwarding": self.cfg.port_forwarding, "listen_port": self.listening_on,
-                            "vpn_port": self.vpn_forward.view() if self.vpn_forward else None},
+                            "vpn_port": self.vpn_forward.view() if self.vpn_forward else None,
+                            **self.reach_view()},
                 "config_path": str(self.cfg.path) if self.cfg.path else None,
                 "user_paused": self.user_paused,
                 "log": [{"t": t, "msg": m} for t, m in list(self.log_ring)[-100:]],
@@ -1956,11 +1982,57 @@ class Engine:
         if now - self._last_peer_scan < 60:
             return
         self._last_peer_scan = now
+        inbound = outbound = punched = 0
         for h in [*self.handles.values(), *(c[2] for c in self.extra_handles())]:
             for p in h.get_peer_info():
                 if p.total_upload > 0 and len(self.upload_peers) < UPLOAD_PEERS_MAX:
                     pid = p.pid.to_bytes()
                     self.upload_peers.add(pid if any(pid) else str(p.ip).encode())
+                if p.flags & (lt.peer_info.connecting | lt.peer_info.handshake):
+                    continue
+                if p.flags & lt.peer_info.holepunched:
+                    punched += 1
+                if p.flags & lt.peer_info.outgoing_connection:
+                    outbound += 1
+                elif _from_internet(p.ip[0]):    # one on your own network says nothing about the internet
+                    inbound += 1
+        self.peers_in, self.peers_out, self.peers_holepunched = inbound, outbound, punched
+        if inbound:
+            self.state.data["inbound"]["last"] = time.time()   # (`now` runs ahead at shutdown)
+        self.set_dial_out(not self.reachable())
+
+    def reach_view(self) -> dict:
+        last = self.state.data["inbound"]["last"]
+        return {"reachable": self.reachable(), "dialing_out": self.dialing_out, "peers_in": self.peers_in,
+                "peers_out": self.peers_out, "peers_holepunched": self.peers_holepunched,
+                "inbound_last": last or None}
+
+    def reachable(self, now: float | None = None) -> bool:
+        """Can peers start connections to this node? A port the VPN forwards says so at once; otherwise
+        a peer that connected in within REACHABLE_FOR."""
+        if self.vpn_forward and self.vpn_forward.port:
+            return True
+        return (now or time.time()) - self.state.data["inbound"]["last"] < REACHABLE_FOR
+
+    def set_dial_out(self, on: bool) -> None:
+        if on == self.dialing_out:
+            return
+        self.dialing_out = on
+        self.ses.apply_settings(DIAL_OUT if on else self._dial_defaults)
+        self.log("peers can't connect in: dialing out harder and announcing more often" if on
+                 else "peers can connect in: back to libtorrent's usual dialing")
+
+    def dial_out_announce(self, now: float) -> None:
+        """While nobody can reach this node, ask trackers for peers more often than their usual
+        interval (never sooner than the tracker's own minimum: force_reannounce keeps to it)."""
+        if not self.dialing_out or now - self._last_dial_announce < DIAL_OUT_ANNOUNCE:
+            return
+        self._last_dial_announce = now
+        for h in [*self.handles.values(), *(c[2] for c in self.extra_handles())]:
+            try:
+                h.force_reannounce()
+            except RuntimeError:
+                pass
 
     def report_progress(self) -> None:
         """One `jobq:progress` line per percent when running under the job queue.
@@ -2051,6 +2123,7 @@ class Engine:
                         self._dirty, last_save = False, now
                 self.guard_disk()
                 self.scan_upload_peers(now)
+                self.dial_out_announce(now)
                 self.report_progress()
                 if now - last_status_file >= STATUS_FILE_EVERY:
                     self.write_status()

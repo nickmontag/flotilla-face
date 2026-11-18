@@ -385,6 +385,14 @@ wanted a key for its control server since v3.40: give it one with
 to Flotilla's container. (ProtonVPN in gluetun works without one: Flotilla asks Proton itself.) Set
 `vpn_port_forwarding = false` to keep `listen_port` as it is.
 
+With no port forwarded, Flotilla makes up for it. It notices that no peer has connected in for three
+days (`flotilla status` and the dashboard count peers that connected in and peers it dialed), then
+dials more peers, faster, and asks trackers for new peers every 15 minutes instead of every half
+hour. Two nodes that both lack a forwarded port can still meet through a third peer connected to both
+(hole punching over uTP), though not every VPN allows it. Nodes that peers *can* reach also lean
+harder toward the pieces with at most one other copy, so the last copies end up where everyone can
+reach them.
+
 ### Behind gluetun (Docker)
 
 If your torrents already go through a [gluetun](https://github.com/qdm12/gluetun) container, run

@@ -273,6 +273,13 @@ and `min_hold_days`. Now the user sets how often it happens and how much moves: 
   VPN forwards (gluetun's control server, NAT-PMP to the tunnel's gateway, `piactl`, a file), moves the
   listen socket there with `apply_settings`, sets `announce_port` when the VPN maps a different public
   port, and re-announces so the swarm learns it at once.
+- **Reachability.** The once-a-minute peer scan counts connections peers started (from internet
+  addresses; LAN peers don't count) and ones this node dialed. No inbound peer for `REACHABLE_FOR`
+  (3 days) and no forwarded port: the node is unreachable, applies `DIAL_OUT` (faster, more outgoing
+  connections, uTP on for BEP 55 hole punching) and force-reannounces every 15 min, within the
+  tracker's own minimum interval. A reachable node plans with `Params.reachable`, which weights
+  scarcity ×1.4 for files with at most one other copy (below `hold_bonus`, so a change in reachability
+  alone doesn't swap held files).
 - **Housekeeping cadence.** Every 10 s the main loop settles upload totals and seed-hours. Torrent
   status is read with only the accurate byte counters (`STATUS_FLAGS`), and one read per torrent is
   shared for 2 s by everything that asks. `state.json` is written every 5 minutes, at once after a plan,

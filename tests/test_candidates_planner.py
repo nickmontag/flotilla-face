@@ -500,3 +500,26 @@ def test_ranking_sets_priority():
     prio = {m.repo: f.priority(m) for m in f.models}
     assert prio == {"c/c": 1.0, "a/a": pytest.approx(0.65), "b/b": pytest.approx(0.3)}
     assert f.order == ["c/c", "a/a", "b/b"] and f.allot_gb == {"a/a": 12.0}
+
+
+def test_reachable_nodes_lean_toward_the_last_copies():
+    from flotilla.planner import REACHABLE_RARE, build_units
+
+    c = cand("org/m", n_shards=40)
+    for i, f in enumerate(c.files):
+        f.availability = 0 if i % 2 else 3
+    rates = {u.files[0].repo_path: u.rate for u in build_units([c], params(11), "n")}
+    reach = {u.files[0].repo_path: u.rate for u in build_units([c], params(11, reachable=True), "n")}
+    rare = next(f.repo_path for f in c.files if f.kind == "weight" and f.availability == 0)
+    common = next(f.repo_path for f in c.files if f.kind == "weight" and f.availability == 3)
+    assert reach[rare] == pytest.approx(rates[rare] * REACHABLE_RARE)
+    assert reach[common] == rates[common]
+
+    def rare_picks(reachable):
+        n = 0
+        for node in range(60):
+            p = plan([c], params(5.1 * 10, reachable=reachable), f"node-{node}")
+            n += sum(1 for f in p.picks[c.infohash].files if f.kind == "weight" and f.availability == 0)
+        return n
+
+    assert rare_picks(True) > rare_picks(False)

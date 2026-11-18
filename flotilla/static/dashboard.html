@@ -1631,6 +1631,9 @@ function fillDrawer() {
     ["Port", String(state.listen_port) + (net.vpn_port ? (net.vpn_port.port
         ? " · forwarded by " + net.vpn_port.source + (net.vpn_port.port !== net.vpn_port.listen ? " as " + net.vpn_port.port : "")
         : " · not forwarded: " + net.vpn_port.note) : "")],
+    ["Peers", (net.peers_in || 0) + " connected in, " + (net.peers_out || 0) + " dialed"
+        + (net.peers_holepunched ? " (" + net.peers_holepunched + " hole-punched)" : "")
+        + (net.dialing_out ? " · nobody has connected in lately, so Flotilla dials out harder" : "")],
     ["Priority list", (feed.version ? "v" + feed.version + " · signed by " + feed.signer + " · " + feed.source
                        : "none published (all models equal)") + (feed.local ? " · plus your changes in " + feed.local : "")],
     ["Config", state.config_path || "–"],

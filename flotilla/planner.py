@@ -18,6 +18,10 @@ steer with priority; the swarm state steers with scarcity.
                  file; ×0.1 once a reaches the model's target replica count.
 * risk         - ×2.5 if the Hugging Face original is gone (the swarm is the
                  only copy), ×1.5 if unknown, ×1 if HF still serves it.
+* reachable    - ×1.4 on scarcity for files with at most one other copy, on a
+                 node peers can connect to (REACHABLE_RARE): the last copies
+                 belong where nodes behind VPNs without port forwarding can
+                 reach them.
 * throughput   - small extra term for swarms with many leechers, scaled by
                  how much upload this node has. Low-upload nodes therefore
                  lean toward pure preservation (rare files), high-upload
@@ -71,6 +75,9 @@ class Params:
     # Repos the user chose by hand (their own picks, models with space set aside). Their pieces
     # are never swapped out, and bringing them in isn't held back by churn_bytes.
     manual: frozenset[str] = frozenset()
+    # Can peers start connections to this node (a forwarded port, or peers that connected in lately)?
+    # Then its rarest pieces are worth REACHABLE_RARE times more to it: see build_units.
+    reachable: bool = False
 
 
 @dataclass
@@ -186,6 +193,11 @@ def _avail(f: FileCand, c: TorrentCand) -> float:
 
 
 WHOLE_BONUS = 1.25
+# A piece no one else holds, or one other node, is only as reachable as the nodes holding it. Two
+# nodes behind VPNs without port forwarding can never connect to each other, so the last copies
+# should sit where anyone can reach them: reachable nodes count those pieces' scarcity this much
+# more. (Below hold_bonus, so a node's reachability changing doesn't by itself swap what it holds.)
+REACHABLE_RARE = 1.4
 
 
 def build_units(cands: list[TorrentCand], p: Params, node_id: str) -> list[Unit]:
@@ -196,15 +208,19 @@ def build_units(cands: list[TorrentCand], p: Params, node_id: str) -> list[Unit]
         if not live:
             continue
         r, t = risk(c.hf_backed), throughput(c, p.upload_bps)
+
+        def need(a: float) -> float:
+            return scarcity(a, c.target_replicas) * r * (REACHABLE_RARE if p.reachable and a <= 1 else 1.0)
+
         if c.selectable_bytes <= p.whole_model_under_bytes or not weights:
             a = min(_avail(f, c) for f in live)
             held = all(f.held for f in live)
-            rate = c.priority * (scarcity(a, c.target_replicas) * r + t)
+            rate = c.priority * (need(a) + t)
             units.append(Unit(c, live, sum(f.size for f in live), 0, a, rate, held=held, whole=True))
             continue
         for f in weights:
             a = _avail(f, c)
-            rate = c.priority * (scarcity(a, c.target_replicas) * r + t)
+            rate = c.priority * (need(a) + t)
             units.append(Unit(c, [f], f.size, _edge_overhead(c, f), a, rate, held=f.held))
 
     for u in units:

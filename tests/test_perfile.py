@@ -251,7 +251,10 @@ def test_held_shards_seed_in_their_own_swarms_to_a_client_without_piece_layers(t
     ses, h = downloader(tmp_path, raw1)
     h.connect_peer(("127.0.0.1", eng.ses.listen_port()))
     assert drive(eng, lambda: h.status().is_seeding, others=[ses]), (h.status().progress, logs)
-    assert (tmp_path / "dl" / e1["name"]).read_bytes() == (src / "model-1.safetensors").read_bytes()
+    # Seeding means every piece passed its hash; the writes can still be on their way to disk.
+    got, want = tmp_path / "dl" / e1["name"], (src / "model-1.safetensors").read_bytes()
+    h.flush_cache()
+    assert drive(eng, lambda: got.is_file() and got.read_bytes() == want, others=[ses]), logs
     # ...without our copy changing, or anything written next to it.
     seeds = Path(eng.state.holdings[ih]["save_path"]) / "m"
     assert (seeds / "model-1.safetensors").read_bytes() == (src / "model-1.safetensors").read_bytes()

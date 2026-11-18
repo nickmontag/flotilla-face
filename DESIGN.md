@@ -78,7 +78,7 @@ malicious files, inflates or deflates priorities, replays an old feed, or makes 
 | HF pieces | Only for files peers aren't sending, of models HF has at the pinned commit; the reply must be exactly the byte range asked for; each piece's SHA-1 must equal the torrent's own v1 piece hash before `add_piece`; two mismatches stop HF for that file | HF, its CDN or someone in the middle serving bytes that don't match the torrent; one bad piece making libtorrent discard a whole v2 file |
 | Magnet index | A build must hash to the listed infohash, hold only the license and dated shards, be small, and pass the tracker allowlist; shard lines must pass the magnet allowlist and name a 40-hex commit; an unreadable removals file disables the copy; metadata from the swarm must match the infohash; Hugging Face / ledger checks unchanged | A forged or tampered index steering nodes to other torrents, or bringing back a removed one |
 | Replaced pins | Followed only when Pirate Face's record of the pin names the listed torrent as its successor, and Hugging Face or the hash ledger vouches for every file | A compromised index swapping a pinned model's torrent while nothing else anchors it |
-| Pirate Face account | Only a key the user connected (`pirateface-key`, 0600, or `FLOTILLA_PF_KEY_FILE`; never `PIRATEFACE_KEY` or `pf`'s saved key); sent only to `pirateface.co` (`auth` is host-exact, never a redirect target) for `/api/trackers`; the seeding tracker must be `:6970/<token>/announce` on the tracker allowlist, and only its host is ever logged or shown | The key or the tracker token leaking; an answer steering announces to a foreign tracker |
+| Pirate Face account | Only a key or seeding tracker address the user connected (`pirateface-key`, 0600, or `FLOTILLA_PF_KEY_FILE`, which the dashboard never writes; never `PIRATEFACE_KEY` or `pf`'s saved key); sent only to `pirateface.co` (`auth` is host-exact, never a redirect target) for `/api/trackers`; the seeding tracker must be `:6970/<token>/announce` on the tracker allowlist, and only its host is ever logged or shown | The key or the tracker token leaking; an answer steering announces to a foreign tracker |
 | Per-file torrents | Pure v2, exactly one file whose pieces root and size match a verified file of ours, infohash as listed; trackers filtered to the allowlist, web seeds dropped; the added piece layer must hash up to the root; seeded in upload mode from our own copy | A listing pointing our upload at other bytes; foreign trackers or seeds; a bad piece layer misleading peers |
 | HF account | Only a token the user connected (`hf-token`, 0600, or `FLOTILLA_HF_TOKEN_FILE`; never `HF_TOKEN`); whoami must show a read-only token (role `read`, or fine-grained with only `*.read` permissions) of a user; sent only after an anonymous request is refused, only to `huggingface.co` (never a redirect target); 401 on a download stops using it | A leaked token file changing the user's account or spending on it; the account being tied to public models it isn't needed for; the token reaching the CDN |
 | Policy | Code files and weight formats that can run code when loaded (pickle, Keras HDF5/.keras, NumPy .npz/.npy) are not selected by default; nothing downloaded is ever executed; licenses must be on the user's allowlist | Turning seeders into a malware distribution network |
@@ -458,8 +458,12 @@ the real points through each account's seeding tracker (below).
 (`http://tracker.pirateface.co:6970/<token>/announce`). Torrents that also announce to it count toward the
 account's points. With a key connected, the engine adds it, in a tier of its own, to every model and
 per-file torrent, and sets `announce_to_all_tiers` so the public trackers keep hearing from it too.
-Trackers are outside the info dict, so no infohash changes. A thread re-reads the key file every minute
-and asks for the tracker every 12 hours; while Pirate Face can't be reached it keeps the tracker it has.
+Trackers are outside the info dict, so no infohash changes. The key file holds either the key or the
+tracker address itself (copied from the account's settings page): an address is used as it is, since
+nothing can check it. A thread re-reads the file every minute, at once when the dashboard saves it, and
+asks for a key's tracker every 12 hours; while Pirate Face can't be reached it keeps the tracker it has.
+The dashboard's connect request carries the secret, so a separate dashboard hands it over in an inbox
+file only this user can read; errors never repeat what was pasted.
 
 **Per-file swarms.** Pirate Face lists a pure v2 torrent per file of its hybrid torrents
 (`/api/files/<pieces root>`), shared by every upload with the same bytes. A node holding some shards is a

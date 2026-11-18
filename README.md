@@ -462,21 +462,29 @@ counts them through a tracker of each account's own. Flotilla can earn them for 
 flotilla points connect
 ```
 
-It asks for your key from [pirateface.co/settings](https://pirateface.co/settings) (Community torrent
-key, starting `pfct_`), checks it with Pirate Face, and saves it in `pirateface-key` next to the config,
-readable only by you. Setup asks too; the answer defaults to no. From then on, every torrent Flotilla seeds
-also announces to your account's tracker, and the dashboard says so. With Docker, run it in the node's
-container: `docker exec -it flotilla flotilla points connect`.
+It asks for one of two things from [pirateface.co/settings](https://pirateface.co/settings), and saves
+it in `pirateface-key` next to the config, readable only by you:
+
+- the **Seeding tracker** address (`http://tracker.pirateface.co:6970/…/announce`), used as it is.
+  Pirate Face has no way to check it, so if your points don't move within a day, copy it again.
+- or the **Community torrent key** (starting `pfct_`), which Flotilla checks with Pirate Face and trades
+  for that tracker, asking again twice a day in case Pirate Face changes it.
+
+Setup asks for it too: paste one, or press Enter to skip. The dashboard's settings (the gear) has a
+**Pirate Face points** section to connect, replace or disconnect it, so you don't need a terminal. From
+then on, every torrent Flotilla seeds also announces to your account's tracker, and the dashboard says
+so. With Docker, run the command in the node's container: `docker exec -it flotilla flotilla points
+connect`. Either one is tied to your account: don't post it publicly.
 
 What connecting means:
 
 - **Pirate Face sees what this node seeds, under your account**, from the address peers see (your VPN's,
   if Flotilla is pinned to one). Without a key, Flotilla never tells Pirate Face who you are.
-- **The key goes only to `pirateface.co`**, only to ask for your tracker. That tracker's address carries
+- **A key goes only to `pirateface.co`**, only to ask for your tracker. That tracker's address carries
   a token of its own, so Flotilla never logs or shows it, only its host. It's accepted only on
   `tracker.pirateface.co`.
-- `flotilla points` shows whether it's working. `flotilla points disconnect` removes the key, and
-  torrents stop announcing to your tracker within a minute.
+- `flotilla points` shows whether it's working. `flotilla points disconnect` (or Disconnect in the
+  dashboard) removes it, and torrents stop announcing to your tracker within a minute.
 
 **Per-file swarms.** Pirate Face's tracker counts a peer as a seeder only if it holds a whole torrent, so
 a node holding some of a model's shards shows up as a leecher. But Pirate Face also runs a swarm for every

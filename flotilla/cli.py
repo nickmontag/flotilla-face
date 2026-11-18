@@ -555,36 +555,45 @@ def _setup_points(config_path: Path, bind: str, allowed: tuple[str, ...]) -> boo
         remove_token(kpath)
         ui.info("disconnected: seeding no longer earns points")
         return False
-    if not _yes("Connect your Pirate Face account to earn points", False):
-        return False
-    netsafe.pin(bind)          # check the key over the connection Flotilla will use
-    return points_connect(kpath, allowed)
+    netsafe.pin(bind)          # check a key over the connection Flotilla will use
+    return points_connect(kpath, allowed, skippable=True)
 
 
-def points_connect(kpath: Path, allowed: tuple[str, ...], source: str | None = None) -> bool:
-    """Ask for a Pirate Face key (or read it from `source`, a file or - for stdin), check it, save it."""
+def points_connect(kpath: Path, allowed: tuple[str, ...], source: str | None = None,
+                   skippable: bool = False) -> bool:
+    """Ask for a Pirate Face seeding tracker address or community key (or read it from `source`, a
+    file or - for stdin), check it, save it. With `skippable`, pressing Enter skips."""
     import getpass
 
     from .hfauth import save_secret
     from .netsafe import FetchError
-    from .pfaccount import SETTINGS_PAGE, PFKeyError, check, clean_key, tracker_host
+    from .pfaccount import SETTINGS_PAGE, PFKeyError, check, clean_key, kind_of, tracker_host
     from .sources import PirateFace
 
     if source is None:
-        print("\nPirate Face counts seeding through a tracker of your account's own:")
-        print(f"  * Your key is at {SETTINGS_PAGE}, under Community torrent key (it starts with pfct_). Points go")
-        print("    to your handle: an account without one earns none.")
-        print("  * Every torrent Flotilla seeds also announces to that tracker, so Pirate Face sees what this node")
-        print("    seeds, and from which address, under your account.")
-        print(f"  * The key is saved in {kpath}, readable only by you, and sent only to pirateface.co.")
-        raw = getpass.getpass("Paste the key (it won't show): ")
+        print("\nPirate Face counts seeding through a tracker of your account's own. From "
+              f"{SETTINGS_PAGE}, paste either:")
+        print("  * the Seeding tracker address (http://tracker.pirateface.co:6970/.../announce), or")
+        print("  * the Community torrent key (pfct_...): with it Flotilla follows the tracker if Pirate Face changes it.")
+        print("Points go to your handle: an account without one earns none. Every torrent Flotilla seeds also")
+        print("announces to that tracker, so Pirate Face sees what this node seeds, and from which address, under")
+        print(f"your account. It's saved in {kpath}, readable only by you. Don't post it publicly.")
+        try:
+            raw = getpass.getpass("Paste it (it won't show" + ("; Enter to skip): " if skippable else "): "))
+        except EOFError:        # no one to ask
+            raw = ""
     elif source == "-":
         raw = sys.stdin.readline()
     else:
         raw = Path(source).expanduser().read_text()
+    if not raw.strip():
+        print("Skipped: seeding earns no points. Connect later with `flotilla points connect`, or in the "
+              "dashboard's settings." if skippable and source is None else "Not connected: nothing to connect.")
+        return False
     try:
         key = clean_key(raw)
-        print("Checking it with Pirate Face...")
+        if kind_of(key) == "key":
+            print("Checking it with Pirate Face...")
         url = check(key, PirateFace(allowed))
     except PFKeyError as e:
         print(f"Not connected: {e}")
@@ -598,6 +607,8 @@ def points_connect(kpath: Path, allowed: tuple[str, ...], source: str | None = N
         print(f"Not connected: couldn't save the key to {kpath} ({e})")
         return False
     print(f"Connected: your seeding tracker is on {tracker_host(url)}. Saved to {kpath}.")
+    if kind_of(key) == "tracker":
+        print("Pirate Face can't confirm a tracker address. If your points don't move within a day, copy it again.")
     print("A running node starts announcing to it within a minute.")
     return True
 
@@ -605,7 +616,7 @@ def points_connect(kpath: Path, allowed: tuple[str, ...], source: str | None = N
 def cmd_points(args) -> int:
     from .hfauth import readable_by_others, remove_token
     from .netsafe import FetchError
-    from .pfaccount import PFKeyError, check, key_path, read_key, tracker_host
+    from .pfaccount import PFKeyError, check, key_path, kind_of, read_key, tracker_host
     from .sources import PirateFace
 
     cfg_path = Path(args.config)
@@ -635,7 +646,8 @@ def cmd_points(args) -> int:
             print(f"  others on this computer can read it: chmod 600 {kpath}")
         try:
             url = check(key, PirateFace(tuple(cfg.allowed_hosts)))
-            print(f"Connected: seeding counts toward your account's points (tracker {tracker_host(url)}).")
+            how = " (a seeding tracker address, used as it is)" if kind_of(key) == "tracker" else ""
+            print(f"Connected: seeding counts toward your account's points (tracker {tracker_host(url)}){how}.")
         except PFKeyError as e:
             print(f"Not used: {e}")
         except FetchError as e:
@@ -1929,7 +1941,7 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("points", help="connect a Pirate Face account so your seeding earns points")
     p.add_argument("action", nargs="?", default="status", choices=["connect", "disconnect", "status"])
     p.add_argument("--from-file", metavar="PATH",
-                   help="connect: read the key from this file, or - for standard input, instead of asking")
+                   help="connect: read the seeding tracker address or key from this file, or - for standard input")
     p = sub.add_parser("service", help="run Flotilla in the background (launchd on macOS, systemd on Linux)")
     p.add_argument("action", choices=["install", "uninstall", "status"])
     p.add_argument("--dry-run", action="store_true", help="show what would be written and run")

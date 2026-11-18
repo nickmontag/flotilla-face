@@ -365,6 +365,11 @@
   .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .field { display: grid; gap: 6px; min-width: 0; align-content: start; }
   .field.wide { grid-column: 1 / -1; }
+  .pf-field { margin-top: 12px; } .pf-field[hidden] { display: none; }
+  .pf-row { display: flex; gap: 8px; }
+  .pf-row input { flex: 1; min-width: 0; height: 38px; font-family: var(--mono); font-size: 13px; }
+  .pf-row input::placeholder { font-family: var(--sans); color: var(--faint); }
+  .pf-row button { flex: none; height: 38px; padding: 0 16px; }
   .fl { display: flex; align-items: center; gap: 6px; min-height: 18px; }
   .fl label, .switch-row label { font-size: 12px; font-weight: 550; color: var(--muted); }
   .unit-in { position: relative; }
@@ -755,6 +760,24 @@
         <div class="acct" id="hfacct"></div>
         <div class="msg muted" id="hfmsg"></div>
       </section>
+
+      <section class="set" id="pfset">
+        <div class="set-h">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>
+          <h3>Pirate Face points</h3>
+          <button type="button" class="qm" aria-label="About Pirate Face points" data-tip="Pirate Face gives points for seeding to accounts that connect. Every torrent Flotilla seeds then also announces to your account's own tracker, so Pirate Face sees what this node seeds, and from which address: your VPN's, if Flotilla's traffic goes through one. Points go to your handle; an account without one earns none.">?</button>
+        </div>
+        <div class="acct" id="pfacct"></div>
+        <div class="field wide pf-field" id="pfin">
+          <div class="fl"><label for="s-pf" id="pf-label">Seeding tracker or key</label>
+            <button type="button" class="qm" aria-label="Where to find it" data-tip="On pirateface.co/settings, copy the Seeding tracker address (http://tracker.pirateface.co:6970/…/announce) or the Community torrent key (pfct_…). With the key, Flotilla follows the tracker if Pirate Face changes it. Either is tied to your account: don't post it publicly.">?</button></div>
+          <div class="pf-row">
+            <input id="s-pf" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="http://tracker.pirateface.co:6970/…/announce or pfct_…">
+            <button type="button" id="pf-go">Connect</button>
+          </div>
+        </div>
+        <div class="msg muted" id="pfmsg"></div>
+      </section>
     </form>
 
     <section class="set">
@@ -972,7 +995,7 @@ function render(s) {
   $("swarmsub").title = earning
     ? "Your seeding counts toward your Pirate Face account's points (" + acct.tracker + "). The estimate is Flotilla's own; Pirate Face keeps the real count."
     : (acct.why ? acct.why.charAt(0).toUpperCase() + acct.why.slice(1) + ". " : "") +
-      "No Pirate Face account is connected, so this seeding earns no points. Run `flotilla points connect` where Flotilla runs.";
+      "No Pirate Face account is connected, so this seeding earns no points. Connect one in Settings.";
 
   renderReorient(s.reorient || {});
   renderCarrying(ts);
@@ -1595,6 +1618,7 @@ function fillDrawer() {
     if (i.type === "checkbox") i.checked = !!v; else i.value = k.endsWith("_share") ? Math.round(v * 100) : v;
   }
   fillAccount();
+  fillPoints();
   const about = $("about"); about.replaceChildren();
   const net = state.network || {}, feed = state.feed || {};
   [
@@ -1651,6 +1675,50 @@ function fillAccount() {
     box.append(ul);
   }
 }
+function fillPoints() {
+  const p = state.pirateface || { state: "none" }, box = $("pfacct");
+  box.replaceChildren();
+  const who = el("div", "who"), text = el("span");
+  const page = el("a", null, "pirateface.co/settings");
+  page.href = "https://pirateface.co/settings"; page.target = "_blank"; page.rel = "noopener noreferrer";
+  if (p.state === "none") {
+    text.append("Not connected: seeding earns no points. Paste the Seeding tracker address or the Community torrent " +
+      "key from ", page, " below.");
+  } else if (p.state === "ok") {
+    text.append("Connected: seeding counts toward your account's points, announcing to ", el("b", null, p.tracker || "its tracker"),
+      p.kind === "tracker" ? " (the tracker address you pasted)." : " (from your key).");
+  } else if (p.state === "unchecked") {
+    text.append("Checking the key with Pirate Face…");
+  } else {
+    const why = p.why || "the saved tracker or key can't be used.";
+    text.className = "warn-t"; text.append(why.charAt(0).toUpperCase() + why.slice(1));
+  }
+  who.append(text);
+  if (p.state !== "none" && !p.from_env) {
+    const b = el("button", "ghost danger", "Disconnect"); b.type = "button";
+    b.onclick = () => {
+      if (confirm("Disconnect the Pirate Face account? Torrents stop announcing to its tracker, and seeding earns no points."))
+        post("points_disconnect", {}, "Disconnecting…", "Disconnected.", "pfmsg");
+    };
+    who.append(b);
+  }
+  box.append(who);
+  if (p.from_env) box.append(el("div", "help", "It comes from the file FLOTILLA_PF_KEY_FILE names (" + (p.path || "") + "): change it there."));
+  $("pfin").hidden = !!p.from_env;
+  $("pf-go").textContent = p.state === "none" ? "Connect" : "Replace";
+  $("pf-label").textContent = p.state === "none" ? "Seeding tracker or key" : "Replace with another tracker or key";
+}
+async function pfConnect() {
+  const i = $("s-pf"), m = $("pfmsg"), v = i.value.trim();
+  if (!v) {
+    m.textContent = "Paste the Seeding tracker address or the key first."; m.className = "msg bad-t"; i.focus();
+    return;
+  }
+  if (await post("points_connect", { secret: v }, "Saving…", "Saved. Torrents start announcing to your tracker within a minute.", "pfmsg"))
+    i.value = "";
+}
+$("pf-go").onclick = pfConnect;
+$("s-pf").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); pfConnect(); } });
 $("gear").onclick = () => openDrawer(!drawerOpen);
 $("close").onclick = () => openDrawer(false);
 $("scrim").onclick = () => openDrawer(false);

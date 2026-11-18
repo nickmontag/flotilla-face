@@ -46,7 +46,8 @@ from .feed import (BUNDLED_FEED, REPO_RE, Feed, FeedError, add_pick, apply_local
 from .netinfo import address_present
 from .magnetindex import INDEX_REPO, MagnetIndex
 from .perfile import PerFile
-from .pfaccount import Account, key_path
+from .hfauth import remove_token, save_secret
+from .pfaccount import Account, clean_key, key_path, kind_of
 from .planner import GB, Params, Plan, Unit, plan as make_plan
 from .signing import PublicKey, SignatureError
 from .sources import HuggingFace, PirateFace, git_blob_sha1, sha256_file
@@ -325,6 +326,7 @@ class Engine:
         self.torrent_dir = state.dir / "torrents"
         # Seeding credit (an opt-in Pirate Face account key) and per-file swarms.
         self.pf_account = Account(key_path(cfg.path), lambda: PirateFace(tuple(cfg.allowed_hosts)), log=self.log)
+        self._pf_nudge = threading.Event()      # set to look at the account file now, not in a minute
         self._tracker_in_use: tuple[int, str | None] = (0, None)
         self.perfile = PerFile(self)
         self.index = MagnetIndex(self)
@@ -1287,7 +1289,7 @@ class Engine:
     SWITCHES = ("hf_fallback",)   # on/off settings
     CHOICES = {"reorient": REORIENT_CHOICES}   # one-of settings
     ACTIONS = ("settings", "pause", "resume", "replan", "reorient", "drop", "add", "remove", "order", "allot", "skip",
-               "unskip", "hf_disconnect", "rescue")
+               "unskip", "hf_disconnect", "rescue", "points_connect", "points_disconnect")
 
     def _bind_up(self) -> bool | None:
         if not self.cfg.bind_interface:
@@ -1443,6 +1445,13 @@ class Engine:
                 raise ValueError(f"{repo} isn't on your list")
             threading.Thread(target=self._ask_rescue, args=(repo,), name="rescue", daemon=True).start()
             return "asking"
+        elif action == "points_connect":
+            secret = body.get("secret")
+            if not isinstance(secret, str) or len(secret) > 1000:
+                raise ValueError("paste the Seeding tracker address or the community torrent key")
+            return self._points_save(clean_key(secret))      # PFKeyError (a ValueError) explains
+        elif action == "points_disconnect":
+            return self._points_save(None)
         elif action in ("add", "remove"):
             # Picks are just a file: save right away (so the page shows it at once),
             # and let the main loop do the replan when it's free.
@@ -1465,6 +1474,33 @@ class Engine:
             body = {}
         self.commands.put((action, body))
         return "queued"
+
+    def _points_save(self, secret: str | None) -> str:
+        """Connect (save the tracker address or key) or disconnect the Pirate Face account, from the
+        dashboard. Saved right away; the points thread picks it up at once. Never logs the secret."""
+        info = self.pf_account.info()
+        path = self.pf_account.path
+        if path is None:
+            raise ValueError("there's no config file to keep it next to")
+        if info["from_env"]:
+            raise ValueError(f"it comes from the file FLOTILLA_PF_KEY_FILE names ({path}): change it there")
+        try:
+            if secret is None:
+                gone = remove_token(path)
+            else:
+                save_secret(path, secret)
+        except OSError as e:
+            raise ValueError(f"couldn't {'remove' if secret is None else 'save'} {path}: {e.strerror or e}") from None
+        self._pf_nudge.set()
+        if secret is None:
+            self.log("pirate face: account disconnected from the dashboard" if gone
+                     else "pirate face: no account was connected")
+            return "disconnected" if gone else "not connected"
+        if kind_of(secret) == "tracker":
+            self.log("pirate face: seeding tracker address saved from the dashboard")
+            return "connected"
+        self.log("pirate face: community key saved from the dashboard; checking it with Pirate Face")
+        return "checking"
 
     def _ask_rescue(self, repo: str) -> None:
         """Ask Pirate Face to add a model it has no torrent for (sends only its name). Own thread."""
@@ -1837,7 +1873,8 @@ class Engine:
                 self.pf_account.poll()
             except Exception as e:      # never let a surprise end the thread
                 self.log(f"pirate face: {e}")
-            self.stop.wait(60)
+            self._pf_nudge.wait(60)
+            self._pf_nudge.clear()
 
     def guard_disk(self, free: int | None = None) -> None:
         """Keep the reserve free *while running*, not just at plan time: other
@@ -2007,6 +2044,7 @@ class Engine:
 
     def shutdown(self) -> None:
         self.stop.set()   # run() can also end on once/until; stop the helper threads either way
+        self._pf_nudge.set()
         if self._sampler is not None:
             self._sampler.join(timeout=10)
             self._sampler = None

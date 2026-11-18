@@ -30,7 +30,7 @@ The test suite never touches the internet. `tests/test_swarm.py` runs real libto
 | `engine.py` | libtorrent: probe swarms, apply plans, verify, seed, disk guard |
 | `hfpieces.py` | Pieces no peer is sending, fetched from Hugging Face and checked against the torrent |
 | `hfauth.py` | The Hugging Face account for gated models: the token file, the read-only check, when the token is sent |
-| `pfaccount.py` | The Pirate Face account for points: the key file, the account's seeding tracker |
+| `pfaccount.py` | The Pirate Face account for points: the key file (a key or the tracker address), the account's seeding tracker |
 | `magnetindex.py` | Pirate Face's magnet index: keeping and seeding it, reading its shards, listings from it while Pirate Face is down |
 | `perfile.py`, `v2hash.py` | Per-file swarms: looking up and checking each shard's own torrent, supplying its BitTorrent v2 piece layer |
 | `history.py` | Upload and download history (SQLite) |

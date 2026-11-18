@@ -6,6 +6,7 @@ torrent (no piece layers) downloads the whole shard from it.
 """
 
 import hashlib
+import json
 import random
 import shutil
 import time
@@ -512,8 +513,9 @@ def test_points_connect_checks_then_saves_and_never_prints_the_key(tmp_path, mon
     assert "No Pirate Face account connected" in capsys.readouterr().out
 
 
-def test_setup_asks_about_points_and_defaults_to_no(tmp_path, monkeypatch):
+def test_setup_asks_for_a_tracker_or_key_and_enter_skips(tmp_path, monkeypatch, capsys):
     import argparse
+    import stat
 
     from flotilla import cli, netinfo, sources
 
@@ -532,35 +534,143 @@ def test_setup_asks_about_points_and_defaults_to_no(tmp_path, monkeypatch):
 
     monkeypatch.setattr(sources, "PirateFace", OfflineLicenses)
     prompts: list[str] = []
+    pasted: list[str] = []
 
-    def run(answers):
-        it = iter(answers)
+    def run(paste, answers=()):
+        it = iter([str(tmp_path / "seeds"), *answers])
+        prompts.clear()
 
         def ask(prompt=""):
             prompts.append(prompt)
             return next(it, "")
 
+        def secret(prompt=""):
+            prompts.append(prompt)
+            return pasted.pop(0) if pasted else ""
+
+        pasted[:] = [paste]
         monkeypatch.setattr("builtins.input", ask)
-        monkeypatch.setattr("getpass.getpass", lambda prompt="": KEY)
+        monkeypatch.setattr("getpass.getpass", secret)
         assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "config.toml"))) == 0
 
-    run([str(tmp_path / "seeds")])
-    assert any("Pirate Face account to earn points" in p for p in prompts)
+    # Enter skips: nothing saved, nothing asked of Pirate Face.
+    run("")
+    assert any("Paste it" in p and "Enter to skip" in p for p in prompts), prompts
     assert not (tmp_path / "pirateface-key").exists() and not pf.keys
+    assert "Skipped: seeding earns no points" in capsys.readouterr().out
 
-    answers = {"Pirate Face account to earn points": "y"}
-    it_prompts: list[str] = []
+    # The tracker address from the settings page is saved as it is, without asking Pirate Face.
+    run(MINE)
+    assert pfaccount.read_key(tmp_path / "pirateface-key") == MINE and not pf.keys
+    assert stat.S_IMODE((tmp_path / "pirateface-key").stat().st_mode) == 0o600
+    assert "s3cr3t" not in capsys.readouterr().out
 
-    def ask(prompt=""):
-        it_prompts.append(prompt)
-        return next((a for k, a in answers.items() if k in prompt), "")
+    # Run again: it offers to keep the connected account, and asks for nothing new.
+    run("")
+    assert any("Keep earning points with it" in p for p in prompts)
+    assert not any("Paste it" in p for p in prompts)
+    assert pfaccount.read_key(tmp_path / "pirateface-key") == MINE
 
-    monkeypatch.setattr("builtins.input", ask)
-    monkeypatch.setattr("getpass.getpass", lambda prompt="": KEY)
-    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "config.toml"))) == 0
+    # A key instead, after letting the old one go: checked with Pirate Face, then saved.
+    (tmp_path / "pirateface-key").unlink()
+    run(KEY)
     assert pfaccount.read_key(tmp_path / "pirateface-key") == KEY and pf.keys == [KEY]
-    # Run again: it offers to keep the connected account.
-    it_prompts.clear()
-    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "config.toml"))) == 0
-    assert any("Keep earning points with it" in p for p in it_prompts)
-    assert (tmp_path / "pirateface-key").exists()
+
+
+def test_a_pasted_tracker_address_is_used_as_it_is(tmp_path, capsys, monkeypatch):
+    from flotilla import sources
+
+    assert pfaccount.clean_key(f"  {MINE}\n") == MINE and pfaccount.kind_of(MINE) == "tracker"
+    for bad in ("http://tracker.pirateface.co:6969/s3cr3t/announce",          # the public tracker's port
+                "http://tracker.evil.example:6970/s3cr3t/announce",          # someone else's
+                "http://tracker.pirateface.co:6970/s3cr3t",                  # cut short
+                "https://pirateface.co/settings"):
+        with pytest.raises(pfaccount.PFKeyError) as e:
+            pfaccount.clean_key(bad)
+        assert "s3cr3t" not in str(e.value)                                    # a typo'd secret isn't repeated
+    # The running node: no Pirate Face call, counted at once, never asked again.
+    pf = FakePF()
+    logs: list[str] = []
+    path = tmp_path / pfaccount.KEY_FILE
+    path.write_text(MINE + "\n")
+    acct = pfaccount.Account(path, lambda: pf, log=logs.append)
+    acct.poll(1000.0)
+    assert acct.tracker() == (1, MINE) and acct.info()["state"] == "ok" and acct.info()["kind"] == "tracker"
+    acct.poll(1000.0 + 3 * pfaccount.REFETCH_EVERY)
+    assert not pf.keys and acct.tracker() == (1, MINE)
+    assert any("tracker.pirateface.co:6970" in m for m in logs) and not any("s3cr3t" in m for m in logs)
+    path.unlink()
+    acct.poll(2000.0 + 3 * pfaccount.REFETCH_EVERY)
+    assert acct.tracker() == (2, None) and acct.info()["state"] == "none"
+    # The command line takes it too, and says it can't be confirmed.
+    monkeypatch.setattr(sources.PirateFace, "trackers", lambda self, key: pf.trackers(key))
+    f = tmp_path / "t.txt"
+    f.write_text(MINE)
+    assert run_cli(tmp_path, "points", "connect", "--from-file", str(f)) == 0
+    out = capsys.readouterr().out
+    assert "can't confirm a tracker address" in out and "s3cr3t" not in out and not pf.keys
+    assert run_cli(tmp_path, "points") == 0
+    out = capsys.readouterr().out
+    assert "a seeding tracker address, used as it is" in out and "s3cr3t" not in out and not pf.keys
+    empty = tmp_path / "empty.txt"
+    empty.write_text("\n")
+    assert run_cli(tmp_path, "points", "connect", "--from-file", str(empty)) == 1
+    assert "nothing to connect" in capsys.readouterr().out
+
+
+def test_the_dashboard_connects_and_disconnects_the_account(tmp_path, monkeypatch):
+    import stat
+
+    from flotilla import remote
+
+    logs: list[str] = []
+    eng, ih, src, meta = held_model(tmp_path, {"model-1.safetensors": 2 * PIECE}, logs, monkeypatch)
+    kpath = pfaccount.key_path(eng.cfg.path)
+    for junk in ("", "hello", "http://tracker.evil.example:6970/s3cr3t/announce", 5, "x" * 2000):
+        with pytest.raises(ValueError) as e:
+            eng.submit("points_connect", {"secret": junk})
+        assert "s3cr3t" not in str(e.value)
+    assert not kpath.exists()
+
+    assert eng.submit("points_connect", {"secret": MINE}) == "connected"
+    assert pfaccount.read_key(kpath) == MINE and stat.S_IMODE(kpath.stat().st_mode) == 0o600
+    eng.pf_account.poll()
+    eng.tick()
+    assert [t["url"] for t in eng.handles[ih].trackers()][-1] == MINE
+    doc = eng.status_doc()
+    assert doc["pirateface"]["state"] == "ok" and doc["pirateface"]["kind"] == "tracker"
+    assert "s3cr3t" not in json.dumps(doc) and not any("s3cr3t" in m for m in logs)
+
+    # A key replaces it, and is checked with Pirate Face by the points thread.
+    pf = FakePF()
+    eng.pf_account.pf_factory = lambda: pf
+    assert eng.submit("points_connect", {"secret": KEY}) == "checking" and pfaccount.read_key(kpath) == KEY
+    eng.pf_account.poll()
+    assert pf.keys == [KEY] and eng.pf_account.info()["kind"] == "key"
+
+    assert eng.submit("points_disconnect", {}) == "disconnected" and not kpath.exists()
+    assert eng.submit("points_disconnect", {}) == "not connected"
+    eng.pf_account.poll()
+    eng.tick()
+    assert MINE not in [t["url"] for t in eng.handles[ih].trackers()]
+
+    # Set by FLOTILLA_PF_KEY_FILE (a Docker secret): the dashboard doesn't write there.
+    monkeypatch.setenv("FLOTILLA_PF_KEY_FILE", str(tmp_path / "secret"))
+    with pytest.raises(ValueError, match="change it there"):
+        eng.submit("points_connect", {"secret": MINE})
+    assert not (tmp_path / "secret").exists()
+    monkeypatch.delenv("FLOTILLA_PF_KEY_FILE")
+    eng.shutdown()
+
+    # A dashboard in another container hands it over in a file only this user can read.
+    seen: list[int] = []
+
+    def answer(*a, **kw):
+        for f in (tmp_path / "rstate" / "inbox").glob("*.json"):
+            seen.append(stat.S_IMODE(f.stat().st_mode))
+        raise ValueError("stop")
+
+    monkeypatch.setattr(remote.time, "sleep", answer)
+    with pytest.raises(ValueError):
+        remote.RemoteEngine(tmp_path / "rstate").submit("points_connect", {"secret": MINE})
+    assert seen and set(seen) == {0o600}

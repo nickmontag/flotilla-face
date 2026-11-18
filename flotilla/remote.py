@@ -67,7 +67,10 @@ class RemoteEngine:
         inbox, outbox = self.dir / "inbox", self.dir / "outbox"
         inbox.mkdir(parents=True, exist_ok=True)
         tmp = inbox / f"{rid}.tmp"
-        tmp.write_text(json.dumps({"action": action, "body": body}))
+        # This user only: a request can carry a secret (the Pirate Face account's tracker or key).
+        fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+        with os.fdopen(fd, "w") as f:
+            f.write(json.dumps({"action": action, "body": body}))
         tmp.rename(inbox / f"{rid}.json")
         answer = outbox / f"{rid}.json"
         deadline = time.time() + ANSWER_WITHIN

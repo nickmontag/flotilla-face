@@ -13,6 +13,12 @@ def _no_real_config_folder(monkeypatch, tmp_path):
 
 
 @pytest.fixture(autouse=True)
+def _enter_at_hidden_prompts(monkeypatch):
+    """A hidden prompt (setup's Pirate Face paste, say) gets Enter unless a test pastes something."""
+    monkeypatch.setattr("getpass.getpass", lambda prompt="": "")
+
+
+@pytest.fixture(autouse=True)
 def _no_host_vpn_lookups(monkeypatch):
     """Setup tests must not depend on the test machine's VPN tunnels, Docker containers, home network
     or Tailscale, and a setup that binds to a VPN mustn't leave its network pin behind for the next test."""

@@ -168,6 +168,24 @@ def test_update_replaces_docker_containers_by_digest(updating, monkeypatch):
     assert updating == [("pull", IMG), ("replace", "flotilla", IMG)]
 
 
+def test_the_check_says_why_a_container_on_the_same_version_still_needs_updating(updating, monkeypatch, capsys):
+    """A container set up before there were images installs GitHub's newest code each start: it may
+    already run this version, but unsigned. The check says that, not just the version."""
+    monkeypatch.setattr(release, "latest", lambda: _rel(flotilla.__version__))
+    monkeypatch.setattr(cli.shutil, "which", lambda n: "/usr/bin/docker" if n == "docker" else None)
+    old_tag = release.IMAGE_REPO + ":0.0.1"
+    monkeypatch.setattr(containers, "installed", lambda: {
+        "flotilla": _installed("flotilla", "python:3.13-slim", ["run"]),
+        "flotilla-dashboard": _installed("flotilla-dashboard", old_tag, ["dashboard", "--serve"])})
+    assert cli.cmd_update(argparse.Namespace(check=True, yes=False)) == 0
+    out = capsys.readouterr().out
+    node = next(line for line in out.splitlines() if "Docker: flotilla " in line + " " and "dashboard" not in line)
+    assert f"installs unsigned code from GitHub when it starts → the signed {flotilla.__version__} image" in node
+    dash = next(line for line in out.splitlines() if "flotilla-dashboard" in line)
+    assert dash.rstrip().endswith("→ " + flotilla.__version__) and "unsigned" not in dash
+    assert "Everything is up to date" not in out and updating == []
+
+
 def test_inside_a_container_it_points_at_the_host(updating, monkeypatch, capsys):
     monkeypatch.setattr("flotilla.access.in_container", lambda: True)
     assert cli.cmd_update(argparse.Namespace(check=False, yes=True)) == 2

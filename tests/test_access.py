@@ -174,6 +174,36 @@ def test_serving_a_public_dashboard_warns(tmp_path, monkeypatch, capsys):
     assert "WARNING: the dashboard is PUBLIC" in capsys.readouterr().err
 
 
+def test_port_0_serves_on_any_free_port_not_the_configured_one(tmp_path, monkeypatch, capsys):
+    """--port 0 asks for any free port. It used to mean "not given", so the dashboard tried the
+    configured port, and failed on a machine whose own dashboard already holds it."""
+    pytest.importorskip("libtorrent")
+    import socket
+    import threading
+
+    from flotilla import dashboard
+    from flotilla.config import render_config
+
+    busy = socket.socket()
+    busy.bind(("127.0.0.1", 0))
+    busy.listen()
+    cfg = Config()
+    cfg.dashboard_port = busy.getsockname()[1]
+    path = tmp_path / "c.toml"
+    path.write_text(render_config(cfg))
+    ports = []
+    real_start = dashboard.Dashboard.start
+    monkeypatch.setattr(dashboard.Dashboard, "start", lambda self: real_start(self) or ports.append(self.port))
+    monkeypatch.setattr(threading.Event, "wait", lambda self, *a: True)
+    args = argparse.Namespace(config=str(path), state=str(tmp_path / "state"), port=0, url=False, serve=True,
+                              listen="127.0.0.1", access="local", no_open=True)
+    try:
+        assert cli.cmd_dashboard(args) == 0
+    finally:
+        busy.close()
+    assert ports and ports[0] not in (0, cfg.dashboard_port)
+
+
 def _url(tmp_path, monkeypatch, capsys, mode, **kw):
     path = tmp_path / f"{mode}.toml"
     cfg = Config()

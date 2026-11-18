@@ -845,7 +845,7 @@ def cmd_dashboard(args) -> int:
 
     cfg = load_config(Path(args.config))
     state_dir = Path(args.state)
-    port = args.port or cfg.dashboard_port
+    port = cfg.dashboard_port if args.port is None else args.port     # 0: any free port
     access = args.access or os.environ.get(ACCESS_ENV) or cfg.dashboard_access
 
     def tailnet_hint() -> None:
@@ -1358,6 +1358,14 @@ def _install_kind() -> str:
     return "pip"
 
 
+def _container_label(e, rel) -> str:
+    """What updating a container would change. One set up before there were images installs the
+    newest code from GitHub each time it starts, unsigned: it moves to the signed image."""
+    if e.image.split("@")[0].split(":")[0] != rel.image.split("@")[0].split(":")[0]:
+        return f"installs unsigned code from GitHub when it starts → the signed {rel.version} image"
+    return "→ " + rel.version
+
+
 def _uv() -> str | None:
     found = shutil.which("uv")
     if found:
@@ -1417,7 +1425,7 @@ def cmd_update(args) -> int:
     ui.title(f"Flotilla {rel.version}", rel.page)
     ui.table([("This machine", f"{here}" + (" (a development checkout: update it with git)" if kind == "dev"
                                             else " → " + rel.version if native else ", up to date"))]
-             + [(f"Docker: {n}", ("→ " + rel.version) if n in stale else "up to date") for n in ours])
+             + [(f"Docker: {n}", _container_label(e, rel) if n in stale else "up to date") for n, e in ours.items()])
     if not native and not stale:
         ui.done("Everything is up to date")
         return 0
@@ -1905,7 +1913,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--listen", default="127.0.0.1",
                    help="with --serve: address to listen on, e.g. 0.0.0.0 to reach it from your network "
                         "(then it needs its access key)")
-    p.add_argument("--port", type=int, help="with --serve: port (default: the config's dashboard port)")
+    p.add_argument("--port", type=int, help="with --serve: port (default: the config's dashboard port; 0 for any free one)")
     p.add_argument("--url", action="store_true", help="print the network dashboard's address with its access key")
     p.add_argument("--access", choices=["local", "lan", "tailnet", "public"],
                    help="who may reach it (default: the config's dashboard.access); anything but public turns "

@@ -25,6 +25,7 @@ import math
 import os
 import queue
 import random
+import re
 import shutil
 import signal
 import threading
@@ -36,7 +37,7 @@ import libtorrent as lt
 
 from . import USER_AGENT, __version__, netsafe
 from .candidates import Rejection, TorrentCand, gather
-from .config import (BUILTIN_EDITOR_KEYS, REORIENT_CHOICES, REORIENT_EVERY, Config, State, memory_budget,
+from .config import (BUILTIN_EDITOR_KEYS, FOCUS_CHOICES, REORIENT_CHOICES, REORIENT_EVERY, Config, State, memory_budget,
                      own_memory)
 from .hfpieces import HFPieces
 from .history import History
@@ -58,6 +59,9 @@ from .v2hash import NO_TREE, piece_layer_tree
 
 PROBE_RATE = 4096          # bytes/s per probed torrent
 PROBE_PREFIX = "-FP0100-"
+# Peer ids of Flotilla nodes (-FL0100-<node>) and probes (-FP0100-), whatever the version: they hold
+# pieces to seed them, so they're never demand, even while Pirate Face's tracker calls them leechers.
+FLOTILLA_PEER = re.compile(rb"^-F[LP]\d{4}-")
 STATUS_EVERY = 10.0
 SAVE_EVERY = 300.0          # state.json is written this often (and at once after real changes)
 STATUS_FILE_EVERY = 60.0    # status.json (for `flotilla status`) is written this often
@@ -245,7 +249,9 @@ def _forget_pieces(raw: bytes, piece_length: int, sizes: list[int], files: set[i
 def probe(cands: list[TorrentCand], cfg: Config, scratch: Path, seconds: float, exclude_pid_prefix: bytes,
           log=print, listen_host: str | None = None, dht: bool = True,
           connect: list[tuple[str, int]] | None = None) -> dict[str, dict]:
-    """Watch each swarm. Returns {infohash: {"seeds": n, "partial": {file_index: n}, "peers": n}}."""
+    """Watch each swarm. Returns {infohash: {"seeds": n, "partial": {file_index: n}, "peers": n,
+    "downloaders": n}}. Downloaders are peers still fetching (not seeds, not done with what they
+    chose, not Flotilla nodes): the swarm's real demand, and only those this node could reach."""
     if not cands or seconds <= 0:
         return {}
     scratch.mkdir(parents=True, exist_ok=True)
@@ -271,6 +277,9 @@ def probe(cands: list[TorrentCand], cfg: Config, scratch: Path, seconds: float, 
     log(f"probe: watching {len(handles)} swarm(s) for {seconds:.0f}s (peers can see your IP address)")
 
     seen: dict[str, dict[bytes, object]] = {ih: {} for ih in handles}
+    # Each peer's latest word on whether it still wants pieces: a peer looks like it does until its
+    # piece map arrives, so only the last sample counts.
+    wanting: dict[str, dict[bytes, bool]] = {ih: {} for ih in handles}
     started = time.monotonic()
     deadline = started + seconds
     while True:
@@ -281,6 +290,8 @@ def probe(cands: list[TorrentCand], cfg: Config, scratch: Path, seconds: float, 
                 if pid.startswith(exclude_pid_prefix) or pid.startswith(PROBE_PREFIX.encode()):
                     continue
                 key = pid if any(pid) else str(p.ip).encode()
+                if not FLOTILLA_PEER.match(pid) and not (p.flags & (lt.peer_info.connecting | lt.peer_info.handshake)):
+                    wanting[ih][key] = not (p.flags & (lt.peer_info.seed | lt.peer_info.upload_only))
                 if p.flags & lt.peer_info.seed:
                     seen[ih][key] = True
                 else:
@@ -304,7 +315,8 @@ def probe(cands: list[TorrentCand], cfg: Config, scratch: Path, seconds: float, 
             partial[f.index] = sum(
                 1 for b in peers.values() if b is not True and all(b[f.first_piece : f.last_piece + 1])
             )
-        out[c.infohash] = {"seeds": seeds, "partial": partial, "peers": len(peers)}
+        out[c.infohash] = {"seeds": seeds, "partial": partial, "peers": len(peers),
+                           "downloaders": sum(wanting[c.infohash].values())}
     for h in handles.values():
         ses.remove_torrent(h, lt.session.delete_files)
     end = time.monotonic() + 5
@@ -322,6 +334,8 @@ def apply_probe(cands: list[TorrentCand], result: dict[str, dict]) -> None:
         r = result.get(c.infohash)
         if not r:
             continue
+        if "downloaders" in r and (r["peers"] or not c.seeders):
+            c.downloaders = r["downloaders"]       # else it saw nobody: the planner falls back on the tracker
         we_are_seed = all(f.held for f in c.files if f.kind != "skip")
         tracker_seeds = max(0, c.seeders - (1 if we_are_seed else 0))
         if r["peers"] == 0 and tracker_seeds > 0:
@@ -524,7 +538,7 @@ class Engine:
             min_hold_days=self.cfg.min_hold_days, whole_model_under_bytes=int(self.cfg.whole_model_under_gb * GB),
             now=time.time(), allot={r: int(gb * GB) for r, gb in (self.feed.allot_gb if self.feed else {}).items()},
             churn_bytes=churn_bytes, manual=self.feed.manual if self.feed else frozenset(),
-            reachable=self.reachable(),
+            reachable=self.reachable(), focus=self.cfg.focus,
         )
 
     def replan(self, cands: list[TorrentCand], rejected: list[Rejection],
@@ -542,7 +556,7 @@ class Engine:
             for c in cands:
                 self.cand_info[c.infohash] = {
                     "repo": c.repo, "priority": c.priority, "target": c.target_replicas, "hf_backed": c.hf_backed,
-                    "seeders": c.seeders, "leechers": c.leechers,
+                    "seeders": c.seeders, "leechers": c.leechers, "downloaders": c.downloaders,
                     "files": [{"i": f.index, "path": f.repo_path, "size": f.size, "avail": f.availability}
                               for f in c.files if f.kind == "weight"],
                 }
@@ -1329,7 +1343,7 @@ class Engine:
         "hf_gb_per_day": (0, 1e6), "churn_gb": (0, 1e6),
     }
     SWITCHES = ("hf_fallback",)   # on/off settings
-    CHOICES = {"reorient": REORIENT_CHOICES}   # one-of settings
+    CHOICES = {"reorient": REORIENT_CHOICES, "focus": FOCUS_CHOICES}   # one-of settings
     ACTIONS = ("settings", "pause", "resume", "replan", "reorient", "drop", "add", "remove", "order", "allot", "skip",
                "unskip", "hf_disconnect", "rescue", "points_connect", "points_disconnect")
 
@@ -1383,7 +1397,7 @@ class Engine:
                 held = {int(k): e for k, e in hold.get("files", {}).items()}
                 t.update({"priority": info.get("priority"), "target": info.get("target"),
                           "hf_backed": info.get("hf_backed"), "swarm_seeders": info.get("seeders"),
-                          "swarm_leechers": info.get("leechers"),
+                          "swarm_leechers": info.get("leechers"), "swarm_downloaders": info.get("downloaders"),
                           "ledger": self.state.data["ledger"].get(t["infohash"])})
                 if info.get("files"):
                     t["shards"] = [{"path": f["path"], "size": f["size"], "avail": f["avail"],
@@ -1671,7 +1685,11 @@ class Engine:
         self.log("settings changed: " + ", ".join(f"{k} = {shown(v)}" for k, v in s.items()))
         if "budget_gb" in s or "reserve_gb" in s:
             self.next_refresh = min(self.next_refresh or time.time(), time.time() + 5)
-        if changed & {"reorient", "churn_gb"}:
+        if "focus" in changed:
+            self.log(f"focus: {self.cfg.focus}; replanning (free space follows it now, what's held shifts at the "
+                     f"next reorientation)")
+            self.commands.put(("replan_soon", {}))
+        if changed & {"reorient", "churn_gb", "focus"}:
             self._update_preview()
             due = self.reorient_at()         # a shorter schedule can bring the next one forward
             if due and self.next_refresh:
@@ -1750,7 +1768,7 @@ class Engine:
             if i:
                 avail = [f["avail"] for f in i["files"] if f["avail"] is not None]
                 row.update(pieces=len(i["files"]), size=sum(f["size"] for f in i["files"]), seeders=i["seeders"],
-                           leechers=i["leechers"], hf_backed=i["hf_backed"], target=i["target"], measured=len(avail),
+                           leechers=i["leechers"], downloaders=i.get("downloaders"), hf_backed=i["hf_backed"], target=i["target"], measured=len(avail),
                            below=sum(1 for a in avail if a < i["target"]), zero=sum(1 for a in avail if a == 0),
                            rarest=min(avail) if avail else None, status="ok")
             elif repo in rejected:

@@ -193,7 +193,8 @@ brought back. Set `keep_magnet_index = false` under `[pirateface]` to turn this 
 3. **It looks at the swarm** for about 90 seconds, to see how many peers hold *each piece*, not just
    how many hold a whole model.
 4. **It picks pieces** by need: rarer pieces, more important models, and models whose Hugging Face
-   original is gone score higher. A per-computer random draw means two people who join at the same
+   original is gone score higher. Busy swarms score a little extra, or more, depending on your
+   [focus](#what-to-seed-first). A per-computer random draw means two people who join at the same
    moment pick *different* pieces, with no central coordinator. Small models are kept whole.
 5. **It downloads only those pieces, verifies them, and seeds.** Every 6 hours it looks again: it keeps
    what you hold and fills any space you've added.
@@ -201,6 +202,22 @@ brought back. Set `keep_magnet_index = false` under `[pirateface]` to turn this 
    ones the swarm needs most.
 
 The maths is in [DESIGN.md](DESIGN.md).
+
+### What to seed first
+
+`flotilla init` and the dashboard's settings ask what you'd rather carry (`focus` under `[policy]`):
+
+| Focus | Favours |
+| --- | --- |
+| **At risk** (the default) | the copies most likely to be lost, and models Hugging Face has taken down |
+| **Balanced** | both: at-risk copies and busy swarms |
+| **In demand** | the models the most people are downloading right now; rarity breaks ties |
+
+Demand is counted in the swarm itself: people downloading a model right now. Flotilla nodes don't
+count, though Pirate Face's tracker lists them as downloaders, since they hold only part of a model.
+In-demand works best with a fast upload, and with reorienting every day, since demand changes faster
+than rarity; setup suggests daily when you pick it. Changing focus moves free space at once; what you
+already hold shifts at the next reorientation.
 
 ### Reorienting
 

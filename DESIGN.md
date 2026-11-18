@@ -149,7 +149,8 @@ Resume data is never trusted for trackers or web seeds: trackers are always take
 ## Probing: how we learn per-shard availability
 
 Tracker counts only say how many peers have *everything*. A partial seeder announces as a leecher. To
-see shards we read peer bitfields.
+see shards we read peer bitfields. The same look counts real downloaders, for demand (see the
+planner's notes below).
 
 A session that wants nothing never learns anything: libtorrent (and most clients) drop "upload to
 upload" connections before or right after the bitfield. The probe therefore uses a separate
@@ -183,11 +184,15 @@ Units are single weight files, or whole models smaller than `whole_model_under_g
 torrent. That keeps every partial seed useful and license-compliant.
 
 ```
-rate(unit)  = priority × (scarcity(a, T) × risk + throughput)          # value per GB
+rate(unit)  = priority × (w_risk × scarcity(a, T) × risk + w_demand × demand × uplink)   # value per GB
 scarcity    = 1/(1+a)            if a < T     (a = availability, T = target replicas)
             = 0.1/(1+a)          otherwise
+            × 1.4 on a reachable node when a ≤ 1
 risk        = 2.5  HF original gone   | 1.5 unknown | 1.0 HF still serves it
-throughput  = 0.5 × min(1, leechers/(seeders+1)) × min(1, upload / 100 Mbit/s)
+demand      = min(1, log2(1+d) / log2(33)) × d / (d + seeders)
+              d = downloaders the probe saw (Flotilla nodes left out), or tracker leechers / 2
+uplink      = 0.25 + 0.75 × min(1, upload / 100 Mbit/s)
+(w_risk, w_demand) = at-risk (1, 0.5) | balanced (1, 1.5) | in-demand (0.25, 3)    # policy.focus
 value       = rate × size_GB × (1.25 if whole model)  × (hold_bonus if already held)
 density     = value / (size + boundary-piece overhead)
 key         = density^spread × (−1 / ln u),  u = H(node_id ‖ infohash ‖ path) ∈ (0,1)
@@ -216,9 +221,18 @@ Why each piece is there:
 - **Feedback.** As nodes fetch, the next probe sees their bitfields, so scarcity falls and later
   nodes move on to other shards. Replanning and reorienting are the only control loops; no coordinator
   is needed.
-- **Upload speed** changes *what* you hold. A slow-upload node gets almost no throughput term, so it
-  preserves rare shards. A fast-upload node also takes shards of busy swarms where its bandwidth
+- **Upload speed** changes *what* you hold. A slow-upload node gets a quarter of the demand term, so it
+  leans toward rare shards. A fast-upload node also takes shards of busy swarms where its bandwidth
   matters.
+- **Demand is people, not leechers.** Pirate Face's tracker counts anyone without a full copy as a
+  leecher, so every Flotilla node holding a few shards looked like demand, and more of them with every
+  install. The probe counts downloaders itself: peers whose latest state is neither seed nor
+  upload-only, leaving out Flotilla peer ids (`-FL`, `-FP`). It only sees peers it can connect to, which
+  on a node behind NAT is roughly the demand it could serve. The count is log-scaled (one new
+  downloader matters more at 1 than at 40) and shared with the seeders already there.
+- **Focus** is the user's choice of `w_risk` and `w_demand`. In-demand keeps a little rarity as a
+  tie-break, and the hold bonus and churn limit stop a change of focus from replacing everything held
+  at once.
 
 Tested properties (`tests/test_candidates_planner.py`):
 

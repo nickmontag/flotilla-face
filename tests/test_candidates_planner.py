@@ -1,6 +1,7 @@
 """Trust checks on candidates, and the shard planner."""
 
 import hashlib
+import math
 from pathlib import Path
 
 import pytest
@@ -523,3 +524,59 @@ def test_reachable_nodes_lean_toward_the_last_copies():
         return n
 
     assert rare_picks(True) > rare_picks(False)
+
+
+def test_demand_counts_real_downloaders_and_falls_back_on_the_tracker():
+    from flotilla.planner import demand
+
+    c = cand("org/m", n_shards=4, seeders=0)
+    c.leechers, c.downloaders = 40, None
+    assert demand(c) == pytest.approx(min(1.0, math.log2(21) / math.log2(33)))   # tracker leechers, halved
+    c.downloaders = 0                       # the probe looked: those leechers were Flotilla nodes
+    assert demand(c) == 0
+    c.downloaders = 32
+    assert demand(c) == 1.0
+    c.seeders = 32                          # already well served: half the pull
+    assert demand(c) == pytest.approx(0.5)
+
+
+def _busy_and_rare():
+    busy = cand("org/busy", n_shards=4, seeders=3)
+    busy.downloaders = 60
+    for f in busy.files:
+        f.availability = 3
+    rare = cand("org/rare", n_shards=4, seeders=0)
+    rare.downloaders = 0
+    for f in rare.files:
+        f.availability = 0
+    return busy, rare
+
+
+@pytest.mark.parametrize("focus,want", [("at-risk", "org/rare"), ("in-demand", "org/busy")])
+def test_focus_picks_rare_or_busy(focus, want):
+    busy, rare = _busy_and_rare()
+    p = plan([busy, rare], params(21, spread=10, focus=focus), "node-a")
+    assert [c.repo for c in (busy, rare) if c.infohash in p.picks] == [want]
+
+
+def test_balanced_sits_between():
+    from flotilla.planner import build_units
+
+    busy, rare = _busy_and_rare()
+
+    def ratio(focus):
+        rates = {u.cand.repo: u.rate for u in build_units([busy, rare], params(21, focus=focus), "n")}
+        return rates["org/busy"] / rates["org/rare"]
+
+    assert ratio("at-risk") < ratio("balanced") < ratio("in-demand")
+
+
+def test_focus_is_checked_in_the_config(tmp_path):
+    from flotilla.config import load_config, render_config
+
+    path = tmp_path / "config.toml"
+    path.write_text(render_config(cfg(focus="balanced")))
+    assert load_config(path).focus == "balanced"
+    path.write_text(render_config(cfg()).replace('focus = "at-risk"', 'focus = "popular"'))
+    with pytest.raises(ValueError, match="policy.focus"):
+        load_config(path)

@@ -89,7 +89,7 @@ class TorrentCand:
     target_replicas: int
     hf_backed: bool | None
     seeders: int
-    leechers: int
+    leechers: int                  # Pirate Face's tracker: anyone without a full copy, Flotilla nodes included
     meta: TorrentMeta = field(repr=False)
     files: list[FileCand] = field(default_factory=list)
     verify_source: str = "huggingface"
@@ -102,6 +102,8 @@ class TorrentCand:
     # no longer has the repo, with the hash ledger). We verify against those; this list is for
     # reporting to Pirate Face.
     manifest_mismatches: list[dict] = field(default_factory=list)   # {"path", "pirateface", "huggingface" | "ledger"}
+    # Peers the probe saw still fetching, Flotilla nodes left out (engine.probe). None: no probe.
+    downloaders: int | None = None
 
     @property
     def piece_length(self) -> int:

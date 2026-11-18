@@ -262,3 +262,16 @@ def test_the_dashboard_script_parses(tmp_path):
         f.write_text(js)
         r = subprocess.run([node, "--check", str(f)], capture_output=True, text=True)
         assert r.returncode == 0, r.stderr
+
+
+def test_focus_is_a_choice_saved_and_replans(node):
+    eng, dash, path, logs = node
+    assert eng.cfg.focus == "at-risk"
+    for bad in [{"focus": "popular"}, {"focus": 1}]:
+        assert call(dash, "POST", "/api/settings", bad, token=dash.token)[0] == 400, bad
+    assert call(dash, "POST", "/api/settings", {"focus": "in-demand"}, token=dash.token)[0] == 200
+    eng.process_commands()
+    assert eng.cfg.focus == "in-demand" and load_config(path).focus == "in-demand"
+    assert eng.params().focus == "in-demand"
+    assert any("focus: in-demand; replanning" in l for l in logs)
+    assert eng.snapshot()["settings"]["focus"] == "in-demand"

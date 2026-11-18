@@ -611,3 +611,22 @@ def test_dropping_a_file_keeps_the_rest_without_a_recheck(tmp_path):
     assert h.status().is_finished                                  # all it wants, and seeding it
     eng.handles = {}
     eng.shutdown()
+
+
+def test_probe_demand_leaves_out_flotilla_nodes():
+    from flotilla.engine import FLOTILLA_PEER
+
+    assert FLOTILLA_PEER.match(b"-FL0100-a25b27" + b"\0" * 6) and FLOTILLA_PEER.match(b"-FP0100-" + b"x" * 12)
+    assert FLOTILLA_PEER.match(b"-FL0230-abcdef" + b"\0" * 6)          # a later version too
+    assert not FLOTILLA_PEER.match(b"-qB4650-" + b"x" * 12) and not FLOTILLA_PEER.match(b"-LT2010-" + b"x" * 12)
+
+
+def test_apply_probe_takes_the_downloaders_it_saw():
+    from flotilla.engine import apply_probe
+    from tests.test_candidates_planner import cand
+
+    seen, unseen = cand("org/a", n_shards=2, seeders=2), cand("org/b", n_shards=2, seeders=2)
+    apply_probe([seen, unseen], {
+        seen.infohash: {"seeds": 2, "partial": {}, "peers": 5, "downloaders": 3},
+        unseen.infohash: {"seeds": 0, "partial": {}, "peers": 0, "downloaders": 0}})   # saw nobody at all
+    assert seen.downloaders == 3 and unseen.downloaders is None

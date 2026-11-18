@@ -104,11 +104,25 @@ def test_partial_seed_probe_verify_resume(tmp_path):
             assert not p.exists(), f"{f.repo_path} should not be on disk"   # true partial seed
     assert not (base / repo.name / "modeling_test.py").exists()
 
-    # A third node probing the swarm sees exactly which shards we hold.
+    # Someone else downloading the whole model, slowly (another client: it counts as demand).
+    L = lt.session({"listen_interfaces": "127.0.0.1:0", "enable_dht": False, "enable_lsd": False,
+                    "enable_upnp": False, "enable_natpmp": False, "allow_multiple_connections_per_ip": True,
+                    "peer_fingerprint": "-qB4650-", "download_rate_limit": 1024,
+                    "ignore_limits_on_local_network": False})
+    latp = lt.add_torrent_params()
+    latp.ti, latp.save_path = lt.torrent_info(lt.bdecode(repo.raw)), str(tmp_path / "L")
+    latp.flags &= ~(lt.torrent_flags.auto_managed | lt.torrent_flags.paused)
+    L.add_torrent(latp).connect_peer(a_addr)
+
+    # A third node probing the swarm sees exactly which shards we hold, and one real downloader: the
+    # Flotilla node, a partial seeder the tracker would call a leecher, isn't demand.
     obs = probe([candidate(repo)], cfg, tmp_path / "observer", 6, b"-FL0100-ffffff", log=lambda *_: None,
-                listen_host="127.0.0.1", dht=False, connect=[a_addr, ("127.0.0.1", eng.ses.listen_port())])
+                listen_host="127.0.0.1", dht=False,
+                connect=[a_addr, ("127.0.0.1", eng.ses.listen_port()), ("127.0.0.1", L.listen_port())])
+    del L
     r = obs[c.infohash]
     assert r["seeds"] == 1, (r, [str(x) for x in eng.handles[c.infohash].get_peer_info()])
+    assert r["downloaders"] == 1, r
     for f in c.files:
         if f.kind == "weight":
             assert r["partial"][f.index] == (1 if f.repo_path in picked else 0), (f.repo_path, r)

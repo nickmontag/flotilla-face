@@ -679,6 +679,14 @@
         </div>
         <div class="fields">
           <div class="field">
+            <div class="fl"><label for="s-focus">Seed first</label>
+              <button type="button" class="qm" aria-label="About seed first" data-tip="At risk: the copies most likely to be lost, and models Hugging Face has taken down. In demand: the models the most people are downloading right now (Flotilla nodes don't count). Balanced: both. Free space follows a change at once; what you hold shifts at the next reorientation.">?</button></div>
+            <select id="s-focus" name="focus">
+              <option value="at-risk">At risk</option><option value="balanced">Balanced</option>
+              <option value="in-demand">In demand</option>
+            </select>
+          </div>
+          <div class="field">
             <div class="fl"><label for="s-reorient">How often</label>
               <button type="button" class="qm" aria-label="About how often" data-tip="How often Flotilla reorients by itself. With Never, it only does so when you press Reorient now.">?</button></div>
             <select id="s-reorient" name="reorient">
@@ -1363,7 +1371,8 @@ function detail(t) {
   const meta = el("div", "meta");
   const bits = ["Pieces: you hold " + heldN + " of " + shards.length];
   if (t.priority != null) bits.push("priority " + t.priority.toFixed(2));
-  if (t.swarm_seeders != null) bits.push(t.swarm_seeders + " full seeders, " + t.swarm_leechers + " downloading");
+  if (t.swarm_seeders != null) bits.push(t.swarm_seeders + " full seeders, " + (t.swarm_downloaders != null
+      ? t.swarm_downloaders + " downloading (seen)" : t.swarm_leechers + " not full (tracker)"));
   const av = shards.map((x) => x.avail).filter((a) => a != null);
   if (av.length) {
     const r = Math.min(...av);
@@ -1472,9 +1481,12 @@ function renderPriorities(list, st) {
       }
     }
 
-    const swarm = p.seeders != null ? cell(String(p.seeders), (p.seeders === 1 ? " seed · " : " seeds · ") + p.leechers + " dl")
+    const dl = p.downloaders != null ? p.downloaders : p.leechers;
+    const swarm = p.seeders != null ? cell(String(p.seeders), (p.seeders === 1 ? " seed · " : " seeds · ") + dl + " dl")
                                      : el("span", "cell", "–");
-    swarm.title = p.seeders != null ? p.seeders + " full seeders and " + p.leechers + " downloading, per Pirate Face" : "";
+    swarm.title = p.seeders == null ? "" : p.downloaders != null
+      ? p.seeders + " full seeders (per Pirate Face); " + p.downloaders + " people downloading, seen in the swarm (Flotilla nodes don't count)"
+      : p.seeders + " full seeders and " + p.leechers + " without a full copy, per Pirate Face (Flotilla nodes included)";
     const held = el("span", "cell right", p.held_bytes ? human(p.held_bytes) : "–");
 
     const gb = el("label", "gb");

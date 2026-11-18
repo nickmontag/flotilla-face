@@ -5,7 +5,8 @@ Pure function of (candidates, budget, node id, tuning): no I/O, fully testable.
 The unit of assignment is one weight file (a safetensors/GGUF shard), or a
 whole small model. Each unit gets a value *per GB*:
 
-    rate = priority × (scarcity(availability, target) × risk + throughput)
+    rate = priority × (w_risk × scarcity(availability, target) × risk
+                       + w_demand × demand × uplink)
     value = rate × size_GB  (× 1.25 for a whole model: a complete copy is
                              independently useful and shows up as a seeder)
 
@@ -22,10 +23,14 @@ steer with priority; the swarm state steers with scarcity.
                  node peers can connect to (REACHABLE_RARE): the last copies
                  belong where nodes behind VPNs without port forwarding can
                  reach them.
-* throughput   - small extra term for swarms with many leechers, scaled by
-                 how much upload this node has. Low-upload nodes therefore
-                 lean toward pure preservation (rare files), high-upload
-                 nodes also help busy swarms.
+* demand       - 0..1: real downloaders in the swarm (the probe's count, Flotilla
+                 nodes left out), log-scaled (32 or more is full), shared
+                 with the seeders already serving them. Scaled by uplink,
+                 how much upload this node has.
+* focus        - the user's choice of weights (FOCUS_WEIGHTS): "at-risk" keeps
+                 the rarest copies and lost models (demand a small extra),
+                 "in-demand" serves the busiest swarms (rarity a tie-break),
+                 "balanced" weighs both.
 
 Units are ranked by value per GB, then *weighted rendezvous hashing* turns the
 ranking into a per-node draw: key = density^spread × (−1/ln u), u = H(node, file).
@@ -78,6 +83,8 @@ class Params:
     # Can peers start connections to this node (a forwarded port, or peers that connected in lately)?
     # Then its rarest pieces are worth REACHABLE_RARE times more to it: see build_units.
     reachable: bool = False
+    # What to favour: "at-risk", "balanced" or "in-demand" (FOCUS_WEIGHTS).
+    focus: str = "at-risk"
 
 
 @dataclass
@@ -165,9 +172,30 @@ def risk(hf_backed: bool | None) -> float:
     return {True: 1.0, False: 2.5, None: 1.5}[hf_backed]
 
 
-def throughput(c: TorrentCand, upload_bps: float) -> float:
-    demand = min(1.0, c.leechers / (c.seeders + 1))
-    return 0.5 * demand * min(1.0, upload_bps / 12_500_000)  # 100 Mbit/s → full weight
+# (w_risk, w_demand) per focus. A lone copy of a model Hugging Face still serves scores 1 on the
+# risk side; a swarm with 32+ downloaders and no seeders scores 1 on the demand side (× uplink).
+FOCUS_WEIGHTS = {"at-risk": (1.0, 0.5), "balanced": (1.0, 1.5), "in-demand": (0.25, 3.0)}
+DEMAND_FULL = 32       # downloaders at which demand counts in full
+
+
+def demand(c: TorrentCand) -> float:
+    """How much the swarm wants another seeder, 0..1. The probe's downloaders when it ran; otherwise the
+    tracker's leechers, halved, as they count Flotilla nodes and other partial seeders too."""
+    d = c.downloaders if c.downloaders is not None else c.leechers / 2
+    if d <= 0:
+        return 0.0
+    many = min(1.0, math.log2(1 + d) / math.log2(1 + DEMAND_FULL))
+    return many * d / (d + c.seeders)          # served already by many seeders: each new one adds less
+
+
+def uplink(upload_bps: float) -> float:
+    """How well this node can serve demand: 100 Mbit/s or more in full, never under a quarter, so a slow
+    node that chose in-demand still leans that way."""
+    return 0.25 + 0.75 * min(1.0, upload_bps / 12_500_000)
+
+
+def throughput(c: TorrentCand, upload_bps: float, focus: str = "at-risk") -> float:
+    return FOCUS_WEIGHTS[focus][1] * demand(c) * uplink(upload_bps)
 
 
 def hrw_u(node_id: str, infohash: str, path: str) -> float:
@@ -207,10 +235,11 @@ def build_units(cands: list[TorrentCand], p: Params, node_id: str) -> list[Unit]
         weights = [f for f in live if f.kind == "weight"]
         if not live:
             continue
-        r, t = risk(c.hf_backed), throughput(c, p.upload_bps)
+        r, t = risk(c.hf_backed), throughput(c, p.upload_bps, p.focus)
+        w_risk = FOCUS_WEIGHTS[p.focus][0]
 
         def need(a: float) -> float:
-            return scarcity(a, c.target_replicas) * r * (REACHABLE_RARE if p.reachable and a <= 1 else 1.0)
+            return w_risk * scarcity(a, c.target_replicas) * r * (REACHABLE_RARE if p.reachable and a <= 1 else 1.0)
 
         if c.selectable_bytes <= p.whole_model_under_bytes or not weights:
             a = min(_avail(f, c) for f in live)

@@ -41,6 +41,9 @@ FEED_HOSTS: tuple[str, ...] = DEFAULT_ALLOWED_HOSTS + ("raw.githubusercontent.co
 # "never" isn't here: the node then only swaps when its user asks.
 REORIENT_EVERY: dict[str, float] = {"daily": 86400.0, "weekly": 7 * 86400.0, "monthly": 30 * 86400.0}
 REORIENT_CHOICES: tuple[str, ...] = (*REORIENT_EVERY, "never")
+# What a node favours (planner.FOCUS_WEIGHTS): the copies most likely to be lost, the swarms with the
+# most people downloading, or both.
+FOCUS_CHOICES: tuple[str, ...] = ("at-risk", "balanced", "in-demand")
 
 # Public keys of feed editors (minisign format). Ship your project's key here.
 BUILTIN_EDITOR_KEYS: list[str] = [
@@ -60,6 +63,7 @@ class Config:
     # your own changes (a model you add, skip or set space aside for) still apply at once. Pieces of
     # models you added or set space aside for are never swapped out.
     reorient: str = "weekly"
+    focus: str = "at-risk"
     churn_gb: float = 20.0
 
     upload_mbps: float = 10.0
@@ -158,7 +162,7 @@ _SECTIONS = {
     "network": ["upload_mbps", "download_mbps", "upload_share", "download_share", "monthly_upload_cap_gb",
                 "memory_gb", "listen_port", "port_forwarding", "vpn_port_forwarding", "vpn_port_file",
                 "bind_interface", "hf_fallback", "hf_gb_per_day"],
-    "policy": ["licenses", "include_unlisted", "include_rescue", "seed_code_files", "allow_pickle",
+    "policy": ["focus", "licenses", "include_unlisted", "include_rescue", "seed_code_files", "allow_pickle",
                "whole_model_under_gb", "max_candidates"],
     "feed": ["urls", "trusted_keys", "allowed_hosts", "local"],
     "net": ["allowed_hosts"],
@@ -206,6 +210,8 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
 
     if cfg.dashboard_access not in ACCESS_CHOICES:
         raise ValueError(f"dashboard.access must be one of: {', '.join(ACCESS_CHOICES)}")
+    if cfg.focus not in FOCUS_CHOICES:
+        raise ValueError(f"policy.focus must be one of: {', '.join(FOCUS_CHOICES)}")
     if cfg.reorient not in REORIENT_CHOICES:
         raise ValueError(f"reorient.every must be one of: {', '.join(REORIENT_CHOICES)}")
     if not isinstance(cfg.vpn_port_forwarding, bool):
@@ -265,6 +271,7 @@ hf_fallback = {_toml_str(cfg.hf_fallback)}       # fetch pieces no peer has from
 hf_gb_per_day = {_toml_str(cfg.hf_gb_per_day)}        # most to fetch from Hugging Face a day; 0 = no limit
 
 [policy]
+focus = {_toml_str(cfg.focus)}      # what to seed first: "at-risk" (copies most likely to be lost), "in-demand" (most people downloading) or "balanced"
 licenses = {_toml_str(cfg.licenses)}
 include_unlisted = {_toml_str(cfg.include_unlisted)}   # also help models the list doesn't name (Pirate Face's rescued models and new torrents)
 include_rescue = {_toml_str(cfg.include_rescue)}     # consider Pirate Face's rescued models

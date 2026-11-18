@@ -12,7 +12,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from . import __version__, ui
-from .config import (BUILTIN_EDITOR_KEYS, CONFIG_PATH, REORIENT_CHOICES, STATE_DIR, Config, State, load_config,
+from .config import (BUILTIN_EDITOR_KEYS, CONFIG_PATH, FOCUS_CHOICES, REORIENT_CHOICES, STATE_DIR, Config, State, load_config,
                      render_config)
 from .feed import BUNDLED_FEED, LOCAL_EXAMPLE, FeedError, apply_local, load_feed, origin_view, parse_feed
 from .ledger import LedgerError, load_ledger
@@ -110,16 +110,23 @@ def cmd_init(args) -> int:
     dshare = _ask("Share of download to use while filling, 0.1-1", cfg.download_share, float)
     cap = _ask("Monthly upload cap in GB, 0 for none", cfg.monthly_upload_cap_gb, float)
 
-    ui.section(3, SETUP_STEPS, "Reorienting")
+    ui.section(3, SETUP_STEPS, "What to seed")
+    ui.note("at-risk: the copies most likely to be lost, and models Hugging Face has taken down. in-demand: "
+            "the models the most people are downloading right now. balanced: both.")
+
+    def one_of(choices):
+        def check(raw: str) -> str:
+            if raw.strip().lower() not in choices:
+                raise ValueError(raw)
+            return raw.strip().lower()
+        return check
+
+    focus = _ask(f"Seed first: {', '.join(FOCUS_CHOICES)}", cfg.focus, one_of(FOCUS_CHOICES))
     ui.note("What the swarm needs changes. On a schedule, Flotilla drops the lowest-priority pieces you hold "
-            "and fetches the ones the swarm needs most. Models you add or set space aside for stay.")
-
-    def every(raw: str) -> str:
-        if raw.strip().lower() not in REORIENT_CHOICES:
-            raise ValueError(raw)
-        return raw.strip().lower()
-
-    reorient = _ask(f"How often: {', '.join(REORIENT_CHOICES)}", cfg.reorient, every)
+            "and fetches the ones the swarm needs most. Models you add or set space aside for stay."
+            + (" Demand moves faster than rarity, so in-demand works best daily." if focus == "in-demand" else ""))
+    often = "daily" if focus == "in-demand" and cfg.reorient == Config().reorient else cfg.reorient
+    reorient = _ask(f"How often: {', '.join(REORIENT_CHOICES)}", often, one_of(REORIENT_CHOICES))
     churn = cfg.churn_gb
     if reorient != "never":
         churn = max(0.0, _ask("Most to swap each time, in GB", churn, parse_gb))
@@ -212,7 +219,7 @@ def cmd_init(args) -> int:
     cfg.monthly_upload_cap_gb, cfg.port_forwarding, cfg.licenses = cap, pf, licenses
     cfg.bind_interface = bind
     cfg.hf_fallback, cfg.hf_gb_per_day = hf, hf_gb
-    cfg.reorient, cfg.churn_gb = reorient, churn
+    cfg.reorient, cfg.churn_gb, cfg.focus = reorient, churn, focus
     cfg.dashboard_access = access
 
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -226,6 +233,9 @@ def cmd_init(args) -> int:
         ("Upload", f"{up:g} Mbit/s × {cfg.upload_share:.0%}, up to {cfg.max_torrents} swarms at once"
                    + (f", {cap:g} GB a month" if cap else "")),
         ("Filling", f"about {fill} at {down:g} Mbit/s × {cfg.download_share:.0%} (rare models take longer)"),
+        ("Seeding", {"at-risk": "at-risk first: the copies most likely to be lost",
+                     "balanced": "balanced: at-risk copies and busy swarms",
+                     "in-demand": "in-demand first: the swarms with the most people downloading"}[focus]),
         ("Reorient", reorient if reorient == "never" else f"{reorient}, up to {churn:g} GB"),
         ("Network", f"pinned to {bind}: if the VPN drops, Flotilla goes offline" if bind
                     else "router port open (UPnP)" if pf else "your connection, no router port"),
@@ -1134,7 +1144,7 @@ def cmd_plan(args) -> int:
     params = Params(budget, cfg.upload_bps, cfg.download_bps, cfg.max_torrents, cfg.spread, cfg.hold_bonus,
                     cfg.min_hold_days, int(cfg.whole_model_under_gb * GB), time.time(),
                     allot={r: int(gb * GB) for r, gb in feed.allot_gb.items()},
-                    churn_bytes=int(cfg.churn_gb * GB), manual=feed.manual)
+                    churn_bytes=int(cfg.churn_gb * GB), manual=feed.manual, focus=cfg.focus)
     p = make_plan(cands, params, state.node_id)
     if args.json:
         print(json.dumps({

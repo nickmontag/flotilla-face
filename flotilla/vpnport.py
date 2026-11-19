@@ -128,14 +128,18 @@ def gluetun_port(auth: str = "", base: str = GLUETUN, timeout: float = 3.0) -> i
         if host != "localhost":
             raise GluetunAbsent(f"{base} isn't on this machine") from None
     headers = _gluetun_headers(auth)
-    for path in ("/v1/portforward", "/v1/openvpn/portforwarded"):      # new route, then the old one
+    refused = 0
+    # The new route, then the old one. A gluetun without the new route may answer 401 for it rather
+    # than 404 (routes no role names are private), so a refusal there is no answer yet either.
+    for path in ("/v1/portforward", "/v1/openvpn/portforwarded"):
         req = urllib.request.Request(base + path, headers=headers)
         try:
             with _LOCAL.open(req, timeout=timeout) as r:
                 doc = json.loads(r.read(4096))
         except urllib.error.HTTPError as e:
             if e.code in (401, 403):
-                raise GluetunAuth(f"gluetun's control server said {e.code}") from None
+                refused = e.code
+                continue
             if e.code == 404:
                 continue
             raise GluetunAbsent(f"HTTP {e.code}") from None
@@ -147,6 +151,8 @@ def gluetun_port(auth: str = "", base: str = GLUETUN, timeout: float = 3.0) -> i
         if not isinstance(ports, list) or not all(isinstance(p, int) and 0 <= p < 65536 for p in ports):
             raise GluetunAbsent("not gluetun's answer")
         return next((p for p in ports if p), 0)
+    if refused:
+        raise GluetunAuth(f"gluetun's control server said {refused}")
     raise GluetunAbsent("no port forwarding route")
 
 
@@ -322,7 +328,8 @@ class PortFinder:
                     return Forward(port, "gluetun", renew=60.0)
                 return Forward(note=self._gluetun_note(False))
             except GluetunAuth:
-                notes.append(self._gluetun_note(True))
+                # Not NAT-PMP instead: a port mapped past gluetun's firewall can't come in.
+                return Forward(note=self._gluetun_note(True))
             except GluetunAbsent:
                 self.gluetun = False
         fw = self._natpmp(current)

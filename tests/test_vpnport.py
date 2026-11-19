@@ -128,10 +128,11 @@ def test_gateways_are_private_and_never_ourselves(monkeypatch):
 # ---------------------------------------------------------------- gluetun's control server
 
 
-def _control_server(routes: dict, need_key: str | None = None):
+def _control_server(routes: dict, need_key: str | None = None, private: bool = False):
     class H(BaseHTTPRequestHandler):
         def do_GET(self):
-            if need_key is not None and self.headers.get("X-API-Key") != need_key:
+            # private: like gluetun with an auth file, a route no role names is 401 whatever the key
+            if need_key is not None and (self.headers.get("X-API-Key") != need_key or private and self.path not in routes):
                 self.send_response(401)
                 self.end_headers()
                 return
@@ -168,6 +169,27 @@ def test_gluetun_key():
     assert vpnport.gluetun_port('{"auth":"apikey","apikey":"s3cret"}', base=base) == 5914
     assert vpnport.gluetun_port("s3cret", base=base) == 5914
     srv.shutdown()
+
+
+def test_gluetun_older_route_when_the_new_one_is_refused():
+    # gluetun before /v1/portforward, its key in /gluetun/auth/config.toml for the old route only
+    srv, base = _control_server({"/v1/openvpn/portforwarded": {"port": 63969}}, need_key="k", private=True)
+    assert vpnport.gluetun_port("k", base=base) == 63969
+    with pytest.raises(vpnport.GluetunAuth):
+        vpnport.gluetun_port("wrong", base=base)
+    srv.shutdown()
+
+
+def test_no_natpmp_past_gluetuns_firewall(monkeypatch):
+    def refused(*a, **k):
+        raise vpnport.GluetunAuth("401")
+
+    monkeypatch.setattr(vpnport, "gluetun_port", refused)
+    monkeypatch.setattr(vpnport, "natpmp_map", lambda *a, **k: pytest.fail("mapped a port gluetun's firewall drops"))
+    f = vpnport.PortFinder("tun0", gluetun_auth="k", address=lambda: "10.2.0.2")
+    f.gluetun = True
+    fw = f.find(6881)
+    assert not fw.port and "wants a key" in fw.note
 
 
 def test_gluetun_only_on_this_machine():
@@ -374,3 +396,18 @@ def test_update_passes_gluetuns_provider_and_current_key(monkeypatch):
     assert f"{vpnport.GLUETUN_AUTH_ENV}=stale" not in cmd and "FLOTILLA_IMAGE=x" in cmd
     assert not any("never-copied" in part for part in cmd)
     assert cmd[-2:] == ["img", "run"]
+
+
+def test_update_finds_a_recreated_vpn_container_by_its_name(monkeypatch):
+    from tests.test_release import IMAGE_NODE, _from
+
+    old = _from({**IMAGE_NODE, "HostConfig": {**IMAGE_NODE["HostConfig"], "NetworkMode": "container:" + "e" * 64},
+                 "Config": {**IMAGE_NODE["Config"], "Labels": {containers.VPN_LABEL: "gluetun_seed"}}})
+
+    def docker(*a):                       # Docker no longer knows that id
+        return subprocess.CompletedProcess(a, 1, "", "No such object")
+
+    monkeypatch.setattr(containers, "_docker", docker)
+    cmd = containers.run_args(old, "img")
+    assert cmd[cmd.index("--network") + 1] == "container:gluetun_seed"
+    assert f"{containers.VPN_LABEL}=gluetun_seed" in cmd          # kept for the next time

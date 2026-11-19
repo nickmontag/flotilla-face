@@ -23,6 +23,9 @@ IMAGE_ENV = "FLOTILLA_IMAGE"
 NODE, DASHBOARD = "flotilla", "flotilla-dashboard"
 # Set on the setup container, so `flotilla init` inside knows the host already chose where files go.
 STORAGE_ENV, VPN_ENV = "FLOTILLA_DOCKER_STORAGE", "FLOTILLA_DOCKER_VPN"
+# The VPN container's name, on the node. Docker keeps `--network container:<name>` as the id, which
+# is gone once that container is recreated (a compose change, a new image): the name finds the new one.
+VPN_LABEL = "flotilla.vpn"
 
 # Images that are a VPN client for the containers sharing their network. Ones with "vpn" in the name
 # usually are too (binhex/arch-qbittorrentvpn, haugene/transmission-openvpn), except VPN *servers*.
@@ -235,7 +238,8 @@ _LOGS = ["--log-opt", "max-size=10m", "--log-opt", "max-file=3"]
 
 def node_command(vpn: VpnContainer, volume: str, image: str, memory: str = "3g") -> list[str]:
     """The seeding node, every connection through the VPN container."""
-    return ["docker", "run", "-d", "--name", NODE, "--network", vpn.network, "--restart", "unless-stopped",
+    return ["docker", "run", "-d", "--name", NODE, "--network", vpn.network, "--label", f"{VPN_LABEL}={vpn.name}",
+            "--restart", "unless-stopped",
             "--memory", memory, "--memory-swap", memory, *_LOGS, *gluetun_env(vpn), "-v", f"{volume}:/root",
             image, "run"]
 
@@ -334,8 +338,11 @@ def run_args(old: Installed, image: str) -> list[str]:
     mode = hc.get("NetworkMode") or ""
     vpn_env: list[str] = []
     if mode.startswith("container:"):      # by name: an id goes stale when the VPN container is recreated
-        vpn_name = _container_name(mode.split(":", 1)[1])
-        cmd += ["--network", "container:" + vpn_name]
+        ref = mode.split(":", 1)[1]
+        vpn_name = _container_name(ref)
+        if vpn_name == ref:                # Docker doesn't know it (recreated): the name we kept
+            vpn_name = (cfg.get("Labels") or {}).get(VPN_LABEL) or ref
+        cmd += ["--network", "container:" + vpn_name, "--label", f"{VPN_LABEL}={vpn_name}"]
         vpn_env = _gluetun_env_now(vpn_name)
     elif mode and mode not in ("default", "bridge"):
         cmd += ["--network", mode]

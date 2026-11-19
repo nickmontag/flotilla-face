@@ -556,8 +556,8 @@ formula above. That's Flotilla's count; Pirate Face keeps the real one. Seeding 
 too, with an account connected.
 
 **Other ways to help.** Pirate Face's own CLI has a job Flotilla doesn't do: `pf work` takes models from
-its rescue queue, streams them from Hugging Face, checks them, and lists their torrents (3 points per GB,
-no disk space needed). If you have bandwidth to spare, run it next to Flotilla with the same key:
+its rescue queue, streams them from Hugging Face, checks them, and lists their torrents (1 point per 2 GB
+verified, at least 1 a model; no disk space needed). If you have bandwidth to spare, run it next to Flotilla with the same key:
 
 ```bash
 uvx -p 3.13 --from pirateface@latest pf work

@@ -700,3 +700,17 @@ def test_apply_probe_splits_downloaders_by_file():
     old = cand("org/b", n_shards=1, seeders=1)          # an older node's probe result: torrent count only
     apply_probe([old], {old.infohash: {"seeds": 1, "partial": {}, "peers": 4, "downloaders": 2}})
     assert old.downloaders == 2 and all(f.downloaders is None for f in old.files)
+
+
+def test_swapped_out_files_cool_off_for_a_while(monkeypatch):
+    from types import SimpleNamespace
+
+    from flotilla import engine as E
+
+    fake = SimpleNamespace(state=SimpleNamespace(data={}))
+    unit = SimpleNamespace(cand=SimpleNamespace(infohash="ih1"), files=[SimpleNamespace(repo_path="a/b.safetensors")])
+    E.Engine._remember_swapped_out(fake, [unit], time.time())
+    assert E.Engine._cooling(fake) == {("ih1", "a/b.safetensors")}
+    later = time.time() + E.REPICK_AFTER + 60
+    monkeypatch.setattr(E.time, "time", lambda: later)
+    assert E.Engine._cooling(fake) == frozenset()

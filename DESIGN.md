@@ -238,6 +238,10 @@ Why each piece is there:
   fetching. One with no pieces yet, or between files, could want any file it lacks and counts toward
   each. A piece shared with a neighbouring file doesn't count as starting it. Units of a single file use
   that file's count, served by the peers holding all of it; whole-model units use the torrent's.
+- **Swapped out means out for a while.** Each reorientation compares what's held with the swarm as one
+  probe saw it, so the next one, on slightly different counts, could find a file just dropped worth a
+  little more again and fetch it back. A file a reorientation swaps out isn't picked again for 3 days
+  (`REPICK_AFTER`), unless it's a model you chose.
 - **Focus** is the user's choice of `w_risk` and `w_demand`. In-demand keeps a little rarity as a
   tie-break, and the hold bonus and churn limit stop a change of focus from replacing everything held
   at once.

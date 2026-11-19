@@ -49,7 +49,9 @@ swapped out once a tenth of them has arrived (HOLD_FROM), a held unit counts for
 hold_bonus times its value (so a swap has to be clearly better), a file that isn't
 arriving and has no full copy anywhere, in a torrent Hugging Face won't serve this
 node (`stuck`), is worth nothing, and models the user chose by hand (`manual`) are never
-swapped out and never wait for the schedule to come in.
+swapped out and never wait for the schedule to come in. A file a reorientation swapped out
+lately (`cooling`) doesn't come back until a while has passed: each reorientation compares
+with the swarm as one probe saw it, so the next might find it worth a little more again.
 """
 
 from __future__ import annotations
@@ -92,6 +94,8 @@ class Params:
     # Torrents some of whose files no peer is sending and Hugging Face won't serve this node (gated, lately):
     # a file of theirs that isn't arriving, with no full copy in the swarm, is worth nothing until that changes.
     stuck: frozenset[str] = frozenset()
+    # Files (infohash, repo path) a reorientation swapped out lately: not picked again meanwhile.
+    cooling: frozenset[tuple[str, str]] = frozenset()
 
 
 @dataclass
@@ -270,6 +274,9 @@ def build_units(cands: list[TorrentCand], p: Params, node_id: str) -> list[Unit]
     for u in units:
         if u.cand.infohash in p.stuck and all(f.done < HOLD_FROM and _avail(f, u.cand) == 0 for f in u.files):
             u.rate = 0.0                     # not here, no full copy anywhere, and HF won't serve it: no space
+        if (p.cooling and not u.held and u.cand.repo not in p.manual
+                and all((u.cand.infohash, f.repo_path) in p.cooling for f in u.files)):
+            u.rate = 0.0                     # swapped out lately: not back on the next probe's say-so
         u.value = u.rate * (u.size / GB) * (WHOLE_BONUS if u.whole else 1.0)
         if u.held:
             u.value *= p.hold_bonus

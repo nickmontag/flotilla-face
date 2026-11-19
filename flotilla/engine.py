@@ -92,6 +92,7 @@ DIAL_OUT = {"connection_speed": 60, "torrent_connect_boost": 60, "peer_connect_t
 INBOUND_MIN_BYTES = 16 * 1024
 DIAL_OUT_ANNOUNCE = 15 * 60.0
 STUCK_FOR = 86400.0   # a torrent Hugging Face wouldn't serve stays out of plans this long (see _stuck)
+REPICK_AFTER = 3 * 86400.0   # a file a reorientation swapped out isn't picked again for this long (_cooling)
 RESUME_EVERY = 30 * 60.0
 
 
@@ -589,8 +590,25 @@ class Engine:
             now=time.time(), allot={r: int(gb * GB) for r, gb in (self.feed.allot_gb if self.feed else {}).items()},
             churn_bytes=churn_bytes, manual=self.feed.manual if self.feed else frozenset(),
             reachable=self.reachable(), focus=self.cfg.focus,
-            stuck=self._stuck(),
+            stuck=self._stuck(), cooling=self._cooling(),
         )
+
+    def _cooling(self) -> frozenset[tuple[str, str]]:
+        """Files reorientations swapped out within REPICK_AFTER. Without this the next reorientation,
+        on a new probe's counts, can find a file just dropped worth a bit more than what's held and
+        fetch it again."""
+        now = time.time()
+        mem = self.state.data.setdefault("swapped_out", {})
+        for k, t in list(mem.items()):
+            if now - t > REPICK_AFTER:
+                del mem[k]
+        return frozenset(tuple(k.split(":", 1)) for k in mem)
+
+    def _remember_swapped_out(self, units, now: float) -> None:
+        mem = self.state.data.setdefault("swapped_out", {})
+        for u in units:
+            for f in u.files:
+                mem[f"{u.cand.infohash}:{f.repo_path}"] = now
 
     def _stuck(self) -> frozenset[str]:
         """Torrents Hugging Face wouldn't serve a file no peer was sending, now or within STUCK_FOR. Kept
@@ -651,6 +669,7 @@ class Engine:
         if due:
             ro["last"] = now
             ro["result"] = {"at": now, "churn_gb": self.cfg.churn_gb, "asked": asked, "out": out, "in": into}
+            self._remember_swapped_out(p.swap_out, now)
             if out:
                 self.log(f"reorient: dropped {self._swap_words(out)}, the lowest-priority pieces held, for "
                          f"{self._swap_words(into)} the swarm needs more (up to {self.cfg.churn_gb:g} GB each time)")

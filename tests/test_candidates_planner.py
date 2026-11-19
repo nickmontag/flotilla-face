@@ -644,3 +644,18 @@ def test_demand_is_counted_per_file_where_the_probe_split_it():
     q4.availability, other.downloaders = 0, 0
     p = plan([c], shards(6, focus="in-demand", spread=10), "node-a")      # room for one file
     assert weights(p, c) == {"model-00002.safetensors"}
+
+
+def test_a_file_swapped_out_lately_isnt_picked_again():
+    c = cand("org/m", n_shards=4)
+    for f in c.files:
+        f.availability = 0
+    p = plan([c], shards(6, spread=10), "node-a")              # room for one shard
+    first = weights(p, c)
+    assert first                                              # it picks something
+    cooling = frozenset((c.infohash, path) for path in first)
+    p = plan([c], shards(6, spread=10, cooling=cooling), "node-a")
+    assert weights(p, c) and weights(p, c).isdisjoint(first)  # something else, not that one again
+    held_shards(c, first, avail=0)                            # held files aren't affected by it
+    p = plan([c], shards(6, spread=10, cooling=cooling), "node-a")
+    assert weights(p, c) == first

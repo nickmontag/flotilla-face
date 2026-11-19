@@ -26,7 +26,9 @@ steer with priority; the swarm state steers with scarcity.
 * demand       - 0..1: real downloaders in the swarm (the probe's count, Flotilla
                  nodes left out), log-scaled (32 or more is full), shared
                  with the seeders already serving them. Scaled by uplink,
-                 how much upload this node has.
+                 how much upload this node has. A file on its own counts the
+                 downloaders fetching that file, by their piece maps, and the
+                 peers holding all of it.
 * focus        - the user's choice of weights (FOCUS_WEIGHTS): "at-risk" keeps
                  the rarest copies and lost models (demand a small extra),
                  "in-demand" serves the busiest swarms (rarity a tie-break),
@@ -183,14 +185,19 @@ FOCUS_WEIGHTS = {"at-risk": (1.0, 0.5), "balanced": (1.0, 1.5), "in-demand": (0.
 DEMAND_FULL = 32       # downloaders at which demand counts in full
 
 
-def demand(c: TorrentCand) -> float:
+def demand(c: TorrentCand, f: FileCand | None = None) -> float:
     """How much the swarm wants another seeder, 0..1. The probe's downloaders when it ran; otherwise the
-    tracker's leechers, halved, as they count Flotilla nodes and other partial seeders too."""
-    d = c.downloaders if c.downloaders is not None else c.leechers / 2
+    tracker's leechers, halved, as they count Flotilla nodes and other partial seeders too. With a file,
+    the downloaders fetching that file, served by the peers that have all of it, when the probe split
+    them by file: in a torrent of many quantizations, people want one or two of them."""
+    if f is not None and f.downloaders is not None:
+        d, served = f.downloaders, _avail(f, c)
+    else:
+        d, served = (c.downloaders if c.downloaders is not None else c.leechers / 2), c.seeders
     if d <= 0:
         return 0.0
     many = min(1.0, math.log2(1 + d) / math.log2(1 + DEMAND_FULL))
-    return many * d / (d + c.seeders)          # served already by many seeders: each new one adds less
+    return many * d / (d + served)             # served already by many seeders: each new one adds less
 
 
 def uplink(upload_bps: float) -> float:
@@ -199,8 +206,8 @@ def uplink(upload_bps: float) -> float:
     return 0.25 + 0.75 * min(1.0, upload_bps / 12_500_000)
 
 
-def throughput(c: TorrentCand, upload_bps: float, focus: str = "at-risk") -> float:
-    return FOCUS_WEIGHTS[focus][1] * demand(c) * uplink(upload_bps)
+def throughput(c: TorrentCand, upload_bps: float, focus: str = "at-risk", f: FileCand | None = None) -> float:
+    return FOCUS_WEIGHTS[focus][1] * demand(c, f) * uplink(upload_bps)
 
 
 def hrw_u(node_id: str, infohash: str, path: str) -> float:
@@ -257,7 +264,7 @@ def build_units(cands: list[TorrentCand], p: Params, node_id: str) -> list[Unit]
             continue
         for f in weights:
             a = _avail(f, c)
-            rate = c.priority * (need(a) + t)
+            rate = c.priority * (need(a) + throughput(c, p.upload_bps, p.focus, f))
             units.append(Unit(c, [f], f.size, _edge_overhead(c, f), a, rate, held=f.held))
 
     for u in units:

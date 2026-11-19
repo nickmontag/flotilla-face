@@ -664,3 +664,39 @@ def test_mark_held_records_how_much_has_arrived():
     E.Engine.mark_held(fake, [c])
     assert (w0.held, w0.done) == (True, 1.0) and (w1.held, w1.done) == (True, 0.25)
     assert not any(f.held for f in c.files if f not in (w0, w1))
+
+
+def test_wanted_files_reads_what_each_downloader_is_fetching():
+    from types import SimpleNamespace as F
+
+    from flotilla.engine import wanted_files
+
+    # Three files over 10 pieces; pieces 3 and 6 are shared with the neighbour.
+    files = [F(index=0, first_piece=0, last_piece=3), F(index=1, first_piece=3, last_piece=6),
+             F(index=2, first_piece=6, last_piece=9)]
+
+    def bits(*have):
+        return bytes(1 if i in have else 0 for i in range(10))
+
+    fetching_1 = bits(4)                    # part of file 1
+    edge_only = bits(1, 2, 3)               # most of file 0, and piece 3 it shares with file 1
+    has_0_wants_more = bits(0, 1, 2, 3)     # finished file 0, started nothing else: wants 1 or 2
+    fresh = b""                             # no piece map yet: could want anything
+    assert wanted_files(files, [fetching_1]) == {0: 0, 1: 1, 2: 0}
+    assert wanted_files(files, [edge_only]) == {0: 1, 1: 0, 2: 0}
+    assert wanted_files(files, [has_0_wants_more]) == {0: 0, 1: 1, 2: 1}
+    assert wanted_files(files, [fresh, fetching_1]) == {0: 1, 1: 2, 2: 1}
+
+
+def test_apply_probe_splits_downloaders_by_file():
+    from flotilla.engine import apply_probe
+    from tests.test_candidates_planner import cand
+
+    c = cand("org/a", n_shards=3, seeders=1)
+    w = [f.index for f in c.files if f.kind == "weight"]
+    apply_probe([c], {c.infohash: {"seeds": 1, "partial": {}, "peers": 4, "downloaders": 2,
+                                   "wanted": {w[0]: 2, w[1]: 0, w[2]: 1}}})
+    assert [c.files[i].downloaders for i in w] == [2, 0, 1]
+    old = cand("org/b", n_shards=1, seeders=1)          # an older node's probe result: torrent count only
+    apply_probe([old], {old.infohash: {"seeds": 1, "partial": {}, "peers": 4, "downloaders": 2}})
+    assert old.downloaders == 2 and all(f.downloaders is None for f in old.files)

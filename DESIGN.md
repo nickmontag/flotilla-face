@@ -192,6 +192,7 @@ risk        = 2.5  HF original gone   | 1.5 unknown | 1.0 HF still serves it
 rate        = 0 for a file under a tenth here with no full copy seen, in a torrent HF wouldn't serve (24 h)
 demand      = min(1, log2(1+d) / log2(33)) × d / (d + seeders)
               d = downloaders the probe saw (Flotilla nodes left out), or tracker leechers / 2
+              for a single file: d = downloaders fetching it, seeders = peers holding all of it
 uplink      = 0.25 + 0.75 × min(1, upload / 100 Mbit/s)
 (w_risk, w_demand) = at-risk (1, 0.5) | balanced (1, 1.5) | in-demand (0.25, 3)    # policy.focus
 value       = rate × size_GB × (1.25 if whole model)  × (hold_bonus if already held)
@@ -232,6 +233,11 @@ Why each piece is there:
   upload-only, leaving out Flotilla peer ids (`-FL`, `-FP`). It only sees peers it can connect to, which
   on a node behind NAT is roughly the demand it could serve. The count is log-scaled (one new
   downloader matters more at 1 than at 40) and shared with the seeders already there.
+- **Demand is per file.** One torrent can bundle a dozen quantizations of a model, and each downloader
+  wants one or two. The probe reads each downloader's piece map: a file it has part of is one it's
+  fetching. One with no pieces yet, or between files, could want any file it lacks and counts toward
+  each. A piece shared with a neighbouring file doesn't count as starting it. Units of a single file use
+  that file's count, served by the peers holding all of it; whole-model units use the torrent's.
 - **Focus** is the user's choice of `w_risk` and `w_demand`. In-demand keeps a little rarity as a
   tie-break, and the hold bonus and churn limit stop a change of focus from replacing everything held
   at once.

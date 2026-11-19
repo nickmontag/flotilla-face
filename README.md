@@ -215,6 +215,8 @@ The maths is in [DESIGN.md](DESIGN.md).
 
 Demand is counted in the swarm itself: people downloading a model right now. Flotilla nodes don't
 count, though Pirate Face's tracker lists them as downloaders, since they hold only part of a model.
+It's counted per file too: when one torrent holds many quantizations, Flotilla sees which ones people
+are fetching and seeds those.
 In-demand works best with a fast upload, and with reorienting every day, since demand changes faster
 than rarity; setup suggests daily when you pick it. Changing focus moves free space at once; what you
 already hold shifts at the next reorientation.

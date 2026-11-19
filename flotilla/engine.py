@@ -252,8 +252,9 @@ def probe(cands: list[TorrentCand], cfg: Config, scratch: Path, seconds: float, 
           log=print, listen_host: str | None = None, dht: bool = True,
           connect: list[tuple[str, int]] | None = None) -> dict[str, dict]:
     """Watch each swarm. Returns {infohash: {"seeds": n, "partial": {file_index: n}, "peers": n,
-    "downloaders": n}}. Downloaders are peers still fetching (not seeds, not done with what they
-    chose, not Flotilla nodes): the swarm's real demand, and only those this node could reach."""
+    "downloaders": n, "wanted": {file_index: n}}}. Downloaders are peers still fetching (not seeds, not
+    done with what they chose, not Flotilla nodes): the swarm's real demand, and only those this node
+    could reach. "wanted" splits them by file (see wanted_files)."""
     if not cands or seconds <= 0:
         return {}
     scratch.mkdir(parents=True, exist_ok=True)
@@ -282,7 +283,7 @@ def probe(cands: list[TorrentCand], cfg: Config, scratch: Path, seconds: float, 
     # Each peer's latest word on whether it still wants pieces, and when it was first seen: a peer looks
     # like it does until its piece map arrives, so only the last sample counts, and only for a peer seen
     # for SETTLE seconds (one that connected at the very end would otherwise count, seed or not).
-    wanting: dict[str, dict[bytes, list]] = {ih: {} for ih in handles}   # key -> [first seen, wants, last seen]
+    wanting: dict[str, dict[bytes, list]] = {ih: {} for ih in handles}   # key -> [first, wants, last, bits]
     started = time.monotonic()
     deadline = started + seconds
     while True:
@@ -299,8 +300,8 @@ def probe(cands: list[TorrentCand], cfg: Config, scratch: Path, seconds: float, 
                 seed = seed or (bool(bits) and all(bits))
                 if not FLOTILLA_PEER.match(pid) and not (p.flags & (lt.peer_info.connecting | lt.peer_info.handshake)):
                     t = time.monotonic()
-                    w = wanting[ih].setdefault(key, [t, True, t])
-                    w[1], w[2] = not (seed or p.flags & lt.peer_info.upload_only), t
+                    w = wanting[ih].setdefault(key, [t, True, t, b""])
+                    w[1], w[2], w[3] = not (seed or p.flags & lt.peer_info.upload_only), t, bits
                 if seed:
                     seen[ih][key] = True
                 elif any(bits):
@@ -322,9 +323,9 @@ def probe(cands: list[TorrentCand], cfg: Config, scratch: Path, seconds: float, 
             partial[f.index] = sum(
                 1 for b in peers.values() if b is not True and all(b[f.first_piece : f.last_piece + 1])
             )
-        out[c.infohash] = {"seeds": seeds, "partial": partial, "peers": len(peers),
-                           "downloaders": sum(1 for first, wants, last in wanting[c.infohash].values()
-                                              if wants and last - first >= SETTLE)}
+        down = [bits for first, wants, last, bits in wanting[c.infohash].values() if wants and last - first >= SETTLE]
+        out[c.infohash] = {"seeds": seeds, "partial": partial, "peers": len(peers), "downloaders": len(down),
+                           "wanted": wanted_files(c.files, down)}
     for h in handles.values():
         ses.remove_torrent(h, lt.session.delete_files)
     end = time.monotonic() + 5
@@ -336,6 +337,31 @@ def probe(cands: list[TorrentCand], cfg: Config, scratch: Path, seconds: float, 
     return out
 
 
+def wanted_files(files: list, downloaders: list[bytes]) -> dict[int, int]:
+    """How many downloaders want each file, from their piece maps. A downloader with part of a file
+    is fetching it; one that has started no file it still lacks (no pieces yet, or between files)
+    may want any file it lacks, so it counts towards each. A torrent bundling many quantizations
+    then shows which ones people are fetching, where the torrent's count can't tell them apart.
+    A piece shared with a neighbouring file doesn't count as having started that neighbour."""
+    def has(bits: bytes, i: int) -> bool:
+        return i < len(bits) and bool(bits[i])
+
+    out = {f.index: 0 for f in files}
+    for bits in downloaders:
+        lacks, started = [], []
+        for f in files:
+            if all(has(bits, i) for i in range(f.first_piece, f.last_piece + 1)):
+                continue
+            lacks.append(f.index)
+            inner = range(f.first_piece + 1, f.last_piece) if f.last_piece - f.first_piece >= 2 \
+                else range(f.first_piece, f.last_piece + 1)
+            if any(has(bits, i) for i in inner):
+                started.append(f.index)
+        for i in started or lacks:
+            out[i] += 1
+    return out
+
+
 def apply_probe(cands: list[TorrentCand], result: dict[str, dict]) -> None:
     """availability = complete seeds (max of observed and tracker count) + partial holders seen."""
     for c in cands:
@@ -344,6 +370,8 @@ def apply_probe(cands: list[TorrentCand], result: dict[str, dict]) -> None:
             continue
         if "downloaders" in r and (r["peers"] or not c.seeders):
             c.downloaders = r["downloaders"]       # else it saw nobody: the planner falls back on the tracker
+            for f in c.files:
+                f.downloaders = r.get("wanted", {}).get(f.index)
         we_are_seed = all(f.held for f in c.files if f.kind != "skip")
         tracker_seeds = max(0, c.seeders - (1 if we_are_seed else 0))
         if r["peers"] == 0 and tracker_seeds > 0:
@@ -592,7 +620,8 @@ class Engine:
                 self.cand_info[c.infohash] = {
                     "repo": c.repo, "priority": c.priority, "target": c.target_replicas, "hf_backed": c.hf_backed,
                     "seeders": c.seeders, "leechers": c.leechers, "downloaders": c.downloaders,
-                    "files": [{"i": f.index, "path": f.repo_path, "size": f.size, "avail": f.availability}
+                    "files": [{"i": f.index, "path": f.repo_path, "size": f.size, "avail": f.availability,
+                               "downloaders": f.downloaders}
                               for f in c.files if f.kind == "weight"],
                 }
             # Forget swarms no longer looked at (old revisions, models off the list) unless held.
@@ -1441,6 +1470,7 @@ class Engine:
                           "ledger": self.state.data["ledger"].get(t["infohash"])})
                 if info.get("files"):
                     t["shards"] = [{"path": f["path"], "size": f["size"], "avail": f["avail"],
+                                    "downloaders": f.get("downloaders"),
                                     "status": held.get(f["i"], {}).get("status")} for f in info["files"]]
                 else:  # restarted and not replanned yet: show what we hold
                     t["shards"] = [{"path": e["path"], "size": e["size"], "avail": None, "status": e["status"]}

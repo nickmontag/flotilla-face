@@ -75,6 +75,7 @@ class FileCand:
     held: bool = False
     held_since: float | None = None
     done: float = 0.0              # share of it this node has (1.0 once verified)
+    downloaders: int | None = None # probe: downloaders fetching it (engine.wanted_files). None: no probe
     skip_reason: str = ""
 
 

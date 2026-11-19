@@ -622,3 +622,25 @@ def test_a_download_nobody_can_send_holds_no_space():
     held.done = 1.0
     p = plan([c], shards(6, churn_bytes=None, stuck=frozenset({c.infohash})), "node-a")
     assert held.repo_path in weights(p, c)
+
+
+def test_demand_is_counted_per_file_where_the_probe_split_it():
+    from flotilla.planner import demand
+
+    # One torrent, many quantizations: three people fetching the Q4 file, nobody the others.
+    c = cand("org/gguf", n_shards=6, seeders=0)
+    c.downloaders = 3
+    for f in c.files:
+        f.availability = 0
+        f.downloaders = 3 if f.repo_path == "model-00002.safetensors" else 0
+    q4 = next(f for f in c.files if f.repo_path == "model-00002.safetensors")
+    other = next(f for f in c.files if f.repo_path == "model-00004.safetensors")
+    assert demand(c, q4) == demand(c) > 0 and demand(c, other) == 0
+    q4.availability = 3                                 # three peers hold all of Q4: half the pull
+    assert demand(c, q4) == pytest.approx(demand(c) / 2)
+    other.downloaders = None                            # not split (an old probe): the torrent's count
+    assert demand(c, other) == demand(c)
+
+    q4.availability, other.downloaders = 0, 0
+    p = plan([c], shards(6, focus="in-demand", spread=10), "node-a")      # room for one file
+    assert weights(p, c) == {"model-00002.safetensors"}

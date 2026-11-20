@@ -309,7 +309,9 @@ class HuggingFace:
     """Hash manifests straight from huggingface.co (an independent second source).
 
     Trees are cached on disk per (repo, revision): a commit hash is immutable,
-    so a cached tree never goes stale.
+    so a cached tree never goes stale. A branch's tree (main) is kept for an hour. A repo or
+    revision Hugging Face says is gone or closed to us (401/403/404/410/451), and a repo with no
+    license, is remembered for a day, so a refresh doesn't ask about it again each time.
     """
 
     def __init__(self, allowed: tuple[str, ...], cache_dir: Path, base: str = HF_BASE):
@@ -318,44 +320,59 @@ class HuggingFace:
         self.cache_dir = cache_dir
 
     LICENSE_TTL = 7 * 86400
+    MISSING_TTL = 86400          # a gone, gated or unlicensed answer: asked again after a day
+    BRANCH_TTL = 3600            # a branch's tree (main): it moves, but not every refresh
+    GONE = (401, 403, 404, 410, 451)
 
     def license(self, repo: str) -> str | None:
-        """A repo's license, cached for a week (it rarely changes)."""
+        """A repo's license, cached for a week (it rarely changes); no license, or no repo, for a day."""
         cache = self.cache_dir / "hf-licenses.json"
         try:
             known = json.loads(cache.read_text()) if cache.exists() else {}
         except (OSError, ValueError):
             known = {}
         hit = known.get(repo)
-        if (isinstance(hit, list) and len(hit) == 2 and time.time() - hit[1] < self.LICENSE_TTL and hit[0]
-                and hit[0] != "other"):   # "other" was cached before license names were read: look again
-            return hit[0]
+        if isinstance(hit, list) and len(hit) == 2 and isinstance(hit[1], (int, float)):
+            age = time.time() - hit[1]
+            if hit[0] is None and age < self.MISSING_TTL:
+                return None
+            if hit[0] and hit[0] != "other" and age < self.LICENSE_TTL:
+                return hit[0]     # ("other" was cached before license names were read: look again)
         try:
             doc = fetch_json(f"{self.base}/api/models/{repo}", allowed=self.allowed, max_bytes=4 << 20)
-        except FetchError:
-            return None
-        lic = license_from_card(doc)
-        if lic:
-            known[repo] = [lic, time.time()]
-            try:
-                cache.parent.mkdir(parents=True, exist_ok=True)
-                cache.write_text(json.dumps(known))
-            except OSError:
-                pass
+        except FetchError as e:
+            if e.status not in self.GONE:
+                return None       # unreachable or busy: no answer to remember
+            doc = None
+        lic = license_from_card(doc) if isinstance(doc, dict) else None
+        known[repo] = [lic, time.time()]
+        try:
+            cache.parent.mkdir(parents=True, exist_ok=True)
+            cache.write_text(json.dumps(known))
+        except OSError:
+            pass
         return lic
 
     def tree(self, repo: str, revision: str) -> dict[str, HFFile] | None:
         """Return {path: HFFile}, or None if the repo/revision is not readable on HF.
 
-        Only trees at a full commit hash are cached: a commit is immutable, a
-        branch name like "main" is not.
+        A tree at a full commit hash is cached until unused for a while (a commit is immutable);
+        a branch's, like "main", for BRANCH_TTL. A None is remembered for MISSING_TTL.
         """
         immutable = len(revision) == 40 and all(c in "0123456789abcdef" for c in revision)
         cache = self.cache_dir / "hf-trees" / f"{repo.replace('/', '__')}@{revision}.json"
-        if immutable and cache.exists():
+        gone = cache.with_suffix(".gone")       # when Hugging Face last said it isn't there
+        try:
+            if time.time() - float(gone.read_text()) < self.MISSING_TTL:
+                return None
+        except (OSError, ValueError):
+            pass
+        fresh = immutable or (cache.exists() and time.time() - cache.stat().st_mtime < self.BRANCH_TTL)
+        if fresh and cache.exists():
             try:
                 raw = json.loads(cache.read_text())
-                os.utime(cache)        # in use: keep it out of prune_cache
+                if immutable:
+                    os.utime(cache)    # in use: keep it out of prune_cache
                 # Trees cached before masked hashes were recognised may hold '*' strings; refetch those.
                 if not any(isinstance(v.get("sha256"), str) and not _hex(v["sha256"], 64) for v in raw.values()):
                     return {p: HFFile(**v) for p, v in raw.items()}
@@ -375,7 +392,12 @@ class HuggingFace:
                     break
                 url = nxt
         except FetchError as e:
-            if e.status in (401, 403, 404, 410, 451):
+            if e.status in self.GONE:
+                try:
+                    gone.parent.mkdir(parents=True, exist_ok=True)
+                    gone.write_text(str(time.time()))
+                except OSError:
+                    pass
                 return None
             raise
         out = {}
@@ -388,9 +410,9 @@ class HuggingFace:
                 out[e["path"]] = HFFile(size, _hex(lfs.get("oid"), 64), None, _hex(e.get("oid"), 40))
             else:
                 out[e["path"]] = HFFile(size, None, _hex(e.get("oid"), 40))
-        if immutable:
-            cache.parent.mkdir(parents=True, exist_ok=True)
-            cache.write_text(json.dumps({p: vars(v) for p, v in out.items()}))
+        cache.parent.mkdir(parents=True, exist_ok=True)
+        cache.write_text(json.dumps({p: vars(v) for p, v in out.items()}))
+        gone.unlink(missing_ok=True)
         return out
 
 
@@ -420,7 +442,7 @@ class HuggingFace:
         if not folder.exists():
             return
         cutoff = time.time() - days * 86400
-        for f in folder.glob("*.json"):
+        for f in (*folder.glob("*.json"), *folder.glob("*.gone")):
             try:
                 if f.stat().st_mtime < cutoff:
                     f.unlink()

@@ -312,8 +312,40 @@ def test_setup_tells_the_installer_where_flotilla_went(tmp_path, monkeypatch):
     assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "a.toml"))) == 0
     assert result.read_text() == "docker"
 
-    _answers(monkeypatch, [("inside the VPN container", "n"), ("Folder", str(tmp_path / "seeds"))])
+    _answers(monkeypatch, [("inside the VPN container", "n"), ("Folder", str(tmp_path / "seeds")),
+                           ("public IP address", "y")])
     assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "b.toml"))) == 0
+    assert result.read_text() == "here"
+
+
+def test_setup_without_a_vpn_asks_before_seeding_from_the_home_ip(tmp_path, monkeypatch, capsys):
+    """No VPN pin: setup asks, defaulting to no, and a no keeps the settings but starts nothing."""
+    _no_licenses(monkeypatch)
+    result = tmp_path / "result"
+    monkeypatch.setenv("FLOTILLA_SETUP_RESULT", str(result))
+    monkeypatch.setattr(netinfo, "internet_route", lambda: netinfo.Route("en0", "192.168.1.5"))
+    seen = _answers(monkeypatch, [("Folder", str(tmp_path / "seeds"))])
+    path = tmp_path / "c.toml"
+    assert cli.cmd_init(argparse.Namespace(config=str(path))) == 0
+    asked = [p for p in seen if "Seed from this connection's public IP address" in p]
+    assert asked and "(y/N)" in asked[0]
+    assert result.read_text() == "not-started" and path.exists()
+    out = capsys.readouterr().out
+    assert "Not started" in out and "flotilla service install" in out
+
+    _answers(monkeypatch, [("Folder", str(tmp_path / "seeds")), ("public IP address", "y")])
+    assert cli.cmd_init(argparse.Namespace(config=str(path))) == 0
+    assert result.read_text() == "here"
+
+
+def test_setup_pinned_to_a_vpn_doesnt_ask_about_the_home_ip(tmp_path, monkeypatch):
+    _no_licenses(monkeypatch)
+    result = tmp_path / "result"
+    monkeypatch.setenv("FLOTILLA_SETUP_RESULT", str(result))
+    monkeypatch.setattr(netinfo, "internet_route", lambda: netinfo.Route("tun0", "10.8.0.2"))
+    seen = _answers(monkeypatch, [("Folder", str(tmp_path / "seeds"))])
+    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 0
+    assert not any("public IP address" in p for p in seen)
     assert result.read_text() == "here"
 
 
@@ -330,3 +362,29 @@ def test_dashboard_address_waits_for_the_key_and_fills_in_the_lan_address(monkey
 def test_dashboard_address_gives_up(monkeypatch):
     monkeypatch.setattr(containers, "_docker", lambda *a: subprocess.CompletedProcess(a, 0, "Installing...\n", ""))
     assert containers.dashboard_address(timeout=0) is None
+
+
+def test_setup_leaves_a_new_seed_folder_out_of_time_machine(tmp_path, monkeypatch, capsys):
+    _no_licenses(monkeypatch)
+    monkeypatch.setattr(netinfo, "internet_route", lambda: netinfo.Route("tun0", "10.8.0.2"))
+    monkeypatch.setattr(cli.sys, "platform", "darwin")
+    excluded = []
+    monkeypatch.setattr(cli, "_tmutil", lambda folder: excluded.append(folder) or (True, ""))
+    _answers(monkeypatch, [("Folder", str(tmp_path / "seeds"))])
+    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 0
+    assert excluded == [tmp_path / "seeds"]
+    assert "left out of Time Machine backups" in capsys.readouterr().out
+
+    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 0   # it exists now: yours
+    assert excluded == [tmp_path / "seeds"]
+
+    monkeypatch.setattr(cli, "_tmutil", lambda folder: (False, "tmutil: permission denied"))
+    _answers(monkeypatch, [("Folder", str(tmp_path / "other"))])
+    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 0
+    assert f"tmutil addexclusion {tmp_path / 'other'}" in capsys.readouterr().out
+
+    monkeypatch.setattr(cli.sys, "platform", "linux")
+    monkeypatch.setattr(cli, "_tmutil", lambda folder: excluded.append(folder) or (True, ""))
+    _answers(monkeypatch, [("Folder", str(tmp_path / "linux"))])
+    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 0
+    assert excluded == [tmp_path / "seeds"]

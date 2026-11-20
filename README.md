@@ -107,13 +107,37 @@ Raspberry Pi):
 curl -fsSL https://raw.githubusercontent.com/nickmontag/flotilla-face/main/install.sh | sh
 ```
 
-The installer sets up Flotilla in its own isolated environment (no sudo) and asks a few questions:
+The installer sets up Flotilla in its own isolated environment (no sudo), then `flotilla init` asks
+its questions in eight short sections. Enter keeps each default, and you can change any answer later
+in the dashboard or by running `flotilla init` again.
 
-- **How much space to give it**, and how much to always keep free on that drive.
-- **Your upload and download speed**, and how much of each to share.
-- **Whether to pin its traffic to your VPN**, if you're on one. It detects this for you.
+1. **Storage**: the folder for seeded files, how much space to give Flotilla, and how much to always
+   keep free on that drive. On a Mac, a seed folder setup creates is left out of Time Machine backups
+   (`tmutil addexclusion`): the models can be downloaded again, and would crowd out backups that
+   matter.
+2. **Bandwidth**: your upload and download speeds, how much of each to share, your internet plan's
+   monthly data cap if it has one, and a monthly upload cap (it suggests 40% of the plan's cap).
+3. **What to seed**: at-risk models first, in-demand ones, or both; how often Flotilla
+   [reorients](#reorienting) (daily by default) and the most it swaps each time.
+4. **Network**: whether to pin its traffic to your VPN (it detects one for you), whether to seed from
+   your own IP address if there's no VPN, and whether to open a port on your router.
+5. **Pieces no peer has**: whether to fetch those from Hugging Face, up to how many GB a day, and
+   whether to connect a Hugging Face account for gated models.
+6. **Dashboard**: who can reach it: this machine only, your home network, your Tailscale devices or,
+   typed out on purpose, anyone.
+7. **Pirate Face points**: paste your Pirate Face seeding tracker address or key to earn points, or
+   press Enter to skip.
+8. **Licenses**: whether to seed models under every license Flotilla allows.
+
+If a VPN container such as gluetun runs on the machine, setup first offers to put Flotilla inside its
+network instead (see [Behind gluetun](#behind-gluetun-docker)).
 
 Then it offers to run Flotilla in the background, starting at every login. That's it.
+
+**Without a VPN, peers see your home IP address.** Every peer in every swarm Flotilla joins sees the
+address it seeds from. If setup finds no VPN to pin Flotilla to, it asks whether to seed from your
+connection's own address, and the answer defaults to no: your settings are saved, but nothing starts
+until you run `flotilla service install` (or connect a VPN and run `flotilla init` again).
 
 Open the dashboard any time:
 
@@ -373,7 +397,7 @@ Found a hole? See [SECURITY.md](SECURITY.md).
 | `flotilla init` | Set up or change space, speeds, VPN pinning, licences |
 | `flotilla plan` | Preview what you'd carry, without downloading (`--probe` looks at the live swarm) |
 | `flotilla run` | Run in the foreground (`--hours N` to seed for a set time) |
-| `flotilla service install` / `uninstall` / `status` | Run in the background: launchd on macOS, systemd on Linux (`--linger` keeps it running while you're logged out). Logs: `~/Library/Logs/flotilla.log` on macOS, rotated at 10 MB with three old copies kept; `journalctl --user -u flotilla` on Linux |
+| `flotilla service install` / `uninstall` / `status` | Run in the background: launchd on macOS, systemd on Linux (`--linger` keeps it running while you're logged out; if your system won't allow that without sudo, it says so and gives the command). Without systemd it says so and leaves `flotilla run` to you. Logs: `~/Library/Logs/flotilla.log` on macOS, rotated at 10 MB with three old copies kept; `journalctl --user -u flotilla` on Linux |
 | `flotilla add <link>` / `remove <link>` / `picks` | Prioritize a model by its Hugging Face or Pirate Face link (`--rescue`: ask Pirate Face to add it if it has no torrent), take it off, list your picks |
 | `flotilla dashboard` | Open the local dashboard |
 | `flotilla dashboard --serve --listen 0.0.0.0` | Serve the dashboard on your network for a node in a VPN container (see Behind gluetun) |
@@ -387,7 +411,7 @@ Found a hole? See [SECURITY.md](SECURITY.md).
 | `flotilla ledger` | Show the hash ledger in use, and any conflicts between copies of it |
 | `flotilla feed` | Show the priority list in use and who signed it (`--init-local` to start your own changes) |
 | `flotilla update [--check]` | Install the newest signed release, on this machine and in Flotilla's Docker containers (see [Updating](#updating)) |
-| `flotilla uninstall [--delete-data]` | Stop the service and, if asked, delete everything Flotilla downloaded |
+| `flotilla uninstall [--delete-data]` | Stop the service and Docker containers and, if asked, delete everything Flotilla downloaded and wrote (see Uninstall) |
 
 Settings live in `~/.config/flotilla/config.toml`; `flotilla init` writes it and you can edit it by hand.
 
@@ -795,8 +819,23 @@ flotilla uninstall --delete-data
 uv tool uninstall flotilla-face
 ```
 
-The first stops the background service and deletes only what Flotilla downloaded, leaving anything else
-in that folder alone. The second removes the program.
+The first stops the background service. If an earlier setup put Flotilla in Docker, it offers to stop
+and remove its containers (`flotilla` and `flotilla-dashboard`), which Docker otherwise restarts on its
+own. With `--delete-data`, after you type `delete` to confirm, it also deletes:
+
+- the models Flotilla downloaded, leaving anything else in that folder alone;
+- its state folder and `config.toml`;
+- the `hf-token` and `pirateface-key` files setup saved next to the config. That deletes them from
+  this machine; to revoke them, use huggingface.co/settings/tokens and your Pirate Face account
+  settings;
+- on macOS, the service's log, `~/Library/Logs/flotilla.log` and its rotated copies;
+- the `flotilla` Docker volume, once its containers are gone.
+
+It leaves, and says so with the command to remove each: your picks (`my-priorities.json`, from
+`flotilla add`), a Docker volume or folder you named yourself at setup, and on Linux, lingering if you
+turned it on with `--linger` (`loginctl disable-linger $USER`), since other services may rely on it.
+Without `--delete-data` everything but the service and containers stays. The second command removes
+the program.
 
 ## Contributing
 

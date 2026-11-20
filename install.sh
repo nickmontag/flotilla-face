@@ -141,6 +141,13 @@ if [ "$where" = docker ]; then
   say "  The dashboard's address is above; ${B}docker logs flotilla-dashboard${R} shows it again."
   exit 0
 fi
+if [ "$where" = not-started ]; then
+  # Setup found no VPN to pin to and the answer to seeding from this connection's own IP was no.
+  say ""
+  ok "Installed and set up, not started: nothing runs until you start it."
+  say "  Once a VPN is connected, ${B}flotilla init${R} pins Flotilla to it; ${B}flotilla service install${R} starts it."
+  exit 0
+fi
 say ""
 say "${B}Run in the background${R}"
 printf '%s' "  ${C}?${R} Run Flotilla now and every time you log in ${D}(Y/n)${R}: "
@@ -157,7 +164,13 @@ case "$answer" in
       case "$keep" in [yY]*) linger="--linger" ;; esac
     fi
     # shellcheck disable=SC2086
-    "$BIN" service install $linger
+    if ! "$BIN" service install $linger; then
+      # What failed is printed above (no systemd on this Linux, say). Flotilla is installed and set up.
+      say ""
+      ok "Installed and set up, but not running in the background: the reason is above."
+      say "  Start it in a terminal whenever you like with: ${B}flotilla run${R}"
+      exit 0
+    fi
     ;;
 esac
 say ""

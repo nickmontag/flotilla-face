@@ -141,7 +141,11 @@ Refusing outright would only save one download, at the cost of dropping a possib
 a bookkeeping error. The HF `main` comparison covers the one ambiguous case: Pirate Face packaging a
 newer upload under an old revision label.
 
-Trees at a commit hash are cached forever (they're immutable). The `main` tree is never cached.
+Trees at a commit hash are cached until they go unused for a while (they're immutable). The `main`
+tree is cached for an hour: it moves, so the comparison above reads one at most an hour old. A repo or
+revision Hugging Face says is gone or closed (401, 403, 404, 410 or 451) is remembered for a day, as is a
+repo whose card names no license, so a refresh doesn't ask about it again every time. An answer that
+didn't arrive (timeouts, 429, 5xx) is never remembered.
 
 Resume data is never trusted for trackers or web seeds: trackers are always taken from the verified
 `.torrent`, and web seeds are dropped.

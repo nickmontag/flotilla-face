@@ -93,7 +93,10 @@ def cmd_init(args) -> int:
         ui.info(f"seeded files go in {_host_path(folder, docker)}")
     else:
         folder = Path(_ask("Folder for seeded files", str(cfg.folder))).expanduser()
+    created = not folder.exists()
     folder.mkdir(parents=True, exist_ok=True)
+    if created and not docker and sys.platform == "darwin":
+        _exclude_from_time_machine(folder)
     du = shutil.disk_usage(folder)
     ui.info(f"that drive has {human(du.free)} free of {human(du.total)}")
     suggested = max(10.0, round((du.free / GB - cfg.reserve_gb) * 0.5))
@@ -172,6 +175,15 @@ def cmd_init(args) -> int:
         else:
             ui.note("If your VPN forwards a port (gluetun, ProtonVPN, PIA's app), Flotilla finds it and listens on "
                     "it, so peers can connect in.")
+    home_ip_ok = True
+    if not bind and not docker:    # (in a VPN container's network, every connection goes through its VPN)
+        ui.note("Without a VPN pin, every peer in every swarm Flotilla joins sees this connection's public IP "
+                "address" + (" whenever the VPN is down" if route and route.looks_like_vpn else "")
+                + ". At home that's your household's address, listed as seeding these models. Your settings "
+                "are saved either way; with no, Flotilla doesn't start until you start it.")
+        home_ip_ok = _yes("Seed from this connection's public IP address", False)
+        if not home_ip_ok:
+            ui.info("Flotilla won't start now. To seed through a VPN, connect it and run `flotilla init` again")
     if not bind:
         ui.note("Opening a port on your router (UPnP/NAT-PMP) lets peers reach you, so you seed more. Skip it "
                 "if you've turned UPnP off on your router.")
@@ -231,7 +243,7 @@ def cmd_init(args) -> int:
 
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_config(cfg))
-    _setup_result("here")
+    _setup_result("here" if home_ip_ok else "not-started")
     print()
     ui.done(f"Saved {_host_path(path, docker)}")
     fill = duration(budget * GB / cfg.download_bps)
@@ -258,6 +270,13 @@ def cmd_init(args) -> int:
         ui.caution(PUBLIC_WARNING[0].upper() + PUBLIC_WARNING[1:])
     if docker:     # the host starts the seeding and dashboard containers next
         return 0
+    if not home_ip_ok:
+        print()
+        ui.caution("Not started: you chose not to seed from this connection's public IP address.")
+        ui.table([("flotilla init", "set up again once a VPN is connected, to pin Flotilla to it"),
+                  ("flotilla service install", "seed from this address after all, now and at every login")],
+                 key_style=str, value_style=ui.dim)
+        return 0
     print(f"\n{ui.bold('Next')}")
     ui.table([("flotilla plan", "preview what this node would seed"),
               ("flotilla service install", "run it in the background"),
@@ -265,6 +284,28 @@ def cmd_init(args) -> int:
                + ("" if access == "local" else "; `flotilla dashboard --url` prints its address with the key"))],
              key_style=str, value_style=ui.dim)
     return 0
+
+
+def _exclude_from_time_machine(folder: Path) -> None:
+    """Keep a seed folder setup just made out of Time Machine: hundreds of GB of models, which can
+    be downloaded again, would crowd out the backups that matter."""
+    ok, why = _tmutil(folder)
+    if ok:
+        ui.info("left out of Time Machine backups (the models can always be downloaded again)")
+    else:
+        ui.caution(f"couldn't leave it out of Time Machine backups ({why}). To do it yourself: "
+                   f"tmutil addexclusion {folder}")
+
+
+def _tmutil(folder: Path) -> tuple[bool, str]:
+    """`tmutil addexclusion`: a sticky exclusion, kept on the folder itself, no sudo needed."""
+    import subprocess
+
+    try:
+        r = subprocess.run(["tmutil", "addexclusion", str(folder)], capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.SubprocessError) as e:
+        return False, str(e)
+    return r.returncode == 0, (r.stderr or r.stdout).strip() or f"exit status {r.returncode}"
 
 
 def _describe_access(access: str) -> str:
@@ -348,8 +389,9 @@ def _host_path(p: Path, docker: dict | None) -> str:
 
 
 def _setup_result(where: str) -> None:
-    """Tell install.sh where setup put Flotilla: "here" (run it as a service) or "docker" (the
-    containers run themselves). It passes a file to write that to."""
+    """Tell install.sh where setup put Flotilla: "here" (run it as a service), "docker" (the
+    containers run themselves) or "not-started" (no VPN pin, and seeding from this connection's
+    own IP address was declined: don't start it). It passes a file to write that to."""
     import os
 
     target = os.environ.get("FLOTILLA_SETUP_RESULT")
@@ -971,12 +1013,25 @@ def cmd_service(args) -> int:
 
 
 def cmd_uninstall(args) -> int:
-    """Stop the service and, if asked, delete what Flotilla downloaded and wrote. Nothing else."""
+    """Stop the service and Flotilla's Docker containers and, if asked, delete what Flotilla
+    downloaded and wrote. Nothing else."""
     from . import service
+    from .hfauth import TOKEN_FILE
+    from .pfaccount import KEY_FILE
 
     service.execute(service.uninstall_plan(), dry_run=False, say=lambda m: print(f"service: {m}"))
+    gone, storage = _uninstall_containers(args)
+    volumes = [s for s in storage if not s.startswith("/")]
+    folders = [s for s in storage if s.startswith("/")]
+    linger = _linger_note()
     if not args.delete_data:
         print("Kept your seeded files, config and state. Add --delete-data to remove them.")
+        for v in volumes:
+            print(f"Kept the Docker volume {v} (the containers' settings and seeded files): docker volume rm {v}")
+        for f in folders:
+            print(f"Kept {f} (the containers' settings and seeded files)")
+        if linger:
+            print(linger)
         print("Remove the program itself with: uv tool uninstall flotilla-face")
         return 0
     config = Path(args.config).expanduser()
@@ -986,7 +1041,19 @@ def cmd_uninstall(args) -> int:
     targets = [Path(h["save_path"]) for h in state.holdings.values()] + [cfg.folder / ".probe"]
     targets = [t for t in targets if t.exists() and _inside_dir(cfg.folder, t)]
     held = sum(_du(t) for t in targets)
-    print(f"This deletes {human(held)} of seeded files in {cfg.folder}, the state in {state_dir}, and {config}.")
+    # Setup wrote the account files next to the config; the service wrote the log (macOS).
+    accounts = [config.parent / TOKEN_FILE, config.parent / KEY_FILE]
+    logs = [service.service_log()] + [service.service_log().with_name(f"flotilla.log.{i}")
+                                      for i in range(1, service.LOG_KEEP + 1)] if sys.platform == "darwin" else []
+    files = [p for p in [config, *accounts, *logs] if p.exists()]
+    from . import containers as dc
+
+    # Only the volume setup names by default: one typed in at setup may hold other things too.
+    dropped = [v for v in volumes if v == dc.VOLUME] if gone else []
+    print(f"This deletes {human(held)} of seeded files in {cfg.folder} and the state in {state_dir}"
+          + (f", and {', '.join(str(p) for p in files)}" if files else "")
+          + (f", and the Docker volume{'s' if len(dropped) > 1 else ''} {', '.join(dropped)}" if dropped else "")
+          + ".")
     print("Only files Flotilla downloaded are removed; anything else in that folder is left alone.")
     if not args.yes and input("Type 'delete' to confirm: ").strip() != "delete":
         print("Nothing deleted.")
@@ -998,17 +1065,76 @@ def cmd_uninstall(args) -> int:
     except OSError:
         pass
     shutil.rmtree(state_dir, ignore_errors=True)
-    config.unlink(missing_ok=True)
+    for p in files:
+        p.unlink(missing_ok=True)
+    for v in dropped:
+        if not dc.remove_volume(v):
+            print(f"Couldn't remove the Docker volume {v}: docker volume rm {v}")
+    for v in volumes:
+        if v not in dropped:
+            print(f"Left the Docker volume {v}"
+                  + (": its containers still use it. Remove them, then" if not gone else
+                     ", which setup didn't name, in case it holds other things. To remove it")
+                  + f": docker volume rm {v}")
+    for f in folders:
+        print(f"Left {f}, the folder the Docker setup kept its settings and seeded files in: rm -rf {f}")
     leftover = [p.name for p in config.parent.glob("*")] if config.parent.exists() else []
     if leftover:
-        print(f"Left in {config.parent}: {', '.join(leftover)} (not created by `flotilla init`).")
+        what = "your picks from `flotilla add`" if leftover == [cfg.local_feed.name] else \
+            "your picks from `flotilla add`, or files Flotilla didn't make" if cfg.local_feed.name in leftover else \
+            "files Flotilla didn't make"
+        print(f"Left in {config.parent}: {', '.join(sorted(leftover))} ({what}).")
     else:
         try:
             config.parent.rmdir()
         except OSError:
             pass
+    if any(p in files for p in accounts):
+        print("The Hugging Face token and Pirate Face key are deleted here, not revoked: to revoke them, use "
+              "huggingface.co/settings/tokens and your Pirate Face account settings.")
+    if linger:
+        print(linger)
     print("Done. Remove the program itself with: uv tool uninstall flotilla-face")
     return 0
+
+
+def _uninstall_containers(args) -> tuple[bool, list[str]]:
+    """Offer to stop and remove the containers a Docker setup made (Docker restarts them on its own
+    otherwise). Returns whether none of them are left, and where they keep their files: Docker
+    volume names, or folders on this machine."""
+    from . import containers as dc
+
+    ours = {n: e for n, e in dc.installed().items() if e.ours}
+    if not ours:
+        return True, []
+    names = sorted(ours)
+    storage = sorted({e.storage for e in ours.values() if e.storage})
+    print(f"docker: Flotilla's containers ({', '.join(names)}) run here too; Docker restarts them until "
+          f"they're removed")
+    try:
+        agree = args.yes or _yes(f"Stop and remove {' and '.join(names)}", True)
+    except EOFError:          # no one to ask
+        agree = False
+    if agree and dc.remove(names):
+        print(f"docker: removed {', '.join(names)}")
+        return True, storage
+    print(("docker: couldn't remove them" if agree else f"docker: kept {', '.join(names)}, still seeding")
+          + f". Remove them with: docker rm -f {' '.join(names)}")
+    return False, storage
+
+
+def _linger_note() -> str:
+    """On Linux, `service install --linger` turned on lingering, which uninstalling leaves alone:
+    other services of yours may rely on it."""
+    import getpass
+
+    if not sys.platform.startswith("linux"):
+        return ""
+    user = getpass.getuser()
+    if not Path("/var/lib/systemd/linger", user).exists():
+        return ""
+    return (f"Lingering is still on for {user} (your services keep running while you're logged out). If you "
+            f"turned it on only for Flotilla: loginctl disable-linger {user}")
 
 
 def _inside_dir(base: Path, p: Path) -> bool:

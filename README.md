@@ -385,7 +385,7 @@ Found a hole? See [SECURITY.md](SECURITY.md).
 | `flotilla ledger` | Show the hash ledger in use, and any conflicts between copies of it |
 | `flotilla feed` | Show the priority list in use and who signed it (`--init-local` to start your own changes) |
 | `flotilla update [--check]` | Install the newest signed release, on this machine and in Flotilla's Docker containers (see [Updating](#updating)) |
-| `flotilla uninstall [--delete-data]` | Stop the service and, if asked, delete everything Flotilla downloaded |
+| `flotilla uninstall [--delete-data]` | Stop the service and Docker containers and, if asked, delete everything Flotilla downloaded and wrote (see Uninstall) |
 
 Settings live in `~/.config/flotilla/config.toml`; `flotilla init` writes it and you can edit it by hand.
 
@@ -793,8 +793,23 @@ flotilla uninstall --delete-data
 uv tool uninstall flotilla-face
 ```
 
-The first stops the background service and deletes only what Flotilla downloaded, leaving anything else
-in that folder alone. The second removes the program.
+The first stops the background service. If an earlier setup put Flotilla in Docker, it offers to stop
+and remove its containers (`flotilla` and `flotilla-dashboard`), which Docker otherwise restarts on its
+own. With `--delete-data`, after you type `delete` to confirm, it also deletes:
+
+- the models Flotilla downloaded, leaving anything else in that folder alone;
+- its state folder and `config.toml`;
+- the `hf-token` and `pirateface-key` files setup saved next to the config. That deletes them from
+  this machine; to revoke them, use huggingface.co/settings/tokens and your Pirate Face account
+  settings;
+- on macOS, the service's log, `~/Library/Logs/flotilla.log` and its rotated copies;
+- the `flotilla` Docker volume, once its containers are gone.
+
+It leaves, and says so with the command to remove each: your picks (`my-priorities.json`, from
+`flotilla add`), a Docker volume or folder you named yourself at setup, and on Linux, lingering if you
+turned it on with `--linger` (`loginctl disable-linger $USER`), since other services may rely on it.
+Without `--delete-data` everything but the service and containers stays. The second command removes
+the program.
 
 ## Contributing
 

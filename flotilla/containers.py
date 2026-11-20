@@ -209,6 +209,12 @@ def remove(names: list[str]) -> bool:
     return bool(out) and out.returncode == 0
 
 
+def remove_volume(name: str) -> bool:
+    """Remove a Docker volume a setup made, once no container uses it."""
+    out = _docker("volume", "rm", name)
+    return bool(out) and out.returncode == 0
+
+
 def dashboard_address(timeout: float = 180.0, every: float = 2.0, lan_address: str | None = None) -> str | None:
     """The dashboard container's address with its access key, once it has started (it installs
     Flotilla first, which takes a minute or so). None if it hasn't said within the timeout."""

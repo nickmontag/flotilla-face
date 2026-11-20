@@ -371,7 +371,7 @@ Found a hole? See [SECURITY.md](SECURITY.md).
 | `flotilla init` | Set up or change space, speeds, VPN pinning, licences |
 | `flotilla plan` | Preview what you'd carry, without downloading (`--probe` looks at the live swarm) |
 | `flotilla run` | Run in the foreground (`--hours N` to seed for a set time) |
-| `flotilla service install` / `uninstall` / `status` | Run in the background: launchd on macOS, systemd on Linux (`--linger` keeps it running while you're logged out). Logs: `~/Library/Logs/flotilla.log` on macOS, rotated at 10 MB with three old copies kept; `journalctl --user -u flotilla` on Linux |
+| `flotilla service install` / `uninstall` / `status` | Run in the background: launchd on macOS, systemd on Linux (`--linger` keeps it running while you're logged out; if your system won't allow that without sudo, it says so and gives the command). Without systemd it says so and leaves `flotilla run` to you. Logs: `~/Library/Logs/flotilla.log` on macOS, rotated at 10 MB with three old copies kept; `journalctl --user -u flotilla` on Linux |
 | `flotilla add <link>` / `remove <link>` / `picks` | Prioritize a model by its Hugging Face or Pirate Face link (`--rescue`: ask Pirate Face to add it if it has no torrent), take it off, list your picks |
 | `flotilla dashboard` | Open the local dashboard |
 | `flotilla dashboard --serve --listen 0.0.0.0` | Serve the dashboard on your network for a node in a VPN container (see Behind gluetun) |

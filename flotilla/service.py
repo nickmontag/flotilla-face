@@ -25,6 +25,7 @@ class Step:
     write: tuple[Path, str] | None = None
     remove: Path | None = None
     check: bool = False  # fail the whole operation if this command fails
+    warn: str = ""       # otherwise, what to tell the user if it fails ("{error}" is the command's error)
 
 
 @dataclass
@@ -211,8 +212,13 @@ def systemd_install(exe: list[str], config: Path, state: Path, home: Path, linge
         Step("start it now and at every login", cmd=["systemctl", "--user", "enable", "--now", UNIT], check=True),
     ]
     if linger:
+        import getpass
+
+        user = getpass.getuser()
         steps.append(Step("keep it running while you're logged out",
-                          cmd=["loginctl", "enable-linger", os.environ.get("USER", "")]))
+                          cmd=["loginctl", "enable-linger", user],
+                          warn=f"couldn't turn on lingering ({{error}}), so Flotilla stops when you log out. "
+                               f"Someone with sudo can turn it on: sudo loginctl enable-linger {user}"))
     return Plan(steps, ["logs: journalctl --user -u flotilla -f"])
 
 
@@ -226,9 +232,13 @@ def systemd_uninstall(home: Path) -> Plan:
 
 
 def systemd_status() -> str:
-    r = subprocess.run(["systemctl", "--user", "is-active", UNIT], capture_output=True, text=True)
+    try:
+        r = subprocess.run(["systemctl", "--user", "is-active", UNIT], capture_output=True, text=True)
+        enabled = subprocess.run(["systemctl", "--user", "is-enabled", UNIT], capture_output=True,
+                                 text=True).stdout.strip()
+    except OSError:
+        return f"not installed: {NO_SYSTEMD}"
     state = r.stdout.strip() or "unknown"
-    enabled = subprocess.run(["systemctl", "--user", "is-enabled", UNIT], capture_output=True, text=True).stdout.strip()
     if enabled in ("", "not-found"):
         return "not installed"
     return f"installed ({enabled}), {state}"
@@ -266,6 +276,14 @@ def status(home: Path | None = None) -> str:
     return "unsupported on this OS"
 
 
+NO_SYSTEMD = ("this system has no systemctl, so it doesn't run systemd, which the background service needs. "
+              "Run Flotilla in a terminal with `flotilla run`, or start that from your own init system")
+
+
+def _missing(cmd: str) -> str:
+    return NO_SYSTEMD if cmd == "systemctl" else f"{cmd} isn't installed"
+
+
 def execute(plan: Plan, dry_run: bool, say=print) -> bool:
     ok = True
     for s in plan.steps:
@@ -283,11 +301,18 @@ def execute(plan: Plan, dry_run: bool, say=print) -> bool:
         if s.remove:
             s.remove.unlink(missing_ok=True)
         if s.cmd:
-            r = subprocess.run(s.cmd, capture_output=True, text=True)
-            if r.returncode != 0 and s.check:
-                say(f"    failed: {(r.stderr or r.stdout).strip()}")
+            try:
+                r = subprocess.run(s.cmd, capture_output=True, text=True)
+                failed, error = r.returncode != 0, (r.stderr or r.stdout).strip() or f"exit status {r.returncode}"
+            except OSError as e:      # not installed, most often
+                failed = True
+                error = _missing(s.cmd[0]) if isinstance(e, FileNotFoundError) else f"{s.cmd[0]}: {e}"
+            if failed and s.check:
+                say(f"    failed: {error}")
                 ok = False
                 break
+            if failed and s.warn:
+                say(f"    {s.warn.replace('{error}', error)}")
     for n in plan.notes:
         say(n)
     return ok

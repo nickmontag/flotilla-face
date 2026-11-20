@@ -164,7 +164,13 @@ case "$answer" in
       case "$keep" in [yY]*) linger="--linger" ;; esac
     fi
     # shellcheck disable=SC2086
-    "$BIN" service install $linger
+    if ! "$BIN" service install $linger; then
+      # What failed is printed above (no systemd on this Linux, say). Flotilla is installed and set up.
+      say ""
+      ok "Installed and set up, but not running in the background: the reason is above."
+      say "  Start it in a terminal whenever you like with: ${B}flotilla run${R}"
+      exit 0
+    fi
     ;;
 esac
 say ""

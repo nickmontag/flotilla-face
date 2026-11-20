@@ -241,3 +241,35 @@ def test_uninstall_leaves_a_docker_volume_setup_didnt_name(tmp_path, monkeypatch
     assert _uninstall(tmp_path, monkeypatch)[0] == 0
     assert ran == [["rm", "-f", "flotilla"]]
     assert "Left the Docker volume media" in capsys.readouterr().out
+
+
+def test_a_missing_systemctl_is_reported_not_raised(tmp_path, monkeypatch):
+    def no_such(cmd, **kw):
+        raise FileNotFoundError(2, "No such file or directory", cmd[0])
+
+    monkeypatch.setattr(service.subprocess, "run", no_such)
+    out = []
+    plan = service.systemd_install(["/bin/flotilla"], tmp_path / "c.toml", tmp_path / "s", tmp_path, linger=False)
+    assert service.execute(plan, dry_run=False, say=out.append) is False
+    assert any("failed: this system has no systemctl" in line and "flotilla run" in line for line in out)
+    assert not any("start it now" in line for line in out)          # stopped at the first failure
+    assert service.execute(service.systemd_uninstall(tmp_path), dry_run=False, say=out.append) is True
+    assert service.systemd_status().startswith("not installed: this system has no systemctl")
+
+
+def test_a_failed_linger_is_reported(tmp_path, monkeypatch):
+    import subprocess
+
+    def run(cmd, **kw):
+        if cmd[0] == "loginctl":
+            return subprocess.CompletedProcess(cmd, 1, "", "Could not enable linger: Access denied")
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(service.subprocess, "run", run)
+    monkeypatch.setattr("getpass.getuser", lambda: "sam")
+    out = []
+    plan = service.systemd_install(["/bin/flotilla"], tmp_path / "c.toml", tmp_path / "s", tmp_path, linger=True)
+    assert plan.steps[-1].cmd == ["loginctl", "enable-linger", "sam"]
+    assert service.execute(plan, dry_run=False, say=out.append) is True     # it runs, just not logged out
+    warning = next(line for line in out if "couldn't turn on lingering" in line)
+    assert "Access denied" in warning and "sudo loginctl enable-linger sam" in warning

@@ -108,7 +108,15 @@ def cmd_init(args) -> int:
     down = _ask("Download speed", cfg.download_mbps, float)
     share = _ask("Share of upload to give the swarm, 0.1-1", cfg.upload_share, float)
     dshare = _ask("Share of download to use while filling, 0.1-1", cfg.download_share, float)
-    cap = _ask("Monthly upload cap in GB, 0 for none", cfg.monthly_upload_cap_gb, float)
+    month_gb = up * 125_000 * min(1.0, max(0.1, share)) * 30 * 86400 / GB
+    ui.note(f"At that speed seeding can upload up to {month_gb:,.0f} GB a month, and reorienting downloads up to "
+            f"{cfg.churn_gb * 30:,.0f} GB more. Many internet plans cap data (1.2 TB a month is common in the US, "
+            "counting both directions).")
+    plan_cap = _ask("Your internet plan's monthly data cap in GB, 0 if none", 0.0, float)
+    suggested_cap = cfg.monthly_upload_cap_gb or (round(plan_cap * 0.4) if plan_cap > 0 else 0.0)
+    if plan_cap > 0:
+        ui.note(f"Suggested: {suggested_cap:g} GB of upload a month, 40% of your cap, leaving room for everything else.")
+    cap = _ask("Monthly upload cap in GB, 0 for none", suggested_cap, float)
 
     ui.section(3, SETUP_STEPS, "What to seed")
     ui.note("at-risk: the copies most likely to be lost, and models Hugging Face has taken down. in-demand: "
@@ -123,10 +131,9 @@ def cmd_init(args) -> int:
 
     focus = _ask(f"Seed first: {', '.join(FOCUS_CHOICES)}", cfg.focus, one_of(FOCUS_CHOICES))
     ui.note("What the swarm needs changes. On a schedule, Flotilla drops the lowest-priority pieces you hold "
-            "and fetches the ones the swarm needs most. Models you add or set space aside for stay."
-            + (" Demand moves faster than rarity, so in-demand works best daily." if focus == "in-demand" else ""))
-    often = "daily" if focus == "in-demand" and cfg.reorient == Config().reorient else cfg.reorient
-    reorient = _ask(f"How often: {', '.join(REORIENT_CHOICES)}", often, one_of(REORIENT_CHOICES))
+            "and fetches the ones the swarm needs most. Models you add or set space aside for stay. "
+            "Daily lets the fleet even out within days when many nodes start at once.")
+    reorient = _ask(f"How often: {', '.join(REORIENT_CHOICES)}", cfg.reorient, one_of(REORIENT_CHOICES))
     churn = cfg.churn_gb
     if reorient != "never":
         churn = max(0.0, _ask("Most to swap each time, in GB", churn, parse_gb))
@@ -1104,9 +1111,6 @@ def print_plan(p: Plan, rejected, verbose: bool) -> None:
                 print(f"  {sign} {u.cand.repo}  {u.label}  ({human(u.size)}, held by {u.availability:g} other peer(s))")
             if not verbose and len(units) > 6:
                 print(f"  {sign} … and {len(units) - 6} more (use -v)")
-    elif p.churn_short:
-        print(f"\nNext reorientation: nothing fits. The smallest swap worth making is "
-              f"{p.churn_short / GB:.1f} GB, more than reorient.churn_gb allows.")
     if len(p.drops) > sum(len(u.files) for u in p.swap_out):
         print(f"\nWould drop {len(p.drops)} held file(s) that no longer fit the plan.")
     if rejected:

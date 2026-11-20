@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import collections
 import dataclasses
+import hashlib
 import ipaddress
 import json
 import math
@@ -51,7 +52,7 @@ from .perfile import PerFile
 from .vpnport import Forward, PortFinder
 from .hfauth import remove_token, save_secret
 from .pfaccount import Account, clean_key, key_path, kind_of
-from .planner import GB, Params, Plan, Unit, plan as make_plan
+from .planner import GB, Params, Plan, Unit, plan as make_plan, swappable
 from .signing import PublicKey, SignatureError
 from .sources import HuggingFace, PirateFace, git_blob_sha1, sha256_file
 from .torrentmeta import parse_torrent
@@ -94,6 +95,13 @@ DIAL_OUT_ANNOUNCE = 15 * 60.0
 STUCK_FOR = 86400.0   # a torrent Hugging Face wouldn't serve stays out of plans this long (see _stuck)
 REPICK_AFTER = 3 * 86400.0   # a file a reorientation swapped out isn't picked again for this long (_cooling)
 RESUME_EVERY = 30 * 60.0
+# A node that already holds files waits a random while before its first look at the swarm after
+# it starts, seeding what it has meanwhile: many nodes restarted together (a host reboot, an
+# update) would otherwise all ask Pirate Face and probe every swarm in the same minutes.
+STARTUP_SPREAD = 30 * 60.0
+# Each node's reorientation period is its own, within this share of the chosen one (by node id),
+# so nodes that started together drift apart instead of reorienting in lockstep for good.
+REORIENT_SPREAD = 0.1
 
 
 def _from_internet(host: str) -> bool:
@@ -438,6 +446,11 @@ class Engine:
         self.state.data.setdefault("blocklist", [])
         self.state.data.setdefault("dropped", [])      # repos the user removed from the dashboard
         self.state.data.setdefault("ledger", {})       # seed-hours per torrent (a points estimate)
+        if self.state.data.get("ledger_v", 1) < 2:
+            # Before 0.2.9 the estimate also counted torrents held only in part, which earn nothing.
+            for e in self.state.data["ledger"].values():
+                e["points_est"] = 0.0
+            self.state.data["ledger_v"] = 2
         # Reorienting: when this node last swapped held pieces for needier ones, and what it swapped.
         self.state.data.setdefault("reorient", {})
         self._reorient_now = False                     # the user asked for one, whatever the schedule
@@ -676,14 +689,12 @@ class Engine:
             elif not churn:
                 self.log("reorient: nothing swapped, the churn size is 0 GB")
             else:
-                swappable = any(u.held and not u.forced and u.cand.repo not in base.manual
-                                for pk in p.picks.values() for u in pk.units)
+                can_go = any(swappable(u, base.manual) for pk in p.picks.values() for u in pk.units)
                 days = f"{self.cfg.min_hold_days:g} day{'' if self.cfg.min_hold_days == 1 else 's'}"
                 self.log("reorient: nothing to swap"
-                         + (f": the smallest swap worth making is {p.churn_short / GB:.1f} GB, more than the "
-                            f"{self.cfg.churn_gb:g} GB allowed each time" if p.churn_short
-                            else f": everything held is a model you chose, or was picked less than {days} ago and is coming in"
-                            if not swappable
+                         + (f": everything held is a model you chose, a copy the swarm needs this node to keep, "
+                            f"or was picked less than {days} ago and is coming in"
+                            if not can_go
                             else ": nothing in the swarm needs the space more than what's held"))
         else:
             ro.setdefault("last", now)       # a new node's first reorientation comes one period after it starts
@@ -760,7 +771,12 @@ class Engine:
         """When the next scheduled reorientation is due (None: never, or no plan made yet)."""
         every = REORIENT_EVERY.get(self.cfg.reorient)
         last = self.state.data["reorient"].get("last")
-        return last + every if every and last else None
+        return last + every * self._reorient_stretch() if every and last else None
+
+    def _reorient_stretch(self) -> float:
+        """This node's own share of the reorientation period, 1 ± REORIENT_SPREAD (see there)."""
+        u = int(hashlib.sha256(f"reorient\x00{self.state.node_id}".encode()).hexdigest()[:8], 16) / 0xFFFFFFFF
+        return 1.0 + REORIENT_SPREAD * (2 * u - 1)
 
     def reorient_due(self, now: float) -> bool:
         at = self.reorient_at()
@@ -799,16 +815,15 @@ class Engine:
         base = base or self.params()
         p = make_plan(self._last_cands, dataclasses.replace(base, churn_bytes=int(self.cfg.churn_gb * GB)),
                       self.state.node_id)
-        swappable = [u for pk in p.picks.values() for u in pk.units
-                     if u.held and not u.forced and u.cand.repo not in base.manual] + p.swap_out
+        can_go = [u for pk in p.picks.values() for u in pk.units if swappable(u, base.manual)] + p.swap_out
         self.reorient_preview = {
             "at": at if at is not None else (self.reorient_preview or {}).get("at"),
             "churn_gb": self.cfg.churn_gb,
             "out": self._swap_groups(p.swap_out), "in": self._swap_groups(p.swap_in),
             "lowest": self._swap_groups(p.lowest), "top": self._swap_groups(p.top),
-            "short": p.churn_short,
-            # What a swap may take from: held, not picked within min_hold_days (or not coming in), not a model the user chose.
-            "swappable": sum(u.size for u in swappable),
+            # What a swap may take from: held, not picked within min_hold_days (or not coming in), not a copy
+            # this node keeps for the swarm, not a model the user chose.
+            "swappable": sum(u.size for u in can_go),
             "held": sum(f.size for c in self._last_cands for f in c.files if f.held),
         }
 
@@ -1988,8 +2003,9 @@ class Engine:
 
     def update_ledger(self, now: float) -> None:
         """Seed-hours per torrent and a points estimate with Pirate Face's published
-        formula: 1 point per 3 seed-hours for a 10 GB torrent, scaled by sqrt(GB/10). Flotilla's
-        own count: Pirate Face counts the real one through the account's seeding tracker."""
+        formula: 1 point per 3 seed-hours for a 10 GB torrent, scaled by sqrt(GB/10), counted
+        only while this node holds the whole torrent (Pirate Face credits complete copies).
+        Flotilla's own count: Pirate Face counts the real one through the account's seeding tracker."""
         last = self.state.data.get("ledger_at") or now
         self.state.data["ledger_at"] = now
         dt_h = max(0.0, min(now - last, 600)) / 3600   # cap gaps from sleep or crashes
@@ -2002,7 +2018,9 @@ class Engine:
                 continue
             gb = sum(e["size"] for e in hold["files"].values() if e["status"] == "verified") / GB
             state = str(self.status(ih, h).state)
-            if gb <= 0 or not ("seeding" in state or "finished" in state):
+            # Pirate Face credits a complete copy only: "finished" (the files picked are here, others
+            # aren't) earns nothing, so only "seeding" (every piece of the torrent) counts.
+            if gb <= 0 or "seeding" not in state:
                 continue
             e = led.setdefault(ih, {"repo": hold["repo"], "seed_hours": 0.0, "gb_hours": 0.0, "points_est": 0.0})
             e["seed_hours"] += dt_h
@@ -2218,8 +2236,14 @@ class Engine:
         threading.Thread(target=self.hf.run, name="hugging-face", daemon=True).start()
         self._sampler = threading.Thread(target=self._sample_loop, name="history", daemon=True)
         self._sampler.start()
-        self._start_refresh()
-        self.next_refresh = self._next_refresh_at()
+        if self.state.holdings and not once:
+            wait = random.uniform(0, STARTUP_SPREAD)
+            self.next_refresh = time.time() + wait
+            self.log(f"seeding what's held; first look at the swarm in {wait / 60:.0f} min "
+                     f"(spread out, so restarted nodes don't all ask at once)")
+        else:
+            self._start_refresh()
+            self.next_refresh = self._next_refresh_at()
         last_status = last_resume = 0.0
         last_save = last_status_file = time.time()
         while not self.stop.is_set():

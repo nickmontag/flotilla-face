@@ -203,7 +203,8 @@ key         = density^spread × (−1 / ln u),  u = H(node_id ‖ infohash ‖ p
 A plan is built in this order, each step taking units while they fit the budget and the swarm limit:
 
 1. files picked less than `min_hold_days` ago that are coming in (a tenth or more has arrived),
-   unconditionally;
+   unconditionally, unless others already hold the target number of copies and this node's draw
+   doesn't keep it (see [Reorienting](#reorienting));
 2. space the user set aside for a model: what's held of it, then its other units by `key`;
 3. everything else that's held, the user's own models first, then the highest `density` first (so when
    the space shrinks, the least valuable goes);
@@ -269,19 +270,33 @@ and `min_hold_days`. Now the user sets how often it happens and how much moves: 
   that reorient on the same day don't all fetch the same shard). For each, held units are taken as
   victims in ascending `density` until it fits. A victim must be worth less than the unit coming in:
   its `density` includes `hold_bonus`, so a swap has to be 1.5× better by default. The bytes dropped
-  count against `churn_bytes`, and a swap that would go past it is skipped, never trimmed: the limit is
-  a hard one. `Plan.churn_short` records the smallest swap that was skipped for that reason, so the
-  dashboard can say that the churn size is smaller than one piece.
+  count against `churn_bytes`, and a swap that would go past it is skipped, never trimmed. The one
+  exception is a reorientation's first swap, which may be bigger than `churn_bytes` by itself:
+  otherwise a file bigger than `churn_gb` (the list has many over 25 GB, some over 100 GB) could never
+  come in once the disk is full.
 - **Never victims.** Files picked less than `min_hold_days` ago once a tenth of them has arrived (a
-  file nobody is sending holds no space for a week), and models the user chose by hand
-  (`Feed.manual`: models in their own list file, and models with space set aside). Reordering the list
-  is not choosing a model: it changes priorities, which the next reorientation follows.
+  file nobody is sending holds no space for a week), copies this node keeps for the swarm (below), and
+  models the user chose by hand (`Feed.manual`: models in their own list file, and models with space
+  set aside). Reordering the list is not choosing a model: it changes priorities, which the next
+  reorientation follows.
+- **Spare copies thin out, never vanish.** A held file that others already hold the target number of
+  times (`a ≥ T`) is spare, and spare copies are the cheapest victims. But every holder sees the same
+  count, so if each dropped its copy, all of them would at once and the file could go from many copies
+  to none. Instead each of the `a + 1` holders keeps its copy with chance `T / (a + 1)`, by its own
+  fixed draw (`keeps_copy`, `u = H(node_id ‖ "keep" ‖ infohash ‖ path)`): about `T` stay, and which
+  ones differs from node to node. A kept copy is never a victim. A spare copy that isn't kept isn't held
+  for `min_hold_days` either, so when many nodes start at once and pile onto the same files (each saw
+  none of the others' downloads), the first reorientation undoes the overlap.
 - **The user's own models don't wait.** An unheld unit of a `manual` model may displace victims at any
   replan, and doesn't count against `churn_bytes`. Otherwise a model added to a full node would wait a
   month.
 - **The schedule.** `state.json` keeps `reorient.last`. A replan passes `churn_bytes = churn_gb` when
   `last + period` has passed or the user pressed Reorient now, and 0 otherwise. A new node's first
-  plan sets `last`, so its first reorientation comes one period after it starts. The look at the swarm
+  plan sets `last`, so its first reorientation comes one period after it starts. Each node's period is
+  its own, within ±10% of the chosen one (`REORIENT_SPREAD`, by node id), so nodes started together
+  drift apart instead of reorienting, probing and asking Pirate Face in lockstep. For the same reason a
+  node that already holds files waits a random 0-30 minutes (`STARTUP_SPREAD`) before its first look
+  at the swarm after a start, seeding what it holds meanwhile. The look at the swarm
   that follows is brought forward to the moment one falls due.
 - **Said ahead of time.** After each plan the engine runs the planner once more with the full churn
   size and keeps the result (`reorient_preview`): the units that would go out and come in, by model.
@@ -484,8 +499,9 @@ for shards it never downloads.
 
 Pirate Face's published formula: 1 point per 3 seed-hours for a 10 GB torrent, scaled by √(GB/10).
 Flotilla records, per torrent, seed-hours, GB-hours of verified data, and a points estimate. It only
-counts time when the session isn't paused and the torrent is in a seeding or finished state, and caps
-gaps at 10 minutes so sleep or crashes don't inflate it. It's Flotilla's own count; Pirate Face counts
+counts time when the session isn't paused and the torrent is seeding (every piece here: Pirate Face
+credits complete copies, so a torrent held in part, "finished", earns nothing; the estimate was reset
+to 0 in 0.2.9, which stopped counting those), and caps gaps at 10 minutes so sleep or crashes don't inflate it. It's Flotilla's own count; Pirate Face counts
 the real points through each account's seeding tracker (below).
 
 ## Seeding credit and per-file swarms

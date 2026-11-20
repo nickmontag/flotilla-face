@@ -42,10 +42,13 @@ across runs, so replans don't churn.
 
 What a node holds stays put. A plan keeps every held file that still fits, fills
 free space, and only then *swaps*: the held unit worth least per GB goes out for
-an unheld unit worth more, until `churn_bytes` have been swapped out. The engine
+an unheld unit worth more, until `churn_bytes` have been swapped out (the first
+swap may be bigger, so a file bigger than churn_bytes can still come in). The engine
 allows that on the user's schedule (daily, weekly, monthly, or only when asked)
 and passes 0 in between. Files picked less than min_hold_days ago are never
-swapped out once a tenth of them has arrived (HOLD_FROM), a held unit counts for
+swapped out once a tenth of them has arrived (HOLD_FROM), unless others already hold
+the target number of copies. A copy at its target goes only if this node's own draw
+says so (`keeps_copy`), so the holders of a file never all drop it at once. A held unit counts for
 hold_bonus times its value (so a swap has to be clearly better), a file that isn't
 arriving and has no full copy anywhere, in a torrent Hugging Face won't serve this
 node (`stuck`), is worth nothing, and models the user chose by hand (`manual`) are never
@@ -112,6 +115,12 @@ class Unit:
     held: bool = False
     forced: bool = False
     whole: bool = False
+    keeper: bool = False      # a held copy of a file at its target that this node's draw says to keep
+
+    @property
+    def surplus(self) -> bool:
+        """Held, and others already hold the target number of copies without this one."""
+        return self.held and self.availability >= self.cand.target_replicas
 
     @property
     def label(self) -> str:
@@ -166,9 +175,6 @@ class Plan:
     swap_in: list[Unit] = field(default_factory=list)
     lowest: list[Unit] = field(default_factory=list)
     top: list[Unit] = field(default_factory=list)
-    # Bytes the smallest swap that was worth making, but bigger than churn_bytes allowed, would
-    # have dropped (0: nothing was held back by the limit).
-    churn_short: int = 0
 
     def urgent(self, f: FileCand) -> bool:
         return (f.availability or 0) == 0
@@ -247,6 +253,22 @@ HOLD_FROM = 0.1
 REACHABLE_RARE = 1.4
 
 
+def keeps_copy(node_id: str, u: Unit) -> bool:
+    """Whether this node keeps its copy of a file the swarm has enough of.
+
+    Every holder sees the same count, so if each dropped its copy whenever it looked spare, they
+    would all drop it at once and the file could go from many copies to none. Instead each of the
+    a + 1 holders keeps its copy with chance target / (a + 1), by its own fixed draw: on average the
+    target number stay, and which ones differs from node to node."""
+    share = u.cand.target_replicas / (u.availability + 1)
+    return hrw_u(node_id + "\x00keep", u.cand.infohash, u.files[0].repo_path) < share
+
+
+def swappable(u: Unit, manual: frozenset[str]) -> bool:
+    """A held unit a reorientation may swap out."""
+    return u.held and not u.forced and not u.keeper and u.cand.repo not in manual
+
+
 def build_units(cands: list[TorrentCand], p: Params, node_id: str) -> list[Unit]:
     units: list[Unit] = []
     for c in cands:
@@ -280,9 +302,11 @@ def build_units(cands: list[TorrentCand], p: Params, node_id: str) -> list[Unit]
         u.value = u.rate * (u.size / GB) * (WHOLE_BONUS if u.whole else 1.0)
         if u.held:
             u.value *= p.hold_bonus
+            if u.surplus:
+                u.keeper = keeps_copy(node_id, u)
             since = [f.held_since for f in u.files if f.held_since is not None and f.done >= HOLD_FROM]
-            if since and (p.now - min(since)) < p.min_hold_days * 86400:
-                u.forced = True
+            if since and (p.now - min(since)) < p.min_hold_days * 86400 and (u.keeper or not u.surplus):
+                u.forced = True              # a spare copy isn't held for min_hold_days: it can go at once
         u.density = u.value / max((u.size + u.overhead) / GB, 1e-3)
         uu = hrw_u(node_id, u.cand.infohash, u.files[0].repo_path)
         u.key = (u.density ** p.spread) * (-1.0 / math.log(uu))
@@ -364,7 +388,7 @@ def plan(cands: list[TorrentCand], p: Params, node_id: str) -> Plan:
 
     # 5. Reorient: swap the least valuable of what's held for unheld pieces worth more per GB,
     #    lowest out first, until churn_bytes have gone out.
-    victims = sorted((u for u in units if id(u) in taken and u.held and not u.forced and u.cand.repo not in p.manual),
+    victims = sorted((u for u in units if id(u) in taken and swappable(u, p.manual)),
                      key=lambda u: (u.density, u.key))
     lowest = victims[:SHOWN]
     top = [u for u in order if open_to(u) and not u.held][:SHOWN]
@@ -372,7 +396,7 @@ def plan(cands: list[TorrentCand], p: Params, node_id: str) -> Plan:
     swap_out: list[Unit] = []
     swap_in: list[Unit] = []
     gone: set[int] = set()
-    churned = short = 0
+    churned = 0
     for a in order:
         if len(gone) == len(victims):
             break
@@ -403,8 +427,9 @@ def plan(cands: list[TorrentCand], p: Params, node_id: str) -> Plan:
                     break
             if freed < deficit:
                 continue
-            if not mine and churned + dropped > limit:
-                short = min(short or dropped, dropped)
+            # The first swap may be bigger than churn_bytes by itself: otherwise a file bigger than
+            # churn_bytes could never come in once the disk is full.
+            if not mine and churned and churned + dropped > limit:
                 continue
         if opening:
             leaving: dict[str, int] = {}
@@ -434,4 +459,4 @@ def plan(cands: list[TorrentCand], p: Params, node_id: str) -> Plan:
     new = sum(pk.new_bytes for pk in picks.values())
     return Plan(picks, p.budget_bytes, total, new, drops, len(units),
                 new / p.download_bps if p.download_bps > 0 else float("inf"),
-                swap_out=swap_out, swap_in=swap_in, lowest=lowest, top=top, churn_short=short)
+                swap_out=swap_out, swap_in=swap_in, lowest=lowest, top=top)

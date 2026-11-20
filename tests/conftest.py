@@ -13,6 +13,16 @@ def _no_real_config_folder(monkeypatch, tmp_path):
 
 
 @pytest.fixture(autouse=True)
+def _fresh_pirate_face_pacing(monkeypatch):
+    """Pirate Face pacing is process-wide: no pause carries from one test to the next, and no gap slows them."""
+    from flotilla import sources
+
+    monkeypatch.setattr(sources, "PF_MIN_GAP", 0.0)
+    monkeypatch.setattr(sources, "_pf_last", 0.0)
+    monkeypatch.setattr(sources, "_pf_not_before", 0.0)
+
+
+@pytest.fixture(autouse=True)
 def _enter_at_hidden_prompts(monkeypatch):
     """A hidden prompt (setup's Pirate Face paste, say) gets Enter unless a test pastes something."""
     monkeypatch.setattr("getpass.getpass", lambda prompt="": "")

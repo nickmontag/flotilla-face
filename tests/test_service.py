@@ -119,3 +119,37 @@ def test_launchd_agent_names_its_log_for_rotation():
     doc = plistlib.loads(service.launchd_plist(["/bin/flotilla"], Path("/c.toml"), Path("/st"), Path("/Users/x")).encode())
     assert doc["EnvironmentVariables"] == {service.LOG_ENV: "/Users/x/Library/Logs/flotilla.log"}
     assert doc["StandardOutPath"] == doc["StandardErrorPath"] == "/Users/x/Library/Logs/flotilla.log"
+
+
+def test_setup_suggests_an_upload_cap_from_the_plans_data_cap(tmp_path, monkeypatch):
+    import argparse
+
+    from flotilla import cli, netinfo, sources
+    from flotilla.config import load_config
+
+    monkeypatch.setattr(netinfo, "internet_route", lambda: None)
+
+    class NoPF:
+        def __init__(self, *a, **kw):
+            pass
+
+        def licenses(self):
+            raise OSError("offline")
+
+    monkeypatch.setattr(sources, "PirateFace", NoPF)
+
+    def setup(plan_cap):
+        answers = [str(tmp_path / "seeds")]
+
+        def ask(prompt=""):
+            if "data cap" in prompt:
+                return plan_cap
+            return answers.pop(0) if answers else ""
+
+        monkeypatch.setattr("builtins.input", ask)
+        path = tmp_path / f"cap-{plan_cap or 'none'}.toml"
+        assert cli.cmd_init(argparse.Namespace(config=str(path))) == 0
+        return load_config(path).monthly_upload_cap_gb
+
+    assert setup("1200") == 480          # 40% of a 1.2 TB plan, taken by pressing Enter
+    assert setup("") == 0                # no plan cap: no upload cap

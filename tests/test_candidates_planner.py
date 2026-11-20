@@ -365,7 +365,7 @@ def test_between_reorientations_what_is_held_stays():
     c = cand("org/m", n_shards=20)
     for f in c.files:
         f.availability = 0                     # every other shard has no copy at all
-    held_shards(c, {"model-00019.safetensors"}, avail=6)
+    held_shards(c, {"model-00019.safetensors"}, avail=4)
     p = plan([c], shards(6, churn_bytes=0), "node-a")      # room for one shard only
     assert weights(p, c) == {"model-00019.safetensors"} and not p.drops and not p.swap_out
     # ...but the plan still says what it would choose between
@@ -377,7 +377,7 @@ def test_reorienting_swaps_the_lowest_for_what_the_swarm_needs_most():
     c = cand("org/m", n_shards=20)
     for f in c.files:
         f.availability = 0
-    held_shards(c, {"model-00019.safetensors"}, avail=6)
+    held_shards(c, {"model-00019.safetensors"}, avail=4)
     p = plan([c], shards(6, churn_bytes=5 * GB), "node-a")
     assert [u.label for u in p.swap_out] == ["model-00019.safetensors"]
     assert len(p.swap_in) == 1 and p.swap_in[0].availability == 0
@@ -388,7 +388,7 @@ def test_reorienting_swaps_the_lowest_for_what_the_swarm_needs_most():
 def test_churn_size_limits_how_much_is_swapped():
     low = cand("org/low", n_shards=4)
     need = cand("org/need", n_shards=10)
-    held_shards(low, {f.repo_path for f in low.files}, avail=9)
+    held_shards(low, {f.repo_path for f in low.files}, avail=4)
     for f in need.files:
         f.availability = 0
     budget = 20.1                                           # the four held shards fill it
@@ -396,9 +396,11 @@ def test_churn_size_limits_how_much_is_swapped():
     assert len(p.swap_out) == 2 and len(p.swap_in) == 2     # 10 GB out of the 11 allowed; a third wouldn't fit
     assert sum(u.size for u in p.swap_out) <= 11 * GB and p.total_bytes <= budget * GB
     assert len(weights(p, low)) == 2 and len(weights(p, need)) == 2
-    # a churn size smaller than one piece swaps nothing, and says how much the smallest swap needs
+    # a churn size smaller than one piece still makes the first swap, and only that one
     p = plan([low, need], shards(budget, churn_bytes=4 * GB), "node-a")
-    assert not p.swap_out and not p.drops and p.churn_short == 5 * GB
+    assert len(p.swap_out) == 1 and len(p.swap_in) == 1
+    # nothing to swap: nothing goes
+    assert not plan([low, need], shards(budget, churn_bytes=0), "node-a").swap_out
     # no limit: everything worth swapping goes
     p = plan([low, need], shards(budget), "node-a")
     assert len(p.swap_out) == 4 and low.infohash not in p.picks
@@ -420,7 +422,7 @@ def test_the_lowest_priority_goes_out_first():
 def test_models_you_chose_are_never_swapped_out():
     mine = cand("org/mine", n_shards=4, priority=0.1)
     need = cand("org/need", n_shards=10, priority=0.9)
-    held_shards(mine, {f.repo_path for f in mine.files}, avail=9)
+    held_shards(mine, {f.repo_path for f in mine.files}, avail=4)
     for f in need.files:
         f.availability = 0
     p = plan([mine, need], shards(20.1, manual=frozenset({"org/mine"})), "node-a")   # no churn limit at all
@@ -433,7 +435,7 @@ def test_models_you_chose_are_never_swapped_out():
 def test_a_model_you_add_comes_in_without_waiting_for_a_reorientation():
     low = cand("org/low", n_shards=4, priority=0.2)
     mine = cand("org/mine", n_shards=2, priority=1.0)
-    held_shards(low, {f.repo_path for f in low.files}, avail=9)
+    held_shards(low, {f.repo_path for f in low.files}, avail=4)
     for f in mine.files:
         f.availability = 1
     p = plan([low, mine], shards(20.1, churn_bytes=0), "node-a")
@@ -441,6 +443,56 @@ def test_a_model_you_add_comes_in_without_waiting_for_a_reorientation():
     p = plan([low, mine], shards(20.1, churn_bytes=0, manual=frozenset({"org/mine"})), "node-a")
     assert len(weights(p, mine)) == 2 and len(weights(p, low)) == 2    # yours: room is made now
     assert {u.cand.repo for u in p.swap_out} == {"org/low"}
+
+
+def _spare_fleet(n_nodes, others, since):
+    """Each node holds one shard that `others` other peers also hold, and is full; another shard has no copy."""
+    out = []
+    for i in range(n_nodes):
+        c = cand("org/m", n_shards=2)
+        held = c.files[-1]
+        held.held, held.held_since, held.done, held.availability = True, since, 1.0, others
+        for f in c.files[:-1]:
+            f.availability = 0
+        p = plan([c], shards(5.5, churn_bytes=5 * GB), f"node-{i}")
+        out.append(held.repo_path in weights(p, c))
+    return out
+
+
+def test_holders_of_a_spare_copy_never_all_drop_it():
+    # 40 holders, target 5: each keeps its copy with chance 5/40, so about 5 keep it, not none
+    kept = _spare_fleet(40, others=39, since=1e9 - 30 * 86400)
+    assert 1 <= sum(kept) <= 12
+    # below its target every holder keeps it: nothing better to swap for
+    c = cand("org/m", n_shards=2)
+    held_shards(c, {c.files[-1].repo_path}, avail=4)
+    for f in c.files[:-1]:
+        f.availability = 4
+    assert c.files[-1].repo_path in weights(plan([c], shards(5.5, churn_bytes=5 * GB), "node-0"), c)
+
+
+def test_a_spare_copy_is_not_held_for_min_hold_days():
+    # picked an hour ago (everyone piled on at once): the spare copies can go at the first reorientation
+    kept = _spare_fleet(40, others=39, since=1e9 - 3600)
+    assert 1 <= sum(kept) <= 12
+    # one the swarm still needs is held as before
+    c = cand("org/m", n_shards=2)
+    held = c.files[-1]
+    held.held, held.held_since, held.done, held.availability = True, 1e9 - 3600, 1.0, 2
+    for f in c.files[:-1]:
+        f.availability = 0
+    assert held.repo_path in weights(plan([c], shards(5.5, churn_bytes=5 * GB), "node-0"), c)
+
+
+def test_a_file_bigger_than_the_churn_size_can_still_come_in():
+    low = cand("org/low", n_shards=6, shard=5 * GB)
+    big = cand("org/big", n_shards=2, shard=30 * GB)
+    held_shards(low, {f.repo_path for f in low.files}, avail=4)
+    for f in big.files:
+        f.availability = 0
+    p = plan([low, big], shards(30.1, churn_bytes=5 * GB), "node-a")     # full, and 5 GB a time
+    assert len(weights(p, big)) == 1 and not weights(p, low)            # the first swap may go past it
+    assert p.total_bytes <= 30.1 * GB
 
 
 def test_a_swap_has_to_be_clearly_better():

@@ -218,7 +218,7 @@ def test_config_with_an_old_default_license_list_gets_the_new_defaults(tmp_path)
 def test_reorient_schedule_and_churn_size_through_the_dashboard(node):
     eng, dash, path, logs = node
     doc = json.loads(call(dash, "GET", "/api/state")[2])
-    assert doc["reorient"]["every"] == "weekly" and doc["settings"]["churn_gb"] == 20
+    assert doc["reorient"]["every"] == "daily" and doc["settings"]["churn_gb"] == 20
     assert doc["reorient"]["preview"] is None and doc["reorient"]["next"] is None      # no plan made yet
     for bad in [{"reorient": "hourly"}, {"reorient": 7}, {"churn_gb": -1}, {"churn_gb": "10"}]:
         assert call(dash, "POST", "/api/settings", bad, token=dash.token)[0] == 400, bad
@@ -236,10 +236,10 @@ def test_reorient_schedule_and_churn_size_through_the_dashboard(node):
 
 def test_config_refuses_an_unknown_reorient_schedule(tmp_path):
     path = tmp_path / "config.toml"
-    path.write_text(render_config(Config()).replace('every = "weekly"', 'every = "hourly"'))
+    path.write_text(render_config(Config()).replace('every = "daily"', 'every = "hourly"'))
     with pytest.raises(ValueError, match="reorient.every"):
         load_config(path)
-    path.write_text(render_config(Config()).replace('every = "weekly"', 'every = "never"'))
+    path.write_text(render_config(Config()).replace('every = "daily"', 'every = "never"'))
     assert load_config(path).reorient == "never"
 
 

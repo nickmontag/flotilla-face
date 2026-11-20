@@ -1005,7 +1005,7 @@ function render(s) {
     (pfs.joined ? " · " + (pfs.joined === 1 ? "1 shard in its own swarm" : pfs.joined + " shards in their own swarms") : "") +
     " · ≈ " + (s.points_est_total || 0).toFixed(1) + " points (est.)" + (earning ? "" : ", not earning");
   $("swarmsub").title = earning
-    ? "Your seeding counts toward your Pirate Face account's points (" + acct.tracker + "). The estimate is Flotilla's own; Pirate Face keeps the real count."
+    ? "Your seeding counts toward your Pirate Face account's points (" + acct.tracker + "). Pirate Face credits complete copies only, so the estimate counts only models held whole; shards help the swarm but earn nothing. The estimate is Flotilla's own; Pirate Face keeps the real count."
     : (acct.why ? acct.why.charAt(0).toUpperCase() + acct.why.slice(1) + ". " : "") +
       "No Pirate Face account is connected, so this seeding earns no points. Connect one in Settings.";
 
@@ -1273,9 +1273,8 @@ function renderReorient(r) {
   } else {
     let why;
     if (!r.churn_gb) why = "With 0 GB to swap, nothing is swapped.";
-    else if (pv.short) why = "Nothing fits yet: the smallest swap worth making is " + human(pv.short) + ", more than your " + r.churn_gb + " GB.";
     else if (!pv.held) why = "You hold nothing yet, so there is nothing to swap.";
-    else if (!pv.swappable) why = "Nothing can go out yet: everything you hold is a model you chose, or was picked less than " +
+    else if (!pv.swappable) why = "Nothing can go out yet: everything you hold is a model you chose, a copy the swarm needs you to keep, or was picked less than " +
                                   plural(Math.round(r.min_hold_days), "day") + " ago and is coming in.";
     else why = "Nothing to swap right now: nothing in the swarm needs the space more than what you hold.";
     sum.append(b("Nothing to swap"), never ? " · reorienting is off" : due ? " · next look " + due.replace(/^On /, "").replace(/^At the next look at the swarm$/, "soon") : "");

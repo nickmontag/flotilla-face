@@ -10,6 +10,7 @@ import hashlib
 import json
 import os
 import re
+import threading
 import time
 import urllib.parse
 from dataclasses import dataclass
@@ -51,11 +52,24 @@ def parse_new_torrents(body: bytes) -> list[dict]:
     return out
 
 
+# Gentle on Pirate Face, for the whole process (a refresh makes a new client each time):
+# requests at least PF_MIN_GAP apart, and none at all while Pirate Face has asked us to wait.
+PF_MIN_GAP = 0.25            # seconds
+PF_WAIT_DEFAULT = 300.0      # a 429 or 503 without Retry-After: wait this long
+PF_WAIT_MAX = 3600.0
+_pf_lock = threading.Lock()
+_pf_last = 0.0               # when the last request went out
+_pf_not_before = 0.0         # no requests before this (Retry-After)
+
+
 class PirateFace:
     """Pirate Face's API, used gently: thousands of nodes may run this.
 
     * .torrent files are cached by infohash (an infohash pins the content, so a
       cached file never goes stale), and a cached file is re-verified before use.
+    * Requests go out at least PF_MIN_GAP apart. A 429 or 503 stops every request
+      from this node for as long as its Retry-After says (PF_WAIT_DEFAULT if it
+      doesn't say, at most PF_WAIT_MAX).
     * After a few server errors in a row (5xx, 429, timeouts) the client stops
       calling Pirate Face for the rest of this refresh instead of retrying.
     """
@@ -67,12 +81,27 @@ class PirateFace:
         self._server_errors = 0
 
     def _guard(self) -> None:
+        global _pf_last
         if self._server_errors >= SERVER_ERRORS_BEFORE_BACKOFF:
             raise FetchError(self.base, None, "Pirate Face is having trouble; no more requests until the next refresh")
+        with _pf_lock:
+            now = time.time()
+            if now < _pf_not_before:
+                raise FetchError(self.base, 429, f"Pirate Face asked for a pause; no requests for "
+                                                 f"{_pf_not_before - now:.0f} s more")
+            wait = _pf_last + PF_MIN_GAP - now
+            if wait > 0:
+                time.sleep(wait)
+            _pf_last = time.time()
 
     def _note(self, e: FetchError) -> None:
+        global _pf_not_before
         if e.status is None or e.status == 429 or e.status >= 500:
             self._server_errors += 1
+        if e.status in (429, 503):
+            wait = min(PF_WAIT_MAX, e.retry_after if e.retry_after is not None else PF_WAIT_DEFAULT)
+            with _pf_lock:
+                _pf_not_before = max(_pf_not_before, time.time() + wait)
 
     def _get(self, path: str, **params):
         self._guard()

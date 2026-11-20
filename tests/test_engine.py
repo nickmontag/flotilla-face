@@ -476,7 +476,7 @@ def test_reorienting_follows_the_schedule_and_the_churn_size(tmp_path):
 
     from .fakes import FakeHF, FakePF, FakeRepo, make_repo
 
-    low = FakeRepo("org/low", make_repo(4, seed=1), seeders=9)       # well covered
+    low = FakeRepo("org/low", make_repo(4, seed=1), seeders=2)       # well covered, just under the target of 3 (a spare copy would go by draw)
     need = FakeRepo("org/need", make_repo(4, seed=2), seeders=0)     # no copy anywhere
     cfg = Config()
     cfg.folder, cfg.listen_port, cfg.reserve_gb = tmp_path / "seeds", 0, 0
@@ -492,7 +492,8 @@ def test_reorienting_follows_the_schedule_and_the_churn_size(tmp_path):
 
     eng.replan([cand(low)], [], probe_seconds=0)                     # a new node fills its space
     assert (held(low), held(need)) == (4, 0)
-    assert ro["last"] and "result" not in ro and eng.reorient_at() == ro["last"] + 7 * 86400
+    assert ro["last"] and "result" not in ro and eng.reorient_at() == ro["last"] + 7 * 86400 * eng._reorient_stretch()
+    assert 0.9 <= eng._reorient_stretch() <= 1.1                    # each node's own period, so nodes drift apart
 
     eng.replan([cand(low), cand(need)], [], probe_seconds=0)         # needier pieces turn up: not due yet
     assert (held(low), held(need)) == (4, 0)
@@ -532,7 +533,7 @@ def test_next_look_at_the_swarm_comes_in_time_for_a_reorientation(tmp_path):
     now = time.time()
     assert eng._next_refresh_at() > now + 4 * 3600                   # no plan yet: the usual six hours or so
     cfg.reorient = "daily"
-    eng.state.data["reorient"]["last"] = now - 86400 + 600           # due in ten minutes
+    eng.state.data["reorient"]["last"] = now - 86400 * eng._reorient_stretch() + 600   # due in ten minutes
     assert now + 590 < eng._next_refresh_at() < now + 610
     assert not eng.reorient_due(now) and eng.reorient_due(now + 601)
     eng.state.data["reorient"]["last"] = now - 3 * 86400             # overdue: the look starting now handles it

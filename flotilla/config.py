@@ -62,7 +62,7 @@ class Config:
     # it swaps each time. Between reorientations what it holds stays; free space is still filled, and
     # your own changes (a model you add, skip or set space aside for) still apply at once. Pieces of
     # models you added or set space aside for are never swapped out.
-    reorient: str = "weekly"
+    reorient: str = "daily"
     focus: str = "at-risk"
     churn_gb: float = 20.0
 

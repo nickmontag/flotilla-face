@@ -226,8 +226,11 @@ already hold shifts at the next reorientation.
 What the swarm needs changes: new models are listed, peers come and go, a Hugging Face original
 disappears. You choose how often your part of the swarm follows, and how much of it moves each time:
 
-- **How often**: every day, every week (the default), every month, or never.
-- **Churn size**: the most to swap each time, in GB (20 by default).
+- **How often**: every day (the default), every week, every month, or never. Daily lets the fleet even
+  out quickly: when many nodes start at once, each fills its disk before it can see what the others
+  are fetching, and the overlap goes at the next reorientation.
+- **Churn size**: the most to swap each time, in GB (20 by default). The first swap may be bigger,
+  so a file bigger than the churn size can still come in.
 
 When a reorientation is due, Flotilla looks at the swarm, drops up to your churn size of the
 lowest-priority pieces you hold, and fetches the pieces at the top of the swarm's list in their place.
@@ -235,8 +238,10 @@ The dashboard's settings (the gear button) show both ends ahead of time under **
 would go out, what would come in, and when. **Reorient now**, there too, does one right away.
 
 - Models you added yourself, or set space aside for, are never swapped out.
-- A piece stays at least a week after it's picked (`min_hold_days`) once it has started arriving, and a
-  download nobody can send (no peer has it, and Hugging Face won't serve it to you) is the first to go.
+- A piece stays at least a week after it's picked (`min_hold_days`) once it has started arriving, unless
+  enough others already have it. Then each holder's own random draw decides whether it keeps its copy,
+  so about the target number stay and the holders never all drop it at once. A download nobody can
+  send (no peer has it, and Hugging Face won't serve it to you) is the first to go.
   A swap has to be clearly better, so nothing is fetched twice over a small difference.
 - With **never**, what you hold stays until you change it or press Reorient now.
 - Between reorientations Flotilla still fills free space, and your own changes still apply at once:
@@ -300,7 +305,10 @@ What Flotilla does with it:
 ## Safety
 
 - **Only talks to `pirateface.co` and `huggingface.co`** over HTTPS, plus Hugging Face's download
-  servers (`hf.co`) for [pieces no peer has](#when-no-peer-has-a-piece). Redirects are re-checked, so
+  servers (`hf.co`) for [pieces no peer has](#when-no-peer-has-a-piece), and GitHub for the signed
+  priority list and the daily check for a new release. Trackers are BitTorrent's own: plain HTTP or UDP,
+  so your account's tracker address (if you connect one) crosses the network unencrypted, inside your
+  VPN if Flotilla is pinned to one. Redirects are re-checked, so
   none of them can bounce it somewhere else. A node bound to a VPN also asks the VPN, inside the tunnel,
   which port it forwards (NAT-PMP to its private gateway address, or gluetun on `127.0.0.1`).
 - **Only joins torrents on Pirate Face's tracker.** A torrent whose web seeds point anywhere but Pirate
@@ -503,7 +511,13 @@ ever reaches it, Docker restarts it and it picks up where it left off.
 
 Pirate Face gives points for seeding: 1 point per 3 hours of seeding a 10 GB model, faster for bigger
 ones (×√(GB/10)), plus points for other kinds of help. Points go to an account's handle, and Pirate Face
-counts them through a tracker of each account's own. Flotilla can earn them for you:
+counts them through a tracker of each account's own.
+
+**Points are for complete copies.** Pirate Face credits seeding only while you hold a whole torrent.
+Most of what Flotilla holds is shards of big models, which is what the swarm needs most but earns no
+points; small models it holds whole, every file, do earn them. Whether the per-file swarms below count
+is up to Pirate Face. So connect an account if you like, but run Flotilla for the swarm, not the points.
+Flotilla can announce to your account for you:
 
 ```bash
 flotilla points connect
@@ -552,7 +566,7 @@ Its uploads count in your history and monthly cap like any other. Older torrents
 per-file swarms. Set `per_file_swarms = false` under `[pirateface]` in the config to turn it off.
 
 Flotilla also keeps its own record of seed-hours per model, and the dashboard shows an estimate with the
-formula above. That's Flotilla's count; Pirate Face keeps the real one. Seeding the magnet index counts
+formula above, counting only models held whole. That's Flotilla's count; Pirate Face keeps the real one. Seeding the magnet index counts
 too, with an account connected.
 
 **Other ways to help.** Pirate Face's own CLI has a job Flotilla doesn't do: `pf work` takes models from

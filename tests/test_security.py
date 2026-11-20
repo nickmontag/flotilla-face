@@ -397,11 +397,14 @@ def test_torrent_cache_and_backoff(tmp_path, monkeypatch):
     (tmp_path / "torrents" / f"{r.infohash}.torrent").write_bytes(b"tampered")
     assert pf.torrent_file(r.infohash) == r.raw and len(calls) == 2          # bad cache entry refetched
 
-    def failing(url, **kw):
-        calls.append(url)
-        raise netsafe.FetchError(url, 503, "HTTP 503")
+    def failing(status, retry_after=None):
+        def f(url, **kw):
+            calls.append(url)
+            raise netsafe.FetchError(url, status, f"HTTP {status}", retry_after)
+        return f
 
-    monkeypatch.setattr(sources, "fetch_json", failing)
+    # three server errors in a row: no more requests for the rest of this refresh
+    monkeypatch.setattr(sources, "fetch_json", failing(500))
     for _ in range(3):
         with pytest.raises(netsafe.FetchError):
             pf.torrent("x/y")
@@ -409,3 +412,14 @@ def test_torrent_cache_and_backoff(tmp_path, monkeypatch):
     with pytest.raises(netsafe.FetchError, match="no more requests"):
         pf.torrent("x/y")
     assert len(calls) == n                                                    # backed off: no request sent
+
+    # a 429 or 503 pauses every client in this process for as long as Retry-After says
+    monkeypatch.setattr(sources, "fetch_json", failing(429, retry_after=120))
+    fresh = sources.PirateFace(("pirateface.co",), cache_dir=tmp_path)
+    with pytest.raises(netsafe.FetchError, match="HTTP 429"):
+        fresh.torrent("x/y")
+    n = len(calls)
+    again = sources.PirateFace(("pirateface.co",), cache_dir=tmp_path)     # the next refresh's client too
+    with pytest.raises(netsafe.FetchError, match="asked for a pause"):
+        again.torrent("x/y")
+    assert len(calls) == n and 110 < sources._pf_not_before - __import__("time").time() <= 120

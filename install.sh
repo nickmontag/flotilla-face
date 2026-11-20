@@ -100,8 +100,8 @@ else
       what="Flotilla ${tag#v}, the newest release"
       ;;
     *)
-      PACKAGE="flotilla-face @ https://github.com/$REPO/archive/main.tar.gz"
-      what="Flotilla from github.com/$REPO (main: couldn't find a release)"
+      # Never fall back to main: it isn't signed or released, and may be mid-change.
+      die "couldn't find the newest release on github.com/$REPO (check your connection and try again; FLOTILLA_REF=main installs main on purpose)"
       ;;
   esac
 fi

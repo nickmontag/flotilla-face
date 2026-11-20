@@ -711,3 +711,68 @@ def test_a_file_swapped_out_lately_isnt_picked_again():
     held_shards(c, first, avail=0)                            # held files aren't affected by it
     p = plan([c], shards(6, spread=10, cooling=cooling), "node-a")
     assert weights(p, c) == first
+
+
+def test_hf_remembers_a_gone_repo_for_a_day(tmp_path, monkeypatch):
+    """A 404 tree or license, or a repo with no license, isn't asked about again on every refresh."""
+    import time as _time
+
+    from flotilla import netsafe, sources
+
+    asked = []
+
+    def gone(url, **kw):
+        asked.append(url)
+        raise netsafe.FetchError(url, 404, "not found")
+
+    monkeypatch.setattr(sources, "fetch", gone)
+    monkeypatch.setattr(sources, "fetch_json", gone)
+    hf = sources.HuggingFace(("huggingface.co",), tmp_path)
+    rev = "c" * 40
+    for _ in range(3):
+        assert hf.tree("x/y", rev) is None and hf.tree("x/y", "main") is None and hf.license("x/y") is None
+    assert len(asked) == 3                       # one each: the tree at rev, main's, and the license
+
+    now = _time.time()
+    monkeypatch.setattr(sources.time, "time", lambda: now + sources.HuggingFace.MISSING_TTL + 1)
+    assert hf.tree("x/y", rev) is None and hf.license("x/y") is None
+    assert len(asked) == 5                       # a day later, asked again
+
+
+def test_hf_doesnt_remember_an_unreachable_answer(tmp_path, monkeypatch):
+    from flotilla import netsafe, sources
+
+    asked = []
+
+    def busy(url, **kw):
+        asked.append(url)
+        raise netsafe.FetchError(url, 503, "busy")
+
+    monkeypatch.setattr(sources, "fetch_json", busy)
+    hf = sources.HuggingFace(("huggingface.co",), tmp_path)
+    assert hf.license("x/y") is None and hf.license("x/y") is None
+    assert len(asked) == 2
+
+
+def test_hf_keeps_mains_tree_for_an_hour(tmp_path, monkeypatch):
+    import json as _json
+    import os as _os
+
+    from flotilla import netsafe, sources
+
+    asked = []
+    page = [{"type": "file", "path": "config.json", "size": 10, "oid": "a" * 40}]
+
+    def serve(url, **kw):
+        asked.append(url)
+        return netsafe.Response(url, 200, {}, _json.dumps(page).encode())
+
+    monkeypatch.setattr(sources, "fetch", serve)
+    hf = sources.HuggingFace(("huggingface.co",), tmp_path)
+    assert "config.json" in hf.tree("x/y", "main") and "config.json" in hf.tree("x/y", "main")
+    assert len(asked) == 1
+    cached = tmp_path / "hf-trees" / "x__y@main.json"
+    old = cached.stat().st_mtime - sources.HuggingFace.BRANCH_TTL - 1
+    _os.utime(cached, (old, old))
+    assert "config.json" in hf.tree("x/y", "main")
+    assert len(asked) == 2

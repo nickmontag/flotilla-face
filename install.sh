@@ -141,6 +141,13 @@ if [ "$where" = docker ]; then
   say "  The dashboard's address is above; ${B}docker logs flotilla-dashboard${R} shows it again."
   exit 0
 fi
+if [ "$where" = not-started ]; then
+  # Setup found no VPN to pin to and the answer to seeding from this connection's own IP was no.
+  say ""
+  ok "Installed and set up, not started: nothing runs until you start it."
+  say "  Once a VPN is connected, ${B}flotilla init${R} pins Flotilla to it; ${B}flotilla service install${R} starts it."
+  exit 0
+fi
 say ""
 say "${B}Run in the background${R}"
 printf '%s' "  ${C}?${R} Run Flotilla now and every time you log in ${D}(Y/n)${R}: "

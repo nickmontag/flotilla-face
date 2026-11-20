@@ -108,6 +108,11 @@ The installer sets up Flotilla in its own isolated environment (no sudo) and ask
 
 Then it offers to run Flotilla in the background, starting at every login. That's it.
 
+**Without a VPN, peers see your home IP address.** Every peer in every swarm Flotilla joins sees the
+address it seeds from. If setup finds no VPN to pin Flotilla to, it asks whether to seed from your
+connection's own address, and the answer defaults to no: your settings are saved, but nothing starts
+until you run `flotilla service install` (or connect a VPN and run `flotilla init` again).
+
 Open the dashboard any time:
 
 ```bash

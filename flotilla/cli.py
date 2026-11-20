@@ -172,6 +172,15 @@ def cmd_init(args) -> int:
         else:
             ui.note("If your VPN forwards a port (gluetun, ProtonVPN, PIA's app), Flotilla finds it and listens on "
                     "it, so peers can connect in.")
+    home_ip_ok = True
+    if not bind and not docker:    # (in a VPN container's network, every connection goes through its VPN)
+        ui.note("Without a VPN pin, every peer in every swarm Flotilla joins sees this connection's public IP "
+                "address" + (" whenever the VPN is down" if route and route.looks_like_vpn else "")
+                + ". At home that's your household's address, listed as seeding these models. Your settings "
+                "are saved either way; with no, Flotilla doesn't start until you start it.")
+        home_ip_ok = _yes("Seed from this connection's public IP address", False)
+        if not home_ip_ok:
+            ui.info("Flotilla won't start now. To seed through a VPN, connect it and run `flotilla init` again")
     if not bind:
         ui.note("Opening a port on your router (UPnP/NAT-PMP) lets peers reach you, so you seed more. Skip it "
                 "if you've turned UPnP off on your router.")
@@ -231,7 +240,7 @@ def cmd_init(args) -> int:
 
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_config(cfg))
-    _setup_result("here")
+    _setup_result("here" if home_ip_ok else "not-started")
     print()
     ui.done(f"Saved {_host_path(path, docker)}")
     fill = duration(budget * GB / cfg.download_bps)
@@ -257,6 +266,13 @@ def cmd_init(args) -> int:
 
         ui.caution(PUBLIC_WARNING[0].upper() + PUBLIC_WARNING[1:])
     if docker:     # the host starts the seeding and dashboard containers next
+        return 0
+    if not home_ip_ok:
+        print()
+        ui.caution("Not started: you chose not to seed from this connection's public IP address.")
+        ui.table([("flotilla init", "set up again once a VPN is connected, to pin Flotilla to it"),
+                  ("flotilla service install", "seed from this address after all, now and at every login")],
+                 key_style=str, value_style=ui.dim)
         return 0
     print(f"\n{ui.bold('Next')}")
     ui.table([("flotilla plan", "preview what this node would seed"),
@@ -348,8 +364,9 @@ def _host_path(p: Path, docker: dict | None) -> str:
 
 
 def _setup_result(where: str) -> None:
-    """Tell install.sh where setup put Flotilla: "here" (run it as a service) or "docker" (the
-    containers run themselves). It passes a file to write that to."""
+    """Tell install.sh where setup put Flotilla: "here" (run it as a service), "docker" (the
+    containers run themselves) or "not-started" (no VPN pin, and seeding from this connection's
+    own IP address was declined: don't start it). It passes a file to write that to."""
     import os
 
     target = os.environ.get("FLOTILLA_SETUP_RESULT")

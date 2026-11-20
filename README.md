@@ -100,13 +100,30 @@ Raspberry Pi):
 curl -fsSL https://raw.githubusercontent.com/nickmontag/flotilla-face/main/install.sh | sh
 ```
 
-The installer sets up Flotilla in its own isolated environment (no sudo) and asks a few questions:
+The installer sets up Flotilla in its own isolated environment (no sudo), then `flotilla init` asks
+its questions in eight short sections. Enter keeps each default, and you can change any answer later
+in the dashboard or by running `flotilla init` again.
 
-- **How much space to give it**, and how much to always keep free on that drive. On a Mac, a seed
-  folder setup creates is left out of Time Machine backups (`tmutil addexclusion`): the models can
-  be downloaded again, and would crowd out backups that matter.
-- **Your upload and download speed**, and how much of each to share.
-- **Whether to pin its traffic to your VPN**, if you're on one. It detects this for you.
+1. **Storage**: the folder for seeded files, how much space to give Flotilla, and how much to always
+   keep free on that drive. On a Mac, a seed folder setup creates is left out of Time Machine backups
+   (`tmutil addexclusion`): the models can be downloaded again, and would crowd out backups that
+   matter.
+2. **Bandwidth**: your upload and download speeds, how much of each to share, your internet plan's
+   monthly data cap if it has one, and a monthly upload cap (it suggests 40% of the plan's cap).
+3. **What to seed**: at-risk models first, in-demand ones, or both; how often Flotilla
+   [reorients](#reorienting) (daily by default) and the most it swaps each time.
+4. **Network**: whether to pin its traffic to your VPN (it detects one for you), whether to seed from
+   your own IP address if there's no VPN, and whether to open a port on your router.
+5. **Pieces no peer has**: whether to fetch those from Hugging Face, up to how many GB a day, and
+   whether to connect a Hugging Face account for gated models.
+6. **Dashboard**: who can reach it: this machine only, your home network, your Tailscale devices or,
+   typed out on purpose, anyone.
+7. **Pirate Face points**: paste your Pirate Face seeding tracker address or key to earn points, or
+   press Enter to skip.
+8. **Licenses**: whether to seed models under every license Flotilla allows.
+
+If a VPN container such as gluetun runs on the machine, setup first offers to put Flotilla inside its
+network instead (see [Behind gluetun](#behind-gluetun-docker)).
 
 Then it offers to run Flotilla in the background, starting at every login. That's it.
 

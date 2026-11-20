@@ -273,3 +273,18 @@ def test_a_failed_linger_is_reported(tmp_path, monkeypatch):
     assert service.execute(plan, dry_run=False, say=out.append) is True     # it runs, just not logged out
     warning = next(line for line in out if "couldn't turn on lingering" in line)
     assert "Access denied" in warning and "sudo loginctl enable-linger sam" in warning
+
+
+def test_readme_lists_setups_sections():
+    """README's Get started names every section `flotilla init` asks, in order."""
+    import re
+
+    from flotilla import cli
+
+    root = Path(cli.__file__).parent.parent
+    asked = re.findall(r'ui\.section\((\d+), SETUP_STEPS, "([^"]+)"\)', (root / "flotilla" / "cli.py").read_text())
+    assert len(asked) == cli.SETUP_STEPS
+    readme = (root / "README.md").read_text()
+    get_started = readme[readme.index("## Get started"):readme.index("## Choose models yourself")]
+    listed = re.findall(r"^(\d+)\. \*\*([^*]+)\*\*", get_started, re.M)
+    assert listed == asked

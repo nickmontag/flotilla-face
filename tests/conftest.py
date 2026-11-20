@@ -35,6 +35,7 @@ def _no_host_vpn_lookups(monkeypatch):
     from flotilla import access, cli, containers, netinfo, netsafe
 
     monkeypatch.setattr(cli, "_vpn_containers", lambda: [])
+    monkeypatch.setattr(cli, "_tmutil", lambda folder: (True, ""))  # never the Mac's real Time Machine settings
     monkeypatch.setattr(cli, "_split_vpns", lambda route: [])
     monkeypatch.setattr(netinfo, "lan_address", lambda: None)
     monkeypatch.setattr(access, "tailscale_name", lambda: None)

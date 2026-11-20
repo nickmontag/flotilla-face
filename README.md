@@ -102,7 +102,9 @@ curl -fsSL https://raw.githubusercontent.com/nickmontag/flotilla-face/main/insta
 
 The installer sets up Flotilla in its own isolated environment (no sudo) and asks a few questions:
 
-- **How much space to give it**, and how much to always keep free on that drive.
+- **How much space to give it**, and how much to always keep free on that drive. On a Mac, a seed
+  folder setup creates is left out of Time Machine backups (`tmutil addexclusion`): the models can
+  be downloaded again, and would crowd out backups that matter.
 - **Your upload and download speed**, and how much of each to share.
 - **Whether to pin its traffic to your VPN**, if you're on one. It detects this for you.
 

@@ -93,7 +93,10 @@ def cmd_init(args) -> int:
         ui.info(f"seeded files go in {_host_path(folder, docker)}")
     else:
         folder = Path(_ask("Folder for seeded files", str(cfg.folder))).expanduser()
+    created = not folder.exists()
     folder.mkdir(parents=True, exist_ok=True)
+    if created and not docker and sys.platform == "darwin":
+        _exclude_from_time_machine(folder)
     du = shutil.disk_usage(folder)
     ui.info(f"that drive has {human(du.free)} free of {human(du.total)}")
     suggested = max(10.0, round((du.free / GB - cfg.reserve_gb) * 0.5))
@@ -281,6 +284,28 @@ def cmd_init(args) -> int:
                + ("" if access == "local" else "; `flotilla dashboard --url` prints its address with the key"))],
              key_style=str, value_style=ui.dim)
     return 0
+
+
+def _exclude_from_time_machine(folder: Path) -> None:
+    """Keep a seed folder setup just made out of Time Machine: hundreds of GB of models, which can
+    be downloaded again, would crowd out the backups that matter."""
+    ok, why = _tmutil(folder)
+    if ok:
+        ui.info("left out of Time Machine backups (the models can always be downloaded again)")
+    else:
+        ui.caution(f"couldn't leave it out of Time Machine backups ({why}). To do it yourself: "
+                   f"tmutil addexclusion {folder}")
+
+
+def _tmutil(folder: Path) -> tuple[bool, str]:
+    """`tmutil addexclusion`: a sticky exclusion, kept on the folder itself, no sudo needed."""
+    import subprocess
+
+    try:
+        r = subprocess.run(["tmutil", "addexclusion", str(folder)], capture_output=True, text=True, timeout=30)
+    except (OSError, subprocess.SubprocessError) as e:
+        return False, str(e)
+    return r.returncode == 0, (r.stderr or r.stdout).strip() or f"exit status {r.returncode}"
 
 
 def _describe_access(access: str) -> str:

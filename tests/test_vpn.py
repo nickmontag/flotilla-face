@@ -362,3 +362,29 @@ def test_dashboard_address_waits_for_the_key_and_fills_in_the_lan_address(monkey
 def test_dashboard_address_gives_up(monkeypatch):
     monkeypatch.setattr(containers, "_docker", lambda *a: subprocess.CompletedProcess(a, 0, "Installing...\n", ""))
     assert containers.dashboard_address(timeout=0) is None
+
+
+def test_setup_leaves_a_new_seed_folder_out_of_time_machine(tmp_path, monkeypatch, capsys):
+    _no_licenses(monkeypatch)
+    monkeypatch.setattr(netinfo, "internet_route", lambda: netinfo.Route("tun0", "10.8.0.2"))
+    monkeypatch.setattr(cli.sys, "platform", "darwin")
+    excluded = []
+    monkeypatch.setattr(cli, "_tmutil", lambda folder: excluded.append(folder) or (True, ""))
+    _answers(monkeypatch, [("Folder", str(tmp_path / "seeds"))])
+    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 0
+    assert excluded == [tmp_path / "seeds"]
+    assert "left out of Time Machine backups" in capsys.readouterr().out
+
+    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 0   # it exists now: yours
+    assert excluded == [tmp_path / "seeds"]
+
+    monkeypatch.setattr(cli, "_tmutil", lambda folder: (False, "tmutil: permission denied"))
+    _answers(monkeypatch, [("Folder", str(tmp_path / "other"))])
+    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 0
+    assert f"tmutil addexclusion {tmp_path / 'other'}" in capsys.readouterr().out
+
+    monkeypatch.setattr(cli.sys, "platform", "linux")
+    monkeypatch.setattr(cli, "_tmutil", lambda folder: excluded.append(folder) or (True, ""))
+    _answers(monkeypatch, [("Folder", str(tmp_path / "linux"))])
+    assert cli.cmd_init(argparse.Namespace(config=str(tmp_path / "c.toml"))) == 0
+    assert excluded == [tmp_path / "seeds"]

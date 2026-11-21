@@ -411,3 +411,154 @@ def test_update_finds_a_recreated_vpn_container_by_its_name(monkeypatch):
     cmd = containers.run_args(old, "img")
     assert cmd[cmd.index("--network") + 1] == "container:gluetun_seed"
     assert f"{containers.VPN_LABEL}=gluetun_seed" in cmd          # kept for the next time
+
+
+# ---------------------------------------------------------------- gluetun with no port: off, or a request that failed
+
+
+@pytest.mark.parametrize("provider,had,says,not_says", [
+    ("protonvpn", 0, "or it does and its request to ProtonVPN for a port failed", "forwarded port"),
+    ("protonvpn", 43182, "gluetun forwarded port 43182 before and has none now", "VPN_PORT_FORWARDING"),
+    ("", 0, "VPN_PORT_FORWARDING=on; with both, gluetun's request for a port failed", "forwarded port"),
+])
+def test_gluetun_with_no_port_doesnt_just_say_turn_forwarding_on(monkeypatch, provider, had, says, not_says):
+    srv, base = _control_server({"/v1/portforward": {"port": 0}})
+    monkeypatch.setattr(vpnport.gluetun_port, "__defaults__", ("", base, 3.0))
+    f = _finder(monkeypatch)
+    f.gluetun, f.provider, f.had = True, provider, had
+    fw = f.find(6881)
+    assert fw.port == 0 and says in fw.note and not_says not in fw.note
+    assert 'look for "port forwarding" in `docker logs`' in fw.note       # where to find out which
+    srv.shutdown()
+
+
+class _PortMemory:
+    from flotilla.engine import Engine as _E
+    _vpn_port_memory, _track_vpn_port, vpn_port_view, _recover_vpn_port = (
+        _E._vpn_port_memory, _E._track_vpn_port, _E.vpn_port_view, _E._recover_vpn_port)
+
+    def __init__(self, data=None, recover=False):
+        self.state, self.logs, self.vpn_forward = SimpleNamespace(data=data if data is not None else {}), [], None
+        self.cfg = Config(vpn_port_recover=recover)
+        self.log = self.logs.append
+
+
+def test_a_forwarded_port_that_goes_away_is_lost_until_one_comes_back():
+    e = _PortMemory()
+    mem = e._vpn_port_memory("tun0|protonvpn")
+    e.vpn_forward = vpnport.Forward(note="never had one")
+    e._track_vpn_port(mem, e.vpn_forward, 100.0)
+    assert "lost" not in e.vpn_port_view() and not e.logs        # a VPN that never forwarded: no alarm
+    e.vpn_forward = vpnport.Forward(43182, "gluetun")
+    e._track_vpn_port(mem, e.vpn_forward, 200.0)
+    e.vpn_forward = vpnport.Forward(note="gluetun forwarded port 43182 before and has none now")
+    e._track_vpn_port(mem, e.vpn_forward, 300.0)
+    e._track_vpn_port(mem, e.vpn_forward, 600.0)                  # still gone: said once, since stays put
+    assert e.vpn_port_view()["lost"] == {"port": 43182, "since": 300.0, "recover": False, "tries": 0, "last_try": None}
+    assert sum("LOST" in m for m in e.logs) == 1
+    e.vpn_forward = vpnport.Forward(34880, "gluetun")
+    e._track_vpn_port(mem, e.vpn_forward, 900.0)
+    assert "lost" not in e.vpn_port_view() and mem["port"] == 34880 and "forwarded again" in e.logs[-1]
+
+
+def test_a_lost_port_is_remembered_across_runs_but_not_for_another_vpn():
+    data = {"vpn_port": {"vpn": "tun0|protonvpn", "port": 43182, "seen": 200.0, "lost": 300.0}}
+    e = _PortMemory(data)
+    assert e._vpn_port_memory("tun0|protonvpn")["lost"] == 300.0
+    e.vpn_forward = vpnport.Forward(note="none")
+    assert e.vpn_port_view()["lost"]["port"] == 43182
+    assert e._vpn_port_memory("tun0|nordvpn") == {"vpn": "tun0|nordvpn", "port": 0, "seen": 0.0, "lost": 0.0}
+    assert "lost" not in e.vpn_port_view()
+
+
+# ---------------------------------------------------------------- vpn_port_recover: have gluetun reconnect
+
+
+def _gluetun_puts(routes: set, need_key: str | None = None):
+    """A control server taking PUT {"status": ...} on `routes`; `.puts` lists (path, status)."""
+    puts = []
+
+    class H(BaseHTTPRequestHandler):
+        def do_PUT(self):
+            body = json.loads(self.rfile.read(int(self.headers["Content-Length"])))
+            if need_key is not None and (self.headers.get("X-API-Key") != need_key or self.path not in routes):
+                self.send_response(401)
+            elif self.path not in routes:
+                self.send_response(404)
+            else:
+                puts.append((self.path, body["status"]))
+                self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b'{"outcome":"ok"}')
+
+        def log_message(self, *a):
+            pass
+
+    srv = HTTPServer(("127.0.0.1", 0), H)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return srv, f"http://127.0.0.1:{srv.server_address[1]}", puts
+
+
+def test_gluetun_restart_stops_then_runs_the_vpn():
+    srv, base, puts = _gluetun_puts({"/v1/vpn/status"}, need_key="k")
+    vpnport.gluetun_restart_vpn("k", base=base)
+    assert puts == [("/v1/vpn/status", "stopped"), ("/v1/vpn/status", "running")]
+    srv.shutdown()
+
+
+def test_gluetun_restart_on_an_older_gluetun_uses_openvpns_route():
+    srv, base, puts = _gluetun_puts({"/v1/openvpn/status"})
+    vpnport.gluetun_restart_vpn("", base=base)
+    assert puts == [("/v1/openvpn/status", "stopped"), ("/v1/openvpn/status", "running")]
+    srv.shutdown()
+
+
+def test_gluetun_restart_refused_without_the_route():
+    srv, base, puts = _gluetun_puts(set(), need_key="k")
+    with pytest.raises(vpnport.GluetunAuth, match="PUT /v1/vpn/status"):
+        vpnport.gluetun_restart_vpn("k", base=base)
+    assert puts == []
+    srv.shutdown()
+
+
+def test_recovery_backs_off_and_resets_when_a_port_comes_back(monkeypatch):
+    from flotilla import engine
+
+    asked = []
+    monkeypatch.setattr(engine, "gluetun_restart_vpn", lambda auth: asked.append(auth))
+    e = _PortMemory(recover=True)
+    mem = e._vpn_port_memory("tun0|protonvpn")
+    e._track_vpn_port(mem, vpnport.Forward(43182, "gluetun"), 0.0)
+    e.vpn_forward = vpnport.Forward(note="gone")
+    e._track_vpn_port(mem, e.vpn_forward, 100.0)
+    assert e._recover_vpn_port(mem, "k", 1000.0) and asked == ["k"]
+    assert mem["next_try"] == 1000.0 + 3600
+    e._recover_vpn_port(mem, "k", 5000.0)
+    assert mem["next_try"] == 5000.0 + 7200 and mem["tries"] == 2
+    for t in range(3, 9):
+        e._recover_vpn_port(mem, "k", 10_000.0 * t)
+    assert mem["next_try"] - 80_000.0 == 86400            # never more than a day apart
+    lost = e.vpn_port_view()["lost"]
+    assert (lost["tries"], lost["last_try"], lost["recover"]) == (8, 80_000.0, True)
+    e._track_vpn_port(mem, vpnport.Forward(34880, "gluetun"), 90_000.0)
+    assert (mem["tries"], mem["next_try"]) == (0, 0.0)
+
+
+def test_recovery_refused_says_which_route_to_allow(monkeypatch):
+    from flotilla import engine
+
+    def refuse(auth):
+        raise vpnport.GluetunAuth("401")
+
+    monkeypatch.setattr(engine, "gluetun_restart_vpn", refuse)
+    e = _PortMemory(recover=True)
+    mem = e._vpn_port_memory("tun0|protonvpn")
+    assert not e._recover_vpn_port(mem, "k", 1000.0)
+    assert "PUT /v1/vpn/status" in e.logs[-1] and mem["next_try"] == 1000.0 + 3600
+
+
+def test_recover_is_off_by_default_and_a_dashboard_switch():
+    from flotilla.engine import Engine
+
+    assert Config().vpn_port_recover is False
+    assert "vpn_port_recover" in Engine.SWITCHES

@@ -1354,6 +1354,10 @@ def cmd_status(args) -> int:
     fwd, reach = doc.get("vpn_port"), doc.get("reach") or {}
     if fwd and fwd.get("port"):
         print(f"inbound: {fwd['source']} forwards port {fwd['port']}: peers can connect in")
+    elif fwd and fwd.get("lost"):
+        mins = max(0, time.time() - fwd["lost"]["since"]) / 60
+        ago = f"{mins:.0f} min" if mins < 120 else f"{mins / 60:.1f} h"
+        print(f"inbound: LOST port {fwd['lost']['port']} {ago} ago, so peers can't connect in: {fwd['note']}")
     elif fwd:
         print(f"inbound: no port forwarded: {fwd['note']}")
     if reach:

@@ -83,6 +83,11 @@ class Config:
     # number, for a VPN client that writes one.
     vpn_port_forwarding: bool = True
     vpn_port_file: str = ""
+    # In gluetun's network: when the port it forwarded has been gone 10 minutes, have gluetun reconnect
+    # its VPN so it asks for a port again (after a failed request it never does by itself). Each try
+    # cuts every container sharing gluetun's network for a few seconds; tries back off from an hour to
+    # a day. Needs PUT /v1/vpn/status in the role Flotilla's gluetun key has. Off unless turned on.
+    vpn_port_recover: bool = False
     # Pin all torrent traffic to one interface or address, e.g. a VPN's
     # (e.g. "10.8.0.2" or "wg0"). If the VPN drops, the address
     # vanishes and the seeder goes offline instead of using your real IP.
@@ -161,7 +166,7 @@ _SECTIONS = {
     "reorient": ["every", "churn_gb"],
     "network": ["upload_mbps", "download_mbps", "upload_share", "download_share", "monthly_upload_cap_gb",
                 "memory_gb", "listen_port", "port_forwarding", "vpn_port_forwarding", "vpn_port_file",
-                "bind_interface", "hf_fallback", "hf_gb_per_day"],
+                "vpn_port_recover", "bind_interface", "hf_fallback", "hf_gb_per_day"],
     "policy": ["focus", "licenses", "include_unlisted", "include_rescue", "seed_code_files", "allow_pickle",
                "whole_model_under_gb", "max_candidates"],
     "feed": ["urls", "trusted_keys", "allowed_hosts", "local"],
@@ -216,6 +221,8 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
         raise ValueError(f"reorient.every must be one of: {', '.join(REORIENT_CHOICES)}")
     if not isinstance(cfg.vpn_port_forwarding, bool):
         raise ValueError("network.vpn_port_forwarding must be true or false")
+    if not isinstance(cfg.vpn_port_recover, bool):
+        raise ValueError("network.vpn_port_recover must be true or false")
     if not isinstance(cfg.vpn_port_file, str):
         raise ValueError("network.vpn_port_file must be a path, or \"\"")
     if isinstance(cfg.churn_gb, bool) or not isinstance(cfg.churn_gb, (int, float)) or cfg.churn_gb < 0:
@@ -266,6 +273,7 @@ listen_port = {_toml_str(cfg.listen_port)}
 port_forwarding = {_toml_str(cfg.port_forwarding)}   # UPnP/NAT-PMP on your router
 vpn_port_forwarding = {_toml_str(cfg.vpn_port_forwarding)}   # bound to a VPN: find the port it forwards and listen on it
 vpn_port_file = {_toml_str(cfg.vpn_port_file)}      # or read that port from this file; "" = don't
+vpn_port_recover = {_toml_str(cfg.vpn_port_recover)}   # gluetun: reconnect its VPN when the forwarded port is lost
 bind_interface = {_toml_str(cfg.bind_interface)}      # e.g. your VPN's address; "" = any interface
 hf_fallback = {_toml_str(cfg.hf_fallback)}       # fetch pieces no peer has from Hugging Face (checked against the torrent)
 hf_gb_per_day = {_toml_str(cfg.hf_gb_per_day)}        # most to fetch from Hugging Face a day; 0 = no limit

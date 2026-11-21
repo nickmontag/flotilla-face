@@ -444,6 +444,17 @@ wanted a key for its control server since v3.40: give it one with
 to Flotilla's container. (ProtonVPN in gluetun works without one: Flotilla asks Proton itself.) Set
 `vpn_port_forwarding = false` to keep `listen_port` as it is.
 
+A forwarded port can go away: gluetun asks for one each time its VPN connects, and if that one request
+fails (a server that refuses, often after a reconnect), it doesn't ask again until the VPN reconnects
+for another reason. Flotilla remembers the port it had, so a lost one shows as a warning: an amber
+"inbound port lost" VPN badge on the dashboard and a `LOST` line in `flotilla status`. A VPN that never
+forwarded a port gets no warning. With `vpn_port_recover = true` (`[network]`, or the dashboard's
+Bandwidth settings; off unless you turn it on), Flotilla has gluetun reconnect its VPN once the port
+has been gone for 10 minutes, then again after an hour, two, four and so on, never more than a day
+apart, until a port comes back. Each try takes everything sharing gluetun's network offline for a few
+seconds. If gluetun's control server has an auth `config.toml`, the role holding Flotilla's key needs
+`"PUT /v1/vpn/status"` in its `routes`.
+
 With no port forwarded, Flotilla makes up for it. It notices that no peer has connected in for three
 days (`flotilla status` and the dashboard count peers that connected in and peers it dialed), then
 dials more peers, faster, asks trackers for new peers every 15 minutes instead of every half hour, and

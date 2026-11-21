@@ -49,7 +49,7 @@ from .feed import (BUNDLED_FEED, REPO_RE, Feed, FeedError, add_pick, apply_local
 from .netinfo import address_present
 from .magnetindex import INDEX_REPO, MagnetIndex
 from .perfile import PerFile
-from .vpnport import Forward, PortFinder
+from .vpnport import RESTART_ROUTE, Forward, GluetunAbsent, GluetunAuth, PortFinder, gluetun_restart_vpn
 from .hfauth import remove_token, save_secret
 from .pfaccount import Account, clean_key, key_path, kind_of
 from .planner import GB, Params, Plan, Unit, plan as make_plan, swappable
@@ -81,6 +81,10 @@ SAMPLE_EVERY = 5.0   # history thread wake-ups; sample() itself records once per
 # own minimum interval still holds), to hear about new leechers sooner. uTP and PEX stay on: they're
 # what libtorrent's hole punching (BEP 55) needs to link two nodes neither of which can be reached.
 REACHABLE_FOR = 3 * 86400.0
+# vpn_port_recover: how long a lost port waits before gluetun is asked to reconnect, and the wait
+# between tries, doubling from the first to the last while no port comes back.
+RECOVER_AFTER = 600.0
+RECOVER_EVERY = (3600.0, 86400.0)
 # It also keeps connections to other seeds, which libtorrent drops as useless ("upload to upload"): a
 # seed that stays connected can tell it about leechers it can't reach (PEX) and introduce the two for
 # hole punching. Most clients still hang up from their side (Pirate Face's own seeder does); other
@@ -1425,7 +1429,7 @@ class Engine:
                 "feed": {"version": self.feed.version, "source": self.feed.source, "signer": self.feed.signer,
                          "local": self.feed.local_source,
                          "expires": self.feed.expires.isoformat() if self.feed.version else None} if self.feed else None,
-                "vpn_port": self.vpn_forward.view() if self.vpn_forward else None, "reach": self.reach_view(),
+                "vpn_port": self.vpn_port_view(), "reach": self.reach_view(),
                 "upload_month": dict(self.state.data["upload"]), "next_refresh": self.next_refresh,
                 "budget_bytes": self.last_plan.budget_bytes if self.last_plan else None, "torrents": rows,
                 "run": {"started": self.run_started, "until": self.run_until,
@@ -1445,7 +1449,7 @@ class Engine:
         "upload_share": (0.05, 1), "download_share": (0.05, 1), "monthly_upload_cap_gb": (0, 1e7),
         "hf_gb_per_day": (0, 1e6), "churn_gb": (0, 1e6),
     }
-    SWITCHES = ("hf_fallback",)   # on/off settings
+    SWITCHES = ("hf_fallback", "vpn_port_recover")   # on/off settings
     CHOICES = {"reorient": REORIENT_CHOICES, "focus": FOCUS_CHOICES}   # one-of settings
     ACTIONS = ("settings", "pause", "resume", "replan", "reorient", "drop", "add", "remove", "order", "allot", "skip",
                "unskip", "hf_disconnect", "rescue", "points_connect", "points_disconnect")
@@ -1517,7 +1521,7 @@ class Engine:
                          "folder": str(self.cfg.folder), "paused": self.disk_paused},
                 "network": {"bind": self.cfg.bind_interface, "bind_up": self._bind_up(),
                             "port_forwarding": self.cfg.port_forwarding, "listen_port": self.listening_on,
-                            "vpn_port": self.vpn_forward.view() if self.vpn_forward else None,
+                            "vpn_port": self.vpn_port_view(),
                             **self.reach_view()},
                 "config_path": str(self.cfg.path) if self.cfg.path else None,
                 "user_paused": self.user_paused,
@@ -2048,12 +2052,16 @@ class Engine:
     def _vpn_port_loop(self) -> None:
         """Keep listening on the port the VPN forwards, as it hands out new ones (vpnport.py). Own thread."""
         finder = PortFinder(self.cfg.bind_interface, port_file=self.cfg.vpn_port_file, log=self.log)
+        mem = self._vpn_port_memory(f"{self.cfg.bind_interface}|{finder.provider}")
+        finder.had = mem["port"]
         said = None
         while not self.stop.is_set():
             try:
                 fw = finder.find(self.listening_on)
             except Exception as e:      # never let a surprise end the thread
                 fw = Forward(note=f"couldn't look for a forwarded port: {e}")
+            self._track_vpn_port(mem, fw, time.time())
+            finder.had = mem["port"]
             self.vpn_forward = fw
             if fw.port:
                 if (fw.listen, fw.port) != (self.listening_on, self._announced):
@@ -2062,9 +2070,64 @@ class Engine:
             elif fw.note != said:
                 self.log(f"vpn port: none forwarded ({fw.note})")
                 said = fw.note
+            now = time.time()
+            if (self.cfg.vpn_port_recover and finder.gluetun and not fw.port and mem["lost"]
+                    and now - mem["lost"] >= RECOVER_AFTER and now >= mem.get("next_try", 0.0)
+                    and self._recover_vpn_port(mem, finder.gluetun_auth, now)):
+                self.stop.wait(20)           # gluetun reconnects in seconds: look for its new port soon
+                continue
             self.stop.wait(fw.renew)
 
     _announced = 0
+
+    def _vpn_port_memory(self, vpn: str) -> dict:
+        """The port this VPN last forwarded and when it stopped, kept in state across runs: a port
+        that went away is a fault to warn about, one never given is just how the VPN is. Starts
+        afresh for another VPN (another interface or gluetun provider)."""
+        mem = self.state.data.get("vpn_port")
+        if not isinstance(mem, dict) or mem.get("vpn") != vpn:
+            mem = self.state.data["vpn_port"] = {"vpn": vpn, "port": 0, "seen": 0.0, "lost": 0.0}
+        return mem
+
+    def _track_vpn_port(self, mem: dict, fw: Forward, now: float) -> None:
+        if fw.port:
+            if mem["lost"]:
+                self.log(f"vpn port: forwarded again after {(now - mem['lost']) / 60:.0f} min without one")
+            mem.update(port=fw.port, seen=now, lost=0.0, tries=0, next_try=0.0)
+        elif mem["port"] and not mem["lost"]:
+            mem["lost"] = now
+            self.log(f"vpn port: LOST: the VPN no longer forwards port {mem['port']}; peers can't connect in "
+                     f"until it forwards one again")
+
+    def _recover_vpn_port(self, mem: dict, auth: str, now: float) -> bool:
+        """vpn_port_recover: have gluetun reconnect its VPN, so it asks for a port again. True if it did."""
+        tries = mem.get("tries", 0) + 1
+        wait = min(RECOVER_EVERY[1], RECOVER_EVERY[0] * 2 ** (tries - 1))
+        mem.update(tries=tries, last_try=now, next_try=now + wait)
+        then = f"if it still has none, the next try is in {wait / 3600:g} h"
+        try:
+            gluetun_restart_vpn(auth)
+        except GluetunAuth:
+            self.log(f"vpn port: can't have gluetun reconnect: its control server won't let Flotilla's key at "
+                     f"{RESTART_ROUTE}. Add that route to the key's role (routes, in gluetun's auth config.toml), "
+                     f"or turn vpn_port_recover off; {then}")
+            return False
+        except GluetunAbsent as e:
+            self.log(f"vpn port: couldn't have gluetun reconnect ({e}); {then}")
+            return False
+        self.log(f"vpn port: had gluetun reconnect its VPN to ask for a port again (try {tries}); {then}")
+        return True
+
+    def vpn_port_view(self) -> dict | None:
+        """The forwarded port for status, with `lost` ({port, since}) while one the VPN forwarded is gone."""
+        if not self.vpn_forward:
+            return None
+        view = self.vpn_forward.view()
+        mem = self.state.data.get("vpn_port") or {}
+        if not view["port"] and mem.get("lost"):
+            view["lost"] = {"port": mem["port"], "since": mem["lost"], "recover": bool(self.cfg.vpn_port_recover),
+                            "tries": mem.get("tries", 0), "last_try": mem.get("last_try") if mem.get("tries") else None}
+        return view
 
     def _listen_on(self, fw: Forward) -> None:
         """Listen on the forwarded port (and tell trackers the public one, when the VPN maps it to

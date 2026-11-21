@@ -156,6 +156,34 @@ def gluetun_port(auth: str = "", base: str = GLUETUN, timeout: float = 3.0) -> i
     raise GluetunAbsent("no port forwarding route")
 
 
+RESTART_ROUTE = "PUT /v1/vpn/status"
+
+
+def gluetun_restart_vpn(auth: str = "", base: str = GLUETUN, timeout: float = 60.0) -> None:
+    """Have gluetun reconnect its VPN (stop, then run), which makes it ask its provider for a port
+    again: after a failed first request it never asks by itself. Every container sharing gluetun's
+    network loses the internet for those seconds. GluetunAuth when the key isn't let at the route."""
+    headers = {**_gluetun_headers(auth), "Content-Type": "application/json"}
+    paths = ["/v1/vpn/status", "/v1/openvpn/status"]   # the newer route; gluetuns before it used OpenVPN's
+    for status in ("stopped", "running"):
+        for path in list(paths):
+            req = urllib.request.Request(base + path, data=json.dumps({"status": status}).encode(),
+                                         headers=headers, method="PUT")
+            try:
+                with _LOCAL.open(req, timeout=timeout) as r:
+                    r.read(4096)
+            except urllib.error.HTTPError as e:
+                if e.code in (401, 403, 404) and path != paths[-1]:
+                    continue
+                if e.code in (401, 403):
+                    raise GluetunAuth(f"gluetun's control server said {e.code} to {RESTART_ROUTE}") from None
+                raise GluetunAbsent(f"HTTP {e.code} from {path}") from None
+            except (OSError, ValueError) as e:
+                raise GluetunAbsent(str(e)) from None
+            paths = [path]                  # running goes where stopping went
+            break
+
+
 def in_container() -> bool:
     return Path("/.dockerenv").exists() or Path("/run/.containerenv").exists()
 
@@ -299,6 +327,7 @@ class PortFinder:
         self.natpmp_gw: str | None = None     # the gateway that answered
         self._translated: tuple[str, int, int] | None = None   # (gateway, here, public)
         self.gluetun = in_container()         # worth asking until it's clearly not there
+        self.had = 0                          # the port this VPN last forwarded here (kept across runs by the engine)
 
     def _gluetun_note(self, wants_key: bool) -> str:
         """Why gluetun forwards no port (or won't say which), going by its provider when the host passed it on."""
@@ -315,9 +344,21 @@ class PortFinder:
             return (f"couldn't ask gluetun which port {vpn} forwards: its control server wants a key.{maybe} give "
                     f"gluetun HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE and run `flotilla update` or `flotilla init` "
                     f"on the Docker host, which passes it to this container as {GLUETUN_AUTH_ENV}")
-        vpn = provider_name(provider) if provider else "Its provider needs port forwarding (PIA, ProtonVPN, " \
-                                                       "Perfect Privacy or PrivateVPN), and gluetun"
-        return f"gluetun forwards no port. {vpn} needs VPN_PORT_FORWARDING=on"
+        # gluetun answers 0 both when port forwarding is off and when its one request for a port failed
+        # (it doesn't ask again until the VPN reconnects), and won't say which: its log does.
+        log = 'its log says why: look for "port forwarding" in `docker logs` of the gluetun container'
+        vpn = provider_name(provider) if provider else "the VPN"
+        if self.had:
+            return (f"gluetun forwarded port {self.had} before and has none now: its last request to {vpn} for a "
+                    f"port failed (often just after the VPN reconnected), and gluetun doesn't ask again until its "
+                    f"VPN restarts. {log[0].upper() + log[1:]}. Restarting gluetun's VPN gets a new one; with "
+                    f"vpn_port_recover on, Flotilla has it do that by itself")
+        if provider:
+            return (f"gluetun forwards no port: either it doesn't have VPN_PORT_FORWARDING=on, or it does and its "
+                    f"request to {vpn} for a port failed (gluetun doesn't ask again until its VPN restarts); {log}")
+        return ("gluetun forwards no port. That takes a provider that forwards ports (PIA, ProtonVPN, Perfect "
+                "Privacy or PrivateVPN) and VPN_PORT_FORWARDING=on; with both, gluetun's request for a port "
+                f"failed, and it doesn't ask again until its VPN restarts; {log}")
 
     def find(self, current: int) -> Forward:
         notes = []

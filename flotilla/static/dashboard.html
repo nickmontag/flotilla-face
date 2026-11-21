@@ -746,6 +746,11 @@
             <div class="unit-in"><input id="s-cap" name="monthly_upload_cap_gb" type="number" min="0" step="any" inputmode="decimal" placeholder="0 = no cap"><em>GB</em></div>
           </div>
         </div>
+        <div class="switch-row" id="vpnrecover" hidden>
+          <label for="s-vpnrecover">Get a new VPN port when it's lost</label>
+          <button type="button" class="qm" aria-label="About getting a new VPN port" data-tip="With gluetun: when the port it forwarded has been gone for 10 minutes, Flotilla has gluetun reconnect its VPN, so it asks for a port again (gluetun never asks twice by itself). Everything sharing gluetun's network goes offline for a few seconds each time. Tries back off from an hour to a day. Flotilla's gluetun key needs the PUT /v1/vpn/status route.">?</button>
+          <input id="s-vpnrecover" class="switch" name="vpn_port_recover" type="checkbox" role="switch">
+        </div>
       </section>
 
       <section class="set">
@@ -958,12 +963,18 @@ function render(s) {
   else if (wanted && done < wanted) setPill("status", "ok", "Downloading " + Math.floor(100 * done / wanted) + "%", true);
   else if (ts.length) setPill("status", "ok", "Seeding", true);
   else setPill("status", "", "Idle");
-  const fwd = net.vpn_port;
-  if (net.bind) setPill("vpn", net.bind_up ? "ok" : "bad", (net.bind_up ? "VPN pinned · " : "Waiting for VPN · ") + net.bind
-                        + (net.bind_up && fwd ? (fwd.port ? " · port " + fwd.port + " open" : " · no inbound port") : ""));
+  const fwd = net.vpn_port, lost = fwd && !fwd.port && fwd.lost;
+  if (net.bind) setPill("vpn", !net.bind_up ? "bad" : lost ? "warn" : "ok", (net.bind_up ? "VPN pinned · " : "Waiting for VPN · ") + net.bind
+                        + (net.bind_up && fwd ? (fwd.port ? " · port " + fwd.port + " open"
+                                                 : lost ? " · inbound port lost" : " · no inbound port") : ""));
   else setPill("vpn", "warn", "No VPN pin");
   $("vpn").title = fwd ? (fwd.port ? "Peers can connect in: " + fwd.source + " forwards port " + fwd.port
-                                   : "Peers can't connect in: " + fwd.note) : "";
+                          : lost ? "Peers can't connect in since " + new Date(lost.since * 1000).toLocaleString([], { weekday: "short", hour: "2-digit", minute: "2-digit" })
+                                   + ", when port " + lost.port + " stopped being forwarded: " + fwd.note
+                                   + (lost.tries ? ". Flotilla has had gluetun reconnect " + lost.tries + (lost.tries > 1 ? " times" : " time")
+                                                   + ", last at " + new Date(lost.last_try * 1000).toLocaleString([], { weekday: "short", hour: "2-digit", minute: "2-digit" })
+                                      : lost.recover ? ". Flotilla will have gluetun reconnect once it has been gone 10 minutes" : "")
+                          : "Peers can't connect in: " + fwd.note) : "";
   const rel = s.update;
   $("update").hidden = !rel;
   if (rel) {
@@ -1632,6 +1643,7 @@ function fillDrawer() {
     const i = f.elements[k]; if (!i) continue;
     if (i.type === "checkbox") i.checked = !!v; else i.value = k.endsWith("_share") ? Math.round(v * 100) : v;
   }
+  $("vpnrecover").hidden = !(state.network || {}).bind;
   fillAccount();
   fillPoints();
   const about = $("about"); about.replaceChildren();

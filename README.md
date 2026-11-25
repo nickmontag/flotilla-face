@@ -164,10 +164,6 @@ On the Priorities tab you can drag models (or use ↑ ↓) to change the order; 
 can also set aside GB for a model. Flotilla keeps that much space for it, and the rest of your space is
 shared out as usual. The amounts can't add up to more than your total space.
 
-<p align="center">
-  <img src="docs/priorities.png" alt="The Priorities tab: the signed list of at-risk models in order, with copies in the swarm, what this node holds, and space set aside" width="900">
-</p>
-
 Traffic history counts the exact bytes each model moved, not snapshots of its speed, so nothing is
 missed between samples. It keeps per-minute detail for three days, hourly totals for 90 days and daily
 totals for good, well under 1 MB a year per model, in `history.db` in Flotilla's state folder. It survives restarts and never
@@ -739,125 +735,12 @@ next [reorientation](#reorienting).
 **Follow a different list.** Add its URL to `[feed] urls` and its public key to `[feed] trusted_keys`
 in your config. The newest version that verifies wins.
 
-### Maintaining the published list
-
-```bash
-flotilla editor sign flotilla/data/priorities.json
-```
-
-Edit the file, bump `version`, then sign it. The signing key is `~/.config/flotilla/editor.key` on the
-maintainer's machine. Back it up and never commit it; `*.key` is git-ignored. Its public half is in
-`BUILTIN_EDITOR_KEYS` in `flotilla/config.py`.
-
-Signing the list also keeps the [hash ledger](#the-hash-ledger) up to date, so there's no separate
-routine to remember. It records every newly pinned model from Hugging Face, re-signs the ledger if
-anything changed, timestamps the new records, and completes any proofs from earlier runs whose
-Bitcoin transaction has since confirmed. Then commit everything it changed: the list and its
-`.minisig`, plus `flotilla/data/ledger/`. `--no-ledger` signs the list alone.
-
-Per model you can set:
-
-- `scores` (0–100 per axis);
-- `target_replicas`, its minimum target: how many full copies the swarm should hold. Set it from
-  the model's takedown risk with the rule below;
-- `spare`: `true` to have nodes look at the model only once nearly everything else on the list has
-  its copies (or while they hold it). Every
-  model on the list costs each node a Pirate Face lookup at every refresh, so models meant only for
-  a big fleet's spare space shouldn't cost anything until then;
-- a `boost` for emergencies;
-- a `note`;
-- `revision` / `infohash` pins;
-- `license`, when a publisher's label is wrong (a derivative of a custom license relabelled MIT, say);
-- `origin`: `base`, `method` (`original`, `refusal-removal`, `fine-tune`, `fine-tune+refusal-removal` or
-  `unknown`), `data` (`public` or `undisclosed`, for fine-tunes) and `repack_of`.
-
-Put a repo or infohash in `deny` to make every node drop it, for example to honour a takedown.
-
-**Minimum targets.** A model loses its last copy not when one seeder leaves (Flotilla copies it again
-within a day) but when a takedown wave removes many seeders at once: a crackdown in one country, a VPN
-provider blocking torrents, a run of legal notices. So a model's minimum target is the fewest full
-copies for at least one to survive such a wave 99% of the time, assuming the wave removes a share of
-its seeders that grows steeply with its takedown risk: 70% × (risk/100)^1.5. Never fewer than 2.
-
-| Takedown risk | Share a wave removes | Minimum target |
-| --- | --- | --- |
-| 20 | 6% | 2 |
-| 30–40 | 12–18% | 3 |
-| 52–58 | 26–31% | 4 |
-| 68 | 39% | 5 |
-| 72–75 | 43–45% | 6 |
-| 80 | 50% | 7 |
-| 84 | 54% | 8 |
-| 88–90 | 58–60% | 9 |
-| 92 | 62% | 10 |
-| 95 | 65% | 11 |
-
-`flotilla/feed.py` (`target_for_risk`) holds the rule; the sync tools use it, and a test checks the
-published list follows it. The 99% and the 70% are judgment calls, one line each to change. Copies past
-7 wait until nearly every model on the list has 2, so no model on the list is down to its last copy
-while another gets its eighth.
-
-**Follow Pirate Face's Worth Rescuing page.** Pirate Face keeps a page of models worth preserving: a
-historic shortlist and the top open models on Artificial Analysis's Intelligence Index. To bring the
-list in line with it:
-
-```bash
-flotilla editor sync-worth-rescuing flotilla/data/priorities.json --dry-run   # see what would change
-flotilla editor sync-worth-rescuing flotilla/data/priorities.json
-flotilla editor sign flotilla/data/priorities.json
-```
-
-It adds each model on the page that has a Pirate Face torrent and a license Flotilla seeds by default,
-pinned to the commit Pirate Face serves. It updates pins that moved and removes models that left the
-page. It only touches entries it added (marked `"via": "pirateface/worth-rescuing"`); a model already on
-the list for another reason is left alone. Official releases carry a `boost` of 0.45, under half the
-weight of the lowest at-risk model. Since the planner halves a file's value once someone else holds a
-copy, a node spends space on official releases only after the at-risk models' files have a copy or two. The command also reports any model whose license differs from the custom
-license of the model it's built on. Nodes never read the page themselves: they only ever follow the
-signed list.
-
-**Fill in with popular refusal-removed models.** Once the hand-picked models are well seeded, nodes
-need something else worth carrying. To add the most-downloaded abliterated, heretic, obliterated and
-uncensored builds on Hugging Face that Pirate Face has torrents for:
-
-```bash
-flotilla editor sync-fallback flotilla/data/priorities.json --dry-run   # see what would change
-flotilla editor sync-fallback flotilla/data/priorities.json
-flotilla editor sign flotilla/data/priorities.json
-```
-
-It groups each build with its quantisations, picks one copy per group (the full-precision release
-when Pirate Face has it), keeps at most two per base model and at most 40 in all (`--max`). The license
-must be allowed by default, and so must the base model's when a build relabels it. Entries are marked
-`"via": "huggingface/refusal-removed"` and rank at a priority of about 0.2-0.3, below every
-hand-picked model, so nodes turn to them once the hand-picked models have a couple of copies each.
-DESIGN.md explains the ranking. For a bigger fleet, raise the caps: `--max` (entries), `--per-base`
-(builds of one base model, default 2) and `--search-limit` (Hugging Face results per search term,
-default 200, at most 1000). `--spare-after N` marks every entry past the top N `spare` (see below), so
-a long fallback list costs nodes nothing until the rest is covered.
-
-**Widen the list for a big fleet.** Once everything on the list has its target number of copies, more
-space would only add a 20th or 40th copy of the same models. To add Hugging Face's most downloaded
-language and vision-language models that Pirate Face's magnet index lists:
-
-```bash
-flotilla editor sync-catalog flotilla/data/priorities.json --index <shards folder> --dry-run
-flotilla editor sync-catalog flotilla/data/priorities.json --index <shards folder>
-flotilla editor sign flotilla/data/priorities.json
-```
-
-`--index` is a magnet index build's `shards` folder; a node keeps one at
-`<state>/index/files/magnet-index/shards`, the default on a machine that runs one. Refusal-removed
-builds are left to the fallback list. It keeps one model per base (`--per-base`) and at most 100 in all
-(`--max`), checked like the fallback list. Entries are marked `"via": "pirateface/catalog"`, have a
-target of 2 copies, rank at 0.16-0.19 (above Pirate Face's unranked new torrents, below everything
-else on the list) and are `spare`: nodes don't look at them until the rest of the list has its copies.
-Then each gets a couple of copies before any gets a third.
-
 Installs fetch updates to this file from GitHub between releases and check the signature, so pushing a
 newly signed version updates everyone. If the fetch fails, they use the copy they shipped with. That
 shipped copy is trusted even after its `expires` date; fetched copies must be unexpired, and clients
 never accept a lower `version` than one they've already seen.
+
+Maintainers: how to edit, sign and sync the list is in [CONTRIBUTING.md](CONTRIBUTING.md#the-priority-list).
 
 ## The hash ledger
 
@@ -892,25 +775,7 @@ file per model and commit, listing each file's size and hash as Hugging Face pub
 What it can't do: it proves the bytes are what the publisher put on Hugging Face at that commit. It
 says nothing about whether the publisher is honest (see Safety).
 
-### Maintaining the ledger
-
-It happens when you sign the priority list (see above). A model has to be recorded while Hugging Face
-still has it, so sign and push soon after adding one. A model added after Hugging Face removed it can
-only be recorded from Pirate Face's manifest, and is labelled that way.
-
-Timestamping needs the OpenTimestamps client, `uv tool install opentimestamps-client`. Without it,
-signing still records and signs, and tells you nothing was timestamped. Stamping sends only each
-record's SHA-256 to the public OpenTimestamps calendars. Records are never edited: recording only adds,
-and signing refuses a ledger whose records have changed.
-
-The steps can also be run on their own:
-
-```bash
-flotilla editor ledger-capture flotilla/data/priorities.json   # record new pinned models (--dry-run to preview)
-flotilla editor sign flotilla/data/ledger/index.json           # sign the ledger alone
-flotilla editor stamp flotilla/data/ledger/index.json          # timestamp new records, complete ready proofs
-flotilla editor stamp --upgrade flotilla/data/ledger/index.json   # only complete proofs
-```
+Maintainers: recording and timestamping the ledger is in [CONTRIBUTING.md](CONTRIBUTING.md#the-hash-ledger).
 
 ## Updating
 

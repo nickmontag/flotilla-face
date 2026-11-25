@@ -6,6 +6,5 @@ dist/
 build/
 # Never commit signing keys.
 *.key
-# The working editorial feed stays out of the tool repo until we decide where it's published.
-feed/priorities.json
-feed/priorities.json.minisig
+# Dev lockfile: installs use signed releases, contributors `uv pip install -e '.[dev]'`.
+uv.lock

@@ -69,10 +69,10 @@ class DemoEngine(Engine):
         dropped = set(self.state.data["dropped"])
         return [c for c in cands if c.repo not in dropped], []
 
-    def sample(self, now: float) -> None:  # a chart point every 10 s instead of every minute
-        if now - self._last_sample >= 10:
+    def sample(self, now: float, force: bool = False) -> None:  # a chart point every 10 s, not every minute
+        if force or now - self._last_sample >= 10:
             self._last_sample = 0
-            super().sample(now)
+            super().sample(now, force=force)
 
 
 def main() -> int:

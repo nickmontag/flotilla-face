@@ -27,28 +27,57 @@ MAX_TORRENT_BYTES = 64 << 20
 TORRENT_CACHE_DAYS = 30
 SERVER_ERRORS_BEFORE_BACKOFF = 3
 NEW_TORRENTS_MAX_BYTES = 1 << 20
-_REPO = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}/[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
+_REPO = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}/[A-Za-z0-9][A-Za-z0-9._-]{0,95}\Z")
+_HEX40 = re.compile(r"[0-9a-f]{40}")
+# A revision HF.tree accepts: a full commit hash, or a plain branch name such as "main". It ends up
+# in a URL and in a cache file name, so nothing that could be a path or a query.
+_BRANCH = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
 _DESC = re.compile(r"([0-9.]+)\s*GB.*?(\d+)\s*seeder", re.I)
+
+
+def is_repo_id(v) -> bool:
+    """Whether v is a Hugging Face model name (author/name). Anything from Pirate Face that reaches a
+    URL or a file name is checked with this first."""
+    return isinstance(v, str) and bool(_REPO.match(v))
+
+
+def is_revision(v) -> bool:
+    return isinstance(v, str) and ((bool(_HEX40.fullmatch(v))) or (bool(_BRANCH.fullmatch(v)) and ".." not in v))
 
 
 def parse_new_torrents(body: bytes) -> list[dict]:
     """Items of Pirate Face's new-torrents RSS feed. Anything malformed is skipped; a document
-    declaring entities is refused outright (no entity expansion from a remote feed)."""
-    if b"<!DOCTYPE" in body[:4096].upper() or b"<!ENTITY" in body.upper():
+    declaring entities is refused outright (no entity expansion from a remote feed).
+
+    Only UTF-8 is read, and the parser is told so: a document in another encoding (UTF-16, say)
+    would hide a DOCTYPE from the check below while the parser still read it."""
+    try:
+        text = body.decode("utf-8-sig")
+    except UnicodeDecodeError as e:
+        raise FetchError("new-torrents.xml", None, "feed isn't UTF-8; refused") from e
+    if "\x00" in text:
+        raise FetchError("new-torrents.xml", None, "feed isn't UTF-8; refused")
+    upper = text.upper()
+    if "<!DOCTYPE" in upper or "<!ENTITY" in upper:
         raise FetchError("new-torrents.xml", None, "feed declares a DOCTYPE or entities; refused")
     try:
-        root = ElementTree.fromstring(body)
+        parser = ElementTree.XMLParser(encoding="utf-8")   # overrides any encoding the document declares
+        parser.feed(text.encode("utf-8"))
+        root = parser.close()
     except ElementTree.ParseError as e:
         raise FetchError("new-torrents.xml", None, f"not RSS: {e}") from e
     out = []
     for item in root.iter("item"):
         repo = (item.findtext("title") or "").strip()
         ih = (item.findtext("guid") or "").strip().lower()
-        if not _REPO.match(repo) or len(ih) != 40 or any(c not in "0123456789abcdef" for c in ih):
+        if not _REPO.match(repo) or not _HEX40.fullmatch(ih):
             continue
         m = _DESC.search(item.findtext("description") or "")
-        out.append({"repo": repo, "infohash": ih,
-                    "gb": float(m.group(1)) if m else None, "seeders": int(m.group(2)) if m else None})
+        try:
+            gb, seeders = (float(m.group(1)), int(m.group(2))) if m else (None, None)
+        except ValueError:
+            continue
+        out.append({"repo": repo, "infohash": ih, "gb": gb, "seeders": seeders})
     return out
 
 
@@ -114,8 +143,22 @@ class PirateFace:
         self._server_errors = 0
         return doc
 
+    def _get_dict(self, path: str, **params) -> dict:
+        """_get for an endpoint that answers with a JSON object. Anything else is a FetchError, as
+        for an answer that isn't JSON at all."""
+        doc = self._get(path, **params)
+        if not isinstance(doc, dict):
+            raise FetchError(f"{self.base}{path}", None, f"expected a JSON object, got {type(doc).__name__}")
+        return doc
+
     def licenses(self) -> list[dict]:
-        return self._get("/api/licenses").get("licenses", [])
+        """[{"id", "label", "acceptFirst"}]; entries without a string id are left out."""
+        lics = self._get_dict("/api/licenses").get("licenses")
+        out = []
+        for x in lics if isinstance(lics, list) else []:
+            if isinstance(x, dict) and isinstance(x.get("id"), str):
+                out.append({**x, "label": x["label"] if isinstance(x.get("label"), str) else x["id"]})
+        return out
 
     def new_torrents(self) -> list[dict]:
         """Pirate Face's feed of new torrents that need seeders (the one its own seeding agents
@@ -132,18 +175,21 @@ class PirateFace:
         return parse_new_torrents(body)
 
     def rescue(self) -> dict:
-        return self._get("/api/rescue")
+        return self._get_dict("/api/rescue")
 
     def torrent(self, repo: str, quant: str | None = None) -> dict | None:
+        """Pirate Face's listing for a repo, or None if it lists none (404). A 400 isn't taken to
+        mean "not listed": it says the request was wrong, not that the model is gone, so it is a
+        FetchError like any other failed lookup and a held model is kept."""
         try:
-            return self._get("/api/torrents", repo=repo, quant=quant)
+            return self._get_dict("/api/torrents", repo=repo, quant=quant)
         except FetchError as e:
-            if e.status in (400, 404):
+            if e.status == 404:
                 return None
             raise
 
     def torrent_file(self, infohash: str) -> bytes:
-        if len(infohash) != 40 or any(c not in "0123456789abcdef" for c in infohash):
+        if not isinstance(infohash, str) or not _HEX40.fullmatch(infohash):
             raise ValueError("bad infohash")
         from .torrentmeta import TorrentError, parse_torrent
 
@@ -217,7 +263,7 @@ class PirateFace:
         """Cache a .torrent obtained elsewhere (from the swarm, while Pirate Face is down)."""
         from .torrentmeta import TorrentError, parse_torrent
 
-        if not self.cache_dir:
+        if not self.cache_dir or not isinstance(infohash, str) or not _HEX40.fullmatch(infohash):
             return
         try:
             if parse_torrent(raw).infohash_v1 != infohash:
@@ -325,33 +371,71 @@ class HuggingFace:
     GONE = (401, 403, 404, 410, 451)
 
     def license(self, repo: str) -> str | None:
-        """A repo's license, cached for a week (it rarely changes); no license, or no repo, for a day."""
+        """A repo's license (see license_lookup), or None if none is known."""
+        return self.license_lookup(repo)[0]
+
+    def license_lookup(self, repo: str) -> tuple[str | None, str]:
+        """(license, how): a repo's license and where it came from.
+
+        how is "huggingface" (Hugging Face has the repo; license None means its card names none),
+        "gone" (Hugging Face says the repo is gone or closed to us) or "unreachable" (no answer:
+        timeout, 429, 5xx). For the last two the license is the last one Hugging Face named for
+        it, however old, or None if it never named one here. Taken-down models are what Flotilla
+        keeps, so a license once read isn't forgotten because the repo went away.
+
+        Hugging Face's answer is cached for a week (a license rarely changes); no license, or no
+        repo, for a day. An answer that didn't arrive is never cached.
+        """
+        if not is_repo_id(repo):
+            return None, "huggingface"
         cache = self.cache_dir / "hf-licenses.json"
         try:
             known = json.loads(cache.read_text()) if cache.exists() else {}
         except (OSError, ValueError):
             known = {}
-        hit = known.get(repo)
-        if isinstance(hit, list) and len(hit) == 2 and isinstance(hit[1], (int, float)):
-            age = time.time() - hit[1]
-            if hit[0] is None and age < self.MISSING_TTL:
-                return None
-            if hit[0] and hit[0] != "other" and age < self.LICENSE_TTL:
-                return hit[0]     # ("other" was cached before license names were read: look again)
+        if not isinstance(known, dict):
+            known = {}
+        lic, at, kept, gone = self._cached_license(known.get(repo))
+        if at is not None:
+            age = time.time() - at
+            if lic is None and age < self.MISSING_TTL:
+                return (kept, "gone") if gone else (None, "huggingface")
+            if lic and lic != "other" and age < self.LICENSE_TTL:
+                return lic, "huggingface"   # ("other" was cached before license names were read: look again)
         try:
             doc = fetch_json(f"{self.base}/api/models/{repo}", allowed=self.allowed, max_bytes=4 << 20)
         except FetchError as e:
             if e.status not in self.GONE:
-                return None       # unreachable or busy: no answer to remember
-            doc = None
-        lic = license_from_card(doc) if isinstance(doc, dict) else None
-        known[repo] = [lic, time.time()]
+                return kept, "unreachable"   # no answer to remember
+            doc, gone = None, True
+        else:
+            gone = False
+        if gone:
+            lic = None                      # kept stays what Hugging Face last named
+        else:
+            lic = license_from_card(doc) if isinstance(doc, dict) else None
+            kept = lic
+        known[repo] = {"license": lic, "at": time.time(), "kept": kept, "gone": gone}
         try:
             cache.parent.mkdir(parents=True, exist_ok=True)
             cache.write_text(json.dumps(known))
         except OSError:
             pass
-        return lic
+        return (kept, "gone") if gone else (lic, "huggingface")
+
+    @staticmethod
+    def _cached_license(hit) -> tuple[str | None, float | None, str | None, bool]:
+        """(license, when, kept, gone) from a cache entry; when is None if there's no usable entry.
+        Entries written before "kept" existed are [license, when]; an old [None, when] can't say
+        whether the repo was gone or had no license, so it is asked about again."""
+        def _lic(v):
+            return v if isinstance(v, str) and v else None
+
+        if isinstance(hit, list) and len(hit) == 2 and isinstance(hit[1], (int, float)) and _lic(hit[0]):
+            return _lic(hit[0]), float(hit[1]), _lic(hit[0]), False
+        if isinstance(hit, dict) and isinstance(hit.get("at"), (int, float)):
+            return _lic(hit.get("license")), float(hit["at"]), _lic(hit.get("kept")), hit.get("gone") is True
+        return None, None, None, False
 
     def tree(self, repo: str, revision: str) -> dict[str, HFFile] | None:
         """Return {path: HFFile}, or None if the repo/revision is not readable on HF.
@@ -359,9 +443,15 @@ class HuggingFace:
         A tree at a full commit hash is cached until unused for a while (a commit is immutable);
         a branch's, like "main", for BRANCH_TTL. A None is remembered for MISSING_TTL.
         """
-        immutable = len(revision) == 40 and all(c in "0123456789abcdef" for c in revision)
-        cache = self.cache_dir / "hf-trees" / f"{repo.replace('/', '__')}@{revision}.json"
+        # Both end up in a URL and in a cache file name; they come from Pirate Face's listing.
+        if not is_repo_id(repo) or not is_revision(revision):
+            raise ValueError(f"not a model name and revision: {repo!r} @ {revision!r}")
+        immutable = bool(_HEX40.fullmatch(revision))
+        folder = self.cache_dir / "hf-trees"
+        cache = folder / f"{repo.replace('/', '__')}@{revision}.json"
         gone = cache.with_suffix(".gone")       # when Hugging Face last said it isn't there
+        if cache.resolve().parent != folder.resolve() or gone.resolve().parent != folder.resolve():
+            raise ValueError(f"tree cache path for {repo!r} @ {revision!r} leaves the cache")
         try:
             if time.time() - float(gone.read_text()) < self.MISSING_TTL:
                 return None
@@ -378,7 +468,7 @@ class HuggingFace:
                     return {p: HFFile(**v) for p, v in raw.items()}
             except (OSError, ValueError, TypeError, AttributeError):
                 pass
-        url = f"{self.base}/api/models/{repo}/tree/{revision}?recursive=true"
+        url = f"{self.base}/api/models/{repo}/tree/{urllib.parse.quote(revision, safe='')}?recursive=true"
         entries: list[dict] = []
         try:
             for _ in range(200):  # pagination guard
@@ -386,7 +476,7 @@ class HuggingFace:
                 page = resp.json()
                 if not isinstance(page, list):
                     return None
-                entries.extend(page)
+                entries.extend(e for e in page if isinstance(e, dict))
                 nxt = parse_link_next(resp.headers.get("link"))
                 if not nxt:
                     break
@@ -402,10 +492,11 @@ class HuggingFace:
             raise
         out = {}
         for e in entries:
-            if e.get("type") != "file":
+            # An entry we can't read is left out: a torrent file it would have vouched for is refused.
+            size, lfs = e.get("size", 0), e.get("lfs") or {}
+            if e.get("type") != "file" or not isinstance(e.get("path"), str) or not isinstance(lfs, dict) \
+                    or not isinstance(size, int) or isinstance(size, bool) or size < 0:
                 continue
-            lfs = e.get("lfs") or {}
-            size = int(e.get("size", 0))
             if lfs:
                 out[e["path"]] = HFFile(size, _hex(lfs.get("oid"), 64), None, _hex(e.get("oid"), 40))
             else:
@@ -435,6 +526,8 @@ class HuggingFace:
 
     def model_info(self, repo: str) -> dict | None:
         """One model's search fields (as `search` returns them), or None if Hugging Face doesn't have it."""
+        if not is_repo_id(repo):
+            return None
         q = urllib.parse.urlencode([("expand[]", f) for f in self.SEARCH_FIELDS])
         try:
             doc = fetch_json(f"{self.base}/api/models/{repo}?{q}", allowed=self.allowed, max_bytes=16 << 20)
@@ -464,10 +557,11 @@ def license_from_card(doc: dict) -> str | None:
     Hugging Face files custom licenses as "other" and puts the real one in license_name
     (e.g. "openmdw-1.1", "glm-5.3"), so read that whenever the license says "other".
     """
-    card = doc.get("cardData") or {}
+    card = doc.get("cardData") if isinstance(doc.get("cardData"), dict) else {}
     lic = card.get("license") if isinstance(card.get("license"), str) else None
     if lic is None:
-        for t in doc.get("tags", []):
+        tags = doc.get("tags")
+        for t in tags if isinstance(tags, list) else []:
             if isinstance(t, str) and t.startswith("license:"):
                 lic = t.split(":", 1)[1]
                 break

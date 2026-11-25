@@ -1486,7 +1486,8 @@ function detail(t) {
     if (sh.avail === 0) cls += " a0";
     const s = el("div", cls);
     s.title = sh.path + " · " + human(sh.size) + (sh.avail != null ? " · " + plural(sh.avail, "other peer") + " have it" : "") +
-      (sh.status === "verified" ? " · you hold it" : sh.status ? " · you: " + sh.status : "");
+      (sh.status === "verified" ? " · you hold it" : sh.status ? " · you: " + sh.status : "") +
+      (sh.io_error ? " · couldn't be read to check it (" + sh.io_error + "); checked again later" : "");
     strip.append(s);
   });
   const drop = el("button", "ghost danger", "Drop this model");

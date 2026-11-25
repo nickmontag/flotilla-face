@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
+import os
 import re
 import shutil
 import sys
@@ -12,8 +14,8 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from . import __version__, ui
-from .config import (BUILTIN_EDITOR_KEYS, CONFIG_PATH, FOCUS_CHOICES, REORIENT_CHOICES, STATE_DIR, Config, State, load_config,
-                     render_config)
+from .config import (BUILTIN_EDITOR_KEYS, CONFIG_PATH, FOCUS_CHOICES, REORIENT_CHOICES, STATE_DIR, Config, State,
+                     check_number, load_config, write_config)
 from .feed import BUNDLED_FEED, LOCAL_EXAMPLE, FeedError, apply_local, load_feed, origin_view, parse_feed
 from .ledger import LedgerError, load_ledger
 from .planner import GB, Params, Plan, plan as make_plan
@@ -58,9 +60,28 @@ def parse_gb(raw: str) -> float:
     mult = 1000.0 if t.endswith("t") else 1.0
     t = t.rstrip("tg")
     v = float(t) * mult
-    if v <= 0:
-        raise ValueError("must be positive")
+    if not math.isfinite(v) or v <= 0:       # float() accepts "nan" and "inf"; neither is an amount
+        raise ValueError("must be a positive number")
     return v
+
+
+def _bounded(attr: str, parse=float):
+    """An answer parser for ui.ask that also holds the answer to Config's limits for `attr` (the same
+    ones the config file and the dashboard use), so a typo like "nan" is asked again, not saved."""
+    def cast(raw: str) -> float:
+        v = parse(raw)
+        try:
+            return check_number(attr, v)
+        except ValueError as e:
+            ui.caution(str(e))
+            raise
+    return cast
+
+
+def _absolute(raw) -> Path:
+    """A folder as the config stores it: ~ expanded and relative paths made absolute against where the
+    command ran (the daemon runs from somewhere else). Symlinks are left as they are."""
+    return Path(os.path.abspath(os.path.expanduser(str(raw))))
 
 
 SETUP_STEPS = 8
@@ -94,7 +115,26 @@ def _init_scripted(args, path: Path, cfg: Config, docker: bool) -> int:
         print(f"flotilla init: {msg}", file=sys.stderr)
         return 2
 
-    folder = cfg.folder if docker or not args.folder else Path(args.folder).expanduser()
+    # Check every answer before touching the disk: a run that exits 2 must have changed nothing.
+    folder = cfg.folder if docker or not args.folder else _absolute(args.folder)
+    for flag, attr in (("--budget-gb", "budget_gb"), ("--reserve-gb", "reserve_gb"),
+                       ("--upload-mbps", "upload_mbps"), ("--download-mbps", "download_mbps"),
+                       ("--upload-share", "upload_share"), ("--download-share", "download_share"),
+                       ("--monthly-upload-cap-gb", "monthly_upload_cap_gb"), ("--churn-gb", "churn_gb"),
+                       ("--hf-gb-per-day", "hf_gb_per_day")):
+        v = getattr(args, attr)
+        if v is not None:
+            try:
+                check_number(attr, v, flag)
+            except ValueError as e:
+                return fail(str(e))
+    if args.focus and args.focus not in FOCUS_CHOICES:
+        return fail(f"--focus must be one of: {', '.join(FOCUS_CHOICES)}")
+    if args.reorient and args.reorient not in REORIENT_CHOICES:
+        return fail(f"--reorient must be one of: {', '.join(REORIENT_CHOICES)}")
+    if args.dashboard and args.dashboard not in ACCESS_CHOICES:
+        return fail(f"--dashboard must be one of: {', '.join(ACCESS_CHOICES)}")
+
     created = not folder.exists()
     try:
         folder.mkdir(parents=True, exist_ok=True)
@@ -105,18 +145,7 @@ def _init_scripted(args, path: Path, cfg: Config, docker: bool) -> int:
     du = shutil.disk_usage(folder)
     reserve = args.reserve_gb if args.reserve_gb is not None else cfg.reserve_gb
     budget = args.budget_gb if args.budget_gb is not None else (
-        cfg.budget_gb if path.exists() else max(10.0, round((du.free / GB - reserve) * 0.5)))
-    if budget <= 0 or reserve < 0:
-        return fail("--budget-gb must be positive and --reserve-gb not negative")
-    for name, v in (("--upload-share", args.upload_share), ("--download-share", args.download_share)):
-        if v is not None and not 0.1 <= v <= 1:
-            return fail(f"{name} must be from 0.1 to 1")
-    if args.focus and args.focus not in FOCUS_CHOICES:
-        return fail(f"--focus must be one of: {', '.join(FOCUS_CHOICES)}")
-    if args.reorient and args.reorient not in REORIENT_CHOICES:
-        return fail(f"--reorient must be one of: {', '.join(REORIENT_CHOICES)}")
-    if args.dashboard and args.dashboard not in ACCESS_CHOICES:
-        return fail(f"--dashboard must be one of: {', '.join(ACCESS_CHOICES)}")
+        cfg.budget_gb if path.exists() else min(1e6, max(10.0, round((du.free / GB - reserve) * 0.5))))
 
     # The network: pin to a VPN unless told not to; never seed from the home IP unless told to.
     vpn = (args.vpn or "auto").strip()
@@ -156,21 +185,22 @@ def _init_scripted(args, path: Path, cfg: Config, docker: bool) -> int:
     if args.download_share is not None:
         cfg.download_share = args.download_share
     if args.monthly_upload_cap_gb is not None:
-        cfg.monthly_upload_cap_gb = max(0.0, args.monthly_upload_cap_gb)
+        cfg.monthly_upload_cap_gb = args.monthly_upload_cap_gb
     cfg.focus = args.focus or cfg.focus
     cfg.reorient = args.reorient or cfg.reorient
     if args.churn_gb is not None:
-        cfg.churn_gb = max(0.0, args.churn_gb)
+        cfg.churn_gb = args.churn_gb
     cfg.bind_interface = bind
-    cfg.port_forwarding = False if bind else bool(args.router_port)
+    # Pinned to a VPN: never UPnP. Otherwise --router-port / --no-router-port, else the current setting
+    # (running `init --yes --budget-gb 30` again must not switch off a port someone opened).
+    cfg.port_forwarding = False if bind else (cfg.port_forwarding if args.router_port is None else args.router_port)
     if args.hf_fallback is not None:
         cfg.hf_fallback = args.hf_fallback
     if args.hf_gb_per_day is not None:
-        cfg.hf_gb_per_day = max(0.0, args.hf_gb_per_day)
+        cfg.hf_gb_per_day = args.hf_gb_per_day
     if args.dashboard and not docker:
         cfg.dashboard_access = args.dashboard
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(render_config(cfg))
+    write_config(cfg, path)
     _setup_result("here" if home_ip_ok else "not-started")
 
     print(f"Saved {_host_path(path, docker)}")
@@ -219,7 +249,7 @@ def cmd_init(args) -> int:
         folder = cfg.folder
         ui.info(f"seeded files go in {_host_path(folder, docker)}")
     else:
-        folder = Path(_ask("Folder for seeded files", str(cfg.folder))).expanduser()
+        folder = _absolute(_ask("Folder for seeded files", str(cfg.folder)))
     created = not folder.exists()
     folder.mkdir(parents=True, exist_ok=True)
     if created and not docker and sys.platform == "darwin":
@@ -227,26 +257,27 @@ def cmd_init(args) -> int:
     du = shutil.disk_usage(folder)
     ui.info(f"that drive has {human(du.free)} free of {human(du.total)}")
     suggested = max(10.0, round((du.free / GB - cfg.reserve_gb) * 0.5))
-    budget = _ask("Space for Flotilla, in GB", suggested if not path.exists() else cfg.budget_gb, parse_gb)
-    reserve = _ask("Always leave this much free on the drive, in GB", cfg.reserve_gb, parse_gb)
+    budget = _ask("Space for Flotilla, in GB", min(1e6, suggested) if not path.exists() else cfg.budget_gb,
+                  _bounded("budget_gb", parse_gb))
+    reserve = _ask("Always leave this much free on the drive, in GB", cfg.reserve_gb, _bounded("reserve_gb", parse_gb))
     if budget > du.free / GB - reserve:
         ui.caution(f"only {du.free / GB - reserve:.0f} GB is free after the reserve; Flotilla will stay under that")
 
     ui.section(2, SETUP_STEPS, "Bandwidth")
     ui.note("In megabits per second. A speed test site will tell you yours.")
-    up = _ask("Upload speed", cfg.upload_mbps, float)
-    down = _ask("Download speed", cfg.download_mbps, float)
-    share = _ask("Share of upload to give the swarm, 0.1-1", cfg.upload_share, float)
-    dshare = _ask("Share of download to use while filling, 0.1-1", cfg.download_share, float)
-    month_gb = up * 125_000 * min(1.0, max(0.1, share)) * 30 * 86400 / GB
+    up = _ask("Upload speed", cfg.upload_mbps, _bounded("upload_mbps"))
+    down = _ask("Download speed", cfg.download_mbps, _bounded("download_mbps"))
+    share = _ask("Share of upload to give the swarm, 0.05-1", cfg.upload_share, _bounded("upload_share"))
+    dshare = _ask("Share of download to use while filling, 0.05-1", cfg.download_share, _bounded("download_share"))
+    month_gb = up * 125_000 * min(1.0, max(0.05, share)) * 30 * 86400 / GB
     ui.note(f"At that speed seeding can upload up to {month_gb:,.0f} GB a month, and reorienting downloads up to "
             f"{cfg.churn_gb * 30:,.0f} GB more. Many internet plans cap data (1.2 TB a month is common in the US, "
             "counting both directions).")
-    plan_cap = _ask("Your internet plan's monthly data cap in GB, 0 if none", 0.0, float)
+    plan_cap = _ask("Your internet plan's monthly data cap in GB, 0 if none", 0.0, _bounded("monthly_upload_cap_gb"))
     suggested_cap = cfg.monthly_upload_cap_gb or (round(plan_cap * 0.4) if plan_cap > 0 else 0.0)
     if plan_cap > 0:
         ui.note(f"Suggested: {suggested_cap:g} GB of upload a month, 40% of your cap, leaving room for everything else.")
-    cap = _ask("Monthly upload cap in GB, 0 for none", suggested_cap, float)
+    cap = _ask("Monthly upload cap in GB, 0 for none", suggested_cap, _bounded("monthly_upload_cap_gb"))
 
     ui.section(3, SETUP_STEPS, "What to seed")
     ui.note("at-risk: the copies most likely to be lost, and models Hugging Face has taken down. in-demand: "
@@ -266,7 +297,7 @@ def cmd_init(args) -> int:
     reorient = _ask(f"How often: {', '.join(REORIENT_CHOICES)}", cfg.reorient, one_of(REORIENT_CHOICES))
     churn = cfg.churn_gb
     if reorient != "never":
-        churn = max(0.0, _ask("Most to swap each time, in GB", churn, parse_gb))
+        churn = _ask("Most to swap each time, in GB", churn, _bounded("churn_gb", parse_gb))
 
     ui.section(4, SETUP_STEPS, "Network")
     bind, pf = cfg.bind_interface, cfg.port_forwarding
@@ -328,7 +359,7 @@ def cmd_init(args) -> int:
     hf, hf_gb = cfg.hf_fallback, cfg.hf_gb_per_day
     hf = _yes("Fetch pieces no peer has from Hugging Face", hf)
     if hf:
-        hf_gb = max(0.0, _ask("Most to fetch a day, in GB, 0 for no limit", hf_gb, float))
+        hf_gb = _ask("Most to fetch a day, in GB, 0 for no limit", hf_gb, _bounded("hf_gb_per_day"))
         _setup_hf_account(path, bind)
 
     ui.section(6, SETUP_STEPS, "Dashboard")
@@ -365,15 +396,14 @@ def cmd_init(args) -> int:
 
     cfg.folder, cfg.budget_gb, cfg.reserve_gb = folder, budget, reserve
     cfg.upload_mbps, cfg.download_mbps = up, down
-    cfg.upload_share, cfg.download_share = min(1.0, max(0.1, share)), min(1.0, max(0.1, dshare))
+    cfg.upload_share, cfg.download_share = min(1.0, max(0.05, share)), min(1.0, max(0.05, dshare))
     cfg.monthly_upload_cap_gb, cfg.port_forwarding, cfg.licenses = cap, pf, licenses
     cfg.bind_interface = bind
     cfg.hf_fallback, cfg.hf_gb_per_day = hf, hf_gb
     cfg.reorient, cfg.churn_gb, cfg.focus = reorient, churn, focus
     cfg.dashboard_access = access
 
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(render_config(cfg))
+    write_config(cfg, path)
     _setup_result("here" if home_ip_ok else "not-started")
     print()
     ui.done(f"Saved {_host_path(path, docker)}")
@@ -1142,15 +1172,25 @@ def cmd_dashboard(args) -> int:
     except OSError:
         print(f"The dashboard isn't up: start Flotilla with `flotilla run` or `flotilla service install`. ({url})")
         return 1
-    if keyed:
-        key = dashboard_key(state_dir)
-        url += f"/?key={key}"
-        print(full_address(cfg.dashboard_access, cfg.dashboard_port, key))
-        tailnet_hint()
-    else:
+    if not keyed:
         print(url)
-    if not args.no_open:
+        if not args.no_open:
+            webbrowser.open(url)
+        return 0
+    key = dashboard_key(state_dir)
+    print(full_address(cfg.dashboard_access, cfg.dashboard_port, key))
+    tailnet_hint()
+    if args.no_open:
+        return 0
+    # The key is what keeps other accounts on this computer out, so it must stay off any command line
+    # (`ps` shows those to every user). macOS's opener reads the address from its stdin; elsewhere the
+    # browser and xdg-open would get it as an argument, so they get the address without it, and the
+    # one printed above (opened once, then remembered) lets you in.
+    if sys.platform == "darwin" and not os.environ.get("BROWSER"):
+        webbrowser.MacOSXOSAScript("default").open(f"{url}/?key={key}")
+    else:
         webbrowser.open(url)
+        print("If the page asks for its access key, open the address above once; your browser remembers it.")
     return 0
 
 
@@ -1198,8 +1238,13 @@ def cmd_uninstall(args) -> int:
     config = Path(args.config).expanduser()
     state_dir = Path(args.state).expanduser()
     cfg = load_config(config)
-    state = State(state_dir)
-    targets = [Path(h["save_path"]) for h in state.holdings.values()] + [cfg.folder / ".probe"]
+    left: list[str] = []          # what couldn't be removed, and why: reported at the end, and the exit code says so
+    try:
+        holdings = State(state_dir).holdings
+    except ValueError as e:        # state.json and its backup are both unreadable
+        holdings = {}
+        left.append(f"the seeded files in {cfg.folder}: Flotilla can't tell which are its own ({e})")
+    targets = [Path(h["save_path"]) for h in holdings.values()] + [cfg.folder / ".probe"]
     targets = [t for t in targets if t.exists() and _inside_dir(cfg.folder, t)]
     held = sum(_du(t) for t in targets)
     # Setup wrote the account files next to the config; the service wrote the log (macOS).
@@ -1220,14 +1265,28 @@ def cmd_uninstall(args) -> int:
         print("Nothing deleted.")
         return 1
     for t in targets:
-        shutil.rmtree(t, ignore_errors=True)
+        _delete_tree(t, left)
     try:
         cfg.folder.rmdir()  # only if now empty
     except OSError:
         pass
-    shutil.rmtree(state_dir, ignore_errors=True)
+    if state_dir.is_symlink():
+        # A link to somewhere else (another drive, say): deleting "the state folder" must not mean emptying
+        # whatever it points at. Remove the link and leave the folder it led to for the person to delete.
+        where = state_dir.resolve()
+        try:
+            state_dir.unlink()
+            left.append(f"{where}: {state_dir} was a link to it, so only the link is removed; delete that "
+                        f"folder yourself if you want its contents gone")
+        except OSError as e:
+            left.append(f"{state_dir}: {e.strerror or e}")
+    else:
+        _delete_tree(state_dir, left)
     for p in files:
-        p.unlink(missing_ok=True)
+        try:
+            p.unlink(missing_ok=True)
+        except OSError as e:
+            left.append(f"{p}: {e.strerror or e}")
     for v in dropped:
         if not dc.remove_volume(v):
             print(f"Couldn't remove the Docker volume {v}: docker volume rm {v}")
@@ -1255,8 +1314,38 @@ def cmd_uninstall(args) -> int:
               "huggingface.co/settings/tokens and your Pirate Face account settings.")
     if linger:
         print(linger)
+    if left:
+        print("Not everything was removed:", file=sys.stderr)
+        for item in left:
+            print(f"  {item}", file=sys.stderr)
+        print("Remove the program itself with: uv tool uninstall flotilla-face")
+        return 1
     print("Done. Remove the program itself with: uv tool uninstall flotilla-face")
     return 0
+
+
+def _delete_tree(path: Path, left: list[str]) -> None:
+    """Delete a file or folder, never following a symlink out of it (a link is removed, not what it
+    points to). What can't be removed is added to `left` with the reason, not swallowed."""
+    if not path.exists() and not path.is_symlink():
+        return
+    problems: list[str] = []
+
+    def note(_fn, where, exc) -> None:
+        problems.append(f"{where}: {getattr(exc, 'strerror', None) or exc}")
+
+    try:
+        if path.is_symlink() or not path.is_dir():
+            path.unlink()
+        elif sys.version_info >= (3, 12):
+            shutil.rmtree(path, onexc=note)
+        else:
+            shutil.rmtree(path, onerror=lambda fn, where, info: note(fn, where, info[1]))
+    except OSError as e:
+        problems.append(f"{path}: {e.strerror or e}")
+    left.extend(problems[:5])
+    if len(problems) > 5:
+        left.append(f"... and {len(problems) - 5} more under {path}")
 
 
 def _uninstall_containers(args) -> tuple[bool, list[str]]:
@@ -1550,6 +1639,11 @@ def cmd_status(args) -> int:
         print("\nPirate Face's manifest disagrees with Hugging Face for these (verified against Hugging Face):")
         for t in flagged:
             print(f"  {t['repo']}: {', '.join(m['path'] for m in t['manifest_mismatches'])}")
+    for t in doc["torrents"]:
+        for e in t.get("io_errors") or []:
+            print(f"UNREADABLE  {t['repo']}/{e['path']}: {e['error']} (checked again later)")
+        if t.get("error"):
+            print(f"STOPPED  {t['repo']}: {t['error']} (started again later)")
     print()
     _print_per_file(doc)
     _print_gated(doc.get("hf_gated") or [])
@@ -1570,7 +1664,9 @@ def cmd_verify(args) -> int:
                 continue
             p = base / e["tpath"]
             try:
-                ok = (sha256_file(p) == e["sha256"]) if e.get("sha256") else (git_blob_sha1(p, e["size"]) == e["git_oid"])
+                # Hex digits compare as numbers, not spellings: a record written upper-case is still the same hash.
+                ok = (sha256_file(p).lower() == str(e["sha256"]).lower()) if e.get("sha256") else (
+                    git_blob_sha1(p, e["size"]).lower() == str(e["git_oid"]).lower())
             except OSError as err:
                 ok = False
                 print(f"  {hold['repo']}/{e['path']}: {err}")
@@ -1580,6 +1676,39 @@ def cmd_verify(args) -> int:
                 print(f"BAD  {hold['repo']}/{e['path']}")
     print(f"{good} file(s) verified, {bad} bad")
     return 1 if bad else 0
+
+
+def cmd_unblock(args) -> int:
+    """Let a torrent blocked after a failed verification be picked again. A running node owns
+    state.json, so it's asked through its inbox (as the dashboard asks); otherwise the file is changed."""
+    from .engine import unblock
+    from .remote import RemoteEngine
+
+    if (args.target is None) == (not args.all):
+        print("error: name an infohash or author/model, or pass --all", file=sys.stderr)
+        return 2
+    state_dir = Path(args.state)
+    status = state_dir / "status.json"
+    try:
+        running = time.time() - status.stat().st_mtime < 180     # written every minute while it runs
+    except OSError:
+        running = False
+    if running:
+        body = {"all": True} if args.all else {"target": args.target}
+        print(RemoteEngine(state_dir).submit("unblock", body).capitalize() + ".")   # ValueError explains
+        return 0
+    state = State(state_dir)
+    blocked = dict(state.data.get("blocked") or {})
+    gone = unblock(state.data, None if args.all else args.target)
+    if not gone:
+        print("Nothing blocked matches that." if args.target else "Nothing is blocked.")
+        return 1
+    state.save()
+    for ih in gone:
+        repo = (blocked.get(ih) or {}).get("repo")
+        print(f"Unblocked {ih}" + (f" ({repo})" if repo else ""))
+    print("It can be picked again at the node's next refresh.")
+    return 0
 
 
 def _load_ledger_for(args, offline: bool = False):
@@ -1792,25 +1921,31 @@ def cmd_update(args) -> int:
 
     failed = False
     if native:
-        try:
-            wheel = release.download(rel, rel.wheel)
-        except (release.ReleaseError, FetchError) as e:
-            ui.caution(str(e))
-            return 1
-        ui.done(f"downloaded {wheel.name}, matching the signed release")
-        if _install_wheel(kind, wheel):
-            ui.done(f"Flotilla {rel.version} installed")
-            if service.installed():
-                ok = service.execute(service.restart_plan(), dry_run=False, say=ui.info)
-                failed |= not ok
-            if stale:   # the containers are updated by the version just installed, not this one
-                import subprocess
+        import tempfile
 
-                sys.stdout.flush()      # so this copy's output comes before the new one's, even in a log
-                r = subprocess.run([*service.executable(), "update", "--yes"])
-                return 1 if failed or r.returncode else 0
-        else:
-            failed = True
+        work = Path(tempfile.mkdtemp(prefix="flotilla-update-"))
+        try:       # the downloaded wheel is only needed until it is installed
+            try:
+                wheel = release.download(rel, rel.wheel, into=work)
+            except (release.ReleaseError, FetchError) as e:
+                ui.caution(str(e))
+                return 1
+            ui.done(f"downloaded {wheel.name}, matching the signed release")
+            if _install_wheel(kind, wheel):
+                ui.done(f"Flotilla {rel.version} installed")
+                if service.installed():
+                    ok = service.execute(service.restart_plan(), dry_run=False, say=ui.info)
+                    failed |= not ok
+                if stale:   # the containers are updated by the version just installed, not this one
+                    import subprocess
+
+                    sys.stdout.flush()      # so this copy's output comes before the new one's, even in a log
+                    r = subprocess.run([*service.executable(), "update", "--yes"])
+                    return 1 if failed or r.returncode else 0
+            else:
+                failed = True
+        finally:
+            shutil.rmtree(work, ignore_errors=True)
     if stale:
         try:
             ui.info(f"downloading the {rel.version} image")
@@ -1846,31 +1981,37 @@ def _editor_release(args) -> int:
         return r.stdout or ""
 
     work = Path(tempfile.mkdtemp(prefix="flotilla-release-"))
-    dist = work / "dist"
-    dist.mkdir()
-    gh("release", "download", tag, "--dir", str(dist), "--pattern", "*.whl", "--pattern", "*.tar.gz",
-       "--pattern", "image.txt")
-    image = (dist / "image.txt").read_text().strip()
-    (dist / "image.txt").unlink()
-    wheels = [p.name for p in dist.glob("*.whl")]
-    if wheels != [f"flotilla_face-{version}-py3-none-any.whl"]:
-        raise ValueError(f"expected the {version} wheel in the draft release, found {wheels}")
-    notes = gh("release", "view", tag, "--json", "body", "-q", ".body")
-    manifest = release.make_manifest(version, notes, image, dist)
-    sk = SecretKey.load(Path(args.secret).expanduser())
-    sig = sk.sign(manifest, trusted_comment=release.trusted_comment(version),
-                  untrusted_comment=f"Flotilla {version} release, signed with key {sk.public.key_id_hex}")
-    rel = release.parse(manifest, sig, release.builtin_keys())   # what every install will check
-    (work / release.MANIFEST).write_bytes(manifest)
-    (work / release.SIGNATURE).write_text(sig)
-    print(f"Flotilla {rel.version}: {', '.join(rel.files)}; image {rel.image}")
-    if args.dry_run:
-        print(f"Not published (--dry-run). Signed manifest: {work / release.MANIFEST}")
+    keep = False         # a --dry-run leaves the signed manifest where it says it did
+    try:
+        dist = work / "dist"
+        dist.mkdir()
+        gh("release", "download", tag, "--dir", str(dist), "--pattern", "*.whl", "--pattern", "*.tar.gz",
+           "--pattern", "image.txt")
+        image = (dist / "image.txt").read_text().strip()
+        (dist / "image.txt").unlink()
+        wheels = [p.name for p in dist.glob("*.whl")]
+        if wheels != [f"flotilla_face-{version}-py3-none-any.whl"]:
+            raise ValueError(f"expected the {version} wheel in the draft release, found {wheels}")
+        notes = gh("release", "view", tag, "--json", "body", "-q", ".body")
+        manifest = release.make_manifest(version, notes, image, dist)
+        sk = SecretKey.load(Path(args.secret).expanduser())
+        sig = sk.sign(manifest, trusted_comment=release.trusted_comment(version),
+                      untrusted_comment=f"Flotilla {version} release, signed with key {sk.public.key_id_hex}")
+        rel = release.parse(manifest, sig, release.builtin_keys())   # what every install will check
+        (work / release.MANIFEST).write_bytes(manifest)
+        (work / release.SIGNATURE).write_text(sig)
+        print(f"Flotilla {rel.version}: {', '.join(rel.files)}; image {rel.image}")
+        if args.dry_run:
+            print(f"Not published (--dry-run). Signed manifest: {work / release.MANIFEST}")
+            keep = True
+            return 0
+        gh("release", "upload", tag, str(work / release.MANIFEST), str(work / release.SIGNATURE), "--clobber")
+        gh("release", "edit", tag, "--draft=false", "--latest")
+        print(f"Published {rel.page}")
         return 0
-    gh("release", "upload", tag, str(work / release.MANIFEST), str(work / release.SIGNATURE), "--clobber")
-    gh("release", "edit", tag, "--draft=false", "--latest")
-    print(f"Published {rel.page}")
-    return 0
+    finally:
+        if not keep:
+            shutil.rmtree(work, ignore_errors=True)
 
 
 def cmd_editor(args) -> int:
@@ -2255,8 +2396,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--reserve-gb", type=float, help="--yes: always leave this much free on the drive")
     p.add_argument("--upload-mbps", type=float, help="--yes: this line's upload speed")
     p.add_argument("--download-mbps", type=float, help="--yes: this line's download speed")
-    p.add_argument("--upload-share", type=float, help="--yes: share of upload for the swarm, 0.1-1")
-    p.add_argument("--download-share", type=float, help="--yes: share of download while filling, 0.1-1")
+    p.add_argument("--upload-share", type=float, help="--yes: share of upload for the swarm, 0.05-1")
+    p.add_argument("--download-share", type=float, help="--yes: share of download while filling, 0.05-1")
     p.add_argument("--monthly-upload-cap-gb", type=float, help="--yes: monthly upload cap, 0 for none")
     p.add_argument("--focus", help="--yes: at-risk, balanced or in-demand")
     p.add_argument("--reorient", help="--yes: daily, weekly, monthly or never")
@@ -2266,7 +2407,8 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--seed-from-home-ip", action="store_true",
                    help="--yes: with no VPN to pin to, seed from this connection's own public IP address. "
                         "Peers see it. Only with the person's explicit agreement")
-    p.add_argument("--router-port", action="store_true", help="--yes: open a port on the router (UPnP), when not pinned")
+    p.add_argument("--router-port", action=argparse.BooleanOptionalAction, default=None,
+                   help="--yes: open a port on the router (UPnP), when not pinned (default: keep the current setting)")
     p.add_argument("--hf-fallback", action=argparse.BooleanOptionalAction, default=None,
                    help="--yes: fetch pieces no peer has from Hugging Face")
     p.add_argument("--hf-gb-per-day", type=float, help="--yes: most to fetch from Hugging Face a day, 0 for no limit")
@@ -2330,6 +2472,9 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--repo", help="with a folder: which model it is (author/model), if it can't be told from the files")
     p.add_argument("--revision", help="with a folder: which revision (40-hex commit)")
     p.add_argument("--offline", action="store_true", help="use only the ledger shipped with Flotilla and its cache")
+    p = sub.add_parser("unblock", help="let a torrent blocked after a failed verification be picked again")
+    p.add_argument("target", nargs="?", help="its infohash, or author/model for every blocked torrent of that model")
+    p.add_argument("--all", action="store_true", help="unblock every blocked torrent")
     p = sub.add_parser("ledger", help="show the hash ledger this node uses")
     p.add_argument("--accept", nargs=2, metavar=("REPO@REVISION", "DIGEST"),
                    help="deliberately accept a different ledger entry for one model (see `flotilla ledger`)")
@@ -2378,7 +2523,8 @@ def main(argv: list[str] | None = None) -> int:
                 "add": cmd_add, "remove": cmd_remove, "picks": cmd_picks,
                 "verify": cmd_verify, "history": cmd_history, "feed": cmd_feed, "editor": cmd_editor,
                 "ledger": cmd_ledger, "hf": cmd_hf, "update": cmd_update,
-                "points": cmd_points}
+                "points": cmd_points,
+                "unblock": cmd_unblock}
     try:
         return handlers[args.cmd](args)
     except (FeedError, SignatureError, ValueError) as e:

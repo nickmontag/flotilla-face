@@ -20,6 +20,7 @@ to find; `Forward.note` says so and what would.
 
 from __future__ import annotations
 
+import http.client
 import ipaddress
 import json
 import os
@@ -143,12 +144,13 @@ def gluetun_port(auth: str = "", base: str = GLUETUN, timeout: float = 3.0) -> i
             if e.code == 404:
                 continue
             raise GluetunAbsent(f"HTTP {e.code}") from None
-        except (OSError, ValueError) as e:
-            raise GluetunAbsent(str(e)) from None
+        except (OSError, ValueError, RecursionError, http.client.HTTPException) as e:
+            # Something else on the port (BadStatusLine from a non-HTTP listener): not gluetun either.
+            raise GluetunAbsent(str(e) or type(e).__name__) from None
         if not isinstance(doc, dict):
             raise GluetunAbsent("not gluetun's answer")
         ports = doc.get("ports") if "ports" in doc else [doc.get("port")]
-        if not isinstance(ports, list) or not all(isinstance(p, int) and 0 <= p < 65536 for p in ports):
+        if not isinstance(ports, list) or not all(isinstance(p, int) and not isinstance(p, bool) and 0 <= p < 65536 for p in ports):
             raise GluetunAbsent("not gluetun's answer")
         return next((p for p in ports if p), 0)
     if refused:
@@ -178,8 +180,8 @@ def gluetun_restart_vpn(auth: str = "", base: str = GLUETUN, timeout: float = 60
                 if e.code in (401, 403):
                     raise GluetunAuth(f"gluetun's control server said {e.code} to {RESTART_ROUTE}") from None
                 raise GluetunAbsent(f"HTTP {e.code} from {path}") from None
-            except (OSError, ValueError) as e:
-                raise GluetunAbsent(str(e)) from None
+            except (OSError, ValueError, http.client.HTTPException) as e:
+                raise GluetunAbsent(str(e) or type(e).__name__) from None
             paths = [path]                  # running goes where stopping went
             break
 

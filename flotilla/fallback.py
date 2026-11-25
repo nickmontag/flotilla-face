@@ -339,7 +339,7 @@ def vet(h: Hit, g: Group, pf, hf, licenses: set[str]):
             return f"labelled {lic}, but its base {g.base} is {base_lic}, which isn't allowed by default"
         lic = base_lic
     info = patient(pf.torrent, h.repo)
-    if not info or not info.get("revision") or not info.get("magnet"):
+    if not isinstance(info, dict) or not info.get("revision") or not info.get("magnet"):
         return "no Pirate Face torrent"
     if not info.get("torrent"):
         return "Pirate Face hasn't published its .torrent file"

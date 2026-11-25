@@ -82,14 +82,17 @@ flotilla init --yes --folder ~/flotilla --budget-gb 500 --upload-mbps 40 --downl
 ```
 
 Every answer comes from a flag, else the current settings, else the default `flotilla init` offers.
-`flotilla init --help` lists them all. The ones that matter most:
+`flotilla init --help` lists them all. `--folder` is stored as an absolute path. A number outside its
+limits is an error (exit 2), not saved. The ones that matter most:
 
 | Flag | Default | |
 | --- | --- | --- |
 | `--vpn auto\|none\|<interface or address>` | `auto` | `auto` pins to the VPN found |
 | `--seed-from-home-ip` | off | only with the person's explicit yes (step 1) |
 | `--budget-gb`, `--reserve-gb` | half the free space, 20 | disk to use, disk to always leave free |
-| `--upload-mbps`, `--download-mbps`, `--upload-share`, `--monthly-upload-cap-gb` | 10, 100, 0.8, none | |
+| `--upload-mbps`, `--download-mbps`, `--monthly-upload-cap-gb` | 10, 100, none | |
+| `--upload-share`, `--download-share` | 0.8, 0.9 | share of each line to use, 0.05 to 1 |
+| `--router-port` / `--no-router-port` | keep the current setting | open a port on the router (UPnP); ignored when pinned to a VPN |
 | `--focus at-risk\|balanced\|in-demand` | `at-risk` | what to seed first |
 | `--dashboard local\|lan\|tailnet\|public` | `local` | never `public` unless they ask for it |
 

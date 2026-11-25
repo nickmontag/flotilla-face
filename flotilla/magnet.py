@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import base64
 import binascii
+import re
 import urllib.parse
 from dataclasses import dataclass, field
 
@@ -34,23 +35,26 @@ class Magnet:
     raw: str = ""
 
 
+_HEX40 = re.compile(r"[0-9A-Fa-f]{40}")
+_B32 = re.compile(r"[A-Za-z2-7]{32}")
+
+
 def _btih_hex(value: str) -> str:
-    if len(value) == 40:
-        try:
-            bytes.fromhex(value)
-        except ValueError as e:
-            raise MagnetError("btih is not hex") from e
+    # Matched exactly: bytes.fromhex skips whitespace, so "+abab…+" (spaces, once decoded) passed.
+    if _HEX40.fullmatch(value):
         return value.lower()
-    if len(value) == 32:
+    if _B32.fullmatch(value):
         try:
             return base64.b32decode(value.upper()).hex()
         except binascii.Error as e:
             raise MagnetError("btih is not base32") from e
+    if len(value) in (32, 40):
+        raise MagnetError("btih is not hex or base32")
     raise MagnetError("btih has the wrong length")
 
 
 def parse_magnet(uri: str) -> Magnet:
-    if not uri.startswith("magnet:?"):
+    if not isinstance(uri, str) or not uri.startswith("magnet:?"):
         raise MagnetError("not a magnet URI")
     params = urllib.parse.parse_qsl(uri[len("magnet:?"):], keep_blank_values=True, strict_parsing=False)
     m = Magnet(btih="", raw=uri)
@@ -82,14 +86,26 @@ def validate_magnet(
     tracker_hosts: tuple[str, ...] = DEFAULT_TRACKER_HOSTS,
     webseed_hosts: tuple[str, ...] = DEFAULT_WEBSEED_HOSTS,
 ) -> Magnet:
+    # urlsplit and .port raise ValueError on a malformed URL (a bad IPv6 literal or port): that is
+    # a rejected magnet too, not an error for the caller.
     for tr in m.trackers:
-        p = urllib.parse.urlsplit(tr)
-        if p.scheme not in ("udp", "http", "https") or not p.hostname or not host_allowed(p.hostname, tracker_hosts):
+        try:
+            p = urllib.parse.urlsplit(tr)
+            ok = p.scheme in ("udp", "http", "https") and p.hostname and host_allowed(p.hostname, tracker_hosts) \
+                and (p.port is None or p.port > 0)
+        except ValueError:
+            ok = False
+        if not ok:
             raise MagnetError(f"tracker not on allowlist: {tr}")
     for ws in m.web_seeds:
-        p = urllib.parse.urlsplit(ws)
-        if p.scheme != "https" or not p.hostname or not host_allowed(p.hostname, webseed_hosts):
+        try:
+            p = urllib.parse.urlsplit(ws)
+            ok = p.scheme == "https" and p.hostname and host_allowed(p.hostname, webseed_hosts)
+            port = p.port
+        except ValueError:
+            raise MagnetError(f"web seed URL not allowed: {ws}") from None
+        if not ok:
             raise MagnetError(f"web seed not on allowlist: {ws}")
-        if p.username or p.password or p.port not in (None, 443):
+        if p.username or p.password or port not in (None, 443):
             raise MagnetError(f"web seed URL not allowed: {ws}")
     return m

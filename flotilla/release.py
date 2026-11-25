@@ -17,6 +17,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import shutil
 import tempfile
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -108,7 +109,7 @@ def parse(manifest: bytes, signature: str, keys) -> Release:
     if doc.get("tag") != f"v{version}":
         raise ReleaseError("release tag and version don't match")
     rel = Release(version, doc["tag"], str(doc.get("notes", "")), image, files)
-    rel.wheel                                       # exactly one wheel
+    _ = rel.wheel       # not used here: reading it raises ReleaseError unless the release names exactly one wheel
     return rel
 
 
@@ -142,7 +143,8 @@ def latest(base: str | None = None, keys=None) -> Release:
 
 
 def download(rel: Release, name: str, into: Path | None = None) -> Path:
-    """Fetch one of the release's files and check it against the signed manifest."""
+    """Fetch one of the release's files and check it against the signed manifest. With no `into`, it goes
+    in a new temporary folder that the caller removes (its parent is the returned path's parent)."""
     from . import netsafe
 
     want = rel.files.get(name)
@@ -151,9 +153,15 @@ def download(rel: Release, name: str, into: Path | None = None) -> Path:
     data = netsafe.fetch(rel.url(name), max_bytes=MAX_FILE, allowed=RELEASE_HOSTS, timeout=120).body
     if len(data) != want.get("size", len(data)) or hashlib.sha256(data).hexdigest() != want["sha256"]:
         raise ReleaseError(f"{name} doesn't match the signed release: not installing it")
+    made = into is None
     into = into or Path(tempfile.mkdtemp(prefix="flotilla-update-"))
     path = into / name
-    path.write_bytes(data)
+    try:
+        path.write_bytes(data)
+    except BaseException:
+        if made:        # don't leave the folder we just made behind when the file can't be written
+            shutil.rmtree(into, ignore_errors=True)
+        raise
     return path
 
 

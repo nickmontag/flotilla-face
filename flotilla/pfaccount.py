@@ -38,6 +38,9 @@ KEY_FILE = "pirateface-key"
 KEY_RE = re.compile(r"pfct_[A-Za-z0-9_-]{8,200}")
 SETTINGS_PAGE = "https://pirateface.co/settings"
 # What /api/trackers gives as an account's own tracker (pf's user.SEEDING_TRACKER, tightened).
+# http:// stays allowed: Pirate Face issues it as http://tracker.pirateface.co:6970/<token>/announce
+# (README, DESIGN.md "Seeding credit"), as plain HTTP as BitTorrent announces are; requiring https
+# would refuse every real one.
 SEEDING_TRACKER = re.compile(r"https?://[A-Za-z0-9.-]+:6970/[A-Za-z0-9._~-]+/announce")
 REFETCH_EVERY = 12 * 3600.0     # ask again this often: the site may rotate the tracker
 RETRY_AFTER_ERROR = 900.0

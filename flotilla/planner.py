@@ -99,6 +99,10 @@ class Params:
     stuck: frozenset[str] = frozenset()
     # Files (infohash, repo path) a reorientation swapped out lately: not picked again meanwhile.
     cooling: frozenset[tuple[str, str]] = frozenset()
+    # Held torrents the plan doesn't see but the node keeps as they are (their listing couldn't be
+    # read this time): their bytes and their number count against the budget and max_torrents first.
+    kept_bytes: int = 0
+    kept_torrents: int = 0
 
 
 @dataclass
@@ -380,7 +384,7 @@ def plan(cands: list[TorrentCand], p: Params, node_id: str) -> Plan:
     units = build_units(cands, p, node_id)
     order = sorted(units, key=lambda u: (not u.forced, -u.key))
     picks: dict[str, TorrentPick] = {}
-    used = 0
+    used = p.kept_bytes           # held outside the plan, kept as is: that space is taken
     per_repo: dict[str, int] = {}
     taken: set[int] = set()
 
@@ -396,7 +400,7 @@ def plan(cands: list[TorrentCand], p: Params, node_id: str) -> Plan:
         opening = c.infohash not in picks
         extra = u.size + u.overhead + meta_bytes(u)
         if limit:
-            if opening and len(picks) >= p.max_torrents:
+            if opening and len(picks) + p.kept_torrents >= p.max_torrents:
                 return False
             if used + extra > p.budget_bytes:
                 return False
@@ -496,7 +500,7 @@ def plan(cands: list[TorrentCand], p: Params, node_id: str) -> Plan:
             for v in chosen:
                 leaving[v.cand.infohash] = leaving.get(v.cand.infohash, 0) + 1
             closing = sum(1 for ih, n in leaving.items() if n == len(picks[ih].units))
-            if len(picks) - closing >= p.max_torrents:
+            if len(picks) - closing + p.kept_torrents >= p.max_torrents:
                 continue
         for v in chosen:
             release(v)

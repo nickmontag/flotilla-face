@@ -99,6 +99,9 @@ DIAL_OUT_ANNOUNCE = 15 * 60.0
 STUCK_FOR = 86400.0   # a torrent Hugging Face wouldn't serve stays out of plans this long (see _stuck)
 REPICK_AFTER = 3 * 86400.0   # a file a reorientation swapped out isn't picked again for this long (_cooling)
 RESUME_EVERY = 30 * 60.0
+# Refreshes in a row Pirate Face must list no torrent for a held model before its copy is dropped:
+# one odd answer shouldn't delete a model (a takedown that must act at once goes on the feed's deny list).
+DELIST_GRACE = 3
 # A node that already holds files waits a random while before its first look at the swarm after
 # it starts, seeding what it has meanwhile: many nodes restarted together (a host reboot, an
 # update) would otherwise all ask Pirate Face and probe every swarm in the same minutes.
@@ -106,6 +109,73 @@ STARTUP_SPREAD = 30 * 60.0
 # Each node's reorientation period is its own, within this share of the chosen one (by node id),
 # so nodes that started together drift apart instead of reorienting in lockstep for good.
 REORIENT_SPREAD = 0.1
+# A file that couldn't be read while verifying (a flaky disk, a permission, too many open files) says
+# nothing about the torrent: it's checked again, after VERIFY_QUICK quick looks, at VERIFY_RETRY
+# seconds, doubling up to the last.
+VERIFY_QUICK = 2
+VERIFY_RETRY = (30.0, 3600.0)
+# A torrent libtorrent stopped on a disk error (a full or read-only disk, a vanished file) is started
+# again after the first wait, doubling up to the second while it keeps failing.
+TORRENT_RETRY = (60.0, 3600.0)
+# One failing housekeeping step (a full disk under state.json, say) is logged at most this often.
+STEP_LOG_EVERY = 600.0
+# libtorrent's rate limits are C ints: 2**31 B/s and up wrap round (to 0, unlimited, or to almost nothing).
+RATE_MAX = 2**31 - 1
+
+
+def _rate_limit(bps: float) -> int:
+    """A rate in bytes/s as libtorrent takes it: at least 1 B/s, at most RATE_MAX."""
+    try:
+        return min(RATE_MAX, max(1, int(bps)))
+    except (ValueError, OverflowError):      # nan, inf: no usable limit was given
+        return RATE_MAX
+
+
+def _finite(v) -> bool:
+    """A real number from the dashboard: not a bool, not NaN or infinite (JSON can't carry those back)."""
+    return isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+
+
+def _write_private(path: Path, data: bytes) -> None:
+    """Write `path` whole (a temporary file, then a rename) readable by this user only. Resume data
+    holds the trackers, and the account's seeding tracker address carries its private key."""
+    tmp = path.with_name(path.name + ".tmp")
+    tmp.unlink(missing_ok=True)            # made fresh below, so never readable by others, even briefly
+    fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    try:
+        with os.fdopen(fd, "wb") as f:
+            f.write(data)
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        raise
+    os.replace(tmp, path)
+
+
+def _write_atomic(path: Path, data: bytes) -> None:
+    """Write `path` whole: a crash or a full disk leaves the old file, or none, never a short one."""
+    tmp = path.with_name(path.name + ".tmp")
+    try:
+        tmp.write_bytes(data)
+        os.replace(tmp, path)
+    except BaseException:
+        tmp.unlink(missing_ok=True)
+        raise
+
+
+def unblock(data: dict, target: str | None) -> list[str]:
+    """Take torrents off the blocklist in state data: one by infohash, every torrent of a model by
+    its name (author/model), or all of them (target None). Returns the infohashes taken off."""
+    block = data.setdefault("blocklist", [])
+    why = data.setdefault("blocked", {})
+    if target is None:
+        gone = list(block)
+    else:
+        t = target.strip().lower()
+        gone = [ih for ih in block if ih == t or str((why.get(ih) or {}).get("repo", "")).lower() == t]
+    data["blocklist"] = [ih for ih in block if ih not in gone]
+    for ih in gone:
+        why.pop(ih, None)
+    return gone
 
 
 def _from_internet(host: str) -> bool:
@@ -176,8 +246,8 @@ def session_settings(cfg: Config, *, port: int, fingerprint: str, listen_host: s
     if probe:
         s.update({"download_rate_limit": 256 * 1024, "upload_rate_limit": 16 * 1024})
     else:
-        s.update({"upload_rate_limit": max(1, int(cfg.upload_bps)),
-                  "download_rate_limit": max(1, int(cfg.download_bps))})
+        s.update({"upload_rate_limit": _rate_limit(cfg.upload_bps),
+                  "download_rate_limit": _rate_limit(cfg.download_bps)})
     return s
 
 
@@ -479,12 +549,14 @@ class Engine:
         self._dial_defaults = {k: self.ses.get_settings()[k] for k in DIAL_OUT}
         self._last_dial_announce = 0.0
         self.state.data.setdefault("blocklist", [])
+        self.state.data.setdefault("blocked", {})      # infohash -> {repo, at, why}: what `flotilla unblock` names
         self.state.data.setdefault("dropped", [])      # repos the user removed from the dashboard
         self.state.data.setdefault("ledger", {})       # seed-hours per torrent (a points estimate)
         if self.state.data.get("ledger_v", 1) < 2:
             # Before 0.2.9 the estimate also counted torrents held only in part, which earn nothing.
             for e in self.state.data["ledger"].values():
                 e["points_est"] = 0.0
+            self.state.data["ledger_retired"] = 0.0
             self.state.data["ledger_v"] = 2
         # Reorienting: when this node last swapped held pieces for needier ones, and what it swapped.
         self.state.data.setdefault("reorient", {})
@@ -521,6 +593,12 @@ class Engine:
         self.last_rejected: list[Rejection] = []
         self.dashboard = None
         self._bind_check: tuple[float, bool | None] = (0.0, None)
+        # Torrents libtorrent stopped on a disk error, started again with backoff (_retry_errored):
+        # ih -> {"tries", "due" (None once retried), "at" (the last error)}.
+        self._errored: dict[str, dict] = {}
+        self._step_errors: dict[str, tuple[float, int]] = {}   # step -> (last logged, failures since)
+        self._shut = False
+        self._tighten_resume_dir()
         netsafe.pin(cfg.bind_interface)     # our own requests leave by the same pin as torrent traffic
         # Pieces no peer can supply, from Hugging Face (see hfpieces); its thread starts in run().
         self.hf = HFPieces(self)
@@ -534,7 +612,48 @@ class Engine:
 
     def log(self, msg: str) -> None:
         self.log_ring.append((time.time(), msg))
-        self._raw_log(msg)
+        try:
+            self._raw_log(msg)
+        except Exception:     # stdout on a full disk, or closed: the dashboard's log still has it
+            pass
+
+    def _step_failed(self, step: str, e: BaseException) -> None:
+        """Log a housekeeping step that failed, at most once per STEP_LOG_EVERY for that step: a full
+        disk fails the same writes every few seconds."""
+        now = time.monotonic()
+        last, since = self._step_errors.get(step, (None, 0))
+        if last is None or now - last >= STEP_LOG_EVERY:
+            more = f" ({since} more time(s) since the last report)" if since else ""
+            self.log(f"{step} failed: {type(e).__name__}: {e}{more}; carrying on")
+            self._step_errors[step] = (now, 0)
+        else:
+            self._step_errors[step] = (last, since + 1)
+
+    def _guarded(self, step: str, fn, *args):
+        """Run one step of the main loop; a failure is logged (rate-limited) and the loop goes on."""
+        try:
+            return fn(*args)
+        except Exception as e:
+            self._step_failed(step, e)
+            return None
+
+    def _tighten_resume_dir(self) -> None:
+        """Resume data holds every tracker of its torrent, the account's seeding tracker (and so its
+        key) among them: this user only. Files written by older versions were readable by all."""
+        try:
+            if not self.resume_dir.is_dir():
+                return
+            os.chmod(self.resume_dir, 0o700)
+            for f in self.resume_dir.iterdir():
+                if f.is_file() and f.stat().st_mode & 0o077:
+                    os.chmod(f, 0o600)
+        except OSError as e:
+            self.log(f"couldn't make the resume data private ({e})")
+
+    def _resume_dir_ready(self) -> None:
+        if not self.resume_dir.is_dir():
+            self.resume_dir.mkdir(parents=True, exist_ok=True)
+            os.chmod(self.resume_dir, 0o700)
 
     def status(self, ih: str, h: lt.torrent_handle, fresh: bool = False):
         """This torrent's status, read cheaply (STATUS_FLAGS) and shared for STATUS_MAX_AGE
@@ -576,7 +695,7 @@ class Engine:
         self.ledger = load_ledger(self.trusted_keys(), self.state.dir, tuple(self.cfg.feed_allowed_hosts), log=self.log)
         try:
             self.index.sync(pf)
-        except (netsafe.FetchError, netsafe.UnsafeURL, ValueError) as e:
+        except (netsafe.FetchError, netsafe.UnsafeURL, ValueError, OSError) as e:
             self.log(f"magnet index: couldn't check for a new build ({e})")
         picks = self._sweep_picks(held_repos)
         swept = set(self.state.data.get("sweep", {}).get("picked", []))
@@ -643,23 +762,48 @@ class Engine:
                     f.done = min(1.0, got / f.size) if f.size else 1.0
 
     def budget_bytes(self) -> int:
+        """min(budget, held + free - reserve). Held is what the holdings' folders take on disk: not
+        everything in the folder, where other files (the user's own, a model's leftovers, a probe's
+        scratch) aren't ours to plan over. Counting them promised the plan space it would never get,
+        and the disk guard had to stop the downloads it started."""
         self.cfg.folder.mkdir(parents=True, exist_ok=True)
+        with self.lock:
+            folders = {hold["save_path"] for hold in self.state.holdings.values() if hold.get("save_path")}
         ours = 0
-        for root, _dirs, files in os.walk(self.cfg.folder):
-            for name in files:
-                try:
-                    st = os.stat(os.path.join(root, name))
-                    ours += getattr(st, "st_blocks", 0) * 512 or st.st_size
-                except OSError:
-                    pass
+        for folder in folders:
+            for root, _dirs, files in os.walk(folder):
+                for name in files:
+                    try:
+                        st = os.stat(os.path.join(root, name))
+                        ours += getattr(st, "st_blocks", 0) * 512 or st.st_size
+                    except OSError:
+                        pass
         free = shutil.disk_usage(self.cfg.folder).free
         return int(max(0, min(self.cfg.budget_gb * GB, ours + free - self.cfg.reserve_gb * GB)))
 
-    def params(self, churn_bytes: int = 0) -> Params:
+    def _kept(self, cands: list[TorrentCand], rejected: list[Rejection]) -> list[str]:
+        """Holdings the plan can't see but apply keeps: models whose listing failed for now
+        (a transient rejection). They aren't candidates, so the plan has to be told their space."""
+        transient = {r.repo for r in rejected if r.transient}
+        delisted = {r.repo for r in rejected if r.delisted}
+        listed = {c.infohash for c in cands}
+        with self.lock:
+            return [ih for ih, hold in self.state.holdings.items()
+                    if ih not in listed and (hold["repo"] in transient
+                                             or (hold["repo"] in delisted
+                                                 and hold.get("delisted", 0) + 1 < DELIST_GRACE))]
+
+    def params(self, churn_bytes: int = 0, cands: list[TorrentCand] | None = None,
+               rejected: list[Rejection] | None = None) -> Params:
         """What the planner works from. churn_bytes: how much of what's held it may swap for needier
-        pieces (0 between reorientations)."""
+        pieces (0 between reorientations). cands and rejected: what the plan chooses from, so
+        holdings kept outside it (_kept) count against the budget."""
+        kept = self._kept(cands or [], rejected or [])
+        with self.lock:
+            kept_bytes = sum(e["size"] for ih in kept for e in self.state.holdings[ih]["files"].values())
         return Params(
             budget_bytes=self.budget_bytes(), upload_bps=self.cfg.upload_bps, download_bps=self.cfg.download_bps,
+            kept_bytes=kept_bytes, kept_torrents=len(kept),
             max_torrents=self.cfg.max_torrents, spread=self.cfg.spread, hold_bonus=self.cfg.hold_bonus,
             min_hold_days=self.cfg.min_hold_days, whole_model_under_bytes=int(self.cfg.whole_model_under_gb * GB),
             now=time.time(), allot={r: int(gb * GB) for r, gb in (self.feed.allot_gb if self.feed else {}).items()},
@@ -751,7 +895,7 @@ class Engine:
         if self._carry_over(cands):
             with self.lock:
                 self.mark_held(cands)
-        base = self.params()
+        base = self.params(cands=cands, rejected=rejected)
         churn = int(self.cfg.churn_gb * GB)
         p = make_plan(cands, dataclasses.replace(base, churn_bytes=churn if due else 0), self.state.node_id)
         self.apply(p, cands, rejected)
@@ -780,8 +924,7 @@ class Engine:
             ro.setdefault("last", now)       # a new node's first reorientation comes one period after it starts
             if out:                          # only a model the user chose comes in between reorientations
                 self.log(f"made room for {self._swap_words(into)} of your own models: dropped {self._swap_words(out)}")
-        with self.lock:
-            self.state.save()
+        self._save_now()
         self._update_preview(base, now)
         self._snap = None      # a new plan: the dashboard's next poll shows it
         return p
@@ -812,32 +955,36 @@ class Engine:
                     moves.append((e, f))
             if not moves:
                 continue
-            self.perfile.drop(old)                   # they point at the old folder
-            h = self.handles.get(old)
-            if h is not None:
-                self._take_out(old, h)
-            src, dest = Path(hold["save_path"]), self.save_path(c.repo, c.infohash)
-            files = {}
-            for e, f in moves:
-                to = dest / c.meta.files[f.index].path
-                try:
-                    to.parent.mkdir(parents=True, exist_ok=True)
-                    os.replace(src / e["tpath"], to)
-                except OSError as err:
-                    self.log(f"{c.repo}: couldn't move {e['path']} over ({err}); it's downloaded again")
-                    continue
-                files[str(f.index)] = {"path": f.repo_path, "tpath": c.meta.files[f.index].path, "size": f.size,
-                                       "sha256": f.sha256, "git_oid": f.git_oid, "status": "wanted",
-                                       "since": e.get("since") or time.time(), "prio": 4}
-            self.torrent_dir.mkdir(parents=True, exist_ok=True)
-            (self.torrent_dir / f"{c.infohash}.torrent").write_bytes(c.meta.raw)
+            # Under the lock throughout: the dashboard, history, memory and Hugging Face threads go
+            # through handles and holdings under it, and this takes torrents out of both.
             with self.lock:
+                self.perfile.drop(old)                   # they point at the old folder
+                h = self.handles.get(old)
+                if h is not None:
+                    self._take_out(old, h)
+                src, dest = Path(hold["save_path"]), self.save_path(c.repo, c.infohash)
+                files = {}
+                for e, f in moves:
+                    to = dest / c.meta.files[f.index].path
+                    try:
+                        to.parent.mkdir(parents=True, exist_ok=True)
+                        os.replace(src / e["tpath"], to)
+                    except OSError as err:
+                        self.log(f"{c.repo}: couldn't move {e['path']} over ({err}); it's downloaded again")
+                        continue
+                    files[str(f.index)] = {"path": f.repo_path, "tpath": c.meta.files[f.index].path,
+                                           "size": f.size, "sha256": f.sha256, "git_oid": f.git_oid,
+                                           "status": "wanted", "since": e.get("since") or time.time(), "prio": 4}
+                try:
+                    self._store_torrent(c.infohash, c.meta.raw)
+                except OSError as err:   # apply stores it again when it picks the new torrent
+                    self.log(f"{c.repo}: couldn't store the new .torrent ({err})")
                 self.state.holdings[c.infohash] = {"repo": c.repo, "quant": c.quant, "revision": c.revision,
                                                    "save_path": str(dest), "files": files}
                 led = self.state.data["ledger"]
                 if old in led and c.infohash not in led:
                     led[c.infohash] = led.pop(old)
-            self._remove(old, delete=True)          # what's left of the old torrent
+                self._remove(old, delete=True)          # what's left of the old torrent
             why = (f"Pirate Face replaced its torrent ({old[:12]}… → {c.infohash[:12]}…)"
                    if hold.get("revision") == c.revision else f"it's listed at a new revision ({c.revision[:12]})")
             self.log(f"{c.repo}: {why}; moved {len(files)} verified file(s) over to be checked against the new "
@@ -892,7 +1039,7 @@ class Engine:
             return
         with self.lock:
             self.mark_held(self._last_cands)
-        base = base or self.params()
+        base = base or self.params(cands=self._last_cands, rejected=self.last_rejected)
         p = make_plan(self._last_cands, dataclasses.replace(base, churn_bytes=int(self.cfg.churn_gb * GB)),
                       self.state.node_id)
         can_go = [u for pk in p.picks.values() for u in pk.units if swappable(u, base.manual)] + p.swap_out
@@ -993,11 +1140,26 @@ class Engine:
         h = self.ses.add_torrent(atp)
         for addr in self.connect:
             h.connect_peer(addr)
-        if self.disk_paused:
+        # Below the disk reserve only downloads wait (as in guard_disk): a seed doesn't write, so a
+        # model with every file in keeps seeding when it's added again (a trim, a memory reload).
+        if self.disk_paused and any(e["status"] == "wanted" for e in hold["files"].values()):
             h.pause()
         self.add_seeding_tracker(h)
         self.handles[ih] = h
         return h
+
+    def _store_torrent(self, ih: str, raw: bytes) -> None:
+        """Keep the verified .torrent under the state dir, written whole. One already there that
+        isn't these bytes (cut short by a full disk or a crash, say) is written again: _add would
+        fail on it at every refresh."""
+        tfile = self.torrent_dir / f"{ih}.torrent"
+        try:
+            if tfile.read_bytes() == raw:
+                return
+        except OSError:
+            pass
+        self.torrent_dir.mkdir(parents=True, exist_ok=True)
+        _write_atomic(tfile, raw)
 
     def extra_handles(self) -> list[tuple[str, str, object]]:
         """(status key, history key, handle) of the torrents besides the models: per-file swarms (counted
@@ -1031,11 +1193,14 @@ class Engine:
         gone = False
         while time.monotonic() < end:
             alerts = self.ses.pop_alerts()
-            for a in alerts:
-                if want_deleted and isinstance(a, (lt.torrent_deleted_alert, lt.torrent_delete_failed_alert)):
-                    if str(a.info_hashes.v1) == ih:
-                        return
+            deleted = want_deleted and any(
+                isinstance(a, (lt.torrent_deleted_alert, lt.torrent_delete_failed_alert))
+                and str(a.info_hashes.v1) == ih for a in alerts)
+            # Every alert popped is handled, the rest of the batch too: it can hold other torrents'
+            # file_completed, torrent_checked and save_resume_data alerts, which come only once.
             self._handle_alerts(alerts)
+            if deleted:
+                return
             if not want_deleted and not self.ses.find_torrent(target).is_valid():
                 if gone:
                     return
@@ -1047,6 +1212,7 @@ class Engine:
         h = self.handles.pop(ih, None)
         self._up_seen.pop(ih, None)
         self._st.pop(ih, None)
+        self._errored.pop(ih, None)
         hold = self.state.holdings.get(ih)
         if h is not None:
             self.ses.remove_torrent(h, lt.session.delete_files if delete else 0)
@@ -1059,6 +1225,13 @@ class Engine:
                     shutil.rmtree(sp, ignore_errors=True)
             self.state.holdings.pop(ih, None)
             (self.torrent_dir / f"{ih}.torrent").unlink(missing_ok=True)
+            self._v2_size.pop(ih, None)
+            self._compacted.pop(ih, None)
+            # Its seed-hours only show while it's held; the points estimate it earned stays in the
+            # node's total (points_view's "est") without keeping an entry per torrent ever seeded.
+            e = self.state.data["ledger"].pop(ih, None)
+            if e:
+                self.state.data["ledger_retired"] = self.state.data.get("ledger_retired", 0.0) + e["points_est"]
 
     def _evict_files(self, ih: str, indices: set[int], prios: list[int]) -> None:
         """Drop some files of a torrent we keep: save its resume data, take it out, delete those
@@ -1084,7 +1257,7 @@ class Engine:
             meta = parse_torrent((self.torrent_dir / f"{ih}.torrent").read_bytes())
             sizes = [f.size for f in meta.files]
             if saved:
-                rf.write_bytes(_forget_pieces(rf.read_bytes(), meta.piece_length, sizes, indices))
+                _write_private(rf, _forget_pieces(rf.read_bytes(), meta.piece_length, sizes, indices))
         except Exception as e:    # unusable resume data: a full recheck is slower but always right
             self.log(f"trim {hold['repo']}: resume data unusable ({e}); rechecking")
             saved = False
@@ -1139,7 +1312,10 @@ class Engine:
             prios = [0] * n
             for k, e in hold["files"].items():
                 prios[int(k)] = e.get("prio") or 4
-            self._add(ih, prios)
+            try:
+                self._add(ih, prios)
+            except Exception as e:       # one model that won't load mustn't keep the rest from seeding
+                self.log(f"cannot resume {hold['repo']}: {e}")
         if self.handles:
             self.log(f"resumed seeding {len(self.handles)} torrent(s)")
         self.perfile.resume()
@@ -1150,15 +1326,24 @@ class Engine:
     def apply(self, p: Plan, cands: list[TorrentCand], rejected: list[Rejection]) -> None:
         now = time.time()
         transient = {r.repo for r in rejected if r.transient}
+        delisted = {r.repo for r in rejected if r.delisted}
         by_ih = {c.infohash: c for c in cands}
         with self.lock:
             for ih in list(self.state.holdings):
+                hold = self.state.holdings[ih]
+                if ih in by_ih:
+                    hold.pop("delisted", None)       # listed again: the count starts over
                 if ih in p.picks:
                     continue
-                hold = self.state.holdings[ih]
                 if ih not in by_ih and hold["repo"] in transient:
                     self.log(f"keep {hold['repo']}: listing unreachable right now, holding as-is")
                     continue
+                if ih not in by_ih and hold["repo"] in delisted:
+                    hold["delisted"] = hold.get("delisted", 0) + 1
+                    if hold["delisted"] < DELIST_GRACE:
+                        self.log(f"keep {hold['repo']}: Pirate Face lists no torrent for it "
+                                 f"({hold['delisted']} of {DELIST_GRACE} refreshes before it's dropped)")
+                        continue
                 self.log(f"drop {hold['repo']} ({ih[:12]}): no longer in the plan")
                 self._remove(ih, delete=True)
 
@@ -1167,92 +1352,153 @@ class Engine:
                 if ih in p.picks:
                     drops.setdefault(ih, set()).add(f.index)
 
-            self.torrent_dir.mkdir(parents=True, exist_ok=True)
             for ih, pick in p.picks.items():
-                c = pick.cand
-                prios = [0] * len(c.meta.files)
-                for f in pick.files:
-                    prios[f.index] = 7 if (not f.held and (f.availability or 0) == 0) else 4
-                tfile = self.torrent_dir / f"{ih}.torrent"
-                if not tfile.exists():
-                    tfile.write_bytes(c.meta.raw)
-                hold = self.state.holdings.setdefault(ih, {
-                    "repo": c.repo, "quant": c.quant, "revision": c.revision,
-                    "save_path": str(self.save_path(c.repo, ih)), "files": {},
-                })
-                hold["verify_source"] = c.verify_source
-                hold["manifest_mismatches"] = c.manifest_mismatches
-                for f in pick.files:
-                    e = hold["files"].setdefault(str(f.index), {
-                        "path": f.repo_path, "tpath": c.meta.files[f.index].path, "size": f.size,
-                        "sha256": f.sha256, "git_oid": f.git_oid, "status": "wanted", "since": now,
-                    })
-                    e["prio"] = prios[f.index]
-                    if ((e.get("sha256") or "").lower(), (e.get("git_oid") or "").lower()) != \
-                            ((f.sha256 or "").lower(), (f.git_oid or "").lower()):
-                        # The expected hash changed: a hash-ledger entry arrived for a model only Pirate
-                        # Face vouched for. Check the file again against the new hash.
-                        self.log(f"re-verify {c.repo}/{f.repo_path}: expected hash now from {c.verify_source}")
-                        e["sha256"], e["git_oid"] = f.sha256, f.git_oid
-                        if e["status"] in ("verified", "failed"):
-                            e["status"] = "wanted"
-                if ih in self._parked:     # held back for memory: files it hasn't started stay at 0
-                    waiting = self._unstarted(ih)
-                    prios = [0 if i in waiting else p for i, p in enumerate(prios)]
-                if ih in drops:
-                    self.log(f"trim {c.repo}: dropping {len(drops[ih])} file(s) for higher-need shards")
-                    self._evict_files(ih, drops[ih], prios)
-                elif ih in self.handles:
-                    self.handles[ih].prioritize_files(prios)
-                    self._queue_unverified(ih)
-                else:
-                    self._add(ih, prios)
-            self.state.save()
+                new = ih not in self.state.holdings
+                try:
+                    self._apply_pick(ih, pick, drops, now)
+                except Exception as e:
+                    # One model that can't be added (a disk error, a torrent libtorrent refuses) mustn't
+                    # keep the rest of the plan from being applied and saved. It's tried again at the
+                    # next refresh; one this plan was only now bringing in isn't kept meanwhile.
+                    self.log(f"couldn't apply the plan for {pick.cand.repo} ({ih[:12]}): {e}; "
+                             f"trying again at the next refresh")
+                    if new and ih not in self.handles:
+                        self.state.holdings.pop(ih, None)
+            self._save_now()
+
+    def _save_now(self) -> None:
+        """Write state.json now (after a plan, a verdict, a dashboard action). If it can't be written
+        (a full disk), what changed stays marked for the main loop's next save, and that's all."""
+        with self.lock:
+            try:
+                self.state.save()
+                self._dirty = False
+            except OSError as e:
+                self._dirty = True
+                self._step_failed("saving state", e)
+
+    def _apply_pick(self, ih: str, pick, drops: dict[str, set[int]], now: float) -> None:
+        c = pick.cand
+        prios = [0] * len(c.meta.files)
+        for f in pick.files:
+            prios[f.index] = 7 if (not f.held and (f.availability or 0) == 0) else 4
+        self._store_torrent(ih, c.meta.raw)
+        hold = self.state.holdings.setdefault(ih, {
+            "repo": c.repo, "quant": c.quant, "revision": c.revision,
+            "save_path": str(self.save_path(c.repo, ih)), "files": {},
+        })
+        hold["verify_source"] = c.verify_source
+        hold["manifest_mismatches"] = c.manifest_mismatches
+        for f in pick.files:
+            e = hold["files"].setdefault(str(f.index), {
+                "path": f.repo_path, "tpath": c.meta.files[f.index].path, "size": f.size,
+                "sha256": f.sha256, "git_oid": f.git_oid, "status": "wanted", "since": now,
+            })
+            e["prio"] = prios[f.index]
+            if ((e.get("sha256") or "").lower(), (e.get("git_oid") or "").lower()) != \
+                    ((f.sha256 or "").lower(), (f.git_oid or "").lower()):
+                # The expected hash changed: a hash-ledger entry arrived for a model only Pirate
+                # Face vouched for. Check the file again against the new hash.
+                self.log(f"re-verify {c.repo}/{f.repo_path}: expected hash now from {c.verify_source}")
+                e["sha256"], e["git_oid"] = f.sha256, f.git_oid
+                if e["status"] in ("verified", "failed"):
+                    e["status"] = "wanted"
+        if ih in self._parked:     # held back for memory: files it hasn't started stay at 0
+            waiting = self._unstarted(ih)
+            prios = [0 if i in waiting else p for i, p in enumerate(prios)]
+        if ih in drops:
+            self.log(f"trim {c.repo}: dropping {len(drops[ih])} file(s) for higher-need shards")
+            self._evict_files(ih, drops[ih], prios)
+        elif ih in self.handles:
+            self.handles[ih].prioritize_files(prios)
+            self._queue_unverified(ih)
+        else:
+            self._add(ih, prios)
 
     # ---------------------------------------------------------- verification
 
     def _verifier(self) -> None:
         while True:
-            ih, idx, attempt = self.verify_q.get()
-            with self.lock:
-                hold = self.state.holdings.get(ih)
-                entry = dict(hold["files"].get(str(idx)) or {}) if hold else None
-                base = Path(hold["save_path"]) if hold else None
-            if not entry or base is None:
-                continue
-            path = base / entry["tpath"]
-            ok, why = False, ""
+            item = self.verify_q.get()
             try:
-                if path.stat().st_size != entry["size"]:
-                    why = "size mismatch"
-                elif entry.get("sha256"):
-                    ok = sha256_file(path) == entry["sha256"].lower()
-                    why = "" if ok else "SHA-256 mismatch"
-                elif entry.get("git_oid"):
-                    ok = git_blob_sha1(path, entry["size"]) == entry["git_oid"].lower()
-                    why = "" if ok else "git blob hash mismatch"
-                else:
-                    why = "no expected hash"
-            except OSError as e:
-                why = str(e)
-            if not ok and attempt < 2:
-                # Belt and braces: give the disk a moment and look again before
-                # concluding the torrent is bad.
-                threading.Timer(2.0 * (attempt + 1), self.verify_q.put, args=((ih, idx, attempt + 1),)).start()
-                continue
+                self._verify_one(*item)
+            except Exception as e:
+                # Never let one file end the thread: every later file would stay "verifying" for good
+                # (and `run --once` would never finish). Looked at again later, like a read error.
+                self._step_failed("verify", e)
+                try:
+                    self._verify_later(item[0], item[1], max(item[2] + 1, VERIFY_QUICK + 1))
+                except Exception:
+                    pass
+
+    def _verify_later(self, ih: str, idx: int, attempt: int) -> float:
+        """Queue a file to be verified again: quickly at first, then backing off (VERIFY_RETRY)."""
+        if attempt <= VERIFY_QUICK:
+            delay = 2.0 * attempt
+        else:
+            delay = min(VERIFY_RETRY[1], VERIFY_RETRY[0] * 2 ** (attempt - VERIFY_QUICK - 1))
+        t = threading.Timer(delay, self.verify_q.put, args=((ih, idx, attempt),))
+        t.daemon = True                # an hour's wait mustn't hold up the process at exit
+        t.start()
+        return delay
+
+    def _verify_one(self, ih: str, idx: int, attempt: int) -> None:
+        with self.lock:
+            hold = self.state.holdings.get(ih)
+            entry = dict(hold["files"].get(str(idx)) or {}) if hold else None
+            base = Path(hold["save_path"]) if hold else None
+        if not entry or base is None or entry.get("status") != "verifying":
+            return
+        path = base / entry["tpath"]
+        ok, why, io_error = False, "", None
+        try:
+            if path.stat().st_size != entry["size"]:
+                why = "size mismatch"
+            elif entry.get("sha256"):
+                ok = sha256_file(path) == entry["sha256"].lower()
+                why = "" if ok else "SHA-256 mismatch"
+            elif entry.get("git_oid"):
+                ok = git_blob_sha1(path, entry["size"]) == entry["git_oid"].lower()
+                why = "" if ok else "git blob hash mismatch"
+            else:
+                why = "no expected hash"
+        except OSError as e:
+            # The file couldn't be read (EIO, EACCES, EMFILE...): that's this machine, not the torrent.
+            io_error = f"{e.strerror or e}" + (f" ({e.errno})" if e.errno else "")
+        if io_error is not None:
+            delay = self._verify_later(ih, idx, attempt + 1)
             with self.lock:
                 live = self.state.holdings.get(ih, {}).get("files", {}).get(str(idx))
                 if live is None:
-                    continue
-                live["status"] = "verified" if ok else "failed"
-                live["verified_at"] = time.time()
-                self._dirty = True         # a verdict that took a whole file's hashing: save it soon
+                    return
+                first = "io_error" not in live
+                live["io_error"] = io_error
+                live.setdefault("io_error_since", time.time())
                 repo = self.state.holdings[ih]["repo"]
-                if ok:
-                    self.log(f"verified {repo}/{entry['path']} ({self.state.holdings[ih].get('verify_source')})")
-                else:
-                    self.failed.append((ih, idx, why))
-                    self.log(f"VERIFY FAILED {repo}/{entry['path']}: {why}")
+            if first or attempt >= VERIFY_QUICK:
+                self.log(f"verify {repo}/{entry['path']}: couldn't read it ({io_error}); it stays unverified "
+                         f"and is checked again in {delay:.0f} s")
+            return
+        if not ok and attempt < VERIFY_QUICK:
+            # Belt and braces: give the disk a moment and look again before
+            # concluding the torrent is bad.
+            self._verify_later(ih, idx, attempt + 1)
+            return
+        with self.lock:
+            live = self.state.holdings.get(ih, {}).get("files", {}).get(str(idx))
+            if live is None:
+                return
+            live["status"] = "verified" if ok else "failed"
+            live["verified_at"] = time.time()
+            live.pop("io_error", None)
+            live.pop("io_error_since", None)
+            self._dirty = True         # a verdict that took a whole file's hashing: save it soon
+            repo = self.state.holdings[ih]["repo"]
+            if ok:
+                self.log(f"verified {repo}/{entry['path']} ({self.state.holdings[ih].get('verify_source')})")
+            else:
+                self.failed.append((ih, idx, why))
+                self.log(f"VERIFY FAILED {repo}/{entry['path']}: {why}")
 
     def _handle_failures(self) -> None:
         with self.lock:
@@ -1263,12 +1509,14 @@ class Engine:
                 repo = self.state.holdings[ih]["repo"]
                 # libtorrent already checked every piece against the torrent, so a
                 # mismatch with the published hash means the torrent itself is wrong.
-                self.log(f"blocking torrent {ih[:12]} for {repo}: file {idx} failed ({why}); deleting its data")
+                self.log(f"blocking torrent {ih[:12]} for {repo}: file {idx} failed ({why}); deleting its data "
+                         f"(`flotilla unblock {ih}` lets it be picked again)")
                 if ih not in self.state.data["blocklist"]:
                     self.state.data["blocklist"].append(ih)
+                self.state.data["blocked"][ih] = {"repo": repo, "at": time.time(), "why": why}
                 self._remove(ih, delete=True)
             if failed:
-                self.state.save()
+                self._save_now()
 
     def _unstarted(self, ih: str) -> set[int]:
         """Wanted files of a model that haven't received any data yet.
@@ -1436,29 +1684,88 @@ class Engine:
 
     def _handle_alerts(self, alerts) -> None:
         for a in alerts:
-            if isinstance(a, lt.file_completed_alert):
-                # Pieces passed their hash check, but may still be in the write
-                # cache. Flush first; verify when cache_flushed_alert arrives.
-                ih = _ih(a.handle)
-                with self.lock:
-                    entry = self.state.holdings.get(ih, {}).get("files", {}).get(str(a.index))
-                    if entry and entry["status"] == "wanted":
-                        entry["status"] = "flushing"
-                        a.handle.flush_cache()
-            elif isinstance(a, lt.cache_flushed_alert):
-                self._start_verify(_ih(a.handle))
-            elif isinstance(a, lt.torrent_checked_alert):
-                self._queue_unverified(_ih(a.handle))
-            elif isinstance(a, lt.save_resume_data_alert):
-                ih = _ih(a.handle)
-                self.resume_dir.mkdir(parents=True, exist_ok=True)
-                tmp = self.resume_dir / f"{ih}.tmp"
-                tmp.write_bytes(lt.write_resume_data_buf(a.params))
-                os.replace(tmp, self.resume_dir / f"{ih}.fastresume")
-            elif isinstance(a, lt.listen_succeeded_alert):
-                self._note_port()
-            elif isinstance(a, (lt.torrent_error_alert, lt.file_error_alert, lt.listen_failed_alert)):
+            try:
+                self._handle_alert(a)
+            except Exception as e:      # one alert (a resume file on a full disk) mustn't lose the rest
+                self._step_failed(f"alert {type(a).__name__}", e)
+
+    def _handle_alert(self, a) -> None:
+        if isinstance(a, lt.file_completed_alert):
+            # Pieces passed their hash check, but may still be in the write
+            # cache. Flush first; verify when cache_flushed_alert arrives.
+            ih = _ih(a.handle)
+            with self.lock:
+                entry = self.state.holdings.get(ih, {}).get("files", {}).get(str(a.index))
+                if entry and entry["status"] == "wanted":
+                    entry["status"] = "flushing"
+                    a.handle.flush_cache()
+        elif isinstance(a, lt.cache_flushed_alert):
+            self._start_verify(_ih(a.handle))
+        elif isinstance(a, lt.torrent_checked_alert):
+            self._queue_unverified(_ih(a.handle))
+        elif isinstance(a, lt.save_resume_data_alert):
+            ih = _ih(a.handle)
+            self._resume_dir_ready()
+            _write_private(self.resume_dir / f"{ih}.fastresume", lt.write_resume_data_buf(a.params))
+        elif isinstance(a, lt.listen_succeeded_alert):
+            self._note_port()
+        elif isinstance(a, (lt.torrent_error_alert, lt.file_error_alert)):
+            ih = _ih(a.handle)
+            if self.handles.get(ih) == a.handle:      # a model's torrent (per-file swarms see to their own)
+                self._torrent_failed(ih, a.message(), time.time())
+            else:
                 self.log(f"libtorrent: {a.message()}")
+        elif isinstance(a, lt.listen_failed_alert):
+            self.log(f"libtorrent: {a.message()}")
+
+    def _torrent_failed(self, ih: str, msg: str, now: float) -> None:
+        """libtorrent stopped a model's torrent on an error (a full or read-only disk, a file gone).
+        It never starts it again by itself (torrents aren't auto-managed here): _retry_errored does,
+        waiting TORRENT_RETRY[0], then twice as long each time it fails again."""
+        e = self._errored.get(ih)
+        if e is not None and e["due"] is not None:
+            return                       # a retry is already set: the same fault, said again
+        if e is None or now - e["at"] > 2 * TORRENT_RETRY[1]:
+            e = {"tries": 0}             # first failure, or the first in a long while
+        e["tries"] += 1
+        wait = min(TORRENT_RETRY[1], TORRENT_RETRY[0] * 2 ** (e["tries"] - 1))
+        e.update(at=now, due=now + wait)
+        self._errored[ih] = e
+        repo = (self.state.holdings.get(ih) or {}).get("repo", ih[:12])
+        self.log(f"libtorrent stopped {repo}: {msg}; starting it again in {wait / 60:.0f} min"
+                 + (f" (try {e['tries']})" if e["tries"] > 1 else ""))
+
+    def _retry_errored(self, now: float) -> None:
+        """Start again the torrents libtorrent stopped on an error, once their wait is over. While
+        the disk guard holds downloads back, a torrent still downloading waits for it to lift."""
+        for ih, e in list(self._errored.items()):
+            h = self.handles.get(ih)
+            if h is None:
+                del self._errored[ih]
+                continue
+            if e["due"] is None:
+                if now - e["at"] > 2 * TORRENT_RETRY[1]:
+                    del self._errored[ih]        # fine for a long while since: start afresh next time
+                continue
+            if now < e["due"]:
+                continue
+            hold = self.state.holdings.get(ih) or {}
+            downloading = any(f["status"] == "wanted" for f in hold.get("files", {}).values())
+            if self.disk_paused and downloading:
+                continue
+            e["due"] = None
+            try:
+                h.clear_error()
+                st = h.status()
+                if st.upload_mode:           # libtorrent's own answer to a failed write; never ours
+                    h.unset_flags(lt.torrent_flags.upload_mode)
+                if st.paused:
+                    h.resume()
+            except RuntimeError as err:       # removed meanwhile
+                self.log(f"couldn't start {hold.get('repo', ih[:12])} again ({err})")
+                continue
+            self._st.pop(ih, None)
+            self.log(f"starting {hold.get('repo', ih[:12])} again after its error")
 
     def _account_upload(self) -> None:
         month = datetime.now(timezone.utc).strftime("%Y-%m")
@@ -1503,6 +1810,11 @@ class Engine:
                     "hf_bytes": hold.get("hf_bytes", 0), "per_file": self.perfile.count(ih),
                     # a day, at Pirate Face's seeding rate (1 per 3 h at 10 GB), only while the whole model is here
                     "points_day": round(8 * math.sqrt(whole_gb / 10), 4) if whole_gb else 0,
+                    # Files that couldn't be read to verify them (checked again later), and why libtorrent
+                    # stopped the torrent if it did (started again later): this machine's disk, not the torrent.
+                    "io_errors": [{"path": e["path"], "error": e["io_error"], "since": e.get("io_error_since")}
+                                  for e in files.values() if e.get("io_error")],
+                    "error": st.errc.message() if st.errc.value() else None,
                 })
             doc = {
                 "at": datetime.now(timezone.utc).isoformat(), "node": self.state.node_id[:8],
@@ -1535,7 +1847,8 @@ class Engine:
     SWITCHES = ("hf_fallback", "vpn_port_recover")   # on/off settings
     CHOICES = {"reorient": REORIENT_CHOICES, "focus": FOCUS_CHOICES}   # one-of settings
     ACTIONS = ("settings", "pause", "resume", "replan", "reorient", "drop", "add", "remove", "order", "allot", "skip",
-               "unskip", "hf_disconnect", "rescue", "points_connect", "points_disconnect", "points_handle")
+               "unskip", "hf_disconnect", "rescue", "points_connect", "points_disconnect", "points_handle",
+               "unblock")
 
     def _bind_up(self) -> bool | None:
         if not self.cfg.bind_interface:
@@ -1592,9 +1905,11 @@ class Engine:
                 if info.get("files"):
                     t["shards"] = [{"path": f["path"], "size": f["size"], "avail": f["avail"],
                                     "downloaders": f.get("downloaders"),
-                                    "status": held.get(f["i"], {}).get("status")} for f in info["files"]]
+                                    "status": held.get(f["i"], {}).get("status"),
+                                    "io_error": held.get(f["i"], {}).get("io_error")} for f in info["files"]]
                 else:  # restarted and not replanned yet: show what we hold
-                    t["shards"] = [{"path": e["path"], "size": e["size"], "avail": None, "status": e["status"]}
+                    t["shards"] = [{"path": e["path"], "size": e["size"], "avail": None, "status": e["status"],
+                                    "io_error": e.get("io_error")}
                                    for _, e in sorted(held.items()) if e["size"] >= 64 << 20]
             doc.update({
                 "version": __version__, "now": time.time(),
@@ -1640,7 +1955,7 @@ class Engine:
                     continue
                 if k not in self.SETTINGS:
                     raise ValueError(f"unknown setting {k!r}")
-                if isinstance(v, bool) or not isinstance(v, (int, float)) or math.isnan(v):
+                if not _finite(v):
                     raise ValueError(f"{k} must be a number")
                 lo, hi = self.SETTINGS[k]
                 if not lo <= v <= hi:
@@ -1674,7 +1989,9 @@ class Engine:
             repo, gb = body.get("repo"), body.get("gb")
             if not isinstance(repo, str) or not REPO_RE.match(repo):
                 raise ValueError("which model?")
-            if gb is not None and (isinstance(gb, bool) or not isinstance(gb, (int, float)) or gb < 0):
+            # NaN passes `gb < 0` and every comparison after it, then sits in the snapshot, whose JSON
+            # the page can't read: only finite numbers.
+            if gb is not None and (not _finite(gb) or gb < 0):
                 raise ValueError("GB must be a positive number, or empty to clear")
             others = sum(v for r, v in read_allot(self.cfg.local_feed).items() if r != repo)
             if gb and others + gb > self.cfg.budget_gb:
@@ -1705,6 +2022,18 @@ class Engine:
             if not isinstance(handle, str) or len(handle) > 200:
                 raise ValueError("a handle is the name in pirateface.co/name")
             body = {"handle": clean_handle(handle)}           # PFKeyError (a ValueError) explains
+        elif action == "unblock":
+            # `flotilla unblock`: the main loop changes the blocklist; this only checks there's a match.
+            target = None if body.get("all") is True else body.get("target")
+            if target is not None and (not isinstance(target, str) or not 0 < len(target) <= 200):
+                raise ValueError("an infohash or author/model, or all")
+            with self.lock:              # a dry run on a copy
+                n = len(unblock({"blocklist": list(self.state.data["blocklist"]),
+                                 "blocked": dict(self.state.data["blocked"])}, target))
+            if not n:
+                raise ValueError("nothing blocked matches that" if target else "nothing is blocked")
+            self.commands.put(("unblock", {"target": target}))
+            return f"unblocked {n} torrent(s); replanning"
         elif action in ("add", "remove"):
             # Picks are just a file: save right away (so the page shows it at once),
             # and let the main loop do the replan when it's free.
@@ -1717,7 +2046,7 @@ class Engine:
                 self.log(f"removed {gone} from your picks" if gone else f"{repo} wasn't in your picks")
                 return "removed" if gone else "not in your picks"
             prio = body.get("priority", 100)
-            if isinstance(prio, bool) or not isinstance(prio, (int, float)) or not 0 <= prio <= 100:
+            if not _finite(prio) or not 0 <= prio <= 100:
                 raise ValueError("priority must be between 0 and 100")
             repo, new = add_pick(self.cfg.local_feed, ref, float(prio))
             self.log(f"{'added' if new else 'updated'} {repo} in your picks; replanning")
@@ -1860,18 +2189,16 @@ class Engine:
     def save_config(self) -> None:
         if not self.cfg.path:
             return
-        from .config import render_config
+        from .config import write_config
 
-        tmp = self.cfg.path.with_suffix(".tmp")
-        tmp.write_text(render_config(self.cfg))
-        os.replace(tmp, self.cfg.path)
+        write_config(self.cfg)
 
     def _do_settings(self, s: dict) -> None:
         changed = {k for k, v in s.items() if getattr(self.cfg, k) != v}   # Save sends every field each time
         for k, v in s.items():
             setattr(self.cfg, k, v)
-        self.ses.apply_settings({"upload_rate_limit": max(1, int(self.cfg.upload_bps)),
-                                 "download_rate_limit": max(1, int(self.cfg.download_bps)),
+        self.ses.apply_settings({"upload_rate_limit": _rate_limit(self.cfg.upload_bps),
+                                 "download_rate_limit": _rate_limit(self.cfg.download_bps),
                                  "connections_limit": self.cfg.connections_limit})
         self.save_config()
         def shown(v):
@@ -2022,17 +2349,27 @@ class Engine:
                     freed += sum(e["size"] for e in hold["files"].values() if e["status"] == "verified")
                     self._remove(ih, delete=True)
                     self.cand_info.pop(ih, None)
-            self.state.save()
+            self._save_now()
         self.log(f"skipped {repo}: it won't be carried" + (f"; freed {freed / GB:.1f} GB" if freed else "")
                  + ". Restore it any time under Skipped on the Priorities tab")
         self.commands.put(("replan_soon", {}))
+
+    def _do_unblock(self, b: dict) -> None:
+        """A torrent blocked after a file failed verification may be picked again (`flotilla unblock`)."""
+        with self.lock:
+            gone = unblock(self.state.data, b.get("target"))
+            self._save_now()
+        if gone:
+            self.log(f"unblocked {len(gone)} torrent(s) ({', '.join(ih[:12] for ih in gone[:5])}"
+                     f"{'…' if len(gone) > 5 else ''}); replanning")
+            self.commands.put(("replan_soon", {}))
 
     def _do_unskip(self, b: dict) -> None:
         repo = b["repo"]
         with self.lock:
             if repo in self.state.data["dropped"]:
                 self.state.data["dropped"].remove(repo)
-            self.state.save()
+            self._save_now()
         self.log(f"restored {repo}: it can be carried again; replanning")
         self.commands.put(("replan_soon", {}))
 
@@ -2044,7 +2381,7 @@ class Engine:
                 self.state.data["dropped"].append(repo)
             self._remove(ih, delete=True)
             self.cand_info.pop(ih, None)
-            self.state.save()
+            self._save_now()
         self.log(f"dropped {repo} and deleted its files; it won't be picked again")
 
     # ---------------------------------------------------------- history and ledger
@@ -2176,18 +2513,22 @@ class Engine:
         ann = self._announce
         return {"per_day": 0.0 if self.ses.is_paused() else sum(r["points_day"] for r in rows),
                 "counting": sum(1 for r in rows if r["points_day"]), "models": len(rows),
-                "est": sum(e["points_est"] for e in self.state.data["ledger"].values()),
+                "est": sum(e["points_est"] for e in self.state.data["ledger"].values())
+                + self.state.data.get("ledger_retired", 0.0),
                 "since": since.get("since"), "est_since": since.get("est"),
                 "handle": self.cfg.pf_handle or None,
                 "announce": {k: ann[k] for k in ("ok", "failing", "waiting", "why", "at")} if ann else None}
 
     def tick(self) -> None:
-        self._handle_alerts(self.ses.pop_alerts())
-        self._handle_failures()
-        self.process_commands()
-        self._apply_seeding_tracker()
-        self.perfile.tick(time.time())
-        self.index.tick()
+        # Each step on its own: one that fails (a full disk under state.json, say) is logged and
+        # the others still run, this time and every time after.
+        self._guarded("alerts", lambda: self._handle_alerts(self.ses.pop_alerts()))
+        self._guarded("blocking failed torrents", self._handle_failures)
+        self._guarded("commands", self.process_commands)
+        self._guarded("seeding tracker", self._apply_seeding_tracker)
+        self._guarded("restarting stopped torrents", self._retry_errored, time.time())
+        self._guarded("per-file swarms", self.perfile.tick, time.time())
+        self._guarded("magnet index", self.index.tick)
 
     def _pirateface_loop(self) -> None:
         """The account key: re-read when it changes, its seeding tracker asked for when due."""
@@ -2317,6 +2658,15 @@ class Engine:
             except RuntimeError:        # removed meanwhile
                 pass
 
+    def _guarded_handles(self) -> list[tuple[str, object]]:
+        """What the disk guard pauses: the models, and the magnet index's own download (its builds
+        live in the state folder, usually on the same disk, and it isn't one of self.handles)."""
+        out = list(self.handles.items())
+        index = getattr(self, "index", None)
+        if index is not None:
+            out += [(key, h) for key, _, h in index.handles()]
+        return out
+
     def guard_disk(self, free: int | None = None) -> None:
         """Keep the reserve free *while running*, not just at plan time: other
         programs fill disks too. Below the reserve, torrents still downloading
@@ -2330,7 +2680,7 @@ class Engine:
         if free < reserve and not self.disk_paused:
             self.disk_paused = True
             n = 0
-            for ih, h in self.handles.items():
+            for ih, h in self._guarded_handles():
                 if not self.status(ih, h).is_finished:
                     h.pause()
                     n += 1
@@ -2338,7 +2688,7 @@ class Engine:
                      f"paused {n} download(s), finished files keep seeding")
         elif self.disk_paused and free >= reserve + 2 * GB:
             self.disk_paused = False
-            for h in self.handles.values():
+            for _, h in self._guarded_handles():
                 h.resume()
             self.log(f"disk: {free / GB:.1f} GB free again; downloads resumed")
 
@@ -2434,6 +2784,14 @@ class Engine:
         `until`: exit at this Unix time (a timed seeding run)."""
         signal.signal(signal.SIGINT, lambda *_: self.stop.set())
         signal.signal(signal.SIGTERM, lambda *_: self.stop.set())
+        try:
+            self._run(once, until)
+        finally:
+            # However the loop ends (done, time up, stopped, or something it couldn't survive):
+            # the last resume data, state and history are written and the threads are stopped.
+            self.shutdown()
+
+    def _run(self, once: bool, until: float | None) -> None:
         self._main_ident = threading.get_ident()
         self.run_started, self.run_until = time.time(), until
         self.session_up_start = self.state.data["upload"]["bytes"]
@@ -2482,33 +2840,42 @@ class Engine:
             self.next_refresh = self._next_refresh_at()
         last_status = last_resume = 0.0
         last_save = last_status_file = time.time()
+        guarded = self._guarded
+
+        def save_state(now: float) -> None:
+            nonlocal last_save
+            with self.lock:
+                self._account_upload()
+                self.update_ledger(now)
+                self.check_announces(now)
+                # Upload totals and seed-hours change every few seconds but losing a few
+                # minutes of them to a crash costs little; rewriting state.json (hundreds of
+                # KB) every 10 s cost gigabytes of disk writes a day.
+                if self._dirty or now - last_save >= SAVE_EVERY:
+                    self.state.save()
+                    self._dirty, last_save = False, now
+
+        # Every step is guarded (_guarded): a full or read-only disk fails the state, status and
+        # resume writes, and that must not end the process with nothing saved; it seeds on, logs
+        # the failure now and then, and the writes succeed again once there's room.
         while not self.stop.is_set():
-            self.ses.wait_for_alert(1000)
+            guarded("waiting for libtorrent", self.ses.wait_for_alert, 1000)
             self.tick()
             now = time.time()
             if now - last_status >= STATUS_EVERY:
-                with self.lock:
-                    self._account_upload()
-                    self.update_ledger(now)
-                    self.check_announces(now)
-                    # Upload totals and seed-hours change every few seconds but losing a few
-                    # minutes of them to a crash costs little; rewriting state.json (hundreds of
-                    # KB) every 10 s cost gigabytes of disk writes a day.
-                    if self._dirty or now - last_save >= SAVE_EVERY:
-                        self.state.save()
-                        self._dirty, last_save = False, now
-                self.guard_disk()
-                self.scan_upload_peers(now)
-                self.dial_out_announce(now)
-                self.report_progress()
+                guarded("saving state", save_state, now)
+                guarded("disk guard", self.guard_disk)
+                guarded("counting peers", self.scan_upload_peers, now)
+                guarded("announcing", self.dial_out_announce, now)
+                guarded("progress", self.report_progress)
                 if now - last_status_file >= STATUS_FILE_EVERY:
-                    self.write_status()
+                    guarded("writing status.json", self.write_status)
                     last_status_file = now
                 last_status = now
             if now - last_resume >= RESUME_EVERY:
-                self.save_resume()
+                guarded("saving resume data", self.save_resume)
                 last_resume = now
-            if once and (self._plans_applied or self._refresh_failed) and self.all_done():
+            if once and (self._plans_applied or self._refresh_failed) and guarded("checking", self.all_done):
                 break
             if until and now >= until:
                 self.log("seeding time is up")
@@ -2517,9 +2884,8 @@ class Engine:
                 if self._refresher is not None and self._refresher.is_alive():
                     self.next_refresh = now + 30          # one is still running: ask again shortly
                 else:
-                    self._start_refresh()
-                    self.next_refresh = self._next_refresh_at()
-        self.shutdown()
+                    guarded("starting a refresh", self._start_refresh)
+                    self.next_refresh = guarded("scheduling", self._next_refresh_at) or now + 3600
 
     def refresh_interval(self) -> float:
         """refresh_hours, give or take 15%, so a fleet of nodes doesn't hit
@@ -2540,32 +2906,51 @@ class Engine:
         return n
 
     def shutdown(self) -> None:
+        """Stop: the last history sample, resume data, status and state, then close. Each step on its
+        own, so one that fails (a full disk) doesn't skip the rest. Once only: run() calls it however
+        it ends, and a caller may too."""
+        if self._shut:
+            return
+        self._shut = True
         self.stop.set()   # run() can also end on once/until; stop the helper threads either way
         self._pf_nudge.set()
+        guarded = self._guarded
         if self._sampler is not None:
             self._sampler.join(timeout=10)
             self._sampler = None
-        self.sample(time.time(), force=True)   # the last partial minute
-        with self.lock:
-            self._account_upload()
-        self.scan_upload_peers(time.time() + 3600)
-        hours = (time.time() - self.run_started) / 3600
-        self.log(f"this run: {hours:.2f} h, uploaded {self.session_uploaded / 1e6:.1f} MB "
-                 f"to {len(self.upload_peers)} distinct peer(s)")
+        guarded("history", self.sample, time.time(), True)   # the last partial minute
+
+        def settle():
+            with self.lock:
+                self._account_upload()
+            self.scan_upload_peers(time.time() + 3600)
+            hours = (time.time() - self.run_started) / 3600
+            self.log(f"this run: {hours:.2f} h, uploaded {self.session_uploaded / 1e6:.1f} MB "
+                     f"to {len(self.upload_peers)} distinct peer(s)")
+
+        guarded("upload totals", settle)
         self.log("shutting down: saving resume data")
-        self.ses.pause()
-        pending = self.save_resume()
-        end = time.monotonic() + 15
-        while pending > 0 and time.monotonic() < end:
-            for a in self.ses.pop_alerts():
-                if isinstance(a, (lt.save_resume_data_alert, lt.save_resume_data_failed_alert)):
-                    pending -= 1
-                self._handle_alerts([a])
-            time.sleep(0.1)
-        self.write_status()
-        with self.lock:
-            self.state.save()
+
+        def resume():
+            self.ses.pause()
+            pending = self.save_resume()
+            end = time.monotonic() + 15
+            while pending > 0 and time.monotonic() < end:
+                for a in self.ses.pop_alerts():
+                    if isinstance(a, (lt.save_resume_data_alert, lt.save_resume_data_failed_alert)):
+                        pending -= 1
+                    self._handle_alerts([a])
+                time.sleep(0.1)
+
+        guarded("saving resume data", resume)
+        guarded("writing status.json", self.write_status)
+
+        def save():
+            with self.lock:
+                self.state.save()
+
+        guarded("saving state", save)
         if self.dashboard:
-            self.dashboard.stop()
+            guarded("stopping the dashboard", self.dashboard.stop)
             self.dashboard = None
-        self.history.close()
+        guarded("closing the history", self.history.close)

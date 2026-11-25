@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import json
+import math
 import os
 import secrets
+import shutil
 import sys
 import tomllib
 from dataclasses import dataclass, field
@@ -192,6 +194,80 @@ _SECTIONS = {
 
 PAST_DEFAULT_LICENSES = [["mit", "apache-2.0", "wtfpl", "openmdw-1.1"]]
 
+# The numeric settings, one table for every way a number gets in: the config file (load_config),
+# `flotilla init` (flags), and the dashboard's Settings (engine.Engine.SETTINGS, which must agree with the
+# first nine rows: a test checks it). attr: (name as the config file spells it, lowest, highest, whole number?).
+# Without limits a NaN or a zero slips through: budget_gb = nan means "0 GB" and drops everything held,
+# refresh_hours = 0 refreshes in a loop, upload_mbps = nan stops the daemon at start.
+NUMBER_LIMITS: dict[str, tuple[str, float, float, bool]] = {
+    "budget_gb": ("storage.budget_gb", 1, 1e6, False),
+    "reserve_gb": ("storage.reserve_gb", 0, 1e6, False),
+    "upload_mbps": ("network.upload_mbps", 0.1, 1e5, False),
+    "download_mbps": ("network.download_mbps", 0.1, 1e5, False),
+    "upload_share": ("network.upload_share", 0.05, 1, False),
+    "download_share": ("network.download_share", 0.05, 1, False),
+    "monthly_upload_cap_gb": ("network.monthly_upload_cap_gb", 0, 1e7, False),
+    "hf_gb_per_day": ("network.hf_gb_per_day", 0, 1e6, False),
+    "churn_gb": ("reorient.churn_gb", 0, 1e6, False),
+    "memory_gb": ("network.memory_gb", 0, 1e6, False),
+    "max_models": ("network.max_models", 1, 100_000, True),
+    "listen_port": ("network.listen_port", 0, 65535, True),
+    "whole_model_under_gb": ("policy.whole_model_under_gb", 0, 1e6, False),
+    "max_candidates": ("policy.max_candidates", 0, 10_000, True),
+    "sweep_candidates": ("policy.sweep_candidates", 0, 200, True),
+    "dashboard_port": ("dashboard.port", 1, 65535, True),
+    "refresh_hours": ("tuning.refresh_hours", 0.1, 8760, False),
+    "probe_seconds": ("tuning.probe_seconds", 0, 3600, True),
+    "spread": ("tuning.spread", 0, 20, False),
+    "hold_bonus": ("tuning.hold_bonus", 0, 100, False),
+    "min_hold_days": ("tuning.min_hold_days", 0, 3650, False),
+}
+
+
+def check_number(attr: str, v, name: str | None = None):
+    """Return v if it is a real number within the limits for Config.attr, else raise ValueError saying
+    what's allowed. NaN, infinity, booleans and text are never numbers here. `name` is how the caller
+    spells the setting (a command-line flag, say); by default the config file's name for it."""
+    where, lo, hi, whole = NUMBER_LIMITS[attr]
+    ok = (not isinstance(v, bool) and isinstance(v, int if whole else (int, float))
+          and math.isfinite(v) and lo <= v <= hi)
+    if not ok:
+        raise ValueError(f"{name or where} must be {'a whole number' if whole else 'a number'} "
+                         f"from {lo:,.12g} to {hi:,.12g}")
+    return v
+
+
+# What versions before NUMBER_LIMITS already refused. A number they accepted must not stop a node
+# that upgrades; one they refused still does.
+_REFUSED_BEFORE = {
+    "budget_gb": lambda v: v <= 0,
+    "upload_share": lambda v: not 0 < v <= 1,
+    "download_share": lambda v: not 0 < v <= 1,
+    "hf_gb_per_day": lambda v: v < 0,
+    "churn_gb": lambda v: v < 0,
+    "max_models": lambda v: not 1 <= v <= 100_000,
+    "sweep_candidates": lambda v: not 0 <= v <= 200,
+    "listen_port": lambda v: True,       # a port can't be moved to the nearest limit
+    "dashboard_port": lambda v: True,
+}
+
+
+def _loaded_number(attr: str, v):
+    """A number from the config file. Text, booleans, NaN and infinity stop the node (they were never
+    valid and misbehave silently), and so does anything older versions refused. A real number older
+    versions accepted but that's outside the limits is moved to the nearest one, with a warning, so a
+    node that upgrades keeps starting."""
+    where, lo, hi, whole = NUMBER_LIMITS[attr]
+    if whole and isinstance(v, float) and math.isfinite(v) and v.is_integer():
+        v = int(v)
+    if (isinstance(v, (int, float)) and not isinstance(v, bool) and math.isfinite(v)
+            and not (lo <= v <= hi) and not _REFUSED_BEFORE.get(attr, lambda _: False)(v)):
+        near = (int if whole else float)(lo if v < lo else hi)
+        print(f"warning: {where} = {v} is outside {lo:,.12g} to {hi:,.12g}; using {near:,.12g}",
+              file=sys.stderr, flush=True)
+        return near
+    return check_number(attr, v)
+
 
 def load_config(path: Path = CONFIG_PATH) -> Config:
     cfg = Config(path=path)
@@ -217,12 +293,8 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
     # Nobody chose that list; give it the current defaults so new reviewed licenses reach them.
     if sorted(cfg.licenses) in [sorted(old) for old in PAST_DEFAULT_LICENSES]:
         cfg.licenses = Config().licenses
-    if not 0 < cfg.upload_share <= 1 or not 0 < cfg.download_share <= 1:
-        raise ValueError("upload_share and download_share must be in (0, 1]")
-    if cfg.budget_gb <= 0:
-        raise ValueError("storage.budget_gb must be positive")
-    if cfg.hf_gb_per_day < 0:
-        raise ValueError("network.hf_gb_per_day can't be negative")
+    for attr in NUMBER_LIMITS:
+        setattr(cfg, attr, _loaded_number(attr, getattr(cfg, attr)))
     from .access import ACCESS_CHOICES
 
     if cfg.dashboard_access not in ACCESS_CHOICES:
@@ -237,10 +309,6 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
         raise ValueError("network.vpn_port_recover must be true or false")
     if not isinstance(cfg.vpn_port_file, str):
         raise ValueError("network.vpn_port_file must be a path, or \"\"")
-    if isinstance(cfg.churn_gb, bool) or not isinstance(cfg.churn_gb, (int, float)) or cfg.churn_gb < 0:
-        raise ValueError("reorient.churn_gb must be a number of GB, 0 or more")
-    if isinstance(cfg.max_models, bool) or not isinstance(cfg.max_models, int) or not 1 <= cfg.max_models <= 100_000:
-        raise ValueError("network.max_models must be a whole number from 1 to 100000")
     if not isinstance(cfg.catalog_sweep, bool):
         raise ValueError("policy.catalog_sweep must be true or false")
     if isinstance(cfg.sweep_candidates, bool) or not isinstance(cfg.sweep_candidates, int) or not 0 <= cfg.sweep_candidates <= 200:
@@ -253,6 +321,12 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
         cfg.pf_handle = None
     if cfg.pf_handle is None:
         raise ValueError("pirateface.handle must be the name in pirateface.co/name, or \"\"")
+    for attr, where in (("licenses", "policy.licenses"), ("feed_urls", "feed.urls"),
+                        ("trusted_keys", "feed.trusted_keys"), ("feed_allowed_hosts", "feed.allowed_hosts"),
+                        ("allowed_hosts", "net.allowed_hosts")):
+        v = getattr(cfg, attr)
+        if not isinstance(v, list) or not all(isinstance(x, str) for x in v):
+            raise ValueError(f"{where} must be a list of text")
     # Flotilla's own requests (listings, pieces from Hugging Face) leave by the same pin as torrent traffic.
     pin(cfg.bind_interface)
     return cfg
@@ -277,6 +351,15 @@ def render_config(cfg: Config) -> str:
     folder = str(cfg.folder)
     if folder.startswith(home):
         folder = "~" + folder[len(home):]
+    # [net] is written only when it was changed: a config that never set it keeps following the program's
+    # defaults, and one that did (hosts Pirate Face is reached on, say) must survive every rewrite, from
+    # `flotilla init` and from the dashboard's Settings.
+    net = ""
+    if list(cfg.allowed_hosts) != list(DEFAULT_ALLOWED_HOSTS):
+        net = f"""[net]
+allowed_hosts = {_toml_str(list(cfg.allowed_hosts))}   # hosts Flotilla's own requests may reach (Pirate Face, Hugging Face)
+
+"""
     return f"""# Flotilla config. Edit freely; `flotilla plan` shows the effect.
 
 [storage]
@@ -323,7 +406,7 @@ trusted_keys = {_toml_str(cfg.trusted_keys)}       # extra editor public keys (m
 allowed_hosts = {_toml_str(cfg.feed_allowed_hosts)}
 local = {_toml_str(cfg.local_feed)}   # your own changes to the list (`flotilla feed --init-local`)
 
-[dashboard]
+{net}[dashboard]
 enabled = {_toml_str(cfg.dashboard)}         # local web page to watch and steer Flotilla
 port = {_toml_str(cfg.dashboard_port)}
 access = {_toml_str(cfg.dashboard_access)}     # local, lan (home network), tailnet, or public (anyone on the internet)
@@ -346,15 +429,85 @@ min_hold_days = {_toml_str(cfg.min_hold_days)}
 """
 
 
+def _keep_copy(path: Path, backup: Path) -> None:
+    """Make `backup` another name for what `path` holds now, without ever leaving it missing or half
+    written (a hard link, since the file is about to be replaced rather than changed in place; a copy
+    where links aren't possible). A failure here only costs the backup, never the save."""
+    tmp = backup.with_name(f"{backup.name}.{os.getpid()}.tmp")
+    try:
+        try:
+            os.link(path, tmp)
+        except OSError:
+            shutil.copy2(path, tmp)
+        os.replace(tmp, backup)
+    except OSError:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+
+
+def write_atomic(path: Path, text: str, keep_backup: bool = False) -> None:
+    """Replace `path` with `text` so a reader (or a power cut) sees the old file or the new one, never a
+    half-written one: write a temp file of its own beside it, flush it to disk, rename it over `path`,
+    then flush the folder so the rename itself survives. keep_backup: the file being replaced is kept as
+    `<name>.bak`. The new file keeps the old one's permissions (a config a container reads as another
+    user stays readable), else the usual ones for a new file."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_name(f"{path.name}.{os.getpid()}.{secrets.token_hex(4)}.tmp")
+    try:
+        with open(tmp, "x") as f:          # "x": never write into a file someone else made at that name
+            f.write(text)
+            f.flush()
+            os.fsync(f.fileno())
+        try:
+            os.chmod(tmp, path.stat().st_mode & 0o7777)
+        except OSError:
+            pass                           # no old file to copy from
+        if keep_backup and path.exists():
+            _keep_copy(path, path.with_name(path.name + ".bak"))
+        os.replace(tmp, path)
+    except BaseException:
+        try:
+            os.unlink(tmp)
+        except OSError:
+            pass
+        raise
+    try:        # not everywhere can a folder be opened and flushed (Windows can't); the file itself is safe
+        dfd = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(dfd)
+        finally:
+            os.close(dfd)
+    except OSError:
+        pass
+
+
+def write_config(cfg: Config, path: Path | None = None) -> None:
+    """Save the config (atomically: a crash mid-save never leaves a half-written config.toml)."""
+    path = path or cfg.path
+    if path is None:
+        raise ValueError("no config path to write to")
+    write_atomic(Path(path), render_config(cfg))
+
+
+class StateError(ValueError):
+    """state.json is unreadable and so is its backup."""
+
+
 class State:
-    """Small JSON state file: node id, feed version, holdings, upload counters."""
+    """Small JSON state file: node id, feed version, holdings, upload counters.
+
+    It records which seed folders belong to Flotilla (holdings), so losing it orphans them: save() keeps
+    the previous good copy as state.json.bak, and loading falls back to that copy, loudly, if state.json
+    can't be read. If neither can, it stops with a message rather than starting empty."""
 
     def __init__(self, state_dir: Path = STATE_DIR):
         self.dir = state_dir
         self.path = state_dir / "state.json"
-        self.data: dict = {}
-        if self.path.exists():
-            self.data = json.loads(self.path.read_text())
+        self.backup = state_dir / "state.json.bak"
+        self._from_backup = False
+        self.data: dict = self._load()
         if "node_id" not in self.data:
             self.data["node_id"] = secrets.token_hex(16)
         self.data.setdefault("feed_version", 0)
@@ -369,11 +522,43 @@ class State:
     def holdings(self) -> dict:
         return self.data["holdings"]
 
+    @staticmethod
+    def _read(path: Path) -> dict:
+        data = json.loads(path.read_text())
+        if not isinstance(data, dict):
+            raise ValueError("not a JSON object")
+        return data
+
+    def _load(self) -> dict:
+        if not self.path.exists() and not self.backup.exists():
+            return {}                      # a first run
+        problem = ""
+        if self.path.exists():
+            try:
+                return self._read(self.path)
+            except (OSError, ValueError) as e:     # JSONDecodeError and UnicodeDecodeError are ValueErrors
+                problem = f"{self.path} can't be read ({e})"
+        else:
+            problem = f"{self.path} is missing"
+        try:
+            data = self._read(self.backup)
+        except (OSError, ValueError) as e:
+            raise StateError(
+                f"{problem}, and its backup {self.backup} can't be read either ({e}). Flotilla won't start "
+                f"empty: that would forget which folders hold its seeded files. Restore state.json from a "
+                f"copy if you have one. Otherwise move both files out of {self.dir}: Flotilla then starts "
+                f"fresh and will treat the files already in your seed folder as not its own.") from e
+        print(f"state: {problem}; using the previous copy, {self.backup}. Changes since it was saved are "
+              f"lost: Flotilla picks them up again from the files on disk.", file=sys.stderr, flush=True)
+        self._from_backup = True
+        return data
+
     def save(self) -> None:
-        self.dir.mkdir(parents=True, exist_ok=True)
-        tmp = self.path.with_suffix(".tmp")
-        tmp.write_text(json.dumps(self.data, sort_keys=True, separators=(",", ":")))
-        os.replace(tmp, self.path)
+        # Having just fallen back to the backup, the unreadable state.json must not become the backup:
+        # the first save only replaces it.
+        write_atomic(self.path, json.dumps(self.data, sort_keys=True, separators=(",", ":")),
+                     keep_backup=not self._from_backup)
+        self._from_backup = False
 
 
 def memory_budget(cfg: Config) -> int:

@@ -67,22 +67,22 @@ malicious files, inflates or deflates priorities, replays an old feed, or makes 
 
 | Layer | Check | Defends against |
 |---|---|---|
-| HTTP | HTTPS only, certifi CA bundle, host allowlist (`pirateface.co`, `huggingface.co`; `hf.co` added for pieces), manual redirects re-checked per hop, no userinfo, no odd ports, byte caps on every response, the same network pin as torrent traffic (fails closed while it's down) | MITM, open redirects, memory exhaustion, leaking the real IP |
-| Feed | Ed25519 minisign signature against pinned keys; `expires`; monotonic `version` stored locally | Forged priorities, freeze/replay, rollback |
+| HTTP | HTTPS only, certifi CA bundle, host allowlist (`pirateface.co`, `huggingface.co`; `hf.co` added for pieces), manual redirects re-checked per hop, no userinfo, no odd ports, byte caps on every response, a wall-clock deadline on every request (300 s plus the cap read at 16 KiB/s: `default_deadline`; sockets are shut down when it passes), a reply shorter than its `Content-Length` refused, errors mid-reply a `FetchError`, the same network pin as torrent traffic (fails closed while it's down). The query string of a URL (a signed CDN link) is never shown in a log or error (`shown()`) | MITM, open redirects, memory exhaustion, a server that trickles bytes to hold a thread, a truncated file taken for a whole one, leaking the real IP or a signed link |
+| Feed | Ed25519 minisign signature against pinned keys; `expires`; monotonic `version` stored locally. An expired (or rolled-back) feed whose signature verifies is not used for priorities, but if nothing current is available its deny list still applies: only the deny set carries over | Forged priorities, freeze/replay, rollback; a denied model coming back because the feed host was unreachable |
 | Feed pins | Optional `infohash` and `revision` per model; a listing that disagrees is rejected | A compromised index swapping the torrent for a pinned model |
 | Hash ledger | Signed, append-only per-file hashes per repo@revision, captured from HF; a torrent file it doesn't list, a size or hash HF contradicts, or (HF gone) a revision it never recorded refuses the torrent | A compromised Pirate Face swapping files and manifest together after HF has removed the model |
 | Magnet | Tracker hosts must be `tracker.pirateface.co`; web seeds `https` on the allowlist; any param other than `xt dn tr ws xl` (e.g. `x.pe`, `as`, `xs`) rejects the magnet | Steering the client to foreign trackers, seeds or payloads |
-| .torrent | SHA-1 of the exact info-dict bytes must equal the listed infohash; its own `announce`, `announce-list` and `url-list` pass the same allowlist; BEP 17 `httpseeds` refused; path components sanitised (no `..`, `/`, `\`, `:`, NUL) | Swapped metainfo, path traversal |
-| Content | Every torrent file must exist in the HF tree at the pinned revision with the same size. HF's hash is the expected hash. If Pirate Face's SHA-256 disagrees, HF `main` is checked: same file there → accept, flag for reporting; different or unreadable → refuse as ambiguous | Torrents that smuggle in extra files; Pirate Face packaging a newer upload under an old revision label |
-| Bytes | libtorrent piece hashes, then a file-level SHA-256 (LFS) or git blob SHA-1 against HF after the write cache is flushed; one failure blocks the infohash and deletes its data | Torrents that don't match the model |
+| .torrent | SHA-1 of the exact info-dict bytes must equal the listed infohash; its own `announce`, `announce-list` and `url-list` pass the same allowlist; BEP 17 `httpseeds` refused; path components sanitised (no `..`, `/`, `\`, `:`, control or format characters, none over 240 bytes, and `path.utf-8` / `name.utf-8` must say the same as `path` / `name`, since libtorrent would write the other); files whose paths collide (ignoring case and Unicode form) or where one is another's folder, and symlink entries (BEP 47), refused; bencode must be canonical and has at most `MAX_ELEMENTS` (500,000) elements | Swapped metainfo, path traversal, two files written to one place so an unchecked one is seeded as verified, a symlink writing outside the folder, memory exhaustion from a hostile .torrent |
+| Content | The revision Pirate Face lists must be a full 40-hex commit (it goes into HF URLs and cache file names), and a tree-cache path that would leave its folder is refused. Every torrent file must exist in the HF tree at the pinned revision with the same size. HF's hash is the expected hash. If Pirate Face's SHA-256 disagrees, HF `main` is checked: same file there → accept, flag for reporting; different or unreadable → refuse as ambiguous | Torrents that smuggle in extra files; Pirate Face packaging a newer upload under an old revision label |
+| Bytes | libtorrent piece hashes, then a file-level SHA-256 (LFS) or git blob SHA-1 against HF after the write cache is flushed; a hash or size mismatch blocks the infohash (recording why) and deletes its data. A file that can't be read proves nothing and blocks nothing: see [Why disagreements aren't fatal](#hash-ledger) | Torrents that don't match the model |
 | HF pieces | Only for files peers aren't sending, of models HF has at the pinned commit; the reply must be exactly the byte range asked for; each piece's SHA-1 must equal the torrent's own v1 piece hash before `add_piece`; two mismatches stop HF for that file | HF, its CDN or someone in the middle serving bytes that don't match the torrent; one bad piece making libtorrent discard a whole v2 file |
-| Magnet index | A build must hash to the listed infohash, hold only the license and dated shards, be small, and pass the tracker allowlist; shard lines must pass the magnet allowlist and name a 40-hex commit; an unreadable removals file disables the copy; metadata from the swarm must match the infohash; Hugging Face / ledger checks unchanged | A forged or tampered index steering nodes to other torrents, or bringing back a removed one |
+| Magnet index | A build must hash to the listed infohash, hold only the license and dated shards, be small, and pass the tracker allowlist; shard lines must pass the magnet allowlist and name a 40-hex commit (files are streamed, at most 1,000,000 lines each; an overlong shard line is skipped, an overlong or unreadable removals line disables the copy); an unreadable removals file disables the copy; metadata from the swarm must match the infohash; Hugging Face / ledger checks unchanged | A forged or tampered index steering nodes to other torrents, or bringing back a removed one |
 | Replaced pins | Followed only when Pirate Face's record of the pin names the listed torrent as its successor, and Hugging Face or the hash ledger vouches for every file | A compromised index swapping a pinned model's torrent while nothing else anchors it |
 | Pirate Face account | Only a key or seeding tracker address the user connected (`pirateface-key`, 0600, or `FLOTILLA_PF_KEY_FILE`, which the dashboard never writes; never `PIRATEFACE_KEY` or `pf`'s saved key); sent only to `pirateface.co` (`auth` is host-exact, never a redirect target) for `/api/trackers`; the seeding tracker must be `:6970/<token>/announce` on the tracker allowlist, and only its host is ever logged or shown | The key or the tracker token leaking; an answer steering announces to a foreign tracker |
 | Per-file torrents | Pure v2, exactly one file whose pieces root and size match a verified file of ours, infohash as listed; trackers filtered to the allowlist, web seeds dropped; the added piece layer must hash up to the root; seeded in upload mode from our own copy | A listing pointing our upload at other bytes; foreign trackers or seeds; a bad piece layer misleading peers |
-| HF account | Only a token the user connected (`hf-token`, 0600, or `FLOTILLA_HF_TOKEN_FILE`; never `HF_TOKEN`); whoami must show a read-only token (role `read`, or fine-grained with only `*.read` permissions) of a user; sent only after an anonymous request is refused, only to `huggingface.co` (never a redirect target); 401 on a download stops using it | A leaked token file changing the user's account or spending on it; the account being tied to public models it isn't needed for; the token reaching the CDN |
+| HF account | Only a token the user connected (`hf-token`, 0600, or `FLOTILLA_HF_TOKEN_FILE`; never `HF_TOKEN`); whoami must show a read-only token (role `read`, or fine-grained with only `*.read` permissions) of a user; sent only after an anonymous request is refused, only to `huggingface.co` (never a redirect target); 401 on a download stops using it; a token in use is checked with whoami again every day (`RECHECK_EVERY`), so a fine-grained token widened on huggingface.co stops being used | A leaked token file changing the user's account or spending on it; the account being tied to public models it isn't needed for; the token reaching the CDN |
 | Policy | Code files and weight formats that can run code when loaded (pickle, Keras HDF5/.keras, NumPy .npz/.npy) are not selected by default; nothing downloaded is ever executed; licenses must be on the user's allowlist | Turning seeders into a malware distribution network |
-| Disk | Budget = `min(budget, held + free − reserve)` | Filling the user's drive |
+| Disk | Budget = `min(budget, held + free − reserve)`, where `held` is what the holdings' own folders take, not everything in the seed folder; holdings kept through a failed lookup count against it. The guard below the reserve also pauses the magnet index's download | Filling the user's drive |
 | Updates | `flotilla update` installs only a release whose `release.json` carries the project key's minisign signature, with the trusted comment `flotilla-release <version>` (so a priority-list signature can't stand in); the wheel must have the SHA-256 it names; Docker images are pulled by the digest it names; only ever a higher version. The key stays offline: CI builds a draft release, the maintainer signs it. Nodes only check daily and say so; nothing installs unasked | A hijacked GitHub account or CI pushing code to nodes; a moved image tag; replaying an old release to downgrade |
 
 **Gated repos.** On a gated repo Hugging Face hides each LFS file's SHA-256 from anonymous clients
@@ -137,6 +137,15 @@ bytes that don't match Hugging Face:
 - if the swarm holds the genuine file, it verifies and seeds;
 - if the swarm holds anything else, the check fails, the data is deleted and the infohash blocked.
 
+A file that can't be *read* is a different case. A disk or permission error (EIO, EACCES, too many open
+files) says something about this machine, not the torrent, so `_verify_one` neither passes nor fails the
+file: it stays unverified and is looked at again after 2 s and 4 s, then after 30 s, doubling up to an
+hour (`VERIFY_RETRY`). An unexpected error in the verifier thread is treated the same way, so one file
+can't stop it. `flotilla status` prints these files as `UNREADABLE` lines. Only a hash or size mismatch
+blocks a torrent. The block records the model and the reason (`state.json`'s `blocked`), and
+`flotilla unblock <infohash|author/model>` (or `--all`, or the dashboard's `unblock` action) lifts it, so
+the torrent can be picked again.
+
 Refusing outright would only save one download, at the cost of dropping a possibly genuine model over
 a bookkeeping error. The HF `main` comparison covers the one ambiguous case: Pirate Face packaging a
 newer upload under an old revision label.
@@ -146,6 +155,11 @@ tree is cached for an hour: it moves, so the comparison above reads one at most 
 revision Hugging Face says is gone or closed (401, 403, 404, 410 or 451) is remembered for a day, as is a
 repo whose card names no license, so a refresh doesn't ask about it again every time. An answer that
 didn't arrive (timeouts, 429, 5xx) is never remembered.
+
+Licenses outlive the repo the same way. `license_lookup` keeps the last license Hugging Face named for
+a repo, however old. When Hugging Face can't be reached, or says the repo is gone, that license is used,
+so a takedown doesn't make every node drop its copy. A repo that was gone before this node ever read its
+license is a transient rejection: a node holding it keeps it, and no node newly picks it.
 
 Resume data is never trusted for trackers or web seeds: trackers are always taken from the verified
 `.torrent`, and web seeds are dropped.
@@ -357,8 +371,32 @@ and `min_hold_days`. Now the user sets how often it happens and how much moves: 
 - **Restart.** The verified `.torrent`, resume data (with the info dict) and per-file expected hashes
   are stored under the state dir. Seeding resumes before any network lookup. Anything mid-verification
   is re-queued.
+- **Config and state files.** `config.toml` and `state.json` are written to a temporary file, flushed
+  to disk and renamed over the old one (then the folder is flushed), so a crash or power cut leaves the
+  old file or the new one, never half of either. `state.json` is the record of which seed folders are
+  Flotilla's, so each save keeps the previous good copy as `state.json.bak`. If `state.json` can't be
+  read, the node falls back to the backup and says so loudly (changes since it was saved are picked up
+  again from the files on disk); if the backup can't be read either it stops with a message instead of
+  starting empty, which would forget which folders are its own. Numbers in `config.toml` are checked on
+  load against one table of limits (`NUMBER_LIMITS`, shared with `flotilla init` and the dashboard's
+  settings): text, NaN, infinity and booleans stop the node, and so does a value earlier versions
+  refused. A number earlier versions accepted but that's outside today's limits is moved to the nearest
+  limit, with a warning, so an upgrade doesn't leave a node that won't start. The `[net] allowed_hosts`
+  list is written back whenever it differs from the defaults, so it survives `flotilla init` and
+  settings changes.
 - **Network failures** during a refresh never drop data: a held torrent whose listing is unreachable is
-  kept as is (`Rejection.transient`).
+  kept as is (`Rejection.transient`). A HTTP 400 from Pirate Face's listing is a failed lookup, not "not
+  listed": it says the request was wrong, not that the model is gone.
+- **Delisting.** A held model for which Pirate Face lists no torrent (a 404, or a listing without a
+  magnet) is dropped only when that has happened on `DELIST_GRACE` (3) refreshes in a row; a listing in
+  between starts the count over, and the kept holding counts against the budget meanwhile. One odd answer
+  shouldn't delete a model. The feed's `deny` list isn't delayed: that is how an editor drops a model at
+  once.
+- **Disk errors.** A torrent libtorrent stops on an error (a full or read-only disk, a vanished file)
+  is never restarted by libtorrent here, since torrents aren't auto-managed. `_torrent_failed` records
+  it and `_retry_errored` clears the error and starts it again after 60 s, doubling to an hour while it
+  keeps failing (`TORRENT_RETRY`). While the disk guard holds downloads back, one still downloading waits
+  for it. `flotilla status` prints these as `STOPPED` lines.
 
 ## Pieces from Hugging Face
 
@@ -404,9 +442,11 @@ itself, only where it's needed:
    them, the holding keeps `hf_bytes`, and the dashboard shows today's total, the rate and the files
    being fetched.
 7. **Gated models** (`hfauth.py`). Every request goes without a token first. When `huggingface.co`
-   answers 401/403, the token the user connected with `flotilla hf connect` is checked once with
+   answers 401/403, the token the user connected with `flotilla hf connect` is checked with
    `/api/whoami-v2` (the first time it's needed, so HF doesn't learn the account runs Flotilla until a
-   gated model needs it) and the request is repeated with it; from then on that repo's `huggingface.co`
+   gated model needs it, then again every day, `RECHECK_EVERY`, since a fine-grained token's
+   permissions can be widened without the file changing; if Hugging Face can't be asked then, the token
+   stays in use and is checked again in 15 minutes) and the request is repeated with it; from then on that repo's `huggingface.co`
    requests carry it (`fetch_range` never sends it to a redirect target). A token whoami says can do
    more than read (role `write`, or a fine-grained permission not ending in `.read`) or that isn't a
    user's is never used. With the token, 403 `GatedRepo` means the account isn't let in yet, and a
@@ -427,8 +467,9 @@ itself, only where it's needed:
   same-origin `Origin` header if one is sent. Other sites can't read the page, so they can't get the
   token;
 - there are no CORS headers, and a strict CSP is set;
-- a connection that sends nothing for 30 s is closed, so idle or half-sent requests can't pile up
-  threads.
+- each request (line, headers and body) must arrive in full within 30 s of the server starting to wait
+  for it, so a trickle of bytes doesn't keep a connection alive, and at most 32 connections are open at
+  once (`MAX_CONNECTIONS`; more are closed unanswered), so half-sent requests can't pile up threads.
 
 Loopback keeps other machines and other sites out, not other accounts on the same computer: any
 local user can open the page, read its token and steer the node. That's fine on a computer one
@@ -455,20 +496,43 @@ container, `flotilla dashboard --serve --listen 0.0.0.0`, that shares only the n
 The dashboard process opens no connection to the node, the VPN or the internet. Anyone who can write
 to the state folder can already change the config, so the folder is the trust boundary.
 
+The node container runs with `FLOTILLA_NO_DASHBOARD=1`. Without it the node would serve its own
+dashboard on the loopback it shares with every other container on gluetun's network, and loopback
+means "local", so it would have no access key. With it `flotilla run` logs that no dashboard started and
+seeds on; the keyed dashboard container serves the page through the state folder. (A hand-written
+`docker run` for the node needs the `-e` too: see the README.) Containers are made by `containers.py`
+without secrets on a command line: gluetun's control-server key and anything carried over by an update
+go to docker in a 0600 `--env-file`, removed once docker has read it, and a command printed for the
+user shows a placeholder. `flotilla update` re-creates a container on the new image with its mounts,
+user, environment, ports, devices, capabilities and similar settings carried over from `docker
+inspect`, and refuses, before stopping or changing anything, when it can't: a container managed by
+Docker Compose, started with `--link` or `--volumes-from`, with an SELinux-labelled bind (`:z`), or with a
+mount of a kind it doesn't know.
+
 Listening on anything other than loopback changes the checks, because the loopback ones no longer mean
 anything:
 
 - every request needs the dashboard's **access key**: 32 random bytes, made once and kept in
-  `dashboard.key` (mode 0600) in the state folder. Opening `/?key=…` once sets it as an `HttpOnly`,
-  `SameSite=Strict` cookie and redirects to drop it from the address bar. It is compared in constant
-  time;
+  `dashboard.key` (mode 0600) in the state folder. Opening `/?key=…` once sets a cookie and redirects
+  to drop the key from the address bar. The cookie isn't the key but an HMAC of it for the current
+  30-day period (this period's and the last one's are accepted, and a cookie from the last is
+  replaced), named `flotilla_key_<port>` because browsers send a host's cookies to every port on it. It
+  is `HttpOnly` and `SameSite=Lax`, not Strict: a key link opened from another site (a chat, a notes
+  app) is a cross-site navigation, and Strict would withhold the cookie on the redirect. The key and
+  the cookie are compared in constant time. The older cookie that held the key itself is still
+  still accepted, and replaced in the answer;
 - any `Host` is accepted, since the node's address on the network isn't known in advance. A DNS
   rebinding site never gets the cookie, so it gets a 401;
 - POSTs still need the per-process token, a JSON body and, if `Origin` is sent, one that matches the
-  request's own `Host`.
+  request's own `Host`, with `http://` or `https://` (`tailscale serve` and other TLS proxies pass on
+  the browser's `https://` origin).
 
 The page and API are served over plain HTTP, so the key is only as private as the network it crosses.
 It's meant for a home network, not the internet.
+
+`flotilla dashboard` never puts the key on a command line, where `ps` shows it to every account. On
+macOS it passes the keyed address to the browser through osascript's standard input; elsewhere it opens
+the plain address and prints the keyed one, to be opened once.
 
 ## Traffic history
 
@@ -594,7 +658,11 @@ left of it are then removed.
 refresh asks for it, and a new build's .torrent must hash to the listed infohash, hold only `LICENSE` and
 `shards/[removed-]YYYY-MM-DD.txt`, stay under 256 MB and pass the tracker allowlist. It's seeded from
 `state/index/files`; a new build is added over the old one's folder (it only downloads new shards) and
-the old one is let go once the new one is complete. Shards are read like Pirate Face's CLI reads them:
+the old one is let go once the new one is complete. Then, and at startup (`prune`), what only older builds
+held is deleted: their .torrent files, shards no kept build lists and libtorrent's part files
+(nothing in `files/` is deleted if the kept build's file list can't be read; a symlink is removed, never
+followed). Its download is paused by the disk guard like a model's (`_guarded_handles`): it lives in the
+state folder, usually on the same disk. Shards are read like Pirate Face's CLI reads them:
 dates in order, each date's removals applied after its shard, the last line for a repo winning, and a
 removals file that isn't all 40-hex lines makes the whole copy answer nothing. A line counts only if it
 passes `validate_magnet` and has exactly one web seed naming `api/ws/<owner>/<name>/<40-hex commit>`.
@@ -712,9 +780,13 @@ Face's whole catalog (58,753 models in the 2026-11-23 index), without anyone enu
   catalog weekly.
 - **Seeders.** A BitTorrent scrape of `tracker.pirateface.co:6969`, BATCH (74) infohashes a request
   (the tracker returns HTTP 500 for 200). A hash the tracker doesn't know has had no peer announce it:
-  no seeder. Plain HTTP, through the network pin; a forged count can only steer which catalog models
-  are looked at, since each is then checked like any other. Done at most daily (`EVERY`), picks kept
-  in `state.json`; if the tracker is down, yesterday's picks stand.
+  no seeder. Plain HTTP, through the network pin. The whole request has a deadline (`DEADLINE`, 120 s),
+  the reply is capped at 1 MiB and refused if it is cut off, and a count must be a real non-negative
+  integer (clamped at 2^31; anything else, including a bool or text, reads as no seeder), since the
+  counts are saved in `state.json`. Any failure is an `OSError`, which skips the sweep for that refresh. A
+  forged count can only steer which catalog models are looked at, since each is then checked like any
+  other. Done at most daily (`EVERY`), picks kept in `state.json`; if the tracker is down or
+  answers badly, yesterday's picks stand.
 - **How much.** The `sweep_candidates` (20) least seeded, fewest seeders first, become candidates
   (`gather(sweep=)`) at priority 0.1 with a target of 2. That's below Pirate Face's unranked new
   torrents (0.15), and above a copy past its target of anything on the list (about 0.01 for the top

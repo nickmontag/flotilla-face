@@ -126,7 +126,7 @@ def updating(monkeypatch, tmp_path):
     calls = []
     monkeypatch.setattr(release, "latest", lambda: _rel())
     monkeypatch.setattr(cli, "_install_kind", lambda: "uv-tool")
-    monkeypatch.setattr(release, "download", lambda rel, name: calls.append(("download", name)) or tmp_path / name)
+    monkeypatch.setattr(release, "download", lambda rel, name, into=None: calls.append(("download", name)) or tmp_path / name)
     monkeypatch.setattr(cli, "_install_wheel", lambda kind, wheel: calls.append(("install", kind, wheel.name)) or True)
     monkeypatch.setattr(service, "installed", lambda: True)
     monkeypatch.setattr(service, "execute", lambda plan, dry_run, say: calls.append(("restart",)) or True)
@@ -193,7 +193,7 @@ def test_inside_a_container_it_points_at_the_host(updating, monkeypatch, capsys)
 
 
 def test_a_bad_download_installs_nothing(updating, monkeypatch, capsys):
-    def bad(rel, name):
+    def bad(rel, name, into=None):
         raise release.ReleaseError("doesn't match the signed release")
 
     monkeypatch.setattr(release, "download", bad)

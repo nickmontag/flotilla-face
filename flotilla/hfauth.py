@@ -32,6 +32,7 @@ TOKENS_PAGE = f"https://{HOST}/settings/tokens"
 TOKEN_FILE = "hf-token"
 TOKEN_RE = re.compile(r"hf_[A-Za-z0-9]{20,100}")
 RECHECK_AFTER_ERROR = 900.0     # seconds before asking Hugging Face again after it couldn't be reached
+RECHECK_EVERY = 86400.0         # a token in use is checked again this often (its permissions can change)
 
 
 class TokenError(ValueError):
@@ -115,9 +116,15 @@ def read_only_problem(auth: dict) -> str | None:
         return None
     if role == "fineGrained":
         fg = tok.get("fineGrained") or {}
+        if not isinstance(fg, dict) or not isinstance(fg.get("global") or [], list) \
+                or not isinstance(fg.get("scoped") or [], list):
+            return "Hugging Face didn't say clearly what this token may do"
         perms = {str(p) for p in fg.get("global") or []}
         for s in fg.get("scoped") or []:
-            perms.update(str(p) for p in (s or {}).get("permissions") or [])
+            p = (s or {}).get("permissions") if isinstance(s or {}, dict) else None
+            if not isinstance(p or [], list):
+                return "Hugging Face didn't say clearly what this token may do"
+            perms.update(str(x) for x in p or [])
         more = sorted(p for p in perms if not p.endswith(".read"))
         return f"it may also {', '.join(more)}" if more else None
     if role == "write":
@@ -149,8 +156,9 @@ def check(token: str, timeout: float = 20.0) -> Account:
         raise TokenError(f"{problem}. Flotilla only uses read-only tokens, so whoever can read its token file "
                          f"can't change anything on your account: make a Read token at {TOKENS_PAGE}")
     tok = doc["auth"]["accessToken"]
-    scoped = [str((s.get("entity") or {}).get("name")) for s in (tok.get("fineGrained") or {}).get("scoped") or []
-              if isinstance(s, dict) and (s.get("entity") or {}).get("name")]
+    fg = tok.get("fineGrained") if isinstance(tok.get("fineGrained"), dict) else {}
+    scoped = [str(s["entity"]["name"]) for s in fg.get("scoped") or []
+              if isinstance(s, dict) and isinstance(s.get("entity"), dict) and s["entity"].get("name")]
     return Account(name=str(doc.get("name") or "?"), token_name=str(tok.get("displayName") or "?"),
                    role=str(tok.get("role")), scoped=scoped)
 
@@ -170,6 +178,7 @@ class Connection:
         self.state = "none"     # none / unchecked / ok / refused / error
         self.why: str | None = None
         self._retry_at = 0.0
+        self._checked_at = 0.0  # when Hugging Face last said the token in use only reads
         self.generation = 0     # goes up whenever the token in use changes
 
     def refresh(self) -> bool:
@@ -208,25 +217,38 @@ class Connection:
         return changed
 
     def auth(self) -> tuple[str, str] | None:
-        """(host, Authorization value) for huggingface.co, or None if there's no usable token."""
+        """(host, Authorization value) for huggingface.co, or None if there's no usable token. A
+        token in use is checked again every RECHECK_EVERY: a fine-grained token's permissions can be
+        widened on huggingface.co without the file changing."""
+        now = time.time()
         with self._lock:
-            if self.state == "ok":
+            was_ok = self.state == "ok"
+            if was_ok and now < self._checked_at + RECHECK_EVERY:
                 return HOST, f"Bearer {self.token}"
-            if not (self.state == "unchecked" or (self.state == "error" and time.time() >= self._retry_at)):
+            if not (was_ok or self.state == "unchecked" or (self.state == "error" and now >= self._retry_at)):
                 return None
             token = self.token
+            if was_ok:
+                self._checked_at = now      # other threads keep using it while this one asks
         try:
             acct = check(token)
         except TokenError as e:
             self._set(token, "refused", f"the connected token isn't used: {e}")
             return None
         except FetchError as e:
+            if was_ok:
+                # Hugging Face can't be reached to re-check a token that was fine: keep it, ask again soon.
+                with self._lock:
+                    if token == self.token and self.state == "ok":
+                        self._checked_at = now - RECHECK_EVERY + RECHECK_AFTER_ERROR
+                return HOST, f"Bearer {token}"
             self._set(token, "error", f"couldn't check the token with Hugging Face ({e})",
                       retry_at=time.time() + RECHECK_AFTER_ERROR)
             return None
         if not self._set(token, "ok", None, acct):
             return None
-        self.log(f"hugging face: using {acct.name}'s read-only token {acct.token_name!r} for gated models")
+        if not was_ok:
+            self.log(f"hugging face: using {acct.name}'s read-only token {acct.token_name!r} for gated models")
         return HOST, f"Bearer {token}"
 
     def rejected(self) -> None:
@@ -242,6 +264,8 @@ class Connection:
                 return False
             said = (self.state, self.why)
             self.state, self.why, self.account, self._retry_at = state, why, account, retry_at
+            if state == "ok":
+                self._checked_at = time.time()
         if why and (state, why) != said:
             self.log(f"hugging face: {why}")
         return True

@@ -129,7 +129,7 @@ def _hex(v, n: int) -> str | None:
 def parse_entry(data: bytes, file: str = "", dig: str | None = None) -> Entry:
     try:
         doc = json.loads(data.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as e:
+    except (UnicodeDecodeError, json.JSONDecodeError, RecursionError) as e:
         raise LedgerError(f"entry is not JSON: {e}") from e
     if not isinstance(doc, dict) or doc.get("kind") != ENTRY_KIND or doc.get("schema") != SCHEMA:
         raise LedgerError("not a hash-ledger entry (or an unsupported schema)")
@@ -166,7 +166,7 @@ def parse_index(data: bytes) -> tuple[int, dict[str, tuple[str, str]]]:
     """(version, {ledger_key: (entry file, sha256)})."""
     try:
         doc = json.loads(data.decode("utf-8"))
-    except (UnicodeDecodeError, json.JSONDecodeError) as e:
+    except (UnicodeDecodeError, json.JSONDecodeError, RecursionError) as e:
         raise LedgerError(f"ledger index is not JSON: {e}") from e
     if not isinstance(doc, dict) or doc.get("kind") != KIND or doc.get("schema") != SCHEMA:
         raise LedgerError("not a hash-ledger index (or an unsupported schema)")
@@ -313,7 +313,7 @@ def load_ledger(keys: list[PublicKey], state_dir: Path, allowed_hosts: tuple[str
 
                 take("bundled ledger", index, bundled_entry, keep=True, stamps=d)
                 led.sources.append(f"bundled v{v}")
-        except (OSError, SignatureError, LedgerError) as e:
+        except (OSError, SignatureError, LedgerError, UnicodeDecodeError) as e:
             log(f"hash ledger: bundled copy unusable: {e}")
 
     # 2. The published copy (or, if it can't be fetched, the last one that verified).
@@ -331,7 +331,7 @@ def load_ledger(keys: list[PublicKey], state_dir: Path, allowed_hosts: tuple[str
             data = (cache / "index.json").read_bytes()
             v, index = check(data, (cache / "index.json.minisig").read_text())
             remote = (v, index, data, b"")
-        except (OSError, SignatureError, LedgerError) as e:
+        except (OSError, SignatureError, LedgerError, UnicodeDecodeError) as e:
             log(f"hash ledger: cached copy unusable: {e}")
     if remote is not None:
         v, index, data, sig = remote

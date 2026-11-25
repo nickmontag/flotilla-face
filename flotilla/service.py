@@ -68,28 +68,54 @@ def rotate_own_log(max_bytes: int = LOG_MAX, keep: int = LOG_KEEP, every: float 
         path = service_log()
     else:
         return False
-    try:
-        out = os.fstat(1)
-        if not stat.S_ISREG(out.st_mode) or out.st_size < max_bytes:
-            return False
-        st = path.stat()
-        if (st.st_dev, st.st_ino) != (out.st_dev, out.st_ino):     # stdout is some other file
-            return False
-        sys.stdout.flush()
-        sys.stderr.flush()
-        for i in range(keep - 1, 0, -1):
-            older = path.with_name(f"{path.name}.{i}")
-            if older.exists():
-                os.replace(older, path.with_name(f"{path.name}.{i + 1}"))
-        os.replace(path, path.with_name(f"{path.name}.1"))
-        fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o644)
+    first = path.with_name(f"{path.name}.1")
+
+    def same(a, b) -> bool:
+        return (a.st_dev, a.st_ino) == (b.st_dev, b.st_ino)
+
+    def write_to(fd: int, out) -> None:
         try:
             err = os.fstat(2)
+            sys.stdout.flush()
+            sys.stderr.flush()
             os.dup2(fd, 1)
-            if (err.st_dev, err.st_ino) == (out.st_dev, out.st_ino):
+            if same(err, out):
                 os.dup2(fd, 2)
         finally:
             os.close(fd)
+
+    try:
+        out = os.fstat(1)
+        if not stat.S_ISREG(out.st_mode):
+            return False
+        try:
+            st = path.stat()
+        except FileNotFoundError:
+            # No log file, yet stdout is the first old copy: an earlier rotation renamed the log, then
+            # couldn't put a new one in its place. Start the log again, else that copy grows without limit.
+            if first.exists() and same(first.stat(), out):
+                write_to(os.open(path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o644), out)
+                return True
+            return False
+        if out.st_size < max_bytes or not same(st, out):     # small yet, or stdout is some other file
+            return False
+        sys.stdout.flush()
+        sys.stderr.flush()
+        # The new file first, under another name: if it can't be made, nothing has moved yet.
+        fresh = path.with_name(f"{path.name}.new")
+        fd = os.open(fresh, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_APPEND, 0o644)
+        try:
+            for i in range(keep - 1, 0, -1):
+                older = path.with_name(f"{path.name}.{i}")
+                if older.exists():
+                    os.replace(older, path.with_name(f"{path.name}.{i + 1}"))
+            os.replace(path, first)
+            os.replace(fresh, path)
+        except OSError:
+            os.close(fd)
+            fresh.unlink(missing_ok=True)
+            raise                # if the log was renamed already, the next check starts it again
+        write_to(fd, out)
         return True
     except OSError:
         return False
@@ -176,11 +202,23 @@ def launchd_status(home: Path) -> str:
 # ---------------------------------------------------------------- Linux
 
 
+def _systemd_word(a: str) -> str:
+    """One ExecStart argument, written so systemd reads it back exactly (systemd.syntax, systemd.service):
+    `%` starts a specifier and `$` a variable anywhere, so they're doubled; whitespace, quotes,
+    backslashes and `;` are quoted with C-style escapes. A line break would end the directive and a
+    control character can't be written plainly, so those are refused."""
+    if any(ord(c) < 0x20 or ord(c) == 0x7f for c in a):
+        raise ValueError(f"can't run Flotilla as a systemd service from {a!r}: the path has a line break or "
+                         f"another control character. Move it (or the config or state folder) somewhere "
+                         f"whose path doesn't, or run `flotilla run` yourself.")
+    a = a.replace("%", "%%").replace("$", "$$")
+    if a and not any(c in a for c in ' "\'\\;'):
+        return a
+    return '"' + a.replace("\\", "\\\\").replace('"', '\\"').replace("'", "\\'").replace(";", "\\x3b") + '"'
+
+
 def systemd_unit(exe: list[str], config: Path, state: Path) -> str:
-    # systemd splits on whitespace; quote anything with spaces (and escape quotes/backslashes).
-    def q(a: str) -> str:
-        return '"' + a.replace("\\", "\\\\").replace('"', '\\"') + '"' if (" " in a or '"' in a) else a
-    cmd = " ".join(q(a) for a in _args(exe, config, state))
+    cmd = " ".join(_systemd_word(a) for a in _args(exe, config, state))
     return f"""[Unit]
 Description=Flotilla: seed Pirate Face model shards
 Documentation=https://pirateface.co

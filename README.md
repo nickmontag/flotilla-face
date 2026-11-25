@@ -201,6 +201,10 @@ and checked again; only what changed is downloaded. For a model the signed prior
 torrent, Flotilla follows the replacement only if Pirate Face's own record says the pinned torrent was
 replaced by this one and Hugging Face or the hash ledger vouches for every file in it.
 
+A model Pirate Face simply stops listing isn't dropped at once: Flotilla waits until three refreshes in
+a row say so, since one odd answer shouldn't delete a model. A model on the priority list's `deny` goes
+immediately.
+
 ### When Pirate Face is down
 
 Pirate Face publishes every model's magnet as a torrent of its own, the magnet index (about 10 MB, a new
@@ -208,7 +212,8 @@ build each week). Flotilla keeps the newest build and seeds it, so a copy of the
 While Pirate Face can't be reached, models come from that copy: the magnet from the index, the .torrent
 from the swarm (libtorrent checks it against the infohash), and every file is still checked against
 Hugging Face or the hash ledger before anything is downloaded. A model the index has removed is never
-brought back. Set `keep_magnet_index = false` under `[pirateface]` to turn this off.
+brought back. Files only older builds of the index held are deleted once the newest is in use. Set `keep_magnet_index = false` under
+`[pirateface]` to turn the copy off.
 
 ## How Flotilla decides what to carry
 
@@ -361,6 +366,8 @@ What Flotilla does with it:
 - **Kept on its own.** In `hf-token` next to your config file, readable only by you, or in the file
   `FLOTILLA_HF_TOKEN_FILE` names (a Docker secret, say). Flotilla doesn't use `HF_TOKEN` or a
   `huggingface-cli` login.
+- A token in use is checked with Hugging Face again every day, so one whose permissions were widened
+  stops being used.
 - Until a model lets your account in, Flotilla asks again every hour. The dashboard (Settings, Hugging
   Face) and `flotilla status` list those models, with a link to ask for access.
 - Hugging Face sees your account fetch those models, from the address Flotilla uses.
@@ -381,7 +388,9 @@ What Flotilla does with it:
 - **A torrent must match the Hugging Face repo exactly**: same files, same sizes. Nothing extra can be
   slipped in.
 - **Every file is checked against Hugging Face's own hash.** If one doesn't match, that torrent is
-  blocked and its data deleted. On gated repos, where Hugging Face hides the hash, Pirate Face's hash
+  blocked and its data deleted, the log says which file and why, and `flotilla unblock` undoes the block. A file
+  Flotilla can't read (a failing disk, a permission) proves nothing about the torrent: it stays
+  unchecked and is tried again, backing off to hourly, and blocks nothing. On gated repos, where Hugging Face hides the hash, Pirate Face's hash
   must match the file record Hugging Face still shows. If the two disagree while Hugging Face is
   consistent, Hugging Face wins and the disagreement is flagged for reporting.
 - **Hashes outlive Hugging Face.** The [hash ledger](#the-hash-ledger) records every file's hash while
@@ -394,11 +403,15 @@ What Flotilla does with it:
   loaded (pickle, Keras `.h5`, NumPy `.npz`) are skipped by default, and nothing downloaded is ever
   executed.
 - **Never fills your disk.** It stays inside your budget and pauses downloads if the drive gets close to
-  your reserve, whatever else is filling it.
+  your reserve, whatever else is filling it. The budget counts only the folders of models it carries,
+  not other files you keep in the seed folder.
 - **Only picks up licences you allow.** By default: MIT, Apache-2.0, WTFPL, OpenMDW-1.1, and the GLM-5.3
   and Qwen Community 1.0 licences. Each lets anyone copy and redistribute the weights; the GLM and Qwen
   ones add conditions only for very large commercial AI services. Other licences Pirate Face asks you to
-  accept first (Gemma, Llama and so on) are never picked automatically.
+  accept first (Gemma, Llama and so on) are never picked automatically. If Hugging Face can't be asked,
+  or says a model is gone, Flotilla uses the licence it last named for it, however old, so a takedown
+  doesn't make nodes drop their copies. A model gone before its licence was ever read is kept by nodes
+  that hold it, and not picked by any other.
 - **VPN-safe if you want it.** With `bind_interface` set, all torrent traffic and Flotilla's own requests
   (listings, pieces from Hugging Face) are pinned to your VPN. If the VPN drops, Flotilla goes offline
   instead of falling back to your real connection. Name lookups still use your system's resolver.
@@ -433,10 +446,11 @@ Found a hole? See [SECURITY.md](SECURITY.md).
 | `flotilla run` | Run in the foreground (`--hours N` to seed for a set time) |
 | `flotilla service install` / `uninstall` / `status` | Run in the background: launchd on macOS, systemd on Linux (`--linger` keeps it running while you're logged out; if your system won't allow that without sudo, it says so and gives the command). Without systemd it says so and leaves `flotilla run` to you. Logs: `~/Library/Logs/flotilla.log` on macOS, rotated at 10 MB with three old copies kept; `journalctl --user -u flotilla` on Linux |
 | `flotilla add <link>` / `remove <link>` / `picks` | Prioritize a model by its Hugging Face or Pirate Face link (`--rescue`: ask Pirate Face to add it if it has no torrent), take it off, list your picks |
-| `flotilla dashboard` | Open the local dashboard |
+| `flotilla dashboard` | Open the dashboard. When it needs an access key, the key never goes on a command line (other accounts could read it with `ps`): on macOS the browser gets the keyed address another way; elsewhere it opens the plain address and prints the keyed one to open once |
 | `flotilla dashboard --serve --listen 0.0.0.0` | Serve the dashboard on your network for a node in a VPN container (see Behind gluetun) |
 | `flotilla dashboard --url` | The dashboard's address with its access key |
-| `flotilla status` | Text summary of the running node |
+| `flotilla status` | Text summary of the running node, including files it couldn't read (`UNREADABLE`) and torrents libtorrent stopped on a disk error (`STOPPED`); both are tried again by themselves |
+| `flotilla unblock <infohash or author/model>` / `--all` | Let a torrent that was blocked after a file failed its hash check be picked again |
 | `flotilla hf connect` / `disconnect` / `status` | Connect a Hugging Face account (a read-only token) for [gated models](#gated-models), remove it, check it |
 | `flotilla points [connect / disconnect]` | Connect a Pirate Face account so your seeding [earns points](#pirate-face-points), remove it, or check it: whether its tracker is answering and what this node earns a day |
 | `flotilla history [--range 30d] [--model author/model] [--csv]` | Upload and download over time; `--csv` for a spreadsheet |
@@ -550,8 +564,11 @@ docker run -it --rm --network container:gluetun -v flotilla:/root $IMG init
 
 # 2. Seeding: every connection goes through gluetun. The memory limit keeps it from crowding out
 #    anything else on the machine (see "Memory" below); the log limit keeps its log to 30 MB.
+#    FLOTILLA_NO_DASHBOARD=1 stops it serving a dashboard of its own, which would sit, with no access
+#    key, on the loopback every container in gluetun's network shares; step 3 serves it instead.
 docker run -d --name flotilla --network container:gluetun --restart unless-stopped \
-  --memory 3g --memory-swap 3g --log-opt max-size=10m --log-opt max-file=3 -v flotilla:/root $IMG run
+  --memory 3g --memory-swap 3g --log-opt max-size=10m --log-opt max-file=3 \
+  -e FLOTILLA_NO_DASHBOARD=1 -v flotilla:/root $IMG run
 
 # 3. Dashboard: outside gluetun, reachable from your home network. Put this machine's own address on
 #    that network (here 192.168.1.20) in -p, not just the port: see "Who can reach the dashboard".
@@ -753,7 +770,9 @@ in your config. The newest version that verifies wins.
 Installs fetch updates to this file from GitHub between releases and check the signature, so pushing a
 newly signed version updates everyone. If the fetch fails, they use the copy they shipped with. That
 shipped copy is trusted even after its `expires` date; fetched copies must be unexpired, and clients
-never accept a lower `version` than one they've already seen.
+never accept a lower `version` than one they've already seen. A signed list that has expired, or is older
+than one a node has seen, isn't used for priorities, but if no current list is available its `deny`
+entries still apply, so a model denied for a takedown doesn't come back while the list can't be fetched.
 
 Maintainers: how to edit, sign and sync the list is in [CONTRIBUTING.md](CONTRIBUTING.md#the-priority-list).
 
@@ -800,7 +819,10 @@ flotilla update
 
 It shows what's new and asks first. Then it updates whatever Flotilla runs here: this machine's own
 copy (restarting the background service), and the `flotilla` and `flotilla-dashboard` containers if
-setup made them, keeping their settings. If a new container won't start, the old one is put back.
+setup made them, keeping their settings: mounts, user, environment, published ports and the like are
+carried over from the old container. If it can't carry something over (a container managed by Docker
+Compose, one started with `--link`, a bind mount with an SELinux `:z` label), it says so and changes
+nothing: update that one yourself. If a new container won't start, the old one is put back.
 `flotilla update --check` only says whether there's a newer release.
 
 Nothing updates by itself. Once a day a node checks whether a newer release is out, and the dashboard

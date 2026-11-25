@@ -178,14 +178,18 @@ def sync(doc: dict, page: list[PageModel], pf, hf, licenses: set[str]) -> dict:
             summary["kept"].append(f"{m.repo} (already on the list)")
             continue
         info = pf.torrent(m.repo)
-        if not info or not info.get("revision"):
+        if not isinstance(info, dict) or not info.get("revision"):
             summary["skipped"].append(f"{m.repo}: no Pirate Face torrent")
+            continue
+        rev = info["revision"]
+        # It is pinned into the list and used in Hugging Face URLs and cache file names.
+        if not isinstance(rev, str) or not re.fullmatch(r"[0-9a-f]{40}", rev):
+            summary["skipped"].append(f"{m.repo}: Pirate Face pins no full commit ({str(rev)[:20]!r})")
             continue
         lic = hf.license(m.repo)
         if lic not in licenses:
             summary["skipped"].append(f"{m.repo}: license {lic or 'unknown'} isn't allowed by default")
             continue
-        rev = info["revision"]
         if hf.tree(m.repo, rev) is None:
             summary["skipped"].append(f"{m.repo}: Hugging Face no longer has commit {rev[:12]}")
             continue

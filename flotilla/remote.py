@@ -63,25 +63,36 @@ class RemoteEngine:
     def submit(self, action: str, body: dict) -> str:
         if not isinstance(action, str) or not re.fullmatch(r"[a-z_]{1,24}", action):
             raise ValueError("unknown action")
+        if not isinstance(body, dict):
+            raise ValueError("the request must be a JSON object")
         rid = secrets.token_hex(8)
         inbox, outbox = self.dir / "inbox", self.dir / "outbox"
-        inbox.mkdir(parents=True, exist_ok=True)
         tmp = inbox / f"{rid}.tmp"
-        # This user only: a request can carry a secret (the Pirate Face account's tracker or key).
-        fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
-        with os.fdopen(fd, "w") as f:
-            f.write(json.dumps({"action": action, "body": body}))
-        tmp.rename(inbox / f"{rid}.json")
+        try:
+            inbox.mkdir(parents=True, exist_ok=True)
+            # This user only: a request can carry a secret (the Pirate Face account's tracker or key).
+            fd = os.open(tmp, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+            with os.fdopen(fd, "w") as f:
+                f.write(json.dumps({"action": action, "body": body}))
+            tmp.rename(inbox / f"{rid}.json")
+        except OSError as e:
+            try:
+                tmp.unlink(missing_ok=True)
+            except OSError:
+                pass
+            raise RuntimeError(f"couldn't hand the request to the node ({e.strerror or e})") from e
         answer = outbox / f"{rid}.json"
         deadline = time.time() + ANSWER_WITHIN
         while time.time() < deadline:
             if answer.exists():
                 try:
                     res = json.loads(answer.read_text())
-                except ValueError:
+                except (OSError, ValueError):
                     time.sleep(0.05)
                     continue
                 answer.unlink(missing_ok=True)
+                if not isinstance(res, dict):
+                    raise ValueError("the node's answer made no sense")
                 if res.get("ok"):
                     return str(res.get("message", "done"))
                 raise ValueError(str(res.get("error", "failed")))

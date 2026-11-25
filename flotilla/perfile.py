@@ -373,12 +373,16 @@ class PerFile:
 
     def _check(self) -> None:
         """Take out per-file swarms whose file is no longer verified (or that libtorrent stopped with
-        an error), all of them while the feature is off, and forget retry times that have passed."""
+        an error), all of them while the feature is off, and forget retry times that have passed and
+        "not listed" marks for files no longer held (they'd stay in state.json, and in the count, for good)."""
         now = time.time()
+        live = {w.root for w in self.wanted()} if self.unlisted else set()
         with self.eng.lock:
             gone = [c for c in self.joined.values() if not self.enabled or not self._file(c.ih, c.index)]
             for r in [r for r, t in self.retry.items() if t <= now]:
                 del self.retry[r]
+            for r in [r for r in self.unlisted if r not in live]:
+                del self.unlisted[r]
         for c in self.joined.values():
             st = self.eng.status(f"v2:{c.root}", c.handle)
             if st.errc.value():

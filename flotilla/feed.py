@@ -17,20 +17,24 @@ Security properties (see DESIGN.md):
 
 from __future__ import annotations
 
+import functools
 import json
+import math
 import re
+import threading
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .config import write_atomic
 from .netsafe import FetchError, UnsafeURL, fetch
 from .signing import PublicKey, SignatureError, verify
 
 SCHEMA = 1
 MAX_FEED_BYTES = 4 << 20
 MAX_SIG_BYTES = 4096
-REPO_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}/[A-Za-z0-9][A-Za-z0-9._-]{0,95}$")
-HEX40 = re.compile(r"^[0-9a-f]{40}$")
+REPO_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._-]{0,95}/[A-Za-z0-9][A-Za-z0-9._-]{0,95}\Z")
+HEX40 = re.compile(r"^[0-9a-f]{40}\Z")
 
 DEFAULT_WEIGHTS = {"capability": 0.35, "cyber": 0.25, "takedown_risk": 0.40}
 
@@ -77,6 +81,15 @@ BUNDLED_FEED = Path(__file__).parent / "data" / "priorities.json"
 
 class FeedError(ValueError):
     pass
+
+
+class FeedExpired(FeedError):
+    """A feed whose signature checks out but whose `expires` has passed. It carries the parsed feed so
+    load_feed can keep its deny list (and only that: an expired feed's priorities are not used)."""
+
+    def __init__(self, msg: str, feed: "Feed"):
+        super().__init__(msg)
+        self.feed = feed
 
 
 @dataclass
@@ -137,10 +150,12 @@ class Feed:
         return max(0.0, min(1.0, s / total_w * m.boost))
 
 
-def neutral_feed() -> Feed:
-    """Used when no trusted feed is available: everything is equally important."""
+def neutral_feed(deny: set[str] | None = None) -> Feed:
+    """Used when no trusted feed is available: everything is equally important. `deny` is the deny list
+    carried over from an earlier signature-verified feed (see load_feed): a model the editors denied
+    stays denied while the node can't reach a current list."""
     now = datetime.now(timezone.utc)
-    return Feed(0, now, now, dict(DEFAULT_WEIGHTS), 0.3, 3, [], set(), source="(none: neutral priorities)")
+    return Feed(0, now, now, dict(DEFAULT_WEIGHTS), 0.3, 3, [], set(deny or ()), source="(none: neutral priorities)")
 
 
 def _parse_time(v, what: str) -> datetime:
@@ -155,7 +170,31 @@ def _parse_time(v, what: str) -> datetime:
     return t
 
 
+def _number(v, what: str, lo: float | None = None, hi: float | None = None) -> float:
+    """A finite JSON number (not a bool, not NaN or infinity) within [lo, hi]."""
+    if isinstance(v, bool) or not isinstance(v, (int, float)):
+        raise FeedError(f"{what} must be a number")
+    try:
+        f = float(v)
+    except OverflowError:
+        raise FeedError(f"{what} is out of range") from None
+    if not math.isfinite(f) or (lo is not None and f < lo) or (hi is not None and f > hi):
+        raise FeedError(f"{what} is out of range")
+    return f
+
+
 def parse_feed(data: bytes) -> Feed:
+    """Read a feed document. Every field is shape-checked: whatever a signed (or local) file holds,
+    the only exception out of here is FeedError, so one editor slip can't abort a node's refresh."""
+    try:
+        return _parse_feed(data)
+    except FeedError:
+        raise
+    except (TypeError, AttributeError, OverflowError, KeyError, ValueError, RecursionError) as e:
+        raise FeedError(f"feed has an unexpected shape: {e}") from e
+
+
+def _parse_feed(data: bytes) -> Feed:
     try:
         doc = json.loads(data.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as e:
@@ -163,12 +202,16 @@ def parse_feed(data: bytes) -> Feed:
     if not isinstance(doc, dict) or doc.get("schema") != SCHEMA:
         raise FeedError(f"unsupported feed schema (want {SCHEMA})")
     version = doc.get("version")
-    if not isinstance(version, int) or version < 1:
+    if isinstance(version, bool) or not isinstance(version, int) or version < 1:
         raise FeedError("version must be a positive integer")
-    weights = doc.get("weights", DEFAULT_WEIGHTS)
-    if not isinstance(weights, dict) or not all(isinstance(v, (int, float)) and v >= 0 for v in weights.values()):
-        raise FeedError("weights must map names to non-negative numbers")
+    weights = _check_weights(doc.get("weights", DEFAULT_WEIGHTS))
     defaults = doc.get("defaults", {})
+    if not isinstance(defaults, dict):
+        raise FeedError("defaults must be an object")
+    unlisted = _number(defaults.get("unlisted_priority", 0.15), "defaults.unlisted_priority", 0, 1)
+    target = defaults.get("target_replicas", 5)
+    if isinstance(target, bool) or not isinstance(target, int) or not 1 <= target <= 1000:
+        raise FeedError("defaults.target_replicas must be a whole number from 1 to 1000")
     models = _parse_models(doc.get("models", []))
     deny = doc.get("deny", [])
     if not isinstance(deny, list) or not all(isinstance(d, str) for d in deny):
@@ -177,12 +220,24 @@ def parse_feed(data: bytes) -> Feed:
         version=version,
         issued=_parse_time(doc.get("issued"), "issued"),
         expires=_parse_time(doc.get("expires"), "expires"),
-        weights={k: float(v) for k, v in weights.items()},
-        unlisted_priority=float(defaults.get("unlisted_priority", 0.15)),
-        target_replicas=int(defaults.get("target_replicas", 5)),
+        weights=weights,
+        unlisted_priority=unlisted,
+        target_replicas=target,
         models=models,
         deny={d.lower() for d in deny},
     )
+
+
+def _check_weights(weights) -> dict[str, float]:
+    if not isinstance(weights, dict):
+        raise FeedError("weights must map names to non-negative numbers")
+    out = {}
+    for k, v in weights.items():
+        try:
+            out[k] = _number(v, "weights", lo=0)
+        except FeedError:
+            raise FeedError("weights must map names to non-negative numbers") from None
+    return out
 
 
 def _parse_models(items) -> list[FeedModel]:
@@ -202,21 +257,29 @@ def _parse_models(items) -> list[FeedModel]:
         if rev is not None and (not isinstance(rev, str) or not HEX40.match(rev)):
             raise FeedError(f"models[{i}].revision must be a 40-hex commit")
         scores = e.get("scores", {})
-        if not isinstance(scores, dict) or not all(isinstance(v, (int, float)) for v in scores.values()):
+        if not isinstance(scores, dict):
             raise FeedError(f"models[{i}].scores must be numbers")
+        try:
+            scores = {k: _number(v, "score") for k, v in scores.items()}
+        except FeedError:
+            raise FeedError(f"models[{i}].scores must be numbers") from None
         tr = e.get("target_replicas")
-        if tr is not None and (not isinstance(tr, int) or not 1 <= tr <= 1000):
+        if tr is not None and (isinstance(tr, bool) or not isinstance(tr, int) or not 1 <= tr <= 1000):
             raise FeedError(f"models[{i}].target_replicas out of range")
+        quant = e.get("quant")
+        if quant is not None and (not isinstance(quant, str) or len(quant) > 64):
+            raise FeedError(f"models[{i}].quant must be a short string")
         spare = e.get("spare", False)
         if not isinstance(spare, bool):
             raise FeedError(f"models[{i}].spare must be true or false")
-        boost = e.get("boost", 1.0)
-        if not isinstance(boost, (int, float)) or not 0 <= boost <= 10:
-            raise FeedError(f"models[{i}].boost out of range")
+        try:
+            boost = _number(e.get("boost", 1.0), "boost", 0, 10)
+        except FeedError:
+            raise FeedError(f"models[{i}].boost out of range") from None
         lic = e.get("license")
         if lic is not None and not isinstance(lic, str):
             raise FeedError(f"models[{i}].license must be a string")
-        m = FeedModel(repo, {k: float(v) for k, v in scores.items()}, e.get("quant"), ih, rev, tr, float(boost),
+        m = FeedModel(repo, scores, quant, ih, rev, tr, boost,
                       str(e.get("note", ""))[:500], lic.lower() if lic else None)
         m.origin = _parse_origin(e.get("origin"), i)
         m.spare = spare
@@ -287,7 +350,8 @@ def verify_feed(data: bytes, sig: str, keys: list[PublicKey], min_version: int, 
     feed = parse_feed(data)
     now = now or datetime.now(timezone.utc)
     if check_expiry and feed.expires <= now:
-        raise FeedError(f"feed v{feed.version} expired at {feed.expires.isoformat()}")
+        feed.signer = key.key_id_hex
+        raise FeedExpired(f"feed v{feed.version} expired at {feed.expires.isoformat()}", feed)
     if feed.version < min_version:
         raise FeedError(f"feed v{feed.version} is older than v{min_version} already seen (rollback refused)")
     feed.signer = key.key_id_hex
@@ -308,30 +372,47 @@ def load_feed(
 
     The bundled list ships inside the package, so it is exactly as trusted as
     the code: its signature is still checked, but not its expiry (an old
-    install shouldn't lose its list just because nobody fetched an update)."""
+    install shouldn't lose its list just because nobody fetched an update).
+
+    Neutral priorities keep the deny list. A node that can't reach the feed host for months holds an
+    expired cached copy, and the bundled list may be older than what it already saw (a rollback). Their
+    priorities aren't used, but both were signature-verified, so the models they deny stay denied:
+    otherwise a denied model could come back through Pirate Face's lists."""
     if not keys:
         log("feed: no trusted editor keys configured; using neutral priorities")
         return neutral_feed()
-    chosen = _load_remote_or_cache(urls, keys, min_version, cache_dir, allowed_hosts, log)
+    carry: set[str] = set()      # deny entries of signature-verified feeds we won't take priorities from
+    chosen = _load_remote_or_cache(urls, keys, min_version, cache_dir, allowed_hosts, log, carry)
     if bundled is not None and bundled.exists():
         try:
-            b = verify_feed(bundled.read_bytes(), Path(str(bundled) + ".minisig").read_text(), keys, min_version,
+            b = verify_feed(bundled.read_bytes(), Path(str(bundled) + ".minisig").read_text(), keys, 0,
                             check_expiry=False)
-            b.source = "bundled with this release"
-            if chosen is None or b.version > chosen.version:
-                chosen = b
+            if b.version < min_version:
+                carry |= b.deny     # an older shipped copy after an update is normal, not an error
+            else:
+                b.source = "bundled with this release"
+                if chosen is None or b.version > chosen.version:
+                    chosen = b
         except FeedError as e:
-            if "rollback" not in str(e):  # an older shipped copy after an update is normal, not an error
-                log(f"feed: bundled list unusable: {e}")
+            log(f"feed: bundled list unusable: {e}")
         except (OSError, SignatureError) as e:
             log(f"feed: bundled list unusable: {e}")
     if chosen:
         return chosen
-    log("feed: no valid feed; using neutral priorities")
-    return neutral_feed()
+    if carry:
+        log(f"feed: no current feed; using neutral priorities, but keeping the {len(carry)} denied "
+            f"model(s) from the last verified feed")
+    else:
+        log("feed: no valid feed; using neutral priorities")
+    f = neutral_feed(carry)
+    if carry:
+        f.source = "(none: neutral priorities; deny list kept from an earlier feed)"
+    return f
 
 
-def _load_remote_or_cache(urls, keys, min_version, cache_dir, allowed_hosts, log) -> Feed | None:
+def _load_remote_or_cache(urls, keys, min_version, cache_dir, allowed_hosts, log,
+                          carry: set[str] | None = None) -> Feed | None:
+    carry = carry if carry is not None else set()
     best: Feed | None = None
     for url in urls:
         try:
@@ -344,6 +425,9 @@ def _load_remote_or_cache(urls, keys, min_version, cache_dir, allowed_hosts, log
                 cache_dir.mkdir(parents=True, exist_ok=True)
                 (cache_dir / "feed.json").write_bytes(data)
                 (cache_dir / "feed.json.minisig").write_bytes(sig)
+        except FeedExpired as e:
+            carry |= e.feed.deny
+            log(f"feed: rejected {url}: {e}")
         except (FetchError, UnsafeURL, SignatureError, FeedError, UnicodeDecodeError) as e:
             log(f"feed: rejected {url}: {e}")
     if best:
@@ -355,6 +439,9 @@ def _load_remote_or_cache(urls, keys, min_version, cache_dir, allowed_hosts, log
             feed.source = f"{cached} (cached)"
             log(f"feed: using cached v{feed.version}")
             return feed
+        except FeedExpired as e:
+            carry |= e.feed.deny
+            log(f"feed: cached copy unusable: {e}")
         except (OSError, SignatureError, FeedError) as e:
             log(f"feed: cached copy unusable: {e}")
     return None
@@ -393,12 +480,11 @@ def apply_local(feed: Feed, path: Path, log=print) -> Feed:
         if not isinstance(deny, list) or not all(isinstance(d, str) for d in deny):
             raise FeedError("deny must be a list of repo ids or infohashes")
         weights = doc.get("weights")
-        if weights is not None and (not isinstance(weights, dict)
-                                    or not all(isinstance(v, (int, float)) and v >= 0 for v in weights.values())):
-            raise FeedError("weights must map names to non-negative numbers")
+        if weights is not None:
+            weights = _check_weights(weights)
         order = _check_order(doc.get("order", []))
         allot = _check_allot(doc.get("allot_gb", {}))
-    except (OSError, ValueError) as e:
+    except (OSError, ValueError, TypeError, AttributeError, OverflowError, RecursionError) as e:
         log(f"feed: ignoring your {path}: {e}")
         return feed
     published = {(m.repo, m.quant): m for m in feed.models}
@@ -411,7 +497,7 @@ def apply_local(feed: Feed, path: Path, log=print) -> Feed:
     feed.models = base + models
     feed.deny |= {d.lower() for d in deny}
     if weights:
-        feed.weights = {k: float(v) for k, v in weights.items()}
+        feed.weights = weights
     if order:
         # Your ranking becomes the priority: top 1.0, falling evenly to 0.3 at the bottom.
         by_repo = feed.by_repo()
@@ -533,13 +619,27 @@ def _read_local(path: Path) -> dict:
     return doc
 
 
+# my-priorities.json is changed by dashboard requests, which arrive on concurrent HTTP threads (engine.submit),
+# each reading the file, changing one thing and writing it back. Without this lock two of them read the same
+# old copy and the later write loses the earlier one's change.
+_LOCAL_LOCK = threading.RLock()
+
+
+def _locked(fn):
+    """Run a read-change-write of my-priorities.json one at a time (see _LOCAL_LOCK)."""
+    @functools.wraps(fn)
+    def run(*a, **kw):
+        with _LOCAL_LOCK:
+            return fn(*a, **kw)
+    return run
+
+
 def _write_local(path: Path, doc: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(".tmp")
-    tmp.write_text(json.dumps(doc, indent=2) + "\n")
-    tmp.replace(path)
+    """Replace the file whole, through a temp file of its own: two writers never share a temp name."""
+    write_atomic(path, json.dumps(doc, indent=2) + "\n")
 
 
+@_locked
 def add_pick(path: Path, text: str, priority: float = 100, note: str = "") -> tuple[str, bool]:
     """Add (or update) a model in the user's own list. Returns (repo, was_new)."""
     repo, rev = parse_model_ref(text)
@@ -559,6 +659,7 @@ def add_pick(path: Path, text: str, priority: float = 100, note: str = "") -> tu
     return repo, was_new
 
 
+@_locked
 def remove_pick(path: Path, text: str) -> str | None:
     """Remove a model from the user's own list. Returns the repo, or None if it wasn't there."""
     repo, _ = parse_model_ref(text)
@@ -581,6 +682,7 @@ def list_picks(path: Path) -> list[dict]:
     return [m for m in doc.get("models", []) if isinstance(m, dict) and m.get("repo") not in (None, "author/model")]
 
 
+@_locked
 def set_order(path: Path, repos: list[str]) -> list[str]:
     """Save the user's ranking (top first) to their own list file."""
     order = _check_order(repos)
@@ -590,6 +692,7 @@ def set_order(path: Path, repos: list[str]) -> list[str]:
     return order
 
 
+@_locked
 def set_allot(path: Path, repo: str, gb: float | None) -> dict[str, float]:
     """Set (or with 0/None clear) the GB the user sets aside for one model."""
     if not REPO_RE.match(repo or ""):

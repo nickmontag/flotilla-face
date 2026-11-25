@@ -44,6 +44,8 @@ TARGET = MIN_COPIES    # unscored: the floor of feed.target_for_risk
 EVERY = 86400.0
 WEEK = 7 * 86400
 MAX_REPLY = 1 << 20
+DEADLINE = 120.0       # seconds for a whole scrape request: a tracker that trickles can't hold the refresh
+MAX_COUNT = 1 << 31    # a peer count past this is nonsense: clamped
 
 
 def week_of(now: float) -> int:
@@ -58,42 +60,75 @@ def slice_of(entries: dict, node_id: str, week: int, n: int = SLICE, skip=frozen
     return heapq.nsmallest(n, ((r, e) for r, e in entries.items() if r.lower() not in skip), key=key)
 
 
-def _get(path: str, timeout: float = 20.0) -> bytes:
-    """GET http://<tracker>:6969<path>, through the network pin, at most MAX_REPLY bytes."""
-    conn = http.client.HTTPConnection(SCRAPE_HOST, SCRAPE_PORT, timeout=timeout)
+def _get(path: str, timeout: float = 20.0, deadline: float = DEADLINE, host: str = SCRAPE_HOST,
+         port: int = SCRAPE_PORT) -> bytes:
+    """GET http://<tracker>:6969<path>, through the network pin, at most MAX_REPLY bytes, all of it
+    within `deadline` seconds (`timeout` bounds each wait for bytes). Raises OSError only."""
+    conn = http.client.HTTPConnection(host, port, timeout=timeout)
     if netsafe.pinned_to():
         conn._create_connection = netsafe.pinned_connection
-    try:
-        conn.request("GET", path, headers={"User-Agent": USER_AGENT})
-        resp = conn.getresponse()
-        body = resp.read(MAX_REPLY + 1)
-        if resp.status != 200:
-            raise OSError(f"the tracker answered HTTP {resp.status} to a scrape")
-        if len(body) > MAX_REPLY:
-            raise OSError("the tracker's scrape answer is too large")
-        return body
-    finally:
-        conn.close()
+    with netsafe.Deadline(deadline) as dl:
+        dl.watch(conn)
+        try:
+            conn.request("GET", path, headers={"User-Agent": USER_AGENT})
+            resp = conn.getresponse()
+            if resp.status != 200:
+                raise OSError(f"the tracker answered HTTP {resp.status} to a scrape")
+            chunks, total = [], 0
+            while total <= MAX_REPLY:
+                chunk = resp.read(min(65536, MAX_REPLY + 1 - total))
+                if not chunk:
+                    break
+                chunks.append(chunk)
+                total += len(chunk)
+                if dl.passed():
+                    break
+        except (OSError, http.client.HTTPException) as e:   # BadStatusLine, IncompleteRead, LineTooLong...
+            if dl.expired:
+                raise OSError(f"the tracker's scrape answer took longer than {deadline:.0f}s") from e
+            raise OSError(f"the tracker's scrape answer is broken: {e}") from e
+        finally:
+            conn.close()
+        if dl.passed():
+            raise OSError(f"the tracker's scrape answer took longer than {deadline:.0f}s")
+    if total > MAX_REPLY:
+        raise OSError("the tracker's scrape answer is too large")
+    declared = resp.getheader("Content-Length") or ""
+    if declared.isdigit() and int(declared) != total:       # read(n) ends quietly at an early close
+        raise OSError(f"the tracker's scrape answer was cut off ({total} of {declared} bytes)")
+    return b"".join(chunks)
+
+
+def _count(v) -> int | None:
+    """A peer count from a scrape: a non-negative int (not a bool), clamped; None if it isn't one."""
+    if isinstance(v, bool) or not isinstance(v, int) or v < 0:
+        return None
+    return min(v, MAX_COUNT)
 
 
 def scrape(infohashes: list[str], get=_get) -> dict[str, tuple[int, int]]:
     """{infohash: (seeders, leechers)} from the tracker, BATCH at a time. A hash the tracker doesn't
-    know is (0, 0): no peer has announced it."""
+    know (or gives no usable counts for) is (0, 0): no peer has announced it. Raises OSError only,
+    whatever the reply."""
     out: dict[str, tuple[int, int]] = {}
     for i in range(0, len(infohashes), BATCH):
         batch = infohashes[i:i + BATCH]
         q = "&".join("info_hash=" + urllib.parse.quote(bytes.fromhex(h)) for h in batch)
         try:
             doc = bdecode(get("/scrape?" + q))
-        except TorrentError as e:
+        except (TorrentError, ValueError, RecursionError) as e:
             raise OSError(f"the tracker's scrape answer isn't bencode: {e}") from e
+        except http.client.HTTPException as e:      # a `get` that lets one through
+            raise OSError(f"the tracker's scrape answer is broken: {e}") from e
         files = doc.get(b"files") if isinstance(doc, dict) else None
         if not isinstance(files, dict):
             raise OSError("the tracker's scrape answer has no files")
         for h in batch:
             st = files.get(bytes.fromhex(h))
-            ok = isinstance(st, dict) and isinstance(st.get(b"complete"), int)
-            out[h] = (st[b"complete"], st.get(b"incomplete") or 0) if ok else (0, 0)
+            seeders = _count(st.get(b"complete")) if isinstance(st, dict) else None
+            leechers = _count(st.get(b"incomplete", 0)) if isinstance(st, dict) else None
+            # Both are kept in state.json: anything but a count (bytes, a list) would stop it saving.
+            out[h] = (seeders, leechers or 0) if seeders is not None else (0, 0)
     return out
 
 

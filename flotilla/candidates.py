@@ -43,7 +43,7 @@ from .feed import Feed, FeedModel
 from .ledger import Ledger, LedgerFile
 from .magnet import MagnetError, parse_magnet, validate_magnet
 from .netsafe import FetchError, UnsafeURL
-from .sources import HuggingFace, PirateFace, lfs_pointer_oid
+from .sources import _HEX40, HuggingFace, PirateFace, _hex, is_repo_id, lfs_pointer_oid
 from .torrentmeta import TorrentError, TorrentMeta, parse_torrent
 
 WEIGHT_EXT = {".safetensors", ".gguf", ".onnx", ".onnx_data", ".tflite", ".msgpack", ".mlmodel"}
@@ -129,6 +129,7 @@ class Rejection:
     repo: str
     reason: str
     transient: bool = False   # network trouble: keep what we hold, try again later
+    delisted: bool = False    # Pirate Face lists no torrent for it (a 404, or a listing without one)
 
 
 def classify(repo_path: str, size: int, cfg: Config) -> tuple[str, str]:
@@ -177,6 +178,13 @@ def _ledger_disagrees(lf: LedgerFile, sha256: str | None, git_oid: str | None, p
     return ""
 
 
+def _count(v) -> int:
+    """A peer count from Pirate Face's listing; anything that isn't a count is 0."""
+    if isinstance(v, str) and v.isascii() and v.isdigit() and len(v) < 10:
+        return int(v)
+    return v if isinstance(v, int) and not isinstance(v, bool) and v >= 0 else 0
+
+
 def build_candidate(
     repo: str,
     quant: str | None,
@@ -190,6 +198,8 @@ def build_candidate(
     ledger: Ledger | None = None,
     index=None,
 ) -> TorrentCand | Rejection:
+    if not is_repo_id(repo):
+        return Rejection(repo, "not a model name")   # Pirate Face's rescue list and feed supply these
     if repo.lower() in feed.deny:
         return Rejection(repo, "on the feed's deny list")
     from_index = ""
@@ -200,8 +210,12 @@ def build_candidate(
         if info is None:
             return Rejection(repo, f"Pirate Face lookup failed: {e}", transient=True)
         from_index = info["index_build"]
-    if not info or not info.get("magnet") or not info.get("infohash"):
-        return Rejection(repo, "no magnet listed (no torrent yet, or terms must be accepted first)")
+    # A 404, or a listing without a torrent: Pirate Face doesn't offer one (any more). A delisting
+    # is Pirate Face's call, as the magnet index's removals are, so this isn't transient.
+    if not isinstance(info, dict) or not info.get("magnet") or not info.get("infohash"):
+        return Rejection(repo, "no magnet listed (no torrent yet, or terms must be accepted first)", delisted=True)
+    if not isinstance(info["magnet"], str) or not isinstance(info["infohash"], str):
+        return Rejection(repo, "listing's magnet or infohash isn't a string")
 
     try:
         mag = validate_magnet(parse_magnet(info["magnet"]))
@@ -212,7 +226,9 @@ def build_candidate(
         return Rejection(repo, "magnet infohash differs from the listed infohash")
     if ih in feed.deny:
         return Rejection(repo, "infohash on the feed's deny list")
-    revision = str(info.get("revision") or "")
+    # The revision ends up in Hugging Face URLs and cache file names: only a full commit hash.
+    revision = info.get("revision")
+    revision = revision.lower() if isinstance(revision, str) else ""
     pinned, replaces = False, ""
     if entry and entry.infohash:
         if entry.infohash != ih:
@@ -230,12 +246,22 @@ def build_candidate(
         pinned = True
     if entry and entry.revision and entry.revision != revision:
         return Rejection(repo, "listed revision does not match the signed pin")
-    if len(revision) != 40:
+    if not _HEX40.fullmatch(revision):
         return Rejection(repo, "listing has no pinned revision")
 
     if license_hint == "other":   # a placeholder for a custom license: ask Hugging Face for its name
         license_hint = None
-    license_ = (entry.license if entry and entry.license else None) or license_hint or hf.license(repo)
+    license_ = (entry.license if entry and entry.license else None) or license_hint
+    if license_ is None:
+        license_, how = hf.license_lookup(repo)
+        if license_ is None and how == "unreachable":
+            # No answer isn't "no license": keep what we hold and ask again next refresh.
+            return Rejection(repo, "license unknown: Hugging Face couldn't be asked", transient=True)
+        if license_ is None and how == "gone":
+            # Hugging Face took it down before this node read its license. A copy held here was
+            # taken on with a license read then, so it's kept, but no new copy is started.
+            return Rejection(repo, "license unknown: Hugging Face no longer has it, and its license "
+                                   "was never read here", transient=True)
     if license_ is None:
         return Rejection(repo, "license unknown")
     if license_ not in cfg.licenses:
@@ -243,6 +269,8 @@ def build_candidate(
 
     try:
         raw = pf.torrent_file(ih)
+    except ValueError as e:      # not an infohash (validated above; a hostile listing never gets here)
+        return Rejection(repo, f".torrent rejected: {e}")
     except FetchError as e:
         if index is None or not from_index:
             return Rejection(repo, f".torrent download failed: {e}", transient=True)
@@ -269,7 +297,12 @@ def build_candidate(
         tree = hf.tree(repo, revision)
     except (FetchError, UnsafeURL) as e:
         return Rejection(repo, f"Hugging Face tree lookup failed: {e}", transient=True)
-    pf_sha = {f["path"]: f.get("sha256") for f in info.get("files", []) if isinstance(f, dict) and "path" in f}
+    except ValueError as e:
+        return Rejection(repo, f"Hugging Face tree lookup refused: {e}")
+    # Pirate Face's SHA-256 manifest: lower-cased, and only what is 64 hex digits.
+    pf_files = info.get("files")
+    pf_sha = {f["path"]: _hex(f.get("sha256"), 64) for f in (pf_files if isinstance(pf_files, list) else [])
+              if isinstance(f, dict) and isinstance(f.get("path"), str)}
     record = ledger.get(repo, revision) if ledger else None
     if record is None and tree is None and ledger is not None and ledger.revisions(repo):
         known = ", ".join(r[:12] for r in ledger.revisions(repo))
@@ -329,6 +362,8 @@ def build_candidate(
                     except (FetchError, UnsafeURL) as e:
                         return Rejection(repo, f"Pirate Face's hash for {tf.repo_path!r} disagrees with Hugging Face, "
                                                f"and Hugging Face main could not be checked: {e}", transient=True)
+                    except ValueError as e:
+                        return Rejection(repo, f"Hugging Face main could not be checked: {e}")
                     main_checked = True
                 on_main = main_tree.get(tf.repo_path) if main_tree else None
                 if on_main is None or (on_main.sha256 or "").lower() != fc.sha256.lower():
@@ -368,9 +403,10 @@ def build_candidate(
     else:
         source = "huggingface"
     return TorrentCand(
-        repo=repo, quant=info.get("quant"), infohash=ih, revision=revision, magnet=info["magnet"],
+        repo=repo, quant=info.get("quant") if isinstance(info.get("quant"), str) else None, infohash=ih,
+        revision=revision, magnet=info["magnet"],
         license=license_, priority=priority, target_replicas=target, hf_backed=hf_backed,
-        seeders=int(info.get("seeders") or 0), leechers=int(info.get("leechers") or 0), meta=meta, files=files,
+        seeders=_count(info.get("seeders")), leechers=_count(info.get("leechers")), meta=meta, files=files,
         verify_source=source, pinned=pinned, listed=entry is not None and not entry.sweep,
         note=entry.note if entry else "",
         manifest_mismatches=mismatches, replaces=replaces, index_build=from_index,
@@ -425,7 +461,9 @@ def gather(cfg: Config, feed: Feed, pf: PirateFace, hf: HuggingFace, held_repos:
     if cfg.include_unlisted and cfg.include_rescue:
         try:
             r = pf.rescue()
-            rescued = [x["repoId"] for x in r.get("rescued", []) if isinstance(x, dict) and x.get("repoId")]
+            got = r.get("rescued") if isinstance(r, dict) else None
+            rescued = [x["repoId"] for x in (got if isinstance(got, list) else [])
+                       if isinstance(x, dict) and is_repo_id(x.get("repoId"))]
         except (FetchError, UnsafeURL) as e:
             _warn_once(log, "rescue", f"catalog: could not read Pirate Face's rescue list ({e}); "
                                     f"carrying on with the priority list. Not repeated until Flotilla restarts.")
@@ -436,7 +474,8 @@ def gather(cfg: Config, feed: Feed, pf: PirateFace, hf: HuggingFace, held_repos:
         for repo in rescued:
             add(repo, None, None)
         # Least-seeded first, newest first among equals: that's where a new seeder helps most.
-        for m in sorted(fresh, key=lambda m: m.get("seeders") or 0):
+        fresh = [m for m in fresh if isinstance(m, dict) and is_repo_id(m.get("repo"))]
+        for m in sorted(fresh, key=lambda m: _count(m.get("seeders"))):
             add(m["repo"], None, None)
 
     wanted = wanted[: listed + max(0, cfg.max_candidates)]

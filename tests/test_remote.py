@@ -59,9 +59,10 @@ def test_network_dashboard_needs_its_key(netdash):
     assert req(dash, "GET", "/?key=wrong")[0] == 401
     code, headers, _ = req(dash, "GET", "/?key=" + "k" * 43)
     assert code == 303 and headers["Location"] == "/"
-    cookie = headers["Set-Cookie"]
-    assert cookie.startswith("flotilla_key=" + "k" * 43) and "HttpOnly" in cookie and "SameSite=Strict" in cookie
-    jar = {"Cookie": "flotilla_key=" + "k" * 43}
+    cookie = next(v for k, v in headers.items() if k == "Set-Cookie")   # http.client keeps the last; see below
+    name = f"flotilla_key_{dash.port}"
+    jar = {"Cookie": f"{name}={dash.cookie_value()}"}
+    assert "k" * 43 not in cookie and "HttpOnly" in cookie and "SameSite=Lax" in cookie
     code, _, page = req(dash, "GET", "/", headers=jar)
     assert code == 200 and dash.token.encode() in page and NETWORK.encode() in page
     assert req(dash, "GET", "/api/state", headers={"X-Flotilla-Key": "k" * 43})[0] == 200

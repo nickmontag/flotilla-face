@@ -242,31 +242,55 @@ def setup_command(vpn: VpnContainer, volume: str, image: str) -> list[str]:
 _LOGS = ["--log-opt", "max-size=10m", "--log-opt", "max-file=3"]
 
 
-def node_command(vpn: VpnContainer, volume: str, image: str, memory: str = "3g") -> list[str]:
-    """The seeding node, every connection through the VPN container."""
-    return ["docker", "run", "-d", "--name", NODE, "--network", vpn.network, "--label", f"{VPN_LABEL}={vpn.name}",
-            "--restart", "unless-stopped",
-            "--memory", memory, "--memory-swap", memory, *_LOGS, *gluetun_env(vpn), "-v", f"{volume}:/root",
-            image, "run"]
+class Command(list):
+    """A `docker run` whose secret environment (gluetun's control-server key, a container's own
+    settings carried over by an update) stays off its argv, where any local user could read it with
+    `ps`, and out of anything printed: `run` hands it to docker in a 0600 --env-file, and `shell` shows
+    a placeholder in its place."""
+
+    def __init__(self, args=(), env: dict | None = None, hints: dict | None = None):
+        super().__init__(args)
+        self.env = dict(env or {})        # NAME -> value
+        self.hints = dict(hints or {})    # NAME -> what to put there, in a command printed for you
 
 
-def gluetun_env(vpn: VpnContainer) -> list[str]:
+def _env_line_ok(value: str) -> bool:
+    """Can an --env-file carry this value? One line each, so no line breaks."""
+    return "\n" not in value and "\r" not in value
+
+
+def node_command(vpn: VpnContainer, volume: str, image: str, memory: str = "3g") -> Command:
+    """The seeding node, every connection through the VPN container. It serves no dashboard of its own:
+    that would listen, keyless, on the loopback every container on the VPN's network shares. The
+    dashboard container serves it, through the state folder."""
+    from .dashboard import NO_DASHBOARD_ENV
+
+    args, env, hints = gluetun_env(vpn)
+    return Command(["docker", "run", "-d", "--name", NODE, "--network", vpn.network, "--label",
+                    f"{VPN_LABEL}={vpn.name}", "--restart", "unless-stopped",
+                    "--memory", memory, "--memory-swap", memory, *_LOGS, *args, "-e", f"{NO_DASHBOARD_ENV}=1",
+                    "-v", f"{volume}:/root", image, "run"], env, hints)
+
+
+def gluetun_env(vpn: VpnContainer) -> tuple[list[str], dict, dict]:
     """What the node needs to ask gluetun's control server for the forwarded port (vpnport.py): its
-    key, and its address when it isn't the default."""
+    key, and its address when it isn't the default. (docker run -e arguments, the secret environment
+    for a Command, and placeholders for that in a printed command.)"""
     from .vpnport import GLUETUN_AUTH_ENV, PROVIDER_ENV
 
-    out = []
+    out, env, hints = [], {}, {}
     provider = (vpn.env.get("VPN_PORT_FORWARDING_PROVIDER") or vpn.env.get("VPN_SERVICE_PROVIDER") or "").strip()
     if provider and vpn.is_gluetun:
         out += ["-e", f"{PROVIDER_ENV}={provider.lower()}"]
     role = vpn.env.get("HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE", "")
     if role:
-        out += ["-e", f"{GLUETUN_AUTH_ENV}={role}"]
+        env[GLUETUN_AUTH_ENV] = role
+        hints[GLUETUN_AUTH_ENV] = f"<HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE of {vpn.name}>"
     addr = vpn.env.get("HTTP_CONTROL_SERVER_ADDRESS", "").strip()
     m = re.fullmatch(r"(?:[\w.\[\]:]*):(\d+)", addr)
     if m and m.group(1) != "8000":
         out += ["-e", f"FLOTILLA_GLUETUN_URL=http://127.0.0.1:{m.group(1)}"]
-    return out
+    return out, env, hints
 
 
 def publish(access: str, port: int, lan: str | None) -> str:
@@ -316,7 +340,7 @@ def flotilla_args(doc: dict) -> list[str]:
     return shlex.split(m.group(1)) if m else []
 
 
-def _gluetun_env_now(ref: str) -> list[str] | None:
+def _gluetun_env_now(ref: str) -> tuple[list[str], dict, dict] | None:
     """gluetun_env for the VPN container `ref` as Docker has it now; None when Docker won't say (then
     the node keeps what it had)."""
     out = _docker("inspect", ref)
@@ -327,7 +351,7 @@ def _gluetun_env_now(ref: str) -> list[str] | None:
     if not isinstance(doc, dict):
         return None
     vpn = VpnContainer(ref, (doc.get("Config") or {}).get("Image", ""), env=_gluetun_settings(doc))
-    return gluetun_env(vpn) if vpn.is_gluetun else []
+    return gluetun_env(vpn) if vpn.is_gluetun else ([], {}, {})
 
 
 def _container_name(ref: str) -> str:
@@ -335,14 +359,123 @@ def _container_name(ref: str) -> str:
     return out.stdout.strip().lstrip("/") if out and out.returncode == 0 and out.stdout.strip() else ref
 
 
-def run_args(old: Installed, image: str) -> list[str]:
-    """`docker run` for the same container (name, network, ports, memory, logs, folder, Flotilla's own
-    environment and arguments) on a new image."""
+# The python image's own environment, for when the old image can't be inspected: it isn't the
+# container's own setting, and the new image brings its own.
+_IMAGE_ENV = re.compile(r"PATH|HOME|LANG|LC_ALL|GPG_KEY|PYTHON[A-Z0-9_]*")
+
+
+def _image_env(doc: dict) -> set[str] | None:
+    """The `NAME=value` lines the container's image set (not the container); None if Docker won't say."""
+    ref = doc.get("Image") or (doc.get("Config") or {}).get("Image")
+    out = _docker("image", "inspect", ref) if ref else None
+    try:
+        img = json.loads(out.stdout)[0] if out and out.returncode == 0 else None
+    except (ValueError, IndexError, KeyError, TypeError):
+        img = None
+    if not isinstance(img, dict):
+        return None
+    return {e for e in (img.get("Config") or {}).get("Env") or [] if isinstance(e, str)}
+
+
+def _mount_arg(fields: list[str]) -> str:
+    """--mount's value is CSV, so a path with a comma or a quote gets quoted."""
+    import csv
+    import io
+
+    buf = io.StringIO()
+    csv.writer(buf, lineterminator="").writerow(fields)
+    return buf.getvalue()
+
+
+def _carried(d: dict, name: str) -> list[str]:
+    """What else a container was started with (other folders, user, ports, devices...) as `docker run`
+    arguments, so an update doesn't drop it. DockerError for anything it can't carry over safely."""
+    hc, cfg = d.get("HostConfig") or {}, d.get("Config") or {}
+    redo = ("which an update can't carry over. Recreate it yourself on the new image (`flotilla update "
+            "--check` names it), or set it up again with `flotilla init`.")
+    if any(k.startswith("com.docker.compose.") for k in cfg.get("Labels") or {}):
+        raise DockerError(f"{name} is managed by Docker Compose: update it there (the new image in the compose "
+                          f"file, then `docker compose up -d`)")
+    if hc.get("Links") or hc.get("VolumesFrom"):
+        raise DockerError(f"{name} was started with --link or --volumes-from, " + redo)
+    out: list[str] = []
+    for m in d.get("Mounts") or []:
+        dst, kind = m.get("Destination") or "", m.get("Type") or ""
+        if dst == "/root":
+            continue               # the state folder: run_args mounts it
+        if kind == "bind" and m.get("Source"):
+            if {"z", "Z"} & set((m.get("Mode") or "").split(",")):
+                raise DockerError(f"{name} mounts {m['Source']} with an SELinux label (:z), " + redo)
+            fields = ["type=bind", f"source={m['Source']}", f"target={dst}"]
+            if (m.get("Propagation") or "rprivate") != "rprivate":
+                fields.append(f"bind-propagation={m['Propagation']}")
+        elif kind == "volume" and m.get("Name"):
+            fields = ["type=volume", f"source={m['Name']}", f"target={dst}"]
+        elif kind == "tmpfs" and dst:
+            fields = ["type=tmpfs", f"target={dst}"]
+        else:
+            raise DockerError(f"{name} has a {kind or 'kind of'} mount at {dst or '?'}, " + redo)
+        if m.get("RW") is False:
+            fields.append("readonly")
+        out += ["--mount", _mount_arg(fields)]
+    for dst, opts in (hc.get("Tmpfs") or {}).items():
+        out += ["--tmpfs", f"{dst}:{opts}" if opts else dst]
+    if cfg.get("User"):
+        out += ["--user", str(cfg["User"])]
+    for cport, binds in (hc.get("PortBindings") or {}).items():
+        port, _, proto = cport.partition("/")
+        suffix = f"/{proto}" if proto and proto != "tcp" else ""
+        for b in binds or []:
+            ip = b.get("HostIp") or ""
+            if ":" in ip:          # IPv6, which -p wants in brackets
+                ip = f"[{ip}]"
+            out += ["-p", f"{ip + ':' if ip else ''}{b.get('HostPort') or port}:{port}{suffix}"]
+    log = hc.get("LogConfig") or {}
+    if (log.get("Type") or "json-file") != "json-file":
+        out += ["--log-driver", log["Type"]]
+    for k, v in (log.get("Config") or {}).items():
+        out += ["--log-opt", f"{k}={v}"]
+    for flag, key in (("--cap-add", "CapAdd"), ("--cap-drop", "CapDrop"), ("--add-host", "ExtraHosts"),
+                      ("--dns", "Dns"), ("--dns-search", "DnsSearch"), ("--dns-option", "DnsOptions"),
+                      ("--security-opt", "SecurityOpt"), ("--group-add", "GroupAdd")):
+        for v in hc.get(key) or []:
+            out += [flag, str(v)]
+    for dev in hc.get("Devices") or []:
+        out += ["--device", ":".join(str(x) for x in (dev.get("PathOnHost"), dev.get("PathInContainer"),
+                                                      dev.get("CgroupPermissions")) if x)]
+    for k, v in (hc.get("Sysctls") or {}).items():
+        out += ["--sysctl", f"{k}={v}"]
+    for u in hc.get("Ulimits") or []:
+        out += ["--ulimit", f"{u.get('Name')}={u.get('Soft')}:{u.get('Hard')}"]
+    if hc.get("Privileged"):
+        out.append("--privileged")
+    if hc.get("Init"):
+        out.append("--init")
+    if hc.get("NanoCpus"):
+        out += ["--cpus", f"{hc['NanoCpus'] / 1e9:g}"]
+    if hc.get("PidMode"):
+        out += ["--pid", str(hc["PidMode"])]
+    if (hc.get("IpcMode") or "private") not in ("private", "shareable"):
+        out += ["--ipc", str(hc["IpcMode"])]
+    if hc.get("ShmSize") and hc["ShmSize"] != 64 * 1024 * 1024:
+        out += ["--shm-size", str(hc["ShmSize"])]
+    if (hc.get("Runtime") or "runc") != "runc":
+        out += ["--runtime", str(hc["Runtime"])]
+    return out
+
+
+def run_args(old: Installed, image: str) -> Command:
+    """`docker run` for the same container (name, network, ports, memory, logs, folders, user, its own
+    environment and Flotilla's arguments) on a new image. DockerError, before anything is changed,
+    when it was started with something an update can't carry over."""
+    from .dashboard import NO_DASHBOARD_ENV
+    from .vpnport import GLUETUN_AUTH_ENV, PROVIDER_ENV
+
     d = old.doc
     hc, cfg = d.get("HostConfig") or {}, d.get("Config") or {}
     cmd = ["docker", "run", "-d", "--name", old.name]
     mode = hc.get("NetworkMode") or ""
-    vpn_env: list[str] = []
+    vpn_env: tuple[list[str], dict, dict] | None = ([], {}, {})
     if mode.startswith("container:"):      # by name: an id goes stale when the VPN container is recreated
         ref = mode.split(":", 1)[1]
         vpn_name = _container_name(ref)
@@ -359,24 +492,36 @@ def run_args(old: Installed, image: str) -> list[str]:
         cmd += ["--memory", str(hc["Memory"])]
     if hc.get("MemorySwap"):
         cmd += ["--memory-swap", str(hc["MemorySwap"])]
-    for cport, binds in (hc.get("PortBindings") or {}).items():
-        for b in binds or []:
-            ip = b.get("HostIp") or ""
-            cmd += ["-p", f"{ip + ':' if ip else ''}{b.get('HostPort') or cport.split('/')[0]}:{cport.split('/')[0]}"]
-    for k, v in ((hc.get("LogConfig") or {}).get("Config") or {}).items():
-        cmd += ["--log-opt", f"{k}={v}"]
+    cmd += _carried(d, old.name)
     # What the node knows about its gluetun comes from gluetun as it is now (its provider, its
     # control-server key), so an update picks up a key or provider changed since setup.
-    from .vpnport import GLUETUN_AUTH_ENV, PROVIDER_ENV
-
     fresh = {"FLOTILLA_GLUETUN_URL", GLUETUN_AUTH_ENV, PROVIDER_ENV} if vpn_env is not None else set()
+    env: dict[str, str] = {}
+    image_env = _image_env(d)
     for e in cfg.get("Env") or []:
-        if e.startswith("FLOTILLA_") and e.split("=", 1)[0] not in fresh:
-            cmd += ["-e", e]
-    cmd += vpn_env or []
+        if not isinstance(e, str) or "=" not in e:
+            continue
+        name, value = e.split("=", 1)
+        if name.startswith("FLOTILLA_"):
+            if name in fresh:
+                continue
+            if name != GLUETUN_AUTH_ENV:     # Flotilla's own settings, none of them secret
+                cmd += ["-e", e]
+                continue
+        elif (e in image_env) if image_env is not None else _IMAGE_ENV.fullmatch(name):
+            continue               # the old image's, not the container's: the new image sets its own
+        if not _env_line_ok(value):
+            raise DockerError(f"{old.name}'s {name} setting has a line break, which an update can't pass on; "
+                              f"recreate it yourself on the new image, or set it up again with `flotilla init`")
+        env[name] = value          # the container's own settings may be secrets: kept off the command line
+    args, vpn_secrets, hints = vpn_env or ([], {}, {})
+    cmd += args
+    env.update(vpn_secrets)
+    if mode.startswith("container:") and old.args[:1] == ["run"] and f"{NO_DASHBOARD_ENV}=1" not in cmd:
+        cmd += ["-e", f"{NO_DASHBOARD_ENV}=1"]       # set up before the node stopped serving its own
     if old.storage:
         cmd += ["-v", f"{old.storage}:/root"]
-    return cmd + [image, *old.args]
+    return Command(cmd + [image, *old.args], env, hints)
 
 
 class DockerError(Exception):
@@ -435,13 +580,47 @@ def recover(names: tuple[str, ...] = (NODE, DASHBOARD)) -> list[str]:
 
 
 def shell(cmd: list[str]) -> str:
+    """The command to show: a Command's secret environment as placeholders, never its values."""
+    env = getattr(cmd, "env", None) or {}
+    if env:
+        shown = [x for name in env for x in ("-e", f"{name}={cmd.hints.get(name, '<' + name + '>')}")]
+        cmd = [*cmd[:2], *shown, *cmd[2:]]
     return shlex.join(cmd)
 
 
+def _env_file(env: dict) -> tuple[str, dict]:
+    """An --env-file for the values it can hold (made 0600, by this user only), and the rest, which go
+    to docker through its own environment instead (`-e NAME`)."""
+    import os
+    import tempfile
+
+    fd, path = tempfile.mkstemp(prefix="flotilla-env-")
+    rest = {k: v for k, v in env.items() if not _env_line_ok(v)}
+    with os.fdopen(fd, "w", encoding="utf-8") as f:
+        f.writelines(f"{k}={v}\n" for k, v in env.items() if k not in rest)
+    return path, rest
+
+
 def run(cmd: list[str], interactive: bool = False) -> int:
-    """Run a docker command, its output going straight to the terminal."""
+    """Run a docker command, its output going straight to the terminal. A Command's secret environment
+    goes in a temporary --env-file, removed once docker has read it."""
+    import os
+
+    env = getattr(cmd, "env", None) or {}
+    path, proc_env = None, None
     try:
-        return subprocess.run(cmd, timeout=None if interactive else 600).returncode
+        argv = list(cmd)
+        if env:
+            path, rest = _env_file(env)
+            argv[2:2] = ["--env-file", path] + [x for k in rest for x in ("-e", k)]
+            proc_env = {**os.environ, **rest} if rest else None
+        return subprocess.run(argv, timeout=None if interactive else 600, env=proc_env).returncode
     except (OSError, subprocess.SubprocessError) as e:
         print(f"  docker failed: {e}")
         return 1
+    finally:
+        if path:
+            try:
+                os.unlink(path)
+            except OSError:
+                pass

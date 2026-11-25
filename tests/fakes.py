@@ -109,9 +109,15 @@ class FakeHF:
         self.tree_overrides: dict[str, dict] = {}
         self.main_overrides: dict[str, dict | None] = {}   # what "main" looks like, if it moved on
         self.calls: list[tuple[str, str]] = []
+        # license_lookup's answer per repo, as (license, how): how is "huggingface", "gone" or
+        # "unreachable" (see HuggingFace.license_lookup). Default ("mit", "huggingface").
+        self.licenses: dict[str, tuple[str | None, str]] = {}
+
+    def license_lookup(self, repo):
+        return self.licenses.get(repo, ("mit", "huggingface"))
 
     def license(self, repo):
-        return "mit"
+        return self.license_lookup(repo)[0]
 
     def tree(self, repo, revision):
         self.calls.append((repo, revision))

@@ -22,7 +22,9 @@ from __future__ import annotations
 
 import dataclasses
 import json
+import os
 import re
+import stat
 import shutil
 import threading
 import time
@@ -44,6 +46,10 @@ _HASH = re.compile(r"[0-9a-fA-F]{40}")
 _COMMIT = re.compile(r"[0-9a-f]{40}")
 _REPO = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,95}/[A-Za-z0-9][A-Za-z0-9._-]{0,95}")
 MAX_BYTES = 256 << 20          # the 2026-11 builds are a few MB
+MAX_LINE = 16 << 10            # a magnet line is a few hundred characters
+MAX_LINES = 1_000_000          # per shard or removals file; the whole catalog is tens of thousands
+_TORRENT = re.compile(r"[0-9a-f]{40}\.torrent")
+_PARTS = re.compile(r"\.[0-9a-f]{40}\.parts")
 SYNC_EVERY = 86400.0
 SWARM_METADATA_SECONDS = 120.0
 
@@ -93,13 +99,35 @@ def entry_of(line: str, build: str) -> tuple[str, Entry] | None:
     return repo, Entry(line.strip(), m.btih, parts[4], build)
 
 
-def _lines(path: Path) -> list[str] | None:
+class _Unreadable(Exception):
+    pass
+
+
+def _lines(path: Path):
+    """A file's lines, read as a stream (a shard may be up to MAX_BYTES), a line longer than MAX_LINE
+    as None. A missing file has none. _Unreadable if it can't be read or has more than MAX_LINES."""
     try:
-        return path.read_text(encoding="utf-8", errors="replace").splitlines()
+        f = path.open(encoding="utf-8", errors="replace")
     except FileNotFoundError:
-        return []
-    except OSError:
-        return None
+        return
+    except OSError as e:
+        raise _Unreadable(str(e)) from e
+    with f:
+        try:
+            for _ in range(MAX_LINES):
+                line = f.readline(MAX_LINE + 1)
+                if not line:
+                    return
+                if len(line) > MAX_LINE and not line.endswith("\n"):
+                    while line and not line.endswith("\n"):     # the rest of it, never held whole
+                        line = f.readline(MAX_LINE + 1)
+                    yield None
+                    continue
+                yield line
+            if f.readline(1):
+                raise _Unreadable(f"more than {MAX_LINES} lines")
+        except OSError as e:
+            raise _Unreadable(str(e)) from e
 
 
 def parse_shards(folder: Path) -> dict[str, Entry] | None:
@@ -111,21 +139,24 @@ def parse_shards(folder: Path) -> dict[str, Entry] | None:
     dates = sorted({m[1] for n in names for m in [_SHARD.fullmatch(n) or _REMOVED.fullmatch(n)] if m})
     found: dict[str, Entry] = {}
     for date in dates:
-        gone_lines = _lines(folder / f"removed-{date}.txt")
-        if gone_lines is None:
-            return None
         gone = set()
-        for raw in gone_lines:
-            text = raw.strip()
-            if not text:
-                continue
-            if not _HASH.fullmatch(text):
-                return None          # a stray character must not quietly drop a removal
-            gone.add(text.lower())
-        for line in _lines(folder / f"{date}.txt") or []:
-            got = entry_of(line, date) if line.strip() else None
-            if got:
-                found[got[0]] = got[1]
+        try:
+            for raw in _lines(folder / f"removed-{date}.txt"):
+                text = raw.strip() if raw is not None else "-"     # an overlong line isn't a hash
+                if not text:
+                    continue
+                if not _HASH.fullmatch(text):
+                    return None          # a stray character must not quietly drop a removal
+                gone.add(text.lower())
+        except _Unreadable:
+            return None
+        try:
+            for line in _lines(folder / f"{date}.txt"):
+                got = entry_of(line, date) if line and line.strip() else None
+                if got:
+                    found[got[0]] = got[1]
+        except _Unreadable:
+            pass                         # what was read of it stands, as a missing shard adds nothing
         for repo in [r for r, e in found.items() if e.infohash in gone]:
             del found[repo]
     return found
@@ -202,11 +233,16 @@ class MagnetIndex:
         now = time.time() if now is None else now
         if not self.enabled or now - self.rec.get("synced", 0) < SYNC_EVERY:
             return
-        info = pf.torrent(INDEX_REPO)          # FetchError: Pirate Face is down, try next refresh
-        ih = str((info or {}).get("infohash") or "").lower()
-        with self.eng.lock:
-            self.rec["synced"] = now
+        # Marked synced only once the listing and a new build's .torrent have both come: a FetchError
+        # (Pirate Face down, a reply cut off) on either means trying again at the next refresh.
+        info = pf.torrent(INDEX_REPO)
+        if info is not None and not isinstance(info, dict):
+            self.eng.log("magnet index: Pirate Face's listing of it isn't in the usual shape; asking again tomorrow")
+            info = None
+        ih = (info or {}).get("infohash")
+        ih = ih.lower() if isinstance(ih, str) else ""
         if not re.fullmatch(r"[0-9a-f]{40}", ih) or ih == self.rec.get("infohash"):
+            self._synced(now)
             return
         raw = pf.torrent_file(ih)
         try:
@@ -217,13 +253,25 @@ class MagnetIndex:
             from .candidates import check_urls
 
             check_urls(meta.trackers, meta.web_seeds)
-        except (TorrentError, MagnetError, IndexError_) as e:
+        except (TorrentError, MagnetError, IndexError_, ValueError) as e:
             self.eng.log(f"magnet index: not keeping build {ih[:12]}: {e}")
+            self._synced(now)
             return
-        self.dir.mkdir(parents=True, exist_ok=True)
-        (self.dir / f"{ih}.torrent").write_bytes(raw)
+        try:
+            self.dir.mkdir(parents=True, exist_ok=True)
+            tmp = self.dir / f"{ih}.torrent.tmp"
+            tmp.write_bytes(raw)
+            tmp.replace(self.dir / f"{ih}.torrent")
+        except OSError as e:
+            self.eng.log(f"magnet index: couldn't save build {ih[:12]} ({e}); trying again next refresh")
+            return
         with self._lock:
             self._pending = ih
+        self._synced(now)
+
+    def _synced(self, now: float) -> None:
+        with self.eng.lock:
+            self.rec["synced"] = now
 
     def listing(self, repo: str) -> dict | None:
         """A listing for the repo, in /api/torrents' shape, from this copy; None if it doesn't list it."""
@@ -248,6 +296,65 @@ class MagnetIndex:
         if self.enabled and ih and (self.dir / f"{ih}.torrent").exists():
             with self._lock:
                 self._pending = ih
+            self.prune({ih})        # what earlier runs left: old builds' .torrent files and shards
+
+    # ------------------------------------------------------------ old builds' files
+
+    def _build_files(self, ih: str) -> set[str] | None:
+        """The paths under files/ that build `ih` holds, from its .torrent; None if it can't be read."""
+        try:
+            meta = parse_torrent((self.dir / f"{ih}.torrent").read_bytes())
+        except (OSError, TorrentError, ValueError):
+            return None
+        return {f"{NAME}/{f.repo_path}" for f in meta.real_files()}
+
+    def _unlink(self, path: Path) -> int:
+        """Delete one file, only if it sits in the index folder with no symlinked folder on the way.
+        A name that is itself a link loses only the link: nothing is followed."""
+        try:
+            base = os.path.realpath(self.dir)
+            parent = os.path.realpath(path.parent)
+            st = os.lstat(path)
+            if not (parent == base or parent.startswith(base + os.sep)):
+                return 0
+            if not (stat.S_ISREG(st.st_mode) or stat.S_ISLNK(st.st_mode)):
+                return 0
+            os.unlink(path)
+            return 1
+        except OSError:
+            return 0
+
+    def prune(self, keep: set[str]) -> int:
+        """Delete what only builds other than `keep` (infohashes) held: their .torrent files, their
+        shards and libtorrent's part files. A build holds every earlier shard, so a shard still in a
+        kept build stays; if a kept build's file list can't be read, nothing in files/ is deleted."""
+        removed = 0
+        try:
+            names = [p.name for p in self.dir.iterdir()]
+        except OSError:
+            return 0
+        for n in names:
+            if (_TORRENT.fullmatch(n) and n[:40] not in keep) or n.endswith(".torrent.tmp"):
+                removed += self._unlink(self.dir / n)
+        lists = [self._build_files(ih) for ih in keep]
+        if lists and all(x is not None for x in lists):
+            wanted = set().union(*lists)
+            for sub in ("", NAME, f"{NAME}/shards"):
+                try:
+                    found = [p.name for p in (self.files / sub).iterdir()]
+                except OSError:
+                    continue
+                for n in found:
+                    rel = f"{sub}/{n}".lstrip("/")
+                    if sub == "":
+                        stale = bool(_PARTS.fullmatch(n)) and n[1:41] not in keep
+                    else:
+                        stale = bool(FILE.fullmatch(rel[len(NAME) + 1:])) and rel not in wanted
+                    if stale:
+                        removed += self._unlink(self.files / rel)
+        if removed:
+            self.eng.log(f"magnet index: deleted {removed} file(s) that only older builds held")
+        return removed
 
     def tick(self) -> None:
         if not self.enabled:
@@ -265,6 +372,7 @@ class MagnetIndex:
             if self.old is not None:          # the new build has every shard: let the old one go
                 self.eng.ses.remove_torrent(self.old)
                 self.old = None
+                self.prune({str(self.handle.info_hashes().v1)})
             if self.rec.get("parsed") != self.rec.get("infohash"):
                 self._parse()
 
@@ -286,9 +394,12 @@ class MagnetIndex:
         for addr in self.eng.connect:
             h.connect_peer(addr)
         self.eng.add_seeding_tracker(h)
-        if self.old is not None:
+        dropped = self.old is not None
+        if dropped:                           # a third build before the second was complete
             self.eng.ses.remove_torrent(self.old)
         self.old, self.handle = self.handle, h
+        if dropped:
+            self.prune({str(x.info_hashes().v1) for x in (self.old, self.handle) if x is not None})
         with self.eng.lock:
             self.rec["infohash"] = ih
 

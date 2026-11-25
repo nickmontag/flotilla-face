@@ -242,7 +242,8 @@ def test_node_gets_gluetuns_key_and_address():
         "HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE": '{"auth":"apikey","apikey":"k"}',
         "HTTP_CONTROL_SERVER_ADDRESS": ":9999"})
     cmd = containers.node_command(vpn, "flotilla", "img")
-    assert f'{vpnport.GLUETUN_AUTH_ENV}={{"auth":"apikey","apikey":"k"}}' in cmd
+    assert cmd.env == {vpnport.GLUETUN_AUTH_ENV: '{"auth":"apikey","apikey":"k"}'}   # off the argv
+    assert not any("apikey" in part for part in cmd) and "apikey" not in containers.shell(cmd)
     assert "FLOTILLA_GLUETUN_URL=http://127.0.0.1:9999" in cmd
     assert cmd[-2:] == ["img", "run"]
     plain = containers.node_command(containers.VpnContainer("wg", "linuxserver/wireguard"), "flotilla", "img")
@@ -392,9 +393,10 @@ def test_update_passes_gluetuns_provider_and_current_key(monkeypatch):
     monkeypatch.setattr(containers, "_docker", docker)
     cmd = containers.run_args(old, "img")
     assert f"{vpnport.PROVIDER_ENV}=nordvpn" in cmd
-    assert f'{vpnport.GLUETUN_AUTH_ENV}={{"auth":"apikey","apikey":"new"}}' in cmd
-    assert f"{vpnport.GLUETUN_AUTH_ENV}=stale" not in cmd and "FLOTILLA_IMAGE=x" in cmd
+    assert cmd.env[vpnport.GLUETUN_AUTH_ENV] == '{"auth":"apikey","apikey":"new"}'   # in an --env-file, not argv
+    assert not any("apikey" in part or "stale" in part for part in cmd) and "FLOTILLA_IMAGE=x" in cmd
     assert not any("never-copied" in part for part in cmd)
+    assert "apikey" not in containers.shell(cmd) and "<HTTP_CONTROL_SERVER_AUTH_DEFAULT_ROLE of gluetun>" in containers.shell(cmd)
     assert cmd[-2:] == ["img", "run"]
 
 

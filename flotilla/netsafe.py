@@ -29,6 +29,8 @@ import re
 import socket
 import ssl
 import sys
+import threading
+import time
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -47,10 +49,26 @@ class UnsafeURL(ValueError):
     """The URL failed the allowlist or scheme rules."""
 
 
+def shown(url: str) -> str:
+    """A URL as it may be logged or shown: scheme, host and path, no query or fragment. A
+    download link from Hugging Face's CDN carries its signature in the query (good for an hour,
+    perhaps for a gated file), and a URL with credentials in it is refused but not repeated."""
+    try:
+        p = urllib.parse.urlsplit(str(url))
+        host = p.hostname or ""
+        port = f":{p.port}" if p.port else ""
+    except ValueError:
+        return str(url).split("?", 1)[0].split("#", 1)[0].rsplit("@", 1)[-1]
+    if not p.scheme or not host:
+        return str(url).split("?", 1)[0].split("#", 1)[0]
+    return urllib.parse.urlunsplit((p.scheme, f"[{host}]" if ":" in host else host + port, p.path,
+                                    "", "")) + ("?…" if p.query else "")
+
+
 class FetchError(RuntimeError):
     def __init__(self, url: str, status: int | None, msg: str, retry_after: float | None = None,
                  headers=None):
-        super().__init__(f"{url}: {msg}")
+        super().__init__(f"{shown(url)}: {msg}")
         self.url = url
         self.status = status
         self.retry_after = retry_after   # seconds, from a 429/503's Retry-After header
@@ -70,7 +88,7 @@ class Response:
         error page) becomes a FetchError, which every caller already handles."""
         try:
             return json.loads(self.body.decode("utf-8"))
-        except (UnicodeDecodeError, json.JSONDecodeError) as e:
+        except (UnicodeDecodeError, json.JSONDecodeError, RecursionError) as e:   # deep nesting: "[[[[..."
             ctype = self.headers.get("content-type", "?")
             raise FetchError(self.url, self.status, f"expected JSON, got {ctype} (did the API change?)") from e
 
@@ -81,17 +99,23 @@ def host_allowed(host: str, allowed: tuple[str, ...]) -> bool:
 
 
 def check_url(url: str, allowed: tuple[str, ...], allow_file: bool = False) -> urllib.parse.SplitResult:
-    parts = urllib.parse.urlsplit(url)
+    # urlsplit and .port raise a plain ValueError for a bad port (":99999", ":x") or a stray bracket,
+    # in a URL asked for or in a redirect's Location: UnsafeURL like any other refusal.
+    try:
+        parts = urllib.parse.urlsplit(url)
+        port = parts.port
+    except ValueError as e:
+        raise UnsafeURL(f"malformed URL ({e}): {shown(url)}") from None
     if parts.scheme == "file" and allow_file:
         return parts
     if parts.scheme != "https":
-        raise UnsafeURL(f"only https:// is allowed: {url}")
+        raise UnsafeURL(f"only https:// is allowed: {shown(url)}")
     if parts.username or parts.password:
-        raise UnsafeURL(f"credentials in URL are not allowed: {url}")
-    if parts.port not in (None, 443):
-        raise UnsafeURL(f"non-standard port not allowed: {url}")
+        raise UnsafeURL(f"credentials in URL are not allowed: {shown(url)}")
+    if port not in (None, 443):
+        raise UnsafeURL(f"non-standard port not allowed: {shown(url)}")
     if not parts.hostname or not host_allowed(parts.hostname, allowed):
-        raise UnsafeURL(f"host not on allowlist {allowed}: {url}")
+        raise UnsafeURL(f"host not on allowlist {allowed}: {shown(url)}")
     return parts
 
 
@@ -101,7 +125,6 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
 
 
 _SSL = ssl.create_default_context(cafile=certifi.where())
-_OPENER = urllib.request.build_opener(_NoRedirect(), urllib.request.HTTPSHandler(context=_SSL))
 
 # ---------------------------------------------------------------- network pin
 
@@ -163,12 +186,104 @@ class _PinnedHTTPSConnection(http.client.HTTPSConnection):
         self._create_connection = pinned_connection
 
 
-class _PinnedHTTPSHandler(urllib.request.HTTPSHandler):
+# ---------------------------------------------------------------- deadlines
+
+# The per-call timeout bounds each wait for bytes, not a whole request: a server that sends a byte
+# every few seconds could hold a thread for months. A Deadline bounds the whole request, headers
+# included, by shutting its sockets down once it passes; the blocked read then fails like a dropped
+# connection. By default a request gets MIN_DEADLINE plus its byte cap at MIN_RATE, which a working
+# connection beats by far (64 MiB, the largest cap, gets 73 minutes).
+MIN_DEADLINE = 300.0
+MIN_RATE = 16 << 10          # bytes per second
+
+
+def default_deadline(max_bytes: int) -> float:
+    return MIN_DEADLINE + max(0, max_bytes) / MIN_RATE
+
+
+class Deadline:
+    """`with Deadline(seconds) as d:` ... `d.watch(conn)` for each http.client connection used.
+    `d.expired` says whether it passed (a read cut short can look like a clean end of the body)."""
+
+    def __init__(self, seconds: float):
+        self.seconds = seconds
+        self.end = time.monotonic() + seconds
+        self.expired = False
+        self._socks: list = []
+        self._lock = threading.Lock()
+        self._timer = threading.Timer(max(0.0, seconds), self._expire)
+        self._timer.daemon = True
+
+    def __enter__(self):
+        self._timer.start()
+        return self
+
+    def __exit__(self, *exc):
+        self._timer.cancel()
+        with self._lock:
+            self._socks.clear()
+        return False
+
+    def passed(self) -> bool:
+        return self.expired or time.monotonic() >= self.end
+
+    def watch(self, conn) -> None:
+        """Watch the socket `conn` (an http.client connection) opens."""
+        connect = conn.connect
+
+        def watched_connect():
+            connect()
+            self._add(conn.sock)
+
+        conn.connect = watched_connect
+
+    def _add(self, sock) -> None:
+        if sock is None:
+            return
+        with self._lock:
+            self._socks.append(sock)
+            late = self.expired
+        if late:
+            _shut(sock)
+
+    def _expire(self) -> None:
+        with self._lock:
+            self.expired = True
+            socks = list(self._socks)
+        for s in socks:
+            _shut(s)
+
+
+def _shut(sock) -> None:
+    # The plain socket's shutdown, not SSLSocket's (which also tears down the TLS state another
+    # thread may be reading with): the fd stops, and the read blocked on it returns at once.
+    try:
+        socket.socket.shutdown(sock, socket.SHUT_RDWR)
+    except (OSError, TypeError, ValueError):
+        pass
+
+
+class _WatchedHTTPSHandler(urllib.request.HTTPSHandler):
+    """HTTPS through `conn_class`, each connection watched by the request's Deadline (req.deadline)."""
+
+    def __init__(self, conn_class, context):
+        super().__init__(context=context)
+        self._conn_class = conn_class
+
     def https_open(self, req):
-        return self.do_open(_PinnedHTTPSConnection, req, context=self._context)
+        dl = getattr(req, "deadline", None)
+
+        def make(host, **kw):
+            conn = self._conn_class(host, **kw)
+            if dl is not None:
+                dl.watch(conn)
+            return conn
+
+        return self.do_open(make, req, context=self._context)
 
 
-_PINNED_OPENER = urllib.request.build_opener(_NoRedirect(), _PinnedHTTPSHandler(context=_SSL))
+_OPENER = urllib.request.build_opener(_NoRedirect(), _WatchedHTTPSHandler(http.client.HTTPSConnection, _SSL))
+_PINNED_OPENER = urllib.request.build_opener(_NoRedirect(), _WatchedHTTPSHandler(_PinnedHTTPSConnection, _SSL))
 
 
 def _opener():
@@ -190,9 +305,28 @@ def fetch(
     accept: str | None = None,
     headers: dict[str, str] | None = None,
     auth: tuple[str, str] | None = None,
+    deadline: float | None = None,
 ) -> Response:
-    """GET `url` under the rules above. Raises FetchError on HTTP errors. `auth` = (host,
-    Authorization value) is sent only to that exact host, never to a host a redirect leads to."""
+    """GET `url` under the rules above. Raises FetchError on HTTP and network errors (UnsafeURL
+    for a URL the rules refuse). `auth` = (host, Authorization value) is sent only to that exact
+    host, never to a host a redirect leads to. `timeout` bounds each wait for bytes; `deadline`
+    (default: default_deadline(max_bytes)) the whole request, redirects included."""
+    with Deadline(default_deadline(max_bytes) if deadline is None else deadline) as dl:
+        return _fetch(url, dl, max_bytes=max_bytes, allowed=allowed, allow_file=allow_file, timeout=timeout,
+                      accept=accept, headers=headers, auth=auth)
+
+
+def _too_slow(url: str, dl: Deadline, status: int | None = None) -> FetchError:
+    return FetchError(url, status, f"took longer than {dl.seconds:.0f}s")
+
+
+def _check_length(url: str, status, declared, got: int) -> None:
+    # http.client's read(n) ends quietly where a connection closed early; read() would have raised.
+    if declared and str(declared).isdigit() and int(declared) != got:
+        raise FetchError(url, status, f"the reply was cut off ({got} of {declared} bytes)")
+
+
+def _fetch(url, dl, *, max_bytes, allowed, allow_file, timeout, accept, headers, auth) -> Response:
     for hop in range(MAX_REDIRECTS + 1):
         # A local file is allowed only as the URL asked for, never as where a server redirects us.
         parts = check_url(url, allowed, allow_file and hop == 0)
@@ -214,6 +348,7 @@ def fetch(
             req.add_header(k, v)
         if auth and (parts.hostname or "").lower() == auth[0]:
             req.add_header("Authorization", auth[1])
+        req.deadline = dl
         try:
             resp = _opener().open(req, timeout=timeout)
         except urllib.error.HTTPError as e:
@@ -221,50 +356,75 @@ def fetch(
                 loc = e.headers.get("Location")
                 if not loc:
                     raise FetchError(url, e.code, "redirect without Location") from e
-                url = urllib.parse.urljoin(url, loc)
+                try:
+                    url = urllib.parse.urljoin(url, loc)
+                except ValueError as bad:
+                    raise UnsafeURL(f"malformed redirect from {shown(url)} ({bad})") from None
                 continue
             raise FetchError(url, e.code, f"HTTP {e.code}", _retry_after(e.headers), e.headers) from e
-        except (urllib.error.URLError, TimeoutError, OSError) as e:
-            raise FetchError(url, None, str(e)) from e
+        except (urllib.error.URLError, OSError, http.client.HTTPException) as e:
+            raise (_too_slow(url, dl) if dl.expired else FetchError(url, None, str(e))) from e
 
-        with resp:
-            declared = resp.headers.get("Content-Length")
-            if declared and declared.isdigit() and int(declared) > max_bytes:
-                raise FetchError(url, resp.status, f"Content-Length {declared} exceeds cap {max_bytes}")
-            chunks, total = [], 0
-            while True:
-                chunk = resp.read(65536)
-                if not chunk:
-                    break
-                total += len(chunk)
-                if total > max_bytes:
-                    raise FetchError(url, resp.status, f"response exceeds cap {max_bytes}")
-                chunks.append(chunk)
-            hdrs = {k.lower(): v for k, v in resp.headers.items()}
-            return Response(url, resp.status, hdrs, b"".join(chunks))
+        status = getattr(resp, "status", None)
+        try:
+            with resp:
+                declared = resp.headers.get("Content-Length")
+                if declared and declared.isdigit() and int(declared) > max_bytes:
+                    raise FetchError(url, status, f"Content-Length {declared} exceeds cap {max_bytes}")
+                chunks, total = [], 0
+                while True:
+                    chunk = resp.read(65536)
+                    if not chunk:
+                        break
+                    total += len(chunk)
+                    if total > max_bytes:
+                        raise FetchError(url, status, f"response exceeds cap {max_bytes}")
+                    if dl.passed():
+                        raise _too_slow(url, dl, status)
+                    chunks.append(chunk)
+                hdrs = {k.lower(): v for k, v in resp.headers.items()}
+        except (OSError, http.client.HTTPException) as e:   # TimeoutError, a reset, IncompleteRead mid-body
+            raise (_too_slow(url, dl, status) if dl.expired else
+                   FetchError(url, status, f"read failed after the headers: {e}")) from e
+        if dl.expired:          # the cut-off socket can read as a clean end of a body without a length
+            raise _too_slow(url, dl, status)
+        _check_length(url, status, declared, total)
+        return Response(url, status, hdrs, b"".join(chunks))
     raise FetchError(url, None, "too many redirects")
 
 
 def post_json(url: str, body: dict, *, max_bytes: int = 64 << 10,
-              allowed: tuple[str, ...] = DEFAULT_ALLOWED_HOSTS, timeout: float = 30.0) -> Response:
+              allowed: tuple[str, ...] = DEFAULT_ALLOWED_HOSTS, timeout: float = 30.0,
+              deadline: float | None = None) -> Response:
     """POST a JSON body under the same rules as fetch. Redirects aren't followed: a request that
-    sends something is never re-sent somewhere else. Raises FetchError on HTTP errors."""
+    sends something is never re-sent somewhere else. Raises FetchError on HTTP and network errors."""
     check_url(url, allowed)
     req = urllib.request.Request(url, data=json.dumps(body).encode(), method="POST")
     req.add_header("User-Agent", USER_AGENT)
     req.add_header("Content-Type", "application/json")
     req.add_header("Accept", "application/json")
-    try:
-        resp = _opener().open(req, timeout=timeout)
-    except urllib.error.HTTPError as e:
-        raise FetchError(url, e.code, f"HTTP {e.code}", _retry_after(e.headers), e.headers) from e
-    except (urllib.error.URLError, TimeoutError, OSError) as e:
-        raise FetchError(url, None, str(e)) from e
-    with resp:
-        data = resp.read(max_bytes + 1)
-        if len(data) > max_bytes:
-            raise FetchError(url, resp.status, f"response exceeds cap {max_bytes}")
-        return Response(url, resp.status, {k.lower(): v for k, v in resp.headers.items()}, data)
+    with Deadline(default_deadline(max_bytes) if deadline is None else deadline) as dl:
+        req.deadline = dl
+        try:
+            resp = _opener().open(req, timeout=timeout)
+        except urllib.error.HTTPError as e:
+            raise FetchError(url, e.code, f"HTTP {e.code}", _retry_after(e.headers), e.headers) from e
+        except (urllib.error.URLError, OSError, http.client.HTTPException) as e:
+            raise (_too_slow(url, dl) if dl.expired else FetchError(url, None, str(e))) from e
+        status = getattr(resp, "status", None)
+        try:
+            with resp:
+                data = resp.read(max_bytes + 1)
+                hdrs = {k.lower(): v for k, v in resp.headers.items()}
+        except (OSError, http.client.HTTPException) as e:
+            raise (_too_slow(url, dl, status) if dl.expired else
+                   FetchError(url, status, f"read failed after the headers: {e}")) from e
+        if dl.expired:
+            raise _too_slow(url, dl, status)
+    if len(data) > max_bytes:
+        raise FetchError(url, status, f"response exceeds cap {max_bytes}")
+    _check_length(url, status, hdrs.get("content-length"), len(data))
+    return Response(url, status, hdrs, data)
 
 
 def fetch_json(url: str, *, max_bytes: int = 8 << 20, **kw):

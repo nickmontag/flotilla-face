@@ -36,11 +36,24 @@ Some of this is theirs to decide, and some of it exposes them. Ask, in plain wor
 Run `uname -s; uname -m` and, on Linux, `ldd --version` (musl means no) and `systemctl --user status`
 (an error means no systemd user session).
 
-**VMs and WSL.** A VPN running on the host is invisible inside the VM: Flotilla finds no VPN, and if
-the host's VPN drops, the VM's traffic leaves through the real connection with nothing to stop it. Run
-the VPN inside the VM (or gluetun inside it). Don't use `--seed-from-home-ip` to get past "no VPN found"
-in a VM: the person's real address is what peers would see the moment the host's VPN drops. A VM's
-disk image may also have less real space behind it than it reports.
+**Servers, VMs and seedboxes are a good place for it**: always on, with a disk of their own (a Proxmox
+VM or LXC container, a home server, a rented seedbox or dedicated server). The one rule is that the VPN
+has to fail closed somewhere the seeding traffic can't get around. Any of these does:
+
+1. A VPN inside the machine (a WireGuard client, or gluetun in Docker): `init` pins to it.
+2. A router or firewall (OPNsense, pfSense) that sends this machine's traffic through a VPN and blocks
+   it when the VPN is down. `init` can't see that VPN and says "no VPN found"; `--seed-from-home-ip` is
+   right here, once the person confirms the kill switch.
+3. A rented seedbox or server, whose address is the provider's, not anyone's home. `--seed-from-home-ip`
+   is right here too, once the person confirms the provider allows torrents (seedbox hosts do; many
+   VPS providers don't).
+
+Not fine: a VPN app on the computer that hosts the VM (or Windows, under WSL), with nothing at the
+network level. The VM can't see it, and when it drops, the VM's traffic leaves through the home
+connection. `init` detects a VM or container and says so; don't use `--seed-from-home-ip` to get past
+"no VPN found" in that case. Also: an LXC container needs `/dev/net/tun` passed through for a VPN
+inside it; Alpine containers won't work (musl); and a VM's disk should have real space behind it (a
+pre-allocated image, a passed-through disk or a ZFS dataset), since Flotilla only sees the guest's.
 
 **VPNs.** `flotilla init` pins Flotilla to the VPN it finds, so if the VPN drops, Flotilla goes offline
 instead of leaking. It finds full-tunnel VPNs, split-tunnel WireGuard and the common apps (NordLynx,

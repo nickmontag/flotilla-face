@@ -510,6 +510,29 @@ leechers it can't reach on its own. Two nodes that both lack a forwarded port ca
 harder toward the pieces with at most one other copy, so the last copies end up where everyone can
 reach them.
 
+### On a server, VM or seedbox
+
+A home server, a Proxmox VM or LXC container, or a rented seedbox is a good place to run Flotilla: it's
+always on and has a disk of its own. On Linux, `flotilla service install --linger` keeps it running
+with nobody logged in. The one rule is that the VPN has to fail closed somewhere the seeding traffic
+can't get around:
+
+- **A VPN inside the machine** (a WireGuard client, or gluetun): `flotilla init` pins to it.
+- **A router or firewall** (OPNsense, pfSense) that routes this machine through a VPN and blocks it when
+  the VPN is down. Flotilla can't see that VPN, so setup says none was found; seeding from the machine's
+  own address is fine here.
+- **A rented seedbox or server**: its address is the provider's, not your home's. Check the provider
+  allows torrents (seedbox hosts do; many cheap VPS providers forward copyright notices or forbid it).
+
+What doesn't protect it: a VPN app on the computer that hosts the VM (or on Windows, under WSL), with
+nothing at the network level. The VM can't see that VPN, and when it drops, the VM's traffic leaves
+through your home connection. `flotilla init` notices when it runs in a VM or container and says so
+before asking about seeding from the machine's own address.
+
+For an LXC container, use Debian or Ubuntu (not Alpine), and pass `/dev/net/tun` through for a VPN
+inside it. Give a VM real space: a pre-allocated disk image, a passed-through disk or a ZFS dataset.
+Flotilla measures the guest's free space, so a thin image can run the host out of room first.
+
 ### Behind gluetun (Docker)
 
 If your torrents already go through a [gluetun](https://github.com/qdm12/gluetun) container, run

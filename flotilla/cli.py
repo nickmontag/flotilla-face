@@ -66,6 +66,16 @@ def parse_gb(raw: str) -> float:
 SETUP_STEPS = 8
 
 
+def vm_caution(kind: str) -> str:
+    """What to know before seeding from a virtual machine's or container's own address."""
+    return (f"This is {kind}. A VPN running on the computer that hosts it doesn't protect it: Flotilla can't "
+            f"see that VPN, and if it drops, this machine's traffic leaves through the real connection. Seeding "
+            f"from this machine's own address is fine if a router or firewall sends its traffic through a VPN "
+            f"and blocks it when the VPN is down, or if it's a rented server or seedbox whose address is the "
+            f"provider's (and the provider allows torrents). Otherwise connect a VPN inside this machine (or run "
+            f"gluetun in it) and run `flotilla init` again.")
+
+
 NOT_STARTED = 3   # `init --yes` exit code: settings saved, but nothing may start (see _init_scripted)
 
 
@@ -126,6 +136,11 @@ def _init_scripted(args, path: Path, cfg: Config, docker: bool) -> int:
     elif vpn != "none":
         bind, why = vpn, "the interface or address given"
     home_ip_ok = bool(bind) or docker or args.seed_from_home_ip
+    if not bind and not docker:
+        from .netinfo import virtualization
+
+        if kind := virtualization():
+            print(f"flotilla init: {vm_caution(kind)}", file=sys.stderr)
     if not bind and not docker and vpn == "auto" and _vpn_containers():
         print("flotilla init: a VPN container (such as gluetun) is running here. Setup can't move into it "
               "without questions: run `flotilla init` interactively, or use the docker commands in the README "
@@ -293,6 +308,10 @@ def cmd_init(args) -> int:
                 "address" + (" whenever the VPN is down" if route and route.looks_like_vpn else "")
                 + ". At home that's your household's address, listed as seeding these models. Your settings "
                 "are saved either way; with no, Flotilla doesn't start until you start it.")
+        from .netinfo import virtualization
+
+        if kind := virtualization():
+            ui.caution(vm_caution(kind))
         home_ip_ok = _yes("Seed from this connection's public IP address", False)
         if not home_ip_ok:
             ui.info("Flotilla won't start now. To seed through a VPN, connect it and run `flotilla init` again")

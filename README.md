@@ -438,7 +438,7 @@ Found a hole? See [SECURITY.md](SECURITY.md).
 | `flotilla dashboard --url` | The dashboard's address with its access key |
 | `flotilla status` | Text summary of the running node |
 | `flotilla hf connect` / `disconnect` / `status` | Connect a Hugging Face account (a read-only token) for [gated models](#gated-models), remove it, check it |
-| `flotilla points [connect / disconnect]` | Connect a Pirate Face account so your seeding [earns points](#pirate-face-points), remove it, or check it |
+| `flotilla points [connect / disconnect]` | Connect a Pirate Face account so your seeding [earns points](#pirate-face-points), remove it, or check it: whether its tracker is answering and what this node earns a day |
 | `flotilla history [--range 30d] [--model author/model] [--csv]` | Upload and download over time; `--csv` for a spreadsheet |
 | `flotilla verify` | Re-check every file you hold against its published hash |
 | `flotilla verify <folder>` | Check a model you downloaded (with any client) against the hash ledger |
@@ -672,9 +672,24 @@ also joins that file's own swarm:
 Its uploads count in your history and monthly cap like any other. Older torrents that are v1 only have no
 per-file swarms. Set `per_file_swarms = false` under `[pirateface]` in the config to turn it off.
 
-Flotilla also keeps its own record of seed-hours per model, and the dashboard shows an estimate with the
-formula above, counting only models held whole. That's Flotilla's count; Pirate Face keeps the real one. Seeding the magnet index counts
-too, with an account connected.
+**What the dashboard shows.** A **Points** card and a pill in the header say where this stands:
+
+- **Whether it's counting.** Having your tracker's address isn't the same as Pirate Face counting
+  anything, so Flotilla reads whether the tracker is answering its announces. "Tracker not answering"
+  means nothing is counting (a wrong address or a replaced key look like this): copy it again.
+- **What this node earns**, in points a day, with the formula above, from the models it holds whole
+  right now, and how many of its models that is. Without an account it shows what it would earn. A
+  model's row says what it earns, or that it's held in part and earns nothing.
+- **An estimate since you connected**, from Flotilla's own record of seed-hours per model. Pirate Face
+  keeps the real count, and also shares points among a model's seeders when someone finishes
+  downloading it, which the estimate leaves out.
+- **A link to the real total.** Pirate Face has no way for a program to read an account's points, and a
+  key doesn't say whose it is. Type your handle (the name in `pirateface.co/name`) in the Pirate Face
+  points settings, or set `handle` under `[pirateface]` in the config, and the card links to your page
+  there. The handle is only used for that link.
+
+`flotilla points` and `flotilla status` say the same. Seeding the magnet index counts too, with an
+account connected.
 
 **Other ways to help.** Pirate Face's own CLI has a job Flotilla doesn't do: `pf work` takes models from
 its rescue queue, streams them from Hugging Face, checks them, and lists their torrents (1 point per 2 GB

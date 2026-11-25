@@ -51,7 +51,7 @@ from .magnetindex import INDEX_REPO, MagnetIndex
 from .perfile import PerFile
 from .vpnport import RESTART_ROUTE, Forward, GluetunAbsent, GluetunAuth, PortFinder, gluetun_restart_vpn
 from .hfauth import remove_token, save_secret
-from .pfaccount import Account, clean_key, key_path, kind_of
+from .pfaccount import Account, clean_handle, clean_key, key_path, kind_of
 from .planner import GB, Params, Plan, Unit, list_full, plan as make_plan, set_targets, swappable
 from .signing import PublicKey, SignatureError
 from .sources import HuggingFace, PirateFace, git_blob_sha1, sha256_file
@@ -210,6 +210,31 @@ def _set_tracker(h: lt.torrent_handle, old: str | None, new: str | None) -> None
         e.tier = max((x.tier for x in entries), default=-1) + 1
         entries.append(e)
     h.replace_trackers(entries)
+
+
+ANNOUNCE_CHECK_EVERY = 60.0     # how often to read how the account's tracker answers
+_ERROR_CATEGORIES = {"libtorrent": lt.libtorrent_category, "http": lt.http_category,
+                     "system": lt.system_category, "generic": lt.generic_category}
+
+
+def announce_state(entry: dict) -> tuple[str, str | None]:
+    """How a tracker answers one torrent, from libtorrent's record of it (torrent_handle.trackers()):
+    ("ok", None) once it has answered and an announce still gets through, ("failing", why) while
+    every announce to it fails, ("waiting", None) before its first answer. One endpoint that works is
+    enough: a second listen address the tracker can't be reached from doesn't make it failing."""
+    leaves = [leaf for ep in entry.get("endpoints") or [entry] for leaf in ep.get("info_hashes") or [ep]]
+    tried = [leaf for leaf in leaves if leaf.get("next_announce", 0) > 0]     # a v1 torrent never uses its v2 slot
+    failing = [leaf for leaf in tried if leaf.get("fails")]
+    if not tried or len(failing) < len(tried):
+        return ("ok" if tried and entry.get("verified") else "waiting"), None
+    for leaf in failing:
+        if leaf.get("message"):          # the tracker's own words ("unregistered torrent", say)
+            return "failing", "it says: " + " ".join(str(leaf["message"]).split())[:120]
+    err = next((leaf["last_error"] for leaf in failing if (leaf.get("last_error") or {}).get("value")), None)
+    if not err:
+        return "failing", None
+    category = _ERROR_CATEGORIES.get(err.get("category"))
+    return "failing", (category().message(err["value"]) if category else f"{err.get('category')} error {err['value']}").lower()
 
 
 def _compact_trees(raw: bytes, prios: list[int], sizes: list[int], piece_length: int) -> bytes:
@@ -421,6 +446,8 @@ class Engine:
         self.pf_account = Account(key_path(cfg.path), lambda: PirateFace(tuple(cfg.allowed_hosts)), log=self.log)
         self._pf_nudge = threading.Event()      # set to look at the account file now, not in a minute
         self._tracker_in_use: tuple[int, str | None] = (0, None)
+        self._announce: dict | None = None      # how the account's tracker answers: see check_announces
+        self._announce_at = 0.0
         # The port the VPN forwards to this node (vpnport.py), and the one it listens on for it.
         self.vpn_forward: Forward | None = None
         self.listening_on = cfg.listen_port
@@ -1464,6 +1491,7 @@ class Engine:
                 st = self.status(ih, h)
                 hold = self.state.holdings.get(ih, {})
                 files = hold.get("files", {})
+                whole_gb = self._earning_gb(ih, h)
                 rows.append({
                     "repo": hold.get("repo"), "infohash": ih, "state": str(st.state).split(".")[-1],
                     "files": len(files), "verified": sum(1 for e in files.values() if e["status"] == "verified"),
@@ -1473,6 +1501,8 @@ class Engine:
                     "peers": st.num_peers, "seeds": st.num_seeds, "verify_source": hold.get("verify_source"),
                     "manifest_mismatches": hold.get("manifest_mismatches", []),
                     "hf_bytes": hold.get("hf_bytes", 0), "per_file": self.perfile.count(ih),
+                    # a day, at Pirate Face's seeding rate (1 per 3 h at 10 GB), only while the whole model is here
+                    "points_day": round(8 * math.sqrt(whole_gb / 10), 4) if whole_gb else 0,
                 })
             doc = {
                 "at": datetime.now(timezone.utc).isoformat(), "node": self.state.node_id[:8],
@@ -1486,6 +1516,7 @@ class Engine:
                 "budget_bytes": self.last_plan.budget_bytes if self.last_plan else None, "torrents": rows,
                 "run": {"started": self.run_started, "until": self.run_until,
                         "uploaded": self.session_uploaded, "upload_peers": len(self.upload_peers)},
+                "points": self.points_view(rows),
             }
         doc["hf_gated"] = self.hf.gated_list()
         doc["update"] = self.update_available
@@ -1504,7 +1535,7 @@ class Engine:
     SWITCHES = ("hf_fallback", "vpn_port_recover")   # on/off settings
     CHOICES = {"reorient": REORIENT_CHOICES, "focus": FOCUS_CHOICES}   # one-of settings
     ACTIONS = ("settings", "pause", "resume", "replan", "reorient", "drop", "add", "remove", "order", "allot", "skip",
-               "unskip", "hf_disconnect", "rescue", "points_connect", "points_disconnect")
+               "unskip", "hf_disconnect", "rescue", "points_connect", "points_disconnect", "points_handle")
 
     def _bind_up(self) -> bool | None:
         if not self.cfg.bind_interface:
@@ -1579,7 +1610,6 @@ class Engine:
                 "user_paused": self.user_paused,
                 "log": [{"t": t, "msg": m} for t, m in list(self.log_ring)[-100:]],
                 "rejected": [{"repo": r.repo, "reason": r.reason} for r in self.last_rejected][:60],
-                "points_est_total": sum(e["points_est"] for e in self.state.data["ledger"].values()),
                 "dropped": list(self.state.data["dropped"]),
                 "picks": self.picks_status(doc["torrents"]),
                 "priorities": self.priorities_view(doc["torrents"]),
@@ -1670,6 +1700,11 @@ class Engine:
             return self._points_save(clean_key(secret))      # PFKeyError (a ValueError) explains
         elif action == "points_disconnect":
             return self._points_save(None)
+        elif action == "points_handle":
+            handle = body.get("handle")
+            if not isinstance(handle, str) or len(handle) > 200:
+                raise ValueError("a handle is the name in pirateface.co/name")
+            body = {"handle": clean_handle(handle)}           # PFKeyError (a ValueError) explains
         elif action in ("add", "remove"):
             # Picks are just a file: save right away (so the page shows it at once),
             # and let the main loop do the replan when it's free.
@@ -1854,6 +1889,12 @@ class Engine:
             due = self.reorient_at()         # a shorter schedule can bring the next one forward
             if due and self.next_refresh:
                 self.next_refresh = min(self.next_refresh, max(due, time.time() + 5))
+
+    def _do_points_handle(self, body: dict) -> None:
+        self.cfg.pf_handle = body["handle"]
+        self.save_config()
+        self.log(f"pirate face: the dashboard links to pirateface.co/{body['handle']} for your points" if body["handle"]
+                 else "pirate face: handle cleared")
 
     def _do_pause(self, _) -> None:
         self.user_paused = True
@@ -2057,31 +2098,88 @@ class Engine:
         except Exception as e:   # a full or locked disk must not stop seeding
             self.log(f"history: couldn't record ({e})")
 
+    def _earning_gb(self, ih: str, h: lt.torrent_handle) -> float:
+        """The GB of a model that earn Pirate Face seeding points now: all of it while every piece is
+        here, else 0. Pirate Face credits a complete copy only: "finished" (the files picked are here,
+        others aren't) earns nothing, so only "seeding" (every piece of the torrent) counts."""
+        hold = self.state.holdings.get(ih)
+        if not hold:
+            return 0.0
+        gb = sum(e["size"] for e in hold["files"].values() if e["status"] == "verified") / GB
+        return gb if gb > 0 and "seeding" in str(self.status(ih, h).state) else 0.0
+
     def update_ledger(self, now: float) -> None:
         """Seed-hours per torrent and a points estimate with Pirate Face's published
         formula: 1 point per 3 seed-hours for a 10 GB torrent, scaled by sqrt(GB/10), counted
         only while this node holds the whole torrent (Pirate Face credits complete copies).
-        Flotilla's own count: Pirate Face counts the real one through the account's seeding tracker."""
+        Flotilla's own count: Pirate Face counts the real one through the account's seeding tracker.
+        `points_since` is the part of it earned while the account now connected was announced to."""
         last = self.state.data.get("ledger_at") or now
         self.state.data["ledger_at"] = now
+        seen, ident = self.pf_account.ident()
+        since = self.state.data.get("points_since")
+        started = seen and (since or {}).get("acct") != ident      # connected, replaced or disconnected
+        if started:
+            since = {"acct": ident, "since": now, "est": 0.0} if ident else None
+            self.state.data["points_since"] = since
+            self._dirty = True
         dt_h = max(0.0, min(now - last, 600)) / 3600   # cap gaps from sleep or crashes
         if dt_h == 0 or self.ses.is_paused():
             return
         led = self.state.data["ledger"]
+        # The time up to `now` was seeded before a just-connected account was: it starts counting from here.
+        announced = self._tracker_in_use[1] is not None and not started
         for ih, h in self.handles.items():
-            hold = self.state.holdings.get(ih)
-            if not hold:
+            gb = self._earning_gb(ih, h)
+            if not gb:
                 continue
-            gb = sum(e["size"] for e in hold["files"].values() if e["status"] == "verified") / GB
-            state = str(self.status(ih, h).state)
-            # Pirate Face credits a complete copy only: "finished" (the files picked are here, others
-            # aren't) earns nothing, so only "seeding" (every piece of the torrent) counts.
-            if gb <= 0 or "seeding" not in state:
-                continue
-            e = led.setdefault(ih, {"repo": hold["repo"], "seed_hours": 0.0, "gb_hours": 0.0, "points_est": 0.0})
+            e = led.setdefault(ih, {"repo": self.state.holdings[ih]["repo"], "seed_hours": 0.0, "gb_hours": 0.0,
+                                    "points_est": 0.0})
             e["seed_hours"] += dt_h
             e["gb_hours"] += gb * dt_h
             e["points_est"] += dt_h / 3 * math.sqrt(gb / 10)
+            if since and announced:
+                since["est"] += dt_h / 3 * math.sqrt(gb / 10)
+
+    def check_announces(self, now: float) -> None:
+        """Whether the account's tracker is answering, read from libtorrent every ANNOUNCE_CHECK_EVERY:
+        having its address isn't the same as it counting anything (a pasted address with a wrong token
+        looks the same until the tracker refuses it). Models only; the engine's thread."""
+        url = self._tracker_in_use[1]
+        if not url:
+            self._announce = None
+            return
+        if self._announce and self._announce["gen"] == self._tracker_in_use[0] and now - self._announce_at < ANNOUNCE_CHECK_EVERY:
+            return
+        self._announce_at = now
+        n = {"ok": 0, "failing": 0, "waiting": 0}
+        why = None
+        for h in list(self.handles.values()):
+            try:
+                entry = next((t for t in h.trackers() if t["url"] == url), None)
+            except RuntimeError:         # removed meanwhile
+                continue
+            state, said = announce_state(entry) if entry else ("waiting", None)
+            n[state] += 1
+            why = why or said
+        token = url.rsplit("/", 2)[-2]
+        if why and (url in why or token in why):      # never show the tracker's token, whatever it says
+            why = None
+        self._announce = {**n, "why": why, "at": now, "gen": self._tracker_in_use[0]}
+
+    def points_view(self, rows: list[dict]) -> dict:
+        """What the dashboard and `flotilla points` say about points: the rate the models held whole
+        earn at Pirate Face's published seeding rate (0 while paused), how many of the models that
+        is, Flotilla's own estimate (all time, and since this account was connected), the handle to
+        link to, and whether the account's tracker is answering. Never the tracker or the key."""
+        since = self.state.data.get("points_since") or {}
+        ann = self._announce
+        return {"per_day": 0.0 if self.ses.is_paused() else sum(r["points_day"] for r in rows),
+                "counting": sum(1 for r in rows if r["points_day"]), "models": len(rows),
+                "est": sum(e["points_est"] for e in self.state.data["ledger"].values()),
+                "since": since.get("since"), "est_since": since.get("est"),
+                "handle": self.cfg.pf_handle or None,
+                "announce": {k: ann[k] for k in ("ok", "failing", "waiting", "why", "at")} if ann else None}
 
     def tick(self) -> None:
         self._handle_alerts(self.ses.pop_alerts())
@@ -2392,6 +2490,7 @@ class Engine:
                 with self.lock:
                     self._account_upload()
                     self.update_ledger(now)
+                    self.check_announces(now)
                     # Upload totals and seed-hours change every few seconds but losing a few
                     # minutes of them to a crash costs little; rewriting state.json (hundreds of
                     # KB) every 10 s cost gigabytes of disk writes a day.

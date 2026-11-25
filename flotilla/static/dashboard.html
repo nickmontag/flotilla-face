@@ -52,6 +52,7 @@
   .brand svg { width: 36px; height: 36px; flex: none; filter: drop-shadow(0 2px 6px color-mix(in srgb, var(--accent) 35%, transparent)); }
   .brand b { font-weight: 650; } .brand i { font-style: normal; color: var(--accent); }
   a.pill { text-decoration: none; cursor: pointer; }
+  a#points:not(.bad) { color: inherit; }
   .pill[hidden] { display: none; }
   .pill { display: inline-flex; align-items: center; gap: 7px; padding: 4px 11px 4px 9px; border-radius: 999px;
           font-size: 12px; font-weight: 600; border: 1px solid var(--border); background: color-mix(in srgb, var(--card) 80%, transparent);
@@ -91,7 +92,7 @@
   /* cards: a lit top edge and a soft drop shadow lift them off the page */
   .card { position: relative; background: linear-gradient(180deg, var(--card-hi), var(--card) 120px); border: 1px solid var(--border);
           border-radius: 16px; box-shadow: inset 0 1px 0 var(--highlight), var(--shadow); }
-  .stats { display: grid; grid-template-columns: minmax(0, 2fr) repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
+  .stats { display: grid; grid-template-columns: minmax(0, 1.7fr) repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 12px; }
   .stat { padding: 16px 18px; overflow: hidden; display: flex; flex-direction: column; min-height: 132px; }
   .label { font-size: 11px; font-weight: 650; color: var(--muted); text-transform: uppercase; letter-spacing: .07em;
            display: flex; align-items: center; gap: 7px; }
@@ -115,16 +116,24 @@
   .bar { height: 6px; background: var(--track); border-radius: 999px; overflow: hidden; margin: 10px 0 8px; }
   .bar > div { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-hi)); border-radius: 999px; transition: width .6s var(--ease); }
   .bar.full > div { background: linear-gradient(90deg, var(--warn), color-mix(in srgb, var(--warn) 70%, #fff)); }
-  @media (max-width: 920px) {
-    .stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  /* points: the rate is dimmed while nothing earns it; the links sit at the foot of the card */
+  .stat .value.off { color: var(--faint); }
+  .stat .sub.warn-t { color: var(--warn); }
+  .stat-links { margin-top: auto; padding-top: 8px; display: flex; flex-wrap: wrap; gap: 4px 12px; }
+  .stat-links a { color: var(--accent); text-decoration: none; font-weight: 550; cursor: pointer; }
+  .stat-links a:hover { text-decoration: underline; }
+  @media (max-width: 1100px) {
+    .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
     .stat.hero { grid-column: 1 / -1; }
+  }
+  @media (max-width: 760px) {
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 600px) {
     .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .stat { min-height: 116px; padding: 14px; }
     .stat.hero { padding: 16px 18px; }
     .stat.hero .value { font-size: 38px; }
-    .stats > .stat:last-child { grid-column: 1 / -1; min-height: 0; }
     .value { font-size: 21px; }
   }
 
@@ -510,6 +519,7 @@
     </span>
     <span id="status" class="pill"><span class="dot"></span><span>Connecting…</span></span>
     <span id="vpn" class="pill" hidden><span class="dot"></span><span></span></span>
+    <a id="points" class="pill" hidden href="#pfset" role="button"><span class="dot"></span><span></span></a>
     <a id="update" class="pill warn" hidden target="_blank" rel="noopener noreferrer"><span class="dot"></span><span></span></a>
     <span class="spacer"></span>
     <span id="node" class="node"></span>
@@ -542,6 +552,14 @@
       <div class="sub" id="holdsub"></div>
     </div>
     <div class="card stat"><div class="label">Seeding</div><div class="value" id="swarm">–</div><div class="sub" id="swarmsub"></div></div>
+    <div class="card stat" id="ptscard">
+      <div class="label">Points
+        <button type="button" class="qm" aria-label="About this estimate" data-tip="What this node earns at Pirate Face's seeding rate: 1 point per 3 hours of seeding a 10 GB model, faster for bigger ones (×√(GB/10)), and only for models held whole. Shards help the swarm but earn nothing. Pirate Face also shares points among a model's seeders when someone finishes downloading it; those aren't in this estimate. It's Flotilla's own count: Pirate Face keeps the real one.">?</button>
+      </div>
+      <div class="value" id="pts">–</div>
+      <div class="sub" id="ptssub"></div>
+      <div class="sub stat-links" id="ptslinks"></div>
+    </div>
   </div>
 
   <div class="card chart">
@@ -789,6 +807,14 @@
             <button type="button" id="pf-go">Connect</button>
           </div>
         </div>
+        <div class="field wide pf-field">
+          <div class="fl"><label for="s-pfh">Your handle (optional)</label>
+            <button type="button" class="qm" aria-label="About your handle" data-tip="The name in pirateface.co/name. The dashboard then links to that page, where Pirate Face shows your real points. A key doesn't say which account it belongs to, so Flotilla can't look it up, and it doesn't send the handle anywhere.">?</button></div>
+          <div class="pf-row">
+            <input id="s-pfh" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="100" placeholder="name">
+            <button type="button" id="pfh-go">Save</button>
+          </div>
+        </div>
         <div class="msg muted" id="pfmsg"></div>
       </section>
     </form>
@@ -948,6 +974,66 @@ addEventListener("resize", moveInk);
 
 /* ---------------- top of page ---------------- */
 
+// Points: a small number keeps its decimals, a big one doesn't need them.
+function fmtPts(x) {
+  return x >= 1000 ? Math.round(x).toLocaleString() : x >= 100 ? x.toFixed(0) : x >= 10 ? x.toFixed(1) : x.toFixed(2);
+}
+const upper = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+// Where the connected account stands: is anything counting? One answer for the pill, the card and Settings.
+// kind: "ok" (the tracker answers), "warn" / "bad" (connected but not counting), "" (not connected, or not known yet).
+function pointsLink(s) {
+  const a = s.pirateface || { state: "none" }, p = s.points || {}, ann = p.announce;
+  if (a.state === "none") return { kind: "", pill: "not connected", short: "Not earning: no account connected.",
+                                   text: "Not earning: no Pirate Face account is connected." };
+  if (a.state === "unchecked") return { kind: "", pill: "checking the key", short: "Checking the key…", text: "Checking the key with Pirate Face…" };
+  if (a.state !== "ok") {
+    const text = "Not earning: " + (a.why || "the saved tracker or key can't be used") + ".";
+    return { kind: "bad", pill: a.state === "refused" ? "key not accepted" : "can't reach Pirate Face", short: text, text };
+  }
+  const who = p.handle ? "@" + p.handle : "connected", as = p.handle ? " as @" + p.handle : "";
+  if (ann && ann.ok) return { kind: "ok", earning: true, pill: who, short: "Earning" + as + ".", text: "Earning" + as + ": your tracker is answering." };
+  if (ann && ann.failing) {
+    const text = "Connected, but your tracker isn't answering" + (ann.why ? " (" + ann.why + ")" : "") + ", so nothing is counting.";
+    return { kind: "warn", pill: "tracker not answering", short: text, text };
+  }
+  return { kind: "", earning: true, pill: who, short: "Connected" + as + ": waiting for your tracker.", text: "Connected: waiting for your tracker's first answer." };
+}
+function openPoints() {
+  openDrawer(true);
+  setTimeout(() => $("pfset").scrollIntoView({ block: "start", behavior: calm.matches ? "auto" : "smooth" }), 80);
+}
+function renderPoints(s) {
+  const p = s.points || {}, link = pointsLink(s), connected = (s.pirateface || {}).state !== "none";
+  setPill("points", link.kind, "Points · " + link.pill);
+  $("points").title = link.text + " Open the Pirate Face points settings.";
+  setNum("pts", p.per_day || 0, (x) => ["≈ " + fmtPts(x), "a day"]);
+  $("pts").classList.toggle("off", !link.earning || !p.per_day);
+  const sub = $("ptssub"), links = $("ptslinks");
+  let text = link.short;
+  if (link.earning || !connected) {
+    if (s.paused) text += " Paused, so nothing earns.";
+    else if (p.models && !p.counting) text += " No model is held whole yet.";
+    else if (p.models) text += " " + p.counting + " of " + plural(p.models, "model") + " held whole.";
+  }
+  if (link.earning && p.since)
+    text += " ≈ " + fmtPts(p.est_since || 0) + " since " + new Date(p.since * 1000).toLocaleDateString([], { month: "short", day: "numeric" }) + " (est.).";
+  sub.textContent = text;
+  sub.className = "sub" + (link.kind === "warn" || link.kind === "bad" ? " warn-t" : "");
+  links.replaceChildren();
+  const act = el("a", null, !connected ? "Connect an account" : link.kind ? (link.kind === "ok" ? "Settings" : "Fix in Settings") : "Settings");
+  act.href = "#pfset"; act.onclick = (e) => { e.preventDefault(); openPoints(); };
+  if (connected) {
+    const real = el("a", null, (p.handle ? "@" + p.handle : "Your real total") + " ↗");
+    real.href = p.handle ? "https://pirateface.co/" + encodeURIComponent(p.handle) : "https://pirateface.co/settings";
+    real.target = "_blank"; real.rel = "noopener noreferrer";
+    real.title = p.handle ? "Your page on Pirate Face, with the points it has counted"
+                          : "Pirate Face shows the points it has counted in your account's settings. Add your handle in Settings to link straight to your page.";
+    links.append(real);
+  }
+  links.append(act);
+}
+$("points").onclick = (e) => { e.preventDefault(); openPoints(); };
+
 function render(s) {
   state = s;
   const ts = s.torrents || [];
@@ -1014,14 +1100,10 @@ function render(s) {
   if (hf.retry_at)
     $("downsub").textContent += " · Hugging Face busy, trying again at " + new Date(hf.retry_at * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   setNum("swarm", ts.length, (x) => { const n = Math.round(x); return [String(n), n === 1 ? "model" : "models"]; });
-  const pfs = s.per_file || {}, acct = s.pirateface || {}, earning = acct.state === "ok";
+  const pfs = s.per_file || {};
   $("swarmsub").textContent = plural(sum("peers"), "peer") + " connected" +
-    (pfs.joined ? " · " + (pfs.joined === 1 ? "1 shard in its own swarm" : pfs.joined + " shards in their own swarms") : "") +
-    " · ≈ " + (s.points_est_total || 0).toFixed(1) + " points (est.)" + (earning ? "" : ", not earning");
-  $("swarmsub").title = earning
-    ? "Your seeding counts toward your Pirate Face account's points (" + acct.tracker + "). Pirate Face credits complete copies only, so the estimate counts only models held whole; shards help the swarm but earn nothing. The estimate is Flotilla's own; Pirate Face keeps the real count."
-    : (acct.why ? acct.why.charAt(0).toUpperCase() + acct.why.slice(1) + ". " : "") +
-      "No Pirate Face account is connected, so this seeding earns no points. Connect one in Settings.";
+    (pfs.joined ? " · " + (pfs.joined === 1 ? "1 shard in its own swarm" : pfs.joined + " shards in their own swarms") : "");
+  renderPoints(s);
 
   renderReorient(s.reorient || {});
   renderCarrying(ts);
@@ -1392,6 +1474,7 @@ function detail(t) {
     bits.push("rarest piece: " + r + (r === 1 ? " other copy" : " other copies") + ", target " + (t.target || 5));
   }
   if (t.ledger) bits.push(t.ledger.seed_hours.toFixed(1) + " h seeded");
+  bits.push(t.points_day ? "≈ " + fmtPts(t.points_day) + " points a day (held whole)" : "no points (held in part)");
   if (t.hf_bytes) bits.push(human(t.hf_bytes) + " fetched from Hugging Face (no peer had it)");
   meta.textContent = bits.join(" · ");
   const strip = el("div", "pieces" + (shards.length > 120 ? " dense" : ""));
@@ -1631,7 +1714,7 @@ $("tabink").style.transition = "none"; moveInk(); void $("tabink").offsetWidth; 
 
 let drawerOpen = false, editing = false;
 function openDrawer(open) {
-  drawerOpen = open; setDirty(false); hideTip();
+  drawerOpen = open; setDirty(false); hideTip(); $("s-pfh")._typed = false;
   $("drawer").classList.toggle("open", open); $("scrim").classList.toggle("open", open);
   $("drawer").setAttribute("aria-hidden", String(!open)); $("gear").setAttribute("aria-expanded", String(open));
   document.documentElement.style.overflow = open ? "hidden" : "";   // the page behind doesn't scroll on phones
@@ -1713,7 +1796,7 @@ function fillAccount() {
   }
 }
 function fillPoints() {
-  const p = state.pirateface || { state: "none" }, box = $("pfacct");
+  const p = state.pirateface || { state: "none" }, pts = state.points || {}, ann = pts.announce || {}, box = $("pfacct");
   box.replaceChildren();
   const who = el("div", "who"), text = el("span");
   const page = el("a", null, "pirateface.co/settings");
@@ -1722,8 +1805,14 @@ function fillPoints() {
     text.append("Not connected: seeding earns no points. Paste the Seeding tracker address or the Community torrent " +
       "key from ", page, " below.");
   } else if (p.state === "ok") {
-    text.append("Connected: seeding counts toward your account's points, announcing to ", el("b", null, p.tracker || "its tracker"),
-      p.kind === "tracker" ? " (the tracker address you pasted)." : " (from your key).");
+    const link = pointsLink(state);
+    if (link.kind === "warn") text.className = "warn-t";
+    text.append(link.kind === "ok" ? "Connected and counting: " : link.kind === "warn" ? "Connected, but not counting: " : "Connected: ",
+      el("b", null, p.tracker || "your tracker"), p.kind === "tracker" ? " (the address you pasted) " : " (from your key) ",
+      link.kind === "ok" ? "is answering for " + ann.ok + " of " + plural(ann.ok + ann.failing + ann.waiting, "model") + "."
+      : link.kind === "warn" ? "isn't answering" + (ann.why ? " (" + ann.why + ")" : "") + ". If it stays that way, copy the address or key again from "
+      : "hasn't answered yet.");
+    if (link.kind === "warn") text.append(page, ".");
   } else if (p.state === "unchecked") {
     text.append("Checking the key with Pirate Face…");
   } else {
@@ -1740,6 +1829,22 @@ function fillPoints() {
     who.append(b);
   }
   box.append(who);
+  if (pts.models != null) {
+    const on = p.state === "ok";
+    let line = "≈ " + fmtPts(pts.per_day || 0) + " points a day at Pirate Face's seeding rate, from " + (pts.counting || 0) + " of " +
+      plural(pts.models, "model") + " held whole" + (on ? "" : ", if an account were connected") + ".";
+    if (on && pts.since) line += " ≈ " + fmtPts(pts.est_since || 0) + " since you connected, by Flotilla's count.";
+    const help = el("div", "help", line);
+    if (on) {
+      const real = el("a", null, pts.handle ? "pirateface.co/" + pts.handle : "your Pirate Face page");
+      real.href = "https://pirateface.co/" + (pts.handle ? encodeURIComponent(pts.handle) : "settings");
+      real.target = "_blank"; real.rel = "noopener noreferrer";
+      help.append(" The real total is on ", real, ".");
+    }
+    box.append(help);
+  }
+  const hi = $("s-pfh");
+  if (!hi._typed) hi.value = pts.handle || "";
   if (p.from_env) box.append(el("div", "help", "It comes from the file FLOTILLA_PF_KEY_FILE names (" + (p.path || "") + "): change it there."));
   $("pfin").hidden = !!p.from_env;
   $("pf-go").textContent = p.state === "none" ? "Connect" : "Replace";
@@ -1755,6 +1860,14 @@ async function pfConnect() {
     i.value = "";
 }
 $("pf-go").onclick = pfConnect;
+async function pfHandle() {
+  const i = $("s-pfh"), v = i.value.trim();
+  if (await post("points_handle", { handle: v }, "Saving…", v ? "Saved. The dashboard links to that page for your points." : "Cleared.", "pfmsg"))
+    i._typed = false;
+}
+$("pfh-go").onclick = pfHandle;
+$("s-pfh").addEventListener("input", (e) => { e.target._typed = true; });
+$("s-pfh").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); pfHandle(); } });
 $("s-pf").addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); pfConnect(); } });
 $("gear").onclick = () => openDrawer(!drawerOpen);
 $("close").onclick = () => openDrawer(false);

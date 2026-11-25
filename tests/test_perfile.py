@@ -674,3 +674,137 @@ def test_the_dashboard_connects_and_disconnects_the_account(tmp_path, monkeypatc
     with pytest.raises(ValueError):
         remote.RemoteEngine(tmp_path / "rstate").submit("points_connect", {"secret": MINE})
     assert seen and set(seen) == {0o600}
+
+
+# ------------------------------------------------------------------ what the dashboard says about points
+
+
+def test_whether_a_tracker_is_answering_is_read_from_libtorrents_record():
+    from flotilla.engine import announce_state
+
+    def leaf(fails=0, tried=True, message="", err=("system", 0)):
+        return {"fails": fails, "next_announce": 1795585318 if tried else -352222612, "message": message,
+                "last_error": {"category": err[0], "value": err[1]}}
+
+    def entry(*endpoints, verified=False):
+        return {"url": MINE, "verified": verified, "endpoints": [{"info_hashes": list(e)} for e in endpoints]}
+
+    unused = leaf(tried=False)                                   # a v1 torrent's v2 slot
+    assert announce_state(entry((unused, unused))) == ("waiting", None)
+    assert announce_state(entry((leaf(), unused))) == ("waiting", None)          # asked, no answer yet
+    assert announce_state(entry((leaf(), unused), verified=True)) == ("ok", None)
+    # It answered once and now refuses: failing, in the tracker's own words.
+    assert announce_state(entry((leaf(3, message="unregistered  passkey"), unused), verified=True)) == \
+        ("failing", "it says: unregistered passkey")
+    assert announce_state(entry((leaf(2, err=("http", 404)), unused))) == ("failing", "404 not found")
+    # One listen address that gets through is enough.
+    assert announce_state(entry((leaf(5, err=("system", 65)), unused), (leaf(), leaf()), verified=True)) == ("ok", None)
+    assert announce_state(entry((leaf(1), unused))) == ("failing", None)
+
+
+def test_points_rate_estimate_since_connecting_and_tracker_health(tmp_path, monkeypatch):
+    import math
+    import types
+
+    logs: list[str] = []
+    eng, ih, src, meta = held_model(tmp_path, {"model-1.safetensors": 2 * PIECE}, logs, monkeypatch)
+    kpath = pfaccount.key_path(eng.cfg.path)
+    eng.pf_account.poll()                                        # no key file: looked at, nothing there
+    rate = 8 * math.sqrt(2 * PIECE / 1e9 / 10)                   # a day: 1 point per 3 h at 10 GB, by sqrt(GB/10)
+
+    pts = eng.status_doc()["points"]
+    assert pts["per_day"] == pytest.approx(rate, abs=1e-4) and (pts["counting"], pts["models"]) == (1, 1)
+    assert pts["since"] is None and pts["est_since"] is None and pts["announce"] is None and pts["handle"] is None
+
+    # Not connected: Flotilla's own estimate goes up, nothing is counted "since connecting".
+    eng.update_ledger(1000.0)
+    eng.update_ledger(1300.0)
+    alone = eng.status_doc()["points"]["est"]
+    assert alone == pytest.approx(rate * 300 / 86400, rel=1e-3) and eng.state.data.get("points_since") is None
+
+    # Connected: counted from then on, and only while the account's tracker is on the torrents.
+    assert eng.submit("points_connect", {"secret": MINE}) == "connected"
+    eng.pf_account.poll()
+    eng.update_ledger(1600.0)                                    # the tracker isn't applied yet (the next tick does)
+    assert eng.state.data["points_since"]["since"] == 1600.0 and eng.state.data["points_since"]["est"] == 0
+    eng.tick()
+    eng.update_ledger(1900.0)
+    pts = eng.status_doc()["points"]
+    assert pts["since"] == 1600.0 and pts["est_since"] == pytest.approx(rate * 300 / 86400, rel=1e-3)
+    assert pts["est"] == pytest.approx(alone + 2 * rate * 300 / 86400, rel=1e-3)
+
+    # Right after a restart the key file hasn't been looked at yet: that isn't a disconnect.
+    eng.pf_account._seen = False
+    eng.update_ledger(1910.0)
+    assert eng.state.data["points_since"]["since"] == 1600.0
+    eng.pf_account._seen = True
+
+    # Whether the tracker answers is read from libtorrent, and the token never shows.
+    eng.check_announces(2000.0)
+    ann = eng.status_doc()["points"]["announce"]
+    assert ann["ok"] + ann["failing"] + ann["waiting"] == 1 and ann["at"] == 2000.0
+    monkeypatch.setattr(eng.handles[ih], "trackers", lambda: 1 / 0, raising=False)   # not read again within a minute
+    eng.check_announces(2030.0)
+    assert "s3cr3t" not in json.dumps(eng.status_doc()) and "acct" not in json.dumps(eng.status_doc()["points"])
+
+    # Paused, nothing earns; a model held in part earns nothing either.
+    eng.ses.pause()
+    assert eng.status_doc()["points"]["per_day"] == 0
+    eng.ses.resume()
+    monkeypatch.setattr(eng, "status", lambda *a, **kw: types.SimpleNamespace(state="finished"))
+    assert eng._earning_gb(ih, eng.handles[ih]) == 0
+    monkeypatch.undo()
+
+    # Another account starts its own count; disconnecting ends it.
+    kpath.write_text(MINE.replace("s3cr3tt0ken", "an0thers3cr3t"))
+    eng.pf_account.poll()
+    eng.update_ledger(2100.0)
+    assert eng.state.data["points_since"] == {"acct": eng.pf_account.ident()[1], "since": 2100.0, "est": 0.0}
+    assert eng.submit("points_disconnect", {}) == "disconnected"
+    eng.pf_account.poll()
+    eng.tick()
+    eng.update_ledger(2200.0)
+    eng.check_announces(2200.0)
+    pts = eng.status_doc()["points"]
+    assert pts["since"] is None and pts["est_since"] is None and pts["announce"] is None
+    eng.shutdown()
+
+
+def test_the_handle_is_saved_for_the_link_to_the_real_points(tmp_path, monkeypatch, capsys):
+    from flotilla.cli import points_lines
+
+    logs: list[str] = []
+    eng, ih, src, meta = held_model(tmp_path, {"model-1.safetensors": 2 * PIECE}, logs, monkeypatch)
+    eng.cfg.path.parent.mkdir(parents=True, exist_ok=True)
+    for junk in ("org/model", "two words", "https://example.com/name", "-dash", 5, "x" * 300):
+        with pytest.raises(ValueError):
+            eng.submit("points_handle", {"handle": junk})
+    for typed in ("Some.One", "@Some.One", " https://pirateface.co/Some.One/ ", "pirateface.co/@Some.One"):
+        assert eng.submit("points_handle", {"handle": typed}) == "queued"
+        eng.process_commands()
+        assert eng.cfg.pf_handle == "Some.One"
+    assert load_config(eng.cfg.path).pf_handle == "Some.One"
+    doc = eng.status_doc()
+    assert doc["points"]["handle"] == "Some.One"
+
+    # `flotilla points` and `flotilla status` say the same as the dashboard.
+    doc["pirateface"] = {"state": "ok"}
+    doc["points"].update(since=1795000000.0, est_since=12.345, per_day=3.21,
+                         announce={"ok": 0, "failing": 1, "waiting": 0, "why": "it says: unregistered passkey", "at": 0})
+    said = " ".join(points_lines(doc))
+    assert "isn't answering (it says: unregistered passkey)" in said and "about 3.2 points a day" in said
+    assert "about 12.3 points since you connected" in said and "https://pirateface.co/Some.One" in said
+    doc["points"]["announce"] = {"ok": 1, "failing": 0, "waiting": 0, "why": None, "at": 0}
+    assert "your tracker is answering (1 of 1 models)" in " ".join(points_lines(doc))
+    doc["pirateface"] = {"state": "none"}
+    assert points_lines(doc) == ["about 3.2 points a day at Pirate Face's seeding rate, from 1 of 1 models held whole, "
+                                 "if an account were connected"]
+    assert points_lines({}) == []                               # a status file from an older version
+
+    assert eng.submit("points_handle", {"handle": ""}) == "queued"
+    eng.process_commands()
+    assert load_config(eng.cfg.path).pf_handle == "" and eng.status_doc()["points"]["handle"] is None
+    eng.shutdown()
+    eng.cfg.path.write_text(eng.cfg.path.read_text().replace('handle = ""', 'handle = "not a handle"'))
+    with pytest.raises(ValueError, match="pirateface.handle"):
+        load_config(eng.cfg.path)

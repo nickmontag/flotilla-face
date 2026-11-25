@@ -118,6 +118,9 @@ class Config:
     per_file_swarms: bool = True
     # Keep and seed Pirate Face's magnet index, and list models from it while the site is down (magnetindex.py).
     keep_magnet_index: bool = True
+    # Your Pirate Face handle (the name in pirateface.co/<name>), if you want the dashboard to link to
+    # its page, where Pirate Face shows the real points. Never sent anywhere.
+    pf_handle: str = ""
 
     # Each lets anyone copy and redistribute the weights. glm-5.3 and qwen-community-1.0 are MIT-style
     # with extra conditions only for very large commercial AI services.
@@ -183,7 +186,7 @@ _SECTIONS = {
     "tuning": ["refresh_hours", "probe_seconds", "spread", "hold_bonus", "min_hold_days"],
     "dashboard": ["enabled", "port", "access"],
     "updates": ["check"],
-    "pirateface": ["per_file_swarms", "keep_magnet_index"],
+    "pirateface": ["per_file_swarms", "keep_magnet_index", "handle"],
 }
 
 
@@ -205,7 +208,7 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
                     ("feed", "local"): "local_feed", ("reorient", "every"): "reorient",
                     ("dashboard", "enabled"): "dashboard", ("dashboard", "port"): "dashboard_port",
                     ("dashboard", "access"): "dashboard_access",
-                    ("updates", "check"): "check_updates"}.get((section, k), k)
+                    ("updates", "check"): "check_updates", ("pirateface", "handle"): "pf_handle"}.get((section, k), k)
             v = sec[k]
             if attr in ("folder", "local_feed"):
                 v = Path(os.path.expanduser(v))
@@ -242,6 +245,14 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
         raise ValueError("policy.catalog_sweep must be true or false")
     if isinstance(cfg.sweep_candidates, bool) or not isinstance(cfg.sweep_candidates, int) or not 0 <= cfg.sweep_candidates <= 200:
         raise ValueError("policy.sweep_candidates must be a whole number from 0 to 200")
+    from .pfaccount import PFKeyError, clean_handle
+
+    try:
+        cfg.pf_handle = clean_handle(cfg.pf_handle) if isinstance(cfg.pf_handle, str) else None
+    except PFKeyError:
+        cfg.pf_handle = None
+    if cfg.pf_handle is None:
+        raise ValueError("pirateface.handle must be the name in pirateface.co/name, or \"\"")
     # Flotilla's own requests (listings, pieces from Hugging Face) leave by the same pin as torrent traffic.
     pin(cfg.bind_interface)
     return cfg
@@ -324,6 +335,7 @@ check = {_toml_str(cfg.check_updates)}        # daily: is a newer signed release
 per_file_swarms = {_toml_str(cfg.per_file_swarms)}   # also seed each shard in its own swarm, where Pirate Face counts you as a full seeder
 keep_magnet_index = {_toml_str(cfg.keep_magnet_index)}   # keep and seed Pirate Face's magnet index (about 10 MB); used while the site is down
 # Seeding credit for Pirate Face points: `flotilla points connect` (your key goes in its own file, not here)
+handle = {_toml_str(cfg.pf_handle)}                # your Pirate Face handle, to link the dashboard to its page (the real points are there)
 
 [tuning]
 refresh_hours = {_toml_str(cfg.refresh_hours)}

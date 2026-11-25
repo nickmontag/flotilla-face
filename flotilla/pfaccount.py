@@ -23,6 +23,7 @@ Whichever it is:
 
 from __future__ import annotations
 
+import hashlib
 import os
 import re
 import threading
@@ -40,6 +41,9 @@ SETTINGS_PAGE = "https://pirateface.co/settings"
 SEEDING_TRACKER = re.compile(r"https?://[A-Za-z0-9.-]+:6970/[A-Za-z0-9._~-]+/announce")
 REFETCH_EVERY = 12 * 3600.0     # ask again this often: the site may rotate the tracker
 RETRY_AFTER_ERROR = 900.0
+# A handle is the name in pirateface.co/<name> (Pirate Face's rule: letters, numbers, . - _).
+HANDLE_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
+HANDLE_PAGE = re.compile(r"(?:https?://)?(?:www\.)?pirateface\.co/", re.I)
 
 
 class PFKeyError(ValueError):
@@ -69,6 +73,15 @@ def clean_key(raw: str, tracker_hosts: tuple[str, ...] = DEFAULT_TRACKER_HOSTS) 
             raise PFKeyError(f"that tracker is on {host}, not Pirate Face's ({', '.join(tracker_hosts)})")
         return k
     raise PFKeyError(f"paste the Seeding tracker address or the community torrent key (pfct_...) from {SETTINGS_PAGE}")
+
+
+def clean_handle(raw: str) -> str:
+    """A Pirate Face handle as typed: `name`, `@name` or its page's address. "" for none. PFKeyError
+    if it isn't one. Flotilla only links to its page: nothing tells it which account a key belongs to."""
+    h = HANDLE_PAGE.sub("", raw.strip(), count=1).strip("/").lstrip("@")
+    if h and not HANDLE_RE.fullmatch(h):
+        raise PFKeyError("a handle is the name in pirateface.co/name: letters, numbers, . - _")
+    return h
 
 
 def kind_of(secret: str) -> str:
@@ -135,8 +148,15 @@ class Account:
         self.why: str | None = None
         self._next = 0.0
         self.generation = 0
+        self._seen = False                # the key file has been looked at (it hasn't, right after a start)
 
     def _reread(self) -> bool:
+        try:
+            return self._reread_file()
+        finally:
+            self._seen = True
+
+    def _reread_file(self) -> bool:
         if self.path is None:
             return False
         try:
@@ -212,6 +232,15 @@ class Account:
     def tracker(self) -> tuple[int, str | None]:
         with self._lock:
             return self.generation, self.url
+
+    def ident(self) -> tuple[bool, str | None]:
+        """(whether the key file has been looked at yet, a fingerprint of the key or tracker address in
+        it, or None with no account). The fingerprint tells one connected account from the next without
+        keeping the secret anywhere else; it's never shown."""
+        with self._lock:
+            if not self._seen:
+                return False, None
+            return True, hashlib.sha256(b"flotilla points\0" + self.key.encode()).hexdigest()[:16] if self.key else None
 
     def info(self) -> dict:
         with self._lock:

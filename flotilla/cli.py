@@ -880,6 +880,36 @@ def _print_per_file(doc: dict) -> None:
         print(f"Points: seeding counts toward your Pirate Face account ({acct.get('tracker')})")
     elif acct.get("why"):
         print(f"Points: {acct['why']}")
+    for line in points_lines(doc):
+        print("  " + line)
+
+
+def points_lines(doc: dict) -> list[str]:
+    """What a running node says about points (status.json's `points`): whether the account's tracker is
+    answering, the rate, Flotilla's estimate, and where the real total is."""
+    pts, earning = doc.get("points"), (doc.get("pirateface") or {}).get("state") == "ok"
+    if not pts:
+        return []
+    out = []
+    ann = pts.get("announce")
+    if earning and ann:
+        total = ann["ok"] + ann["failing"] + ann["waiting"]
+        if ann["ok"]:
+            out.append(f"your tracker is answering ({ann['ok']} of {total} models)")
+        elif ann["failing"]:
+            out.append("your tracker isn't answering" + (f" ({ann['why']})" if ann.get("why") else "")
+                       + ": nothing is counting. If it stays that way, copy the tracker address or key again.")
+        elif total:
+            out.append("waiting for your tracker's first answer")
+    rate = f"about {pts['per_day']:.1f} points a day at Pirate Face's seeding rate, from {pts['counting']} of {pts['models']} models held whole"
+    out.append(rate if earning else rate + ", if an account were connected")
+    if earning and pts.get("since"):
+        day = datetime.fromtimestamp(pts["since"])
+        when = f"{day:%b} {day.day}"
+        out.append(f"about {pts['est_since']:.1f} points since you connected ({when}), by Flotilla's count; Pirate Face keeps "
+                   "the real one" + (f": https://pirateface.co/{pts['handle']}" if pts.get("handle") else
+                                     " (your page there, or pirateface.co/leaderboard)"))
+    return out
 
 
 def hf_connect(tpath: Path, source: str | None = None) -> bool:

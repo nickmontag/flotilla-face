@@ -521,6 +521,29 @@ credits complete copies, so a torrent held in part, "finished", earns nothing; t
 to 0 in 0.2.9, which stopped counting those), and caps gaps at 10 minutes so sleep or crashes don't inflate it. It's Flotilla's own count; Pirate Face counts
 the real points through each account's seeding tracker (below).
 
+**What the dashboard says** (`Engine.points_view`, in `status.json` as `points`):
+
+- **A rate**, points a day: the sum over models in the "seeding" state of 8·√(GB/10), 0 while paused.
+  It needs no account, so a node without one shows what it would earn.
+- **An estimate since connecting.** `points_since` in the state holds a fingerprint of the key file's
+  content (a truncated SHA-256, never shown), when that account was first seen, and the points
+  estimated since, added only while its tracker is on the torrents. A different fingerprint starts a
+  new count from that moment; no key file ends it. Until the key file has been read once after a start
+  it's left alone, so a restart isn't a disconnect. A key whose tracker Pirate Face rotates keeps its
+  count.
+- **Whether the tracker answers.** `pfaccount`'s "ok" only means Flotilla has a tracker address. Once a
+  minute the engine reads libtorrent's record of that tracker on every model (`announce_state`): "ok"
+  once it has answered and an announce still gets through, "failing" while every one fails (with the
+  tracker's own message, or the error), "waiting" before the first answer. The dashboard says
+  "counting" only when some model is "ok". A message that repeats the tracker's token is dropped.
+- **The handle**, `[pirateface] handle` in the config, only to link to `pirateface.co/<handle>`.
+  Pirate Face has no API for an account's points (its pages are the only place they appear) and
+  `/api/trackers` doesn't name the account, so Flotilla shows its estimate and links to the real total
+  rather than parsing that page.
+
+Not in the estimate: Pirate Face's download points (since 18 Nov 2026, 50 per finished download of a
+10 GB model, half of it shared among the model's seeders by bytes uploaded).
+
 ## Seeding credit and per-file swarms
 
 `pfaccount.py`, `perfile.py`, `v2hash.py`.

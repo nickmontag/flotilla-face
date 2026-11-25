@@ -134,6 +134,10 @@ network instead (see [Behind gluetun](#behind-gluetun-docker)).
 
 Then it offers to run Flotilla in the background, starting at every login. That's it.
 
+**Setting it up for someone else, or as an agent?** [AGENTS.md](AGENTS.md) has the procedure: what to
+ask them first, what to check, and `flotilla init --yes` with flags, which sets up without questions
+and never seeds from the home IP address unless told to.
+
 **Without a VPN, peers see your home IP address.** Every peer in every swarm Flotilla joins sees the
 address it seeds from. If setup finds no VPN to pin Flotilla to, it asks whether to seed from your
 connection's own address, and the answer defaults to no: your settings are saved, but nothing starts

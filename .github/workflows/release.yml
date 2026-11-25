@@ -14,7 +14,11 @@ permissions:
   contents: read
 
 jobs:
+  test:
+    uses: ./.github/workflows/ci.yml
+
   release:
+    needs: test
     runs-on: ubuntu-24.04
     permissions:
       contents: write     # the draft release
@@ -24,17 +28,11 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: astral-sh/setup-uv@d4b2f3b6ecc6e67c4457f6d3e41ec42d3d0fcb86 # v5.4.2
 
-      - name: Test
-        run: |
-          uv venv -p 3.13
-          uv pip install -e '.[dev]'
-          .venv/bin/python -m pytest -q
-
       - name: Build the wheel and source archive
         id: dist
         run: |
           version="${GITHUB_REF_NAME#v}"
-          have=$(.venv/bin/python -c "import flotilla; print(flotilla.__version__)")
+          have=$(uv run --no-project --python 3.13 python -c "import flotilla; print(flotilla.__version__)")
           [ "$have" = "$version" ] || { echo "tag $GITHUB_REF_NAME but flotilla/__init__.py says $have"; exit 1; }
           rm -rf dist && uv build
           echo "version=$version" >> "$GITHUB_OUTPUT"

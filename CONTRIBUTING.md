@@ -219,9 +219,10 @@ Installs follow releases, not `main`, so `main` can be mid-change. A release:
    git push origin v0.3.0
    ```
 
-   `.github/workflows/release.yml` runs the tests, builds the wheel and source archive and the Docker
-   image (amd64 and arm64, pushed to `ghcr.io/nickmontag/flotilla-face`), and makes a **draft**
-   release holding them and the image's digest. Nobody sees a draft.
+   `.github/workflows/release.yml` runs the full CI test matrix first. Once it passes, the workflow
+   builds the wheel, source archive and Docker image (amd64 and arm64, pushed to
+   `ghcr.io/nickmontag/flotilla-face`), then makes a **draft** release with the artifacts and the
+   image's digest. Nobody sees a draft.
    The actions it (and `ci.yml`) uses are pinned to commit SHAs, with the version in a comment beside
    each, so a moved tag can't change what runs; bump them by hand. Only the release job can write.
 3. Sign and publish it, on the machine with the project key:

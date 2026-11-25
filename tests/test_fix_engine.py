@@ -520,17 +520,25 @@ def test_a_download_stopped_by_a_read_only_folder_resumes_once_it_can_write(tmp_
     eng.budget_bytes = lambda: 10_000_000
     c = cand(repo)
     save = eng.save_path(repo.repo, repo.infohash)
-    save.mkdir(parents=True)
-    os.chmod(save, stat.S_IRUSR | stat.S_IXUSR)                      # can't write: libtorrent stops it
+    save.parent.mkdir(parents=True, exist_ok=True)
+    # Protect the parent so libtorrent's cleanup cannot remove the empty save directory.
+    save.mkdir()
+    save.chmod(0o500)
+    save.parent.chmod(0o500)
     try:
         eng.replan([c], [], probe_seconds=0)
         assert drive(eng, lambda: repo.infohash in eng._errored, 20), logs
-        os.chmod(save, 0o700)
-        assert drive(eng, eng.all_done, 40), logs[-10:]
+        save.parent.chmod(0o700)
+        save.chmod(0o700)
+        assert drive(eng, eng.all_done, 40), logs
+        assert repo.infohash in eng.state.holdings, logs
+        assert all(f["status"] == "verified" for f in eng.state.holdings[repo.infohash]["files"].values()), logs
+        assert any("starting org/ro again" in m for m in logs)
     finally:
-        os.chmod(save, 0o700)
-    assert any("starting org/ro again" in m for m in logs)
-    eng.shutdown()
+        save.parent.chmod(0o700)
+        if save.exists():
+            save.chmod(0o700)
+        eng.shutdown()
 
 
 # ------------------------------------------------------------------ 7. adds while the disk guard is on

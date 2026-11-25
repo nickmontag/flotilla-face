@@ -160,14 +160,13 @@ def test_a_public_dashboard_says_so_on_the_page():
 
 def test_serving_a_public_dashboard_warns(tmp_path, monkeypatch, capsys):
     pytest.importorskip("libtorrent")
-    import threading
+    import signal
 
     from flotilla.config import render_config
 
     path = tmp_path / "c.toml"
     path.write_text(render_config(Config()))
-    started = threading.Event()
-    monkeypatch.setattr(threading.Event, "wait", lambda self, *a: started.set() or True)
+    monkeypatch.setattr(signal, "signal", lambda signum, handler: handler(signum, None))
     args = argparse.Namespace(config=str(path), state=str(tmp_path / "state"), port=0, url=False, serve=True,
                               listen="127.0.0.1", access="public", no_open=True)
     assert cli.cmd_dashboard(args) == 0
@@ -178,8 +177,8 @@ def test_port_0_serves_on_any_free_port_not_the_configured_one(tmp_path, monkeyp
     """--port 0 asks for any free port. It used to mean "not given", so the dashboard tried the
     configured port, and failed on a machine whose own dashboard already holds it."""
     pytest.importorskip("libtorrent")
+    import signal
     import socket
-    import threading
 
     from flotilla import dashboard
     from flotilla.config import render_config
@@ -194,7 +193,7 @@ def test_port_0_serves_on_any_free_port_not_the_configured_one(tmp_path, monkeyp
     ports = []
     real_start = dashboard.Dashboard.start
     monkeypatch.setattr(dashboard.Dashboard, "start", lambda self: real_start(self) or ports.append(self.port))
-    monkeypatch.setattr(threading.Event, "wait", lambda self, *a: True)
+    monkeypatch.setattr(signal, "signal", lambda signum, handler: handler(signum, None))
     args = argparse.Namespace(config=str(path), state=str(tmp_path / "state"), port=0, url=False, serve=True,
                               listen="127.0.0.1", access="local", no_open=True)
     try:

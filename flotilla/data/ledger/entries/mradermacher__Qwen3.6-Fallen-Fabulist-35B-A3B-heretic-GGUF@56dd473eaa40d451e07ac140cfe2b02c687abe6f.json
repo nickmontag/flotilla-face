@@ -1,0 +1,85 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3.6-Fallen-Fabulist-35B-A3B-heretic-GGUF",
+ "revision": "56dd473eaa40d451e07ac140cfe2b02c687abe6f",
+ "captured": "2026-11-25T05:08:48+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2666,
+   "git_oid": "3d8dd93688be0b00a587ee39f15018d9a4b190ab"
+  },
+  {
+   "path": "Qwen3.6-Fallen-Fabulist-35B-A3B-heretic.IQ4_XS.gguf",
+   "size": 19390057248,
+   "sha256": "e563bf8126c8595ef44a6d4a81658f16390ba80c6cafa7be2b4a13c2ef91bcc9"
+  },
+  {
+   "path": "Qwen3.6-Fallen-Fabulist-35B-A3B-heretic.Q2_K.gguf",
+   "size": 13247183648,
+   "sha256": "1737a23222f0126d648f71438a41740ebfc0df49305495f596b56c8ee9b8ff74"
+  },
+  {
+   "path": "Qwen3.6-Fallen-Fabulist-35B-A3B-heretic.Q3_K_L.gguf",
+   "size": 18552091424,
+   "sha256": "539db91c4a691e4b26632c48c8e76e5f94bb63f325de8acb8fcfba77d078cba9"
+  },
+  {
+   "path": "Qwen3.6-Fallen-Fabulist-35B-A3B-heretic.Q3_K_M.gguf",
+   "size": 17166660384,
+   "sha256": "3ab759945101db3349a322938741b7d75f5f2e8d30b60a0a060f15cf8430c428"
+  },
+  {
+   "path": "Qwen3.6-Fallen-Fabulist-35B-A3B-heretic.Q3_K_S.gguf",
+   "size": 15547036448,
+   "sha256": "75a73cda715b3acfdbe7897a932ddd524515a75bc81f461588b59a293dd0fd6e"
+  },
+  {
+   "path": "Qwen3.6-Fallen-Fabulist-35B-A3B-heretic.Q4_K_M.gguf",
+   "size": 21713464096,
+   "sha256": "76c6b8162d500ab3e5b72353b5459f44f662fcaf2f90bed72bfa5e84038ded02"
+  },
+  {
+   "path": "Qwen3.6-Fallen-Fabulist-35B-A3B-heretic.Q4_K_S.gguf",
+   "size": 20366863136,
+   "sha256": "b7de2913db3c0620821c0f8a5e3dc9e396fbe7eda9ddfbbaf1ae3197b1829d00"
+  },
+  {
+   "path": "Qwen3.6-Fallen-Fabulist-35B-A3B-heretic.Q5_K_M.gguf",
+   "size": 25347533600,
+   "sha256": "7496ef4da76e20fcdb6b84f52c209caf62d4ce6ffffd68f4ca6e916ccdcf228d"
+  },
+  {
+   "path": "Qwen3.6-Fallen-Fabulist-35B-A3B-heretic.Q5_K_S.gguf",
+   "size": 24563755808,
+   "sha256": "3fb38c824485c5fb4ac793f8aac9a6a4bcb8210edbc4cbf61b5929c6b065b206"
+  },
+  {
+   "path": "Qwen3.6-Fallen-Fabulist-35B-A3B-heretic.Q6_K.gguf",
+   "size": 29208732448,
+   "sha256": "76fe977e3e21470d89b671000a70fe83bebbf050f2efaa0ba57b28f09051b2a3"
+  },
+  {
+   "path": "Qwen3.6-Fallen-Fabulist-35B-A3B-heretic.Q8_0.gguf",
+   "size": 37802150688,
+   "sha256": "9c306ccff6f244b7945ee810d20ef88b3d92d8756cdca09833dee33a48c23f07"
+  },
+  {
+   "path": "Qwen3.6-Fallen-Fabulist-35B-A3B-heretic.mmproj-Q8_0.gguf",
+   "size": 614195360,
+   "sha256": "1c3e10138e1b1c5b143924b478af4a4a89701c70ce402a02aa48f16ca433da90"
+  },
+  {
+   "path": "Qwen3.6-Fallen-Fabulist-35B-A3B-heretic.mmproj-f16.gguf",
+   "size": 899284256,
+   "sha256": "fa64bd9acc80c82a2b87c92967237979f420ee62d10b13f5d0fcbd0fc5d1aff0"
+  },
+  {
+   "path": "README.md",
+   "size": 4736,
+   "git_oid": "77aec679aac43404b7410be37ea7492a0018a7d3"
+  }
+ ]
+}

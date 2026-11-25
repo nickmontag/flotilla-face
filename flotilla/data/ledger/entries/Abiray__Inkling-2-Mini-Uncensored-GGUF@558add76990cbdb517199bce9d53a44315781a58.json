@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Abiray/Inkling-2-Mini-Uncensored-GGUF",
+ "revision": "558add76990cbdb517199bce9d53a44315781a58",
+ "captured": "2026-11-25T05:08:21+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2161,
+   "git_oid": "75c23b525ddef1367c5abf43324a3a4c231af2eb"
+  },
+  {
+   "path": "Inkling-2-Mini-Uncensored-IQ4_NL.gguf",
+   "size": 14922756096,
+   "sha256": "e6680ab9f97c4aadee065273ec063124d543c66708c0a7d64849c424c3dbdace"
+  },
+  {
+   "path": "Inkling-2-Mini-Uncensored-Q3_K_M.gguf",
+   "size": 13723199616,
+   "sha256": "d7b4b1dc131421c4317206064dab57624394d29acaef5b59a277b5cdc7c7947a"
+  },
+  {
+   "path": "Inkling-2-Mini-Uncensored-Q4_K_M.gguf",
+   "size": 17478094848,
+   "sha256": "2fe74c6d28143176f301133f564b880320bef2d8a25681dff3ad4ffbdff2dd5e"
+  },
+  {
+   "path": "Inkling-2-Mini-Uncensored-Q4_K_S.gguf",
+   "size": 16070553600,
+   "sha256": "5b0d25b39ba9b4d520996ad3940da9d65a75a5515d333ab7a932aece14540ca1"
+  },
+  {
+   "path": "Inkling-2-Mini-Uncensored-Q5_K_M.gguf",
+   "size": 19906437120,
+   "sha256": "699783d76520e6e4a3162f474d5a5c5ff73d514b46dd29545472a65239e81627"
+  },
+  {
+   "path": "Inkling-2-Mini-Uncensored-Q6_K.gguf",
+   "size": 23489841792,
+   "sha256": "f540a15648d11d8a5185c4cd9cb600b50088e1e281cd3cbb4c8f6d8a874a3abc"
+  },
+  {
+   "path": "Inkling-2-Mini-Uncensored-Q8_0.gguf",
+   "size": 27820099776,
+   "sha256": "40414029b42ee8baf8a60b16dc1ade132ac369f9706f4fc2057af1bd16788545"
+  },
+  {
+   "path": "README.md",
+   "size": 9951,
+   "git_oid": "bed373abfab42a394c933ab88aea64bd1d883d69"
+  },
+  {
+   "path": "imatrix.gguf",
+   "size": 90749888,
+   "sha256": "830512fda77c8971d3613e2533e41eab5be209f496aeb1e41e9d863e44564d30"
+  },
+  {
+   "path": "mmproj-Inkling-2-Mini-Uncensored-BF16.gguf",
+   "size": 641806496,
+   "sha256": "887d47ddd19cc6582b681a9bf5b80734e2453dd02f705b58f27481274df3cb87"
+  }
+ ]
+}

@@ -1,0 +1,85 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "zai-org/GLM-4.1V-9B-Thinking",
+ "revision": "3c1471e51dc811b589d4d12b1c1c7c1c941267c2",
+ "captured": "2026-11-25T05:13:13+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 4422,
+   "git_oid": "c6d1aa1c8af0584a2de4a712c47621db96f324f3"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 922,
+   "git_oid": "11c8fe58c6d2aa21ca10f5777a94af489af8d1b1"
+  },
+  {
+   "path": "config.json",
+   "size": 1530,
+   "git_oid": "df1e864f37c70c927988b29012e367e184df3929"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 239,
+   "git_oid": "51d9c1b834b0e321854231ad3618c0e4db30ece6"
+  },
+  {
+   "path": "model-00001-of-00004.safetensors",
+   "size": 5303216560,
+   "sha256": "56708b3541e1f69c9843ae19eaa23720c5cee9f3d0c9ed101c3b9b43b40974a1"
+  },
+  {
+   "path": "model-00002-of-00004.safetensors",
+   "size": 5303216696,
+   "sha256": "7c353db4141fdd9a0c6b990d50040a28812bb56dc91c42154abc5a4ee81fe698"
+  },
+  {
+   "path": "model-00003-of-00004.safetensors",
+   "size": 5303216696,
+   "sha256": "f3fab833fe4cad6cbce924908e1a58320217295417bbf87aa810fff6e4b634a4"
+  },
+  {
+   "path": "model-00004-of-00004.safetensors",
+   "size": 4675994152,
+   "sha256": "b3c7723fac7de60f2b67e4f84f2d8648d7431ff32c95c630dcc17790091005eb"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 66392,
+   "git_oid": "0199a15abc40cf141aafabe981a73245edff5b7e"
+  },
+  {
+   "path": "notebook.ipynb",
+   "size": 2537101,
+   "git_oid": "98019564abbb1e2e933f0ad1953f9f9e8695428a"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 364,
+   "git_oid": "f049d095ff007ac36d302b9be0822ad12e17a631"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19966496,
+   "sha256": "76ebeac0d8bd7879ead7b43c16b44981f277e47225de2bd7de9ae1a6cc664a8c"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 4795,
+   "git_oid": "f4fdf718d3e3771d495685e57d3cd18ae67d0423"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 365,
+   "git_oid": "7e93de5ff416f265523357ee68fff6530399d228"
+  }
+ ]
+}

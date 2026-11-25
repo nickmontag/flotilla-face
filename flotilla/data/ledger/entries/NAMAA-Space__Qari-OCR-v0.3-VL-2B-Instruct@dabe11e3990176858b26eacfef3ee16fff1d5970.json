@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "NAMAA-Space/Qari-OCR-v0.3-VL-2B-Instruct",
+ "revision": "dabe11e3990176858b26eacfef3ee16fff1d5970",
+ "captured": "2026-11-25T05:09:32+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 4724,
+   "git_oid": "06115dc0fccfaff103b9a3a367b6a6cfc1b4feac"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 392,
+   "git_oid": "caa81304af029feb531f1fe80a096dc539ea0153"
+  },
+  {
+   "path": "chat_template.json",
+   "size": 1049,
+   "git_oid": "13303be6f396b038cf397b34a8096819d403836b"
+  },
+  {
+   "path": "config.json",
+   "size": 1171,
+   "git_oid": "464d92c1eab15119c095134f4c73a35398f8f86b"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 215,
+   "git_oid": "b914597b1cc67db88685e2b91f23416b0c6a788d"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671853,
+   "git_oid": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 4418050120,
+   "sha256": "45122cde2b1899960d4517b093199858c44f48955155f820bd408b9e81ea684a"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 572,
+   "git_oid": "6775a5f42a55a6562cc312e44d38ffa6e6bca1f9"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 613,
+   "git_oid": "ac23c0aaa2434523c494330aeb79c58395378103"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 11420371,
+   "sha256": "091aa7594dc2fcfbfa06b9e3c22a5f0562ac14f30375c13af7309407a0e67b8a"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 4327,
+   "git_oid": "84c1ef8e03a2a77a2a0682820d0ec7c37e686312"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "HuggingFaceTB/SmolLM3-3B",
+ "revision": "a07cc9a04f16550a088caea529712d1d335b0ac1",
+ "captured": "2026-11-25T05:09:33+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 17452,
+   "git_oid": "4877f429e45d2f112c03ac14c00b19b97cadc914"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 5598,
+   "git_oid": "e01e3a1bca00ae47bca8326b38cc397729f87481"
+  },
+  {
+   "path": "config.json",
+   "size": 1915,
+   "git_oid": "89ad848b8bbebe0ae085847b7b2e010a4aa1b408"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 182,
+   "git_oid": "5339609fb994a8644fe865353cf0f1d3ee0130c8"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 4966315264,
+   "sha256": "e5eed4113a925264c33e3cdf76cd9f547c06a207ef2270914a7274a2bf685ffd"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 1183919744,
+   "sha256": "6c3ad90646457295723e4da5ee8afac47006e20407b122df5174693dd8d68a43"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 26899,
+   "git_oid": "ee6c028c012814d385be51c1d537c345c9fa9457"
+  },
+  {
+   "path": "notebook.ipynb",
+   "size": 317457,
+   "git_oid": "b5d90395032ceff728bdfe04bf891b6c2efb5d9c"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 289,
+   "git_oid": "190d5624dbbc1ad56f2f34c9d58e03fef7e5328b"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 17208819,
+   "sha256": "7b6a500b662a34eb3f0374db856ba4ad7de4c81040571d78dc0d357238930005"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 50387,
+   "git_oid": "61910c2db5cbdc9e6a6f37e14aaf00584cc6ad47"
+  }
+ ]
+}

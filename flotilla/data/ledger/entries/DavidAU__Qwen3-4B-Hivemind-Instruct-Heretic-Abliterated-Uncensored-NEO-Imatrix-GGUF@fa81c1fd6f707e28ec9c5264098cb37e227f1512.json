@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Qwen3-4B-Hivemind-Instruct-Heretic-Abliterated-Uncensored-NEO-Imatrix-GGUF",
+ "revision": "fa81c1fd6f707e28ec9c5264098cb37e227f1512",
+ "captured": "2026-11-25T05:09:01+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2362,
+   "git_oid": "cf45185a232de16a2b75dd22b781735641d70ee3"
+  },
+  {
+   "path": "Qwen3-4B-Hivemind-Inst-Hrtic-Ablit-Uncensored-IQ2_M-imat.gguf",
+   "size": 1512983488,
+   "sha256": "a1fd2058a3269a8e27bed236482f7da91daf4d5a1949cdedb458670a09401450"
+  },
+  {
+   "path": "Qwen3-4B-Hivemind-Inst-Hrtic-Ablit-Uncensored-IQ3_M-imat.gguf",
+   "size": 1962895808,
+   "sha256": "f5f6b7be2ab682ed2b852930425a8b086bca46cb150b3a7c37aa25d174c8c8c0"
+  },
+  {
+   "path": "Qwen3-4B-Hivemind-Inst-Hrtic-Ablit-Uncensored-IQ4_XS-imat.gguf",
+   "size": 2270751168,
+   "sha256": "b19b787315d6d83b26eb9b62f9bc579696595b9942746edfc227382f07b1119a"
+  },
+  {
+   "path": "Qwen3-4B-Hivemind-Inst-Hrtic-Ablit-Uncensored-Q4_K_M-imat.gguf",
+   "size": 2497280448,
+   "sha256": "f58efbffe2df2271c8b95696aa9b90fca51d502fe109effe30ab009c62261fee"
+  },
+  {
+   "path": "Qwen3-4B-Hivemind-Inst-Hrtic-Ablit-Uncensored-Q5_K_M-imat.gguf",
+   "size": 2889513408,
+   "sha256": "3d1a0f5726992d7491671ed819e4c9a13e32035db2ef0d25fd4454067df4c318"
+  },
+  {
+   "path": "Qwen3-4B-Hivemind-Inst-Hrtic-Ablit-Uncensored-Q5_K_S-imat.gguf",
+   "size": 2823711168,
+   "sha256": "b0a55655f3a3884bcddbd5eaff8490159d319a8096ff6f4a2972fc42f4df6b98"
+  },
+  {
+   "path": "Qwen3-4B-Hivemind-Inst-Hrtic-Ablit-Uncensored-Q6_K-imat.gguf",
+   "size": 3306260928,
+   "sha256": "64054e2ed2f22f733a7d37078157fa2dae2220a965934395b7ba2c09be6be135"
+  },
+  {
+   "path": "Qwen3-4B-Hivemind-Inst-Hrtic-Ablit-Uncensored-Q8_0-imat.gguf",
+   "size": 4280404928,
+   "sha256": "6346b9dba64ace65102f0cd17f7e23f35d1705d09094b48aaf2e2c2e0c7db16d"
+  },
+  {
+   "path": "README.md",
+   "size": 6565,
+   "git_oid": "4f7e864941389a43ebbb65c36f8916fb7f58149c"
+  },
+  {
+   "path": "hivemind-heretic.gif",
+   "size": 2116415,
+   "sha256": "ea18a2df33b38a15d5e52b45ecf98a52ffb4f9830e067f4816dfdda827a8d7a5"
+  }
+ ]
+}

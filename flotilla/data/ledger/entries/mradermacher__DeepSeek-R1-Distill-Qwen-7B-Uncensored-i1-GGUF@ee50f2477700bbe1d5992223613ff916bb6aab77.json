@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/DeepSeek-R1-Distill-Qwen-7B-Uncensored-i1-GGUF",
+ "revision": "ee50f2477700bbe1d5992223613ff916bb6aab77",
+ "captured": "2026-11-25T05:08:35+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3715,
+   "git_oid": "5fcca4336f549e792cf210fd8bc6c1afb5e4806e"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-IQ1_M.gguf",
+   "size": 2040735552,
+   "sha256": "46cbee12a642f253cd9dd30011e9f1c4fa39305aca1964ff6c2081efc26cc979"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-IQ1_S.gguf",
+   "size": 1902206784,
+   "sha256": "8f64bcf224ae4bc6016da4713ff7cdca6e2b1c35232158069410e01f79967633"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-IQ2_M.gguf",
+   "size": 2778736640,
+   "sha256": "8e160b67df55f1d2919ef07daf50a2ae9b17b54c8ce108f84ff4db6922faeb54"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-IQ2_S.gguf",
+   "size": 2594031616,
+   "sha256": "91af044c8ac09826cda0abd543df5167772fdd379bdff9e2fe87ecd410179c0b"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-IQ2_XS.gguf",
+   "size": 2467561280,
+   "sha256": "6c65e533a63b77802b1523468f440728c1e5f415536f97861149a69e4bae5013"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-IQ2_XXS.gguf",
+   "size": 2271616832,
+   "sha256": "4c1049088dc8644bfc95660e5c8377630a590cae73390834727cf071bde81954"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-IQ3_M.gguf",
+   "size": 3572216352,
+   "sha256": "2e0117f7c3c9fc61536fbe1aa26381f88d283df518060232ed391da567b2a43a"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-IQ3_S.gguf",
+   "size": 3497396768,
+   "sha256": "5d9249c9c53ccf056d1c659d6f704ba7a6e78ed28961b98a1fc919b586b570ac"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-IQ3_XS.gguf",
+   "size": 3344460320,
+   "sha256": "702e627058d8a645374aeb329055e5f4071442804148506c4ee02e963dcb8bf7"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-IQ3_XXS.gguf",
+   "size": 3112908800,
+   "sha256": "75fa0b4ddae75190d296f71527a23586760448a1dc14263815b22c18c65af1c6"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-IQ4_NL.gguf",
+   "size": 4435827744,
+   "sha256": "f5b55ef95bc1a76995f8bad1ad6923c60f2cc704ef5ce38b1f3ff911436046be"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-IQ4_XS.gguf",
+   "size": 4216531648,
+   "sha256": "6e327e1f6d569f9889e2bd35a9e498adb79ec73ebc81b55c8de9fd658e2d3c1a"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-Q2_K.gguf",
+   "size": 3014289760,
+   "sha256": "fbe94576d05299474f264506334c22906526af7b2685ad18ee37703ac0c6f3f3"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-Q2_K_S.gguf",
+   "size": 2832423264,
+   "sha256": "39362f400bf88690d7a9c8dd06b7ffb1ce8834e408ef1fff1952ba725098aa8f"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-Q3_K_L.gguf",
+   "size": 4086663712,
+   "sha256": "8bffc6325a277b875b697f44ce6632273792d9ac7ca4b7054a752ce8292c9e49"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-Q3_K_M.gguf",
+   "size": 3806595616,
+   "sha256": "379bba993e548c20f86ae46ac3c442e377e25ee3795d17714bd1c3c355e1f229"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-Q3_K_S.gguf",
+   "size": 3490572832,
+   "sha256": "daf5277182e1cd8387f02f83d7ace100878f70e76a74af448457985439630eb6"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-Q4_0.gguf",
+   "size": 4442135584,
+   "sha256": "e5e86c78faba2de21eed446470885ede253bec04acbb8b3dce5900908f0f9880"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-Q4_1.gguf",
+   "size": 4871208704,
+   "sha256": "495ace43f2132779b34a0be63fab87c5ad775d4464dfbd2efa31f431d58c7a93"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-Q4_K_M.gguf",
+   "size": 4681088032,
+   "sha256": "46163e3bbb5076a1ce025a4d65862f95f411989e765799b4c9204666b819f0bd"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-Q4_K_S.gguf",
+   "size": 4455783456,
+   "sha256": "1e469adef9d80b5edb0e4df7d117aa9df6a6cd62a46bef9d15cd6514aad5856f"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-Q5_K_M.gguf",
+   "size": 5442666976,
+   "sha256": "ff047ed9b00867fda010465768080c2991646686d3f805acf883146e2a71e32f"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-Q5_K_S.gguf",
+   "size": 5313012192,
+   "sha256": "ecf5fa328add1f12eedd165f02ea3587d1dbdb47f1fec64ee44848fca869ce6c"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-7B-Uncensored.i1-Q6_K.gguf",
+   "size": 6251844608,
+   "sha256": "099c33db23e3242d4b5f500d327c5a23ebab4f00080720c76bc5e5a00da3045b"
+  },
+  {
+   "path": "README.md",
+   "size": 6539,
+   "git_oid": "b38316b051c9e8618e5ae3f38a2d0b8220f701e3"
+  },
+  {
+   "path": "imatrix.dat",
+   "size": 4536665,
+   "sha256": "b4701ca4b0c2bcf18ac8ec4b9ceaee9eaa7886276fb8c5619fcb274fee24733d"
+  }
+ ]
+}

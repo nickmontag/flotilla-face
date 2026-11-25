@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "nvidia/NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB-GGUF",
+ "revision": "e0fecb69cb3e5e4c5e8a056fa2aec98c78e91246",
+ "captured": "2026-11-25T05:09:31+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1912,
+   "git_oid": "0c74f70cc22e4f13e617bf3e02f17ecfa2e00272"
+  },
+  {
+   "path": "NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB.gguf",
+   "size": 22018326528,
+   "sha256": "91d63363e782c8a3d5f4be42816eba8e0d42dd2530bd07a7d0d2dc440599af75"
+  },
+  {
+   "path": "README.md",
+   "size": 88805,
+   "git_oid": "48adb70fa81907ab255a500c92bff8e4c5265111"
+  },
+  {
+   "path": "README.txt",
+   "size": 29,
+   "git_oid": "38fea4f23a409f6da27f3914e512225b061608bd"
+  },
+  {
+   "path": "accuracy.png",
+   "size": 841176,
+   "sha256": "4b7772e013d9ce5cce421000e881caa93ec172af3f1792d60ca2959346370fdd"
+  },
+  {
+   "path": "bias.md",
+   "size": 3254,
+   "git_oid": "9363fe5c01f6cd4ce23709896010462a16c07e81"
+  },
+  {
+   "path": "explainability.md",
+   "size": 3182,
+   "git_oid": "57c3808b6e4272b0fddb0ccda3e8d3dbcdd29fe3"
+  },
+  {
+   "path": "mmproj-NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB.gguf",
+   "size": 1733692736,
+   "sha256": "0ee891eadc7bf0cae6289b249c74eb1ef420534351f6ef8b64d49f0ca6a926b0"
+  },
+  {
+   "path": "privacy.md",
+   "size": 1671,
+   "git_oid": "34ae94eed1aa623d152261ba4b9952d6cbec42f1"
+  },
+  {
+   "path": "safety.md",
+   "size": 2103,
+   "git_oid": "8a1cf151536fde8addd84d415d603d627ebe64d4"
+  }
+ ]
+}

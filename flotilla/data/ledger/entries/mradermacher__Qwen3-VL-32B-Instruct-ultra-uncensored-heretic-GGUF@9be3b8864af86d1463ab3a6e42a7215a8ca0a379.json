@@ -1,0 +1,85 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3-VL-32B-Instruct-ultra-uncensored-heretic-GGUF",
+ "revision": "9be3b8864af86d1463ab3a6e42a7215a8ca0a379",
+ "captured": "2026-11-25T05:08:31+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2757,
+   "git_oid": "54ca1215f90658c44e9be5895b2d899966b8175a"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-ultra-uncensored-heretic.IQ4_XS.gguf",
+   "size": 17854336992,
+   "sha256": "f608003ba53ce3c54fdbd92735e960872339e301cd22e5545cd04671a6405d51"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-ultra-uncensored-heretic.Q2_K.gguf",
+   "size": 12344653792,
+   "sha256": "e3ed4e871ede3172668399d37334b14b7755a9808ba39e57113fa4e379320ce7"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-ultra-uncensored-heretic.Q3_K_L.gguf",
+   "size": 17330996192,
+   "sha256": "7eb148a5d1e09d047fbc764354593eb641086ede6d09172a2a13412e646d390a"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-ultra-uncensored-heretic.Q3_K_M.gguf",
+   "size": 15971779552,
+   "sha256": "ffd12f64969d7f3c5c2807378093550c0be2f91ba5ec0d065462d9b07cc7ef77"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-ultra-uncensored-heretic.Q3_K_S.gguf",
+   "size": 14389740512,
+   "sha256": "af5e0b312c2e24a5e047abb51cf8211e7c6a13eacc6142e556e626be93ebc8d0"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-ultra-uncensored-heretic.Q4_K_M.gguf",
+   "size": 19762151392,
+   "sha256": "99e94d03fa55448060fdd1d8d45809db416169237cb6a9f4d7dcb74f46ce80ef"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-ultra-uncensored-heretic.Q4_K_S.gguf",
+   "size": 18771247072,
+   "sha256": "37990c6460983cf1e5b9f528081e8c97883829ffd4006658b159193abe4f5dc3"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-ultra-uncensored-heretic.Q5_K_M.gguf",
+   "size": 23214833632,
+   "sha256": "8dbf9cf733bd82eb4da63aa66bfbc7eead03ad72b1a032c56b1b405ecc869469"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-ultra-uncensored-heretic.Q5_K_S.gguf",
+   "size": 22635495392,
+   "sha256": "c4cfc732bbfcc888979726beb6ac22f13bbe995c4f5470f0a3a69ea4dd64ac3e"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-ultra-uncensored-heretic.Q6_K.gguf",
+   "size": 26883308512,
+   "sha256": "b12cc952a71bfe661f072626cdab7b3672ac34f6526f8124041fcf7c9e81e93a"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-ultra-uncensored-heretic.Q8_0.gguf",
+   "size": 34817721312,
+   "sha256": "6151ea7770090f72371614044790aa24af5afb24e4c3eaed3cece1c65408e7cd"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-ultra-uncensored-heretic.mmproj-Q8_0.gguf",
+   "size": 772360736,
+   "sha256": "c7be6728f22b0d686e7cdf013339f056bda0ec24f78b5a7e1a3329f5dc91e4f0"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-ultra-uncensored-heretic.mmproj-f16.gguf",
+   "size": 1196795552,
+   "sha256": "f8db3a70523b51b67ea1115499fc25f185809965561768a583d424d585d65914"
+  },
+  {
+   "path": "README.md",
+   "size": 4899,
+   "git_oid": "8783c23ca51e15c9a2c4b5000e23e7a83e571d07"
+  }
+ ]
+}

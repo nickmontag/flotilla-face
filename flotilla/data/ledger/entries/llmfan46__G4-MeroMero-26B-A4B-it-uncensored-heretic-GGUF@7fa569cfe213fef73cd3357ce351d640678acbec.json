@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llmfan46/G4-MeroMero-26B-A4B-it-uncensored-heretic-GGUF",
+ "revision": "7fa569cfe213fef73cd3357ce351d640678acbec",
+ "captured": "2026-11-25T05:08:27+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2418,
+   "git_oid": "5c6b2b6fbafb30a8034ba06a858ad54f5c376bce"
+  },
+  {
+   "path": "G4-MeroMero-26B-A4B-it-uncensored-heretic-BF16.gguf",
+   "size": 50505135488,
+   "sha256": "de1273b591b88ac9e6b7f843c5b43a4ad76c3548682b80c4dd9b8d2c3c969c10"
+  },
+  {
+   "path": "G4-MeroMero-26B-A4B-it-uncensored-heretic-Q3_K_L.gguf",
+   "size": 15426567040,
+   "sha256": "da3cecff0f13fc989de5d0e03e76fd3520b86449cc1e2cd1ed1dfa7d7265740d"
+  },
+  {
+   "path": "G4-MeroMero-26B-A4B-it-uncensored-heretic-Q3_K_M.gguf",
+   "size": 14955855744,
+   "sha256": "590376789f4472df2ec65af973e80baf8ae430515af48a7b9a79496f641e4385"
+  },
+  {
+   "path": "G4-MeroMero-26B-A4B-it-uncensored-heretic-Q4_K_M.gguf",
+   "size": 17331776896,
+   "sha256": "9101d86b7f2aecd90ff0fb5f43ae73b2cbe580d335011fd60399aa864a3fe7e1"
+  },
+  {
+   "path": "G4-MeroMero-26B-A4B-it-uncensored-heretic-Q4_K_S.gguf",
+   "size": 16017031552,
+   "sha256": "50d34f2edd8943a5222dbf1abfaa413ff8c4ea1a5a49cad5e9e2b91d9a8cf9b8"
+  },
+  {
+   "path": "G4-MeroMero-26B-A4B-it-uncensored-heretic-Q5_K_M.gguf",
+   "size": 19539250560,
+   "sha256": "47e9eae6b79494ea0aeda8bde6d21c57753214978da5de00edd85fd79bb2a70c"
+  },
+  {
+   "path": "G4-MeroMero-26B-A4B-it-uncensored-heretic-Q5_K_S.gguf",
+   "size": 18403050880,
+   "sha256": "ed5f701e1ceb879be0150c7ac2ec70c4a10ee79d21b7a546c7aba80bf03f49ce"
+  },
+  {
+   "path": "G4-MeroMero-26B-A4B-it-uncensored-heretic-Q6_K.gguf",
+   "size": 22993694080,
+   "sha256": "bccab2c17bcc0deb1378cd7e983efcd960c28e8f377fa7b105e844a85de34ab0"
+  },
+  {
+   "path": "G4-MeroMero-26B-A4B-it-uncensored-heretic-Q8_0.gguf",
+   "size": 26859859328,
+   "sha256": "a7de94299e95b99d81594d6af7af54c0f83858f8f05269e0db3a9e91833ca40c"
+  },
+  {
+   "path": "G4-MeroMero-26B-A4B-it-uncensored-heretic-mmproj-BF16.gguf",
+   "size": 1194827840,
+   "sha256": "a4dd63c9c0b67098ce25cf85359b6e4b325bb719f65590ad8e8acd5ed77731f7"
+  },
+  {
+   "path": "README.md",
+   "size": 28367,
+   "git_oid": "87e9bc7be5aa96f9a3704dfa917b9f47d5ac6189"
+  }
+ ]
+}

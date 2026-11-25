@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Qwen/Qwen3Guard-Gen-0.6B",
+ "revision": "fada3b2f655b89601929198343c94cd2f64d93cc",
+ "captured": "2026-11-25T05:09:37+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11343,
+   "git_oid": "6634c8cc3133b3848ec74b9f275acaaa1ea618ab"
+  },
+  {
+   "path": "README.md",
+   "size": 9841,
+   "git_oid": "1abd0e6c85c31b21bd14ef747bca37f05aa879ae"
+  },
+  {
+   "path": "config.json",
+   "size": 727,
+   "git_oid": "eea5267ae100b197dd81cb1823d797bb18ebbc13"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 161,
+   "git_oid": "76b0c0e82f202eb40ea0ed77df1afb0ac6a4cd4e"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671853,
+   "git_oid": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 1503300328,
+   "sha256": "4f3ce47ebd968cddb67de08d8764f8ede7c410a7d1fb9e08145a4c7a2f2e5c0f"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 11422654,
+   "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 9601,
+   "git_oid": "409e51f8f3d4316361001ea16127a4aa7db80903"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

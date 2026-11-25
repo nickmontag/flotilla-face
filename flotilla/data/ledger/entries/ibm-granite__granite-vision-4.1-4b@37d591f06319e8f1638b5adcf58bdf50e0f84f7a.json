@@ -1,0 +1,165 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "ibm-granite/granite-vision-4.1-4b",
+ "revision": "37d591f06319e8f1638b5adcf58bdf50e0f84f7a",
+ "captured": "2026-11-25T05:13:06+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1880,
+   "git_oid": "0b6b43c62fd51a6a1e06bd6ad33c823ae13dc4fa"
+  },
+  {
+   "path": "README.md",
+   "size": 18187,
+   "git_oid": "7b27ffc166bf017ec5c020198f26b9349dd47ba5"
+  },
+  {
+   "path": "bench_all_benchmarks.png",
+   "size": 113984,
+   "sha256": "7e8b8240eb7630198feda33cf3f621dd99a14b4ad5a8eab62f61fa73caf7a1bd"
+  },
+  {
+   "path": "bench_c2c.png",
+   "size": 89945,
+   "git_oid": "40d5fa3853ef04eb42e2489f4e9da7b5b7f076f8"
+  },
+  {
+   "path": "bench_c2s.png",
+   "size": 88996,
+   "git_oid": "2761b4ec3ea04d151e6b9effba24d6c1d3000af2"
+  },
+  {
+   "path": "bench_omni.png",
+   "size": 83570,
+   "git_oid": "de3ca8ace62930988ebb17a0672eacc5ce0a87e5"
+  },
+  {
+   "path": "bench_pubcrop.png",
+   "size": 74231,
+   "git_oid": "403bd9a17e617e7c743d305d6396f84f8709ed56"
+  },
+  {
+   "path": "bench_pubfull.png",
+   "size": 74649,
+   "git_oid": "25cc72396762abc2663c2b8737467ea47e3b61c2"
+  },
+  {
+   "path": "bench_tvqa.png",
+   "size": 81592,
+   "git_oid": "eee320ebac686d98fbc5480795d1ffca74b169a6"
+  },
+  {
+   "path": "bench_varex.png",
+   "size": 91431,
+   "git_oid": "8cd7a88e1217324f2e7d031448d92eaeea3c9de7"
+  },
+  {
+   "path": "chart.jpg",
+   "size": 60268,
+   "git_oid": "c34b44e1784ac4aaa3fdf525d7d4a3f5f49f7154"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 12124,
+   "git_oid": "b807819fd2e6b2f176d38dfd7449afd16701a1f1"
+  },
+  {
+   "path": "config.json",
+   "size": 3339,
+   "git_oid": "ddaea5182884f04e7695874580ad74d47bffafe8"
+  },
+  {
+   "path": "configuration.py",
+   "size": 1849,
+   "git_oid": "f2339813518457a5302bf4b69384d9b2cce3fe3e"
+  },
+  {
+   "path": "downsampling.py",
+   "size": 6049,
+   "git_oid": "4c11ed5b3223fbd2863eee342b9f86857dac08d2"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 147,
+   "git_oid": "62d124db56fa12037badc3a2eed1d06f3de2c6b0"
+  },
+  {
+   "path": "invoice.png",
+   "size": 612732,
+   "sha256": "778371cee9bc0d3c4c061756ed2304c3620f209f0cb7b56e63ea8e37f7f6e48b"
+  },
+  {
+   "path": "merges.txt",
+   "size": 916646,
+   "git_oid": "354558edcdbd64ca7abd407b8be3d5d09d39d781"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 4963942880,
+   "sha256": "7a95dbcc82b1fbd146edb9c08011d7ca0a1862f689621197b80bc837c1ca3e34"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 3030617368,
+   "sha256": "71d866cf0f20a5d487e17d7c6b839939d6ce126d8a0d175abb34c55131ccd156"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 117567,
+   "git_oid": "45507b1d510621b7c712332270a41443a88a615a"
+  },
+  {
+   "path": "model.sig",
+   "size": 14689,
+   "git_oid": "42f86a461b06c42c95c2452c33968e43ffeb37f8"
+  },
+  {
+   "path": "modeling.py",
+   "size": 24076,
+   "git_oid": "4be7b01429ece630b97d356fe648d863d000ace4"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 1560,
+   "git_oid": "d3001ed0925a2d6887d22c3496fc89adaa11f571"
+  },
+  {
+   "path": "processing.py",
+   "size": 2345,
+   "git_oid": "c19e1b62d3fbc13ee60b47a09bc06fc7d9ab0579"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 286,
+   "git_oid": "782317ff1fb269d35616045b254eeb7755a58bf4"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 579,
+   "git_oid": "3f67e7c50d57b16925f4f15469a774e7bf439047"
+  },
+  {
+   "path": "table.png",
+   "size": 289918,
+   "sha256": "d4498e5af26dee68c6d75bd9c8e3d6d437a7e1c44a1b5cf00b986cc3688df004"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7153595,
+   "git_oid": "5694c5252e2de982538473beb55d11affb29d128"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 17843,
+   "git_oid": "3495db35f33b04bffe5046b803d0e23d7805457f"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2014109,
+   "git_oid": "93ec4f629b184cb32e9745db281b755133ee555f"
+  }
+ ]
+}

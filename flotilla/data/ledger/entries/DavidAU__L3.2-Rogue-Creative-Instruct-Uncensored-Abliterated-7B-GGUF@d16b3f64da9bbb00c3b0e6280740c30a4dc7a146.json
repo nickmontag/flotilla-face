@@ -1,0 +1,90 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-GGUF",
+ "revision": "d16b3f64da9bbb00c3b0e6280740c30a4dc7a146",
+ "captured": "2026-11-25T05:08:51+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3031,
+   "git_oid": "509bdf764cde882baf86b0d7794a1afc37d2b63e"
+  },
+  {
+   "path": "L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-D_AU-IQ4_XS.gguf",
+   "size": 4156478144,
+   "sha256": "36ed58809c0c03064bc9255414750d0916169fe8569155b4150ca372a6521ba5"
+  },
+  {
+   "path": "L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-D_AU-Q2_k.gguf",
+   "size": 2931892928,
+   "sha256": "b2079677e465ce449c71952aec5af74d28b2d94890b3f20288d703dc95a6f48f"
+  },
+  {
+   "path": "L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-D_AU-Q3_k_m.gguf",
+   "size": 3749296832,
+   "sha256": "a1c2a7650512ddf441a8ee35ff3967e0429a141f83b3cd52481b465de79f468c"
+  },
+  {
+   "path": "L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-D_AU-Q3_k_s.gguf",
+   "size": 3400022720,
+   "sha256": "f6f6c2bc73ec0d61d00dc4b5f74c0e43da81dece774d83f62cbb9449843782e0"
+  },
+  {
+   "path": "L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-D_AU-Q4_0_4_4.gguf",
+   "size": 4348097216,
+   "sha256": "85051c983a9c0bd558b59a549175b9c118f352316043953e0c0a46fc512a850b"
+  },
+  {
+   "path": "L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-D_AU-Q4_0_4_8.gguf",
+   "size": 4348097216,
+   "sha256": "48c86e3a16620ed790497629d129030ef5771135c267a5ea9a1cbb2195cc10d2"
+  },
+  {
+   "path": "L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-D_AU-Q4_0_8_8.gguf",
+   "size": 4348097216,
+   "sha256": "ca742844fcf81d9a7ad2edd766ddb521bc4dcbd0a2184ec5a656b700cc5d0c3a"
+  },
+  {
+   "path": "L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-D_AU-Q4_k_m.gguf",
+   "size": 4588966592,
+   "sha256": "1647bfc10b606fc206e8d51cd3e0c894cf9a1dba2f6a2289c8f182b659a6e0e5"
+  },
+  {
+   "path": "L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-D_AU-Q4_k_s.gguf",
+   "size": 4374835904,
+   "sha256": "237b1f92779f5de10a4a97b67e1998774400cab4be2e0d6ceac98d6c394bc8ce"
+  },
+  {
+   "path": "L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-D_AU-Q5_k_s.gguf",
+   "size": 5240402624,
+   "sha256": "513a93e6fc9fdc2cfe7ff141f96bcacdba5473ff35f52613cf77df5a697256a5"
+  },
+  {
+   "path": "L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-D_AU-Q6_k.gguf",
+   "size": 6188477120,
+   "sha256": "f0e07a0a101ff7b1a20b896553b73e2d329eafd069c309471f11cf1e8443456d"
+  },
+  {
+   "path": "L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-D_AU-Q8_0.gguf",
+   "size": 8012741312,
+   "sha256": "533022098918f91de3e8b70adebb123996cd8374d0b2cd69a95a718c89ca7c61"
+  },
+  {
+   "path": "L3.2-Rogue-Creative-Instruct-Uncensored-Abliterated-7B-D_AU-q5_k_m.gguf",
+   "size": 5364486848,
+   "sha256": "4d45a9b228ec11afcf92fe7e7666c522fa8e9ad5aeaa7fbca996000abfb218a0"
+  },
+  {
+   "path": "README.md",
+   "size": 34174,
+   "git_oid": "4ea0c31283340b1b8467b04f3dab80712e9e6554"
+  },
+  {
+   "path": "rogue-ab.webp",
+   "size": 64234,
+   "git_oid": "198dca4157e535e7756064e551ad43ceae6a22bd"
+  }
+ ]
+}

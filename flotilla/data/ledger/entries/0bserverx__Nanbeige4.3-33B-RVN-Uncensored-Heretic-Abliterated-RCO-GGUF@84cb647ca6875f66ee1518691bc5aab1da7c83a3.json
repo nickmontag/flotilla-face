@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "0bserverx/Nanbeige4.3-33B-RVN-Uncensored-Heretic-Abliterated-RCO-GGUF",
+ "revision": "84cb647ca6875f66ee1518691bc5aab1da7c83a3",
+ "captured": "2026-11-25T05:09:06+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2946,
+   "git_oid": "c4221031acc5bdd86401be3553ecda30d4399c19"
+  },
+  {
+   "path": "Nanbeige4.3-33B-RVN-Heretic-F16.gguf",
+   "size": 66243463456,
+   "sha256": "3edaf46206f42772084048da1eba5509f334412fab3f06c0f604c95595e4750c"
+  },
+  {
+   "path": "Nanbeige4.3-33B-RVN-Heretic-IQ2_S.gguf",
+   "size": 10838436352,
+   "sha256": "1c05bef0af76b9c851894692bf19d7aa3a809ee80e6ded24d453b1a43a6c04b7"
+  },
+  {
+   "path": "Nanbeige4.3-33B-RVN-Heretic-IQ2_XS.gguf",
+   "size": 10245040640,
+   "sha256": "aa2882e32909d7f83825f21a2f915816840ec2655843fcca11ec4cb2f7d798cd"
+  },
+  {
+   "path": "Nanbeige4.3-33B-RVN-Heretic-IQ2_XXS.gguf",
+   "size": 9326389760,
+   "sha256": "dac3f724b66709c28034da1e7901df3bfd68da6b813e536d717ff66029ac86b8"
+  },
+  {
+   "path": "Nanbeige4.3-33B-RVN-Heretic-IQ3_S.gguf",
+   "size": 14755547648,
+   "sha256": "1401957f9796714637f548a4ef74c1fe10c697c4ea50fcccdd09bb3cda24d1ef"
+  },
+  {
+   "path": "Nanbeige4.3-33B-RVN-Heretic-IQ3_XXS.gguf",
+   "size": 13108685312,
+   "sha256": "e82bb2e7475f36a2d5a63f8699d25f019b8a70c0a6ed9dba5115420c375134ef"
+  },
+  {
+   "path": "Nanbeige4.3-33B-RVN-Heretic-IQ4_XS.gguf",
+   "size": 18006551040,
+   "sha256": "23dc1d9645e0a763b518db3a0e0dd6671e05e9ada81a1996fc5f1d17466022c7"
+  },
+  {
+   "path": "Nanbeige4.3-33B-RVN-Heretic-RCO-2.60bpw-IQ2_S.gguf",
+   "size": 11637008896,
+   "sha256": "f4236cadc0029cc216a06ffcd26b844364af319d1a0aef0f6e9cdc94c6968688"
+  },
+  {
+   "path": "README.md",
+   "size": 18475,
+   "git_oid": "24c26f78fbadd2967a2ce3b93f584666a693ff95"
+  },
+  {
+   "path": "imatrix-Nanbeige4.3-33B-RVN-Heretic.gguf",
+   "size": 27172864,
+   "sha256": "e062e49d4d9adeb72dfd50daff322af47316866f8ce6e0d2ecc71d05ba96b029"
+  },
+  {
+   "path": "tensor-allocation/RCO-2.60bpw.rco-allocation.txt",
+   "size": 12939,
+   "git_oid": "7af729cf17377e6cb8a10f114f8dabb2645e1395"
+  },
+  {
+   "path": "tensor-allocation/RCO-2.60bpw.tensor_types.txt",
+   "size": 12522,
+   "git_oid": "68733004b90d89079fb96bc62a7bd8a7f838eff4"
+  }
+ ]
+}

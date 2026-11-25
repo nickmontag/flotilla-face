@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Andycurrent/Gemma-3-4B-VL-it-Gemini-Pro-Heretic-Uncensored-Thinking_GGUF",
+ "revision": "0231eb901e7c7ea0058e4fc055fe3609c0debe5a",
+ "captured": "2026-11-25T05:08:52+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2346,
+   "git_oid": "5a4e97ffc4787d104066c1cfd5dcc4ce20f66280"
+  },
+  {
+   "path": "Gemma-3-4B-VL-it-Gemini-Pro-Heretic-Uncensored-Thinking_F16.gguf",
+   "size": 7767804832,
+   "sha256": "d0e981430f5c92ec9096b27c9c63fa6d57e1e365a4c0c88864c4b1f5c2e30d93"
+  },
+  {
+   "path": "Gemma-3-4B-VL-it-Gemini-Pro-Heretic-Uncensored-Thinking_Q2_k.gguf",
+   "size": 1729165472,
+   "sha256": "1a7dbf23f1efc4c1c7c79ff39a35afcc9506df0850ac4169ba72311c3960a089"
+  },
+  {
+   "path": "Gemma-3-4B-VL-it-Gemini-Pro-Heretic-Uncensored-Thinking_Q3_k_m.gguf",
+   "size": 2098460832,
+   "sha256": "2ab2983a596744053d4cae95a9b660fd7eb7a53a33640f782c794c7c06e4de2f"
+  },
+  {
+   "path": "Gemma-3-4B-VL-it-Gemini-Pro-Heretic-Uncensored-Thinking_Q4_k_m.gguf",
+   "size": 2489895072,
+   "sha256": "9efb3af66302cb4953f3877fa07a929ccff602519d60ae0a0ae8ec080b6a3519"
+  },
+  {
+   "path": "Gemma-3-4B-VL-it-Gemini-Pro-Heretic-Uncensored-Thinking_Q5_k_m.gguf",
+   "size": 2829699232,
+   "sha256": "15577d00b5e73f02565bf5461f410f23487279a6f3a9a691e2cc2148791f5512"
+  },
+  {
+   "path": "Gemma-3-4B-VL-it-Gemini-Pro-Heretic-Uncensored-Thinking_Q6_k.gguf",
+   "size": 3190741152,
+   "sha256": "88e5126253376062a12764aaaaf5d6488e3a9e14dd2ecbfe511af9321be54f1f"
+  },
+  {
+   "path": "Gemma-3-4B-VL-it-Gemini-Pro-Heretic-Uncensored-Thinking_Q8_0.gguf",
+   "size": 4130403232,
+   "sha256": "da903d54343d29269a06eb566bea15be315b6e994c7d2f912042304394df0a1f"
+  },
+  {
+   "path": "Gemma-3-4B-VL-it-Gemini-Pro-Heretic-Uncensored-Thinking_mmproj_f16.gguf",
+   "size": 851252256,
+   "sha256": "3b33720b2dbda6208e8245f4599948c2ff0813b39253b2714e774ce37c53dc8d"
+  },
+  {
+   "path": "README.md",
+   "size": 2844,
+   "git_oid": "2c4719f61cf5b5cfcfc44beca00c709e228ea8c5"
+  }
+ ]
+}

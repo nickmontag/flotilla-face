@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "lyf/Qwen3.6-35B-A3B-Uncensored-HauhauCS-Aggressive-NVFP4",
+ "revision": "c9eb0a997ecfc688c468146404606ef6df49555f",
+ "captured": "2026-11-25T05:08:14+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1696,
+   "git_oid": "1901a10facd682bcd6165a64d1ab005c2ed76afb"
+  },
+  {
+   "path": "README.md",
+   "size": 3951,
+   "git_oid": "aee776d133544b1fc87671aaa13b79ff86703fa8"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7764,
+   "git_oid": "a8755d827c0a7b614c246c4060dfd58ab352a8ff"
+  },
+  {
+   "path": "config.json",
+   "size": 23139,
+   "git_oid": "cf307b7246086343d198889429e18853d0fd0308"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 213,
+   "git_oid": "79c8cce3192e22177a1a37e1b8f60514272daacf"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 23354242416,
+   "sha256": "db0e4c15a32070dbbd7ed8866eff4c0e60820d68e42d50710adf27189db1bedf"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 337,
+   "git_oid": "e501264c90ff84c1bb43cb593f877b90f0dc0929"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1191,
+   "git_oid": "33818c7f9e991ad735fd240209f4fa73e6c28c50"
+  },
+  {
+   "path": "recipe.yaml",
+   "size": 280,
+   "git_oid": "17ba243b104cf8a85aa7ffb2437e121a54e366fc"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989343,
+   "sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 15190,
+   "git_oid": "4a7541d5254478c2d5e1ffc509eaa9bb2fdabb44"
+  }
+ ]
+}

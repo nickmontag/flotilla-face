@@ -1,0 +1,110 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "xtools-at/Qwen3.5-2B-MultiDistill-Megamix-6xMerge-UNCENSORED-heretic",
+ "revision": "d5ae3d845e894dfabe5ad40e688cff31b2bc4e29",
+ "captured": "2026-11-25T05:08:43+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 14366,
+   "git_oid": "c38a653fa2c5639dc58deb74e500b7f1d866d955"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7967,
+   "git_oid": "5a663a52f8d29ce0807acafb3f47257020b3efb5"
+  },
+  {
+   "path": "config.json",
+   "size": 2713,
+   "git_oid": "095dd582acef90ff6bd37a5be4c3b380cb1e0682"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 116,
+   "git_oid": "16a4923d822a0f3ee93d073f2d35a3a1fe23edf1"
+  },
+  {
+   "path": "model-mtp.safetensors",
+   "size": 121658064,
+   "sha256": "654c2a74918086315e0e1980f882eab840cbaea1058700f4ed75a11268712846"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 4426558864,
+   "sha256": "9ab255c4e602b15c12a191225e22d705efea2db03da899d9263d6ffea94fa1d7"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 47456,
+   "git_oid": "6739e18e0053c4f110dc4bf31e124a6926f80140"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1220,
+   "git_oid": "43c4343ec493f200e452f87a7c6649ecdfcce1ac"
+  },
+  {
+   "path": "reproduce/README.md",
+   "size": 3390,
+   "git_oid": "e6572d595f75829e086899fafd9f897df88309bd"
+  },
+  {
+   "path": "reproduce/SHA256SUMS",
+   "size": 84,
+   "git_oid": "40382b28a338fd2f5fbcd2e5c0993c2eebe4dd16"
+  },
+  {
+   "path": "reproduce/config.toml",
+   "size": 849,
+   "git_oid": "2b57919d9b343592ff48d86e6f60cc6f9a913410"
+  },
+  {
+   "path": "reproduce/reproduce.json",
+   "size": 7108,
+   "git_oid": "666595d76166ca61ad5105b09585c961cbd678ad"
+  },
+  {
+   "path": "reproduce/requirements.txt",
+   "size": 1943,
+   "git_oid": "834528529d8b5501a0bf0a4624141f3e39e34867"
+  },
+  {
+   "path": "reproduce/xtools-at--Qwen3--5-2B-MultiDistill-Megamix-6xMerge.jsonl",
+   "size": 168809,
+   "git_oid": "e6ef9ae05e1fcbdc14dc126844d1fd876f743423"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989506,
+   "sha256": "2f4dd754486e96054d0c841ddde816748be0116cbbc8ba8b5311ae4853432a21"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1295,
+   "git_oid": "52b7d568e5ec54872ca2c5c300c92a167482a54f"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  },
+  {
+   "path": "vocab.json",
+   "size": 6722759,
+   "git_oid": "0aa0ce0658d60ac4a5d609f4eadb0e8e43514176"
+  }
+ ]
+}

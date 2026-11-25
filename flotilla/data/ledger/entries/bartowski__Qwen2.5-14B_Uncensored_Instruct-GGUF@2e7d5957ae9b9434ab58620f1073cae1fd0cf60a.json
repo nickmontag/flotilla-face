@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bartowski/Qwen2.5-14B_Uncensored_Instruct-GGUF",
+ "revision": "2e7d5957ae9b9434ab58620f1073cae1fd0cf60a",
+ "captured": "2026-11-25T05:08:31+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3509,
+   "git_oid": "b9ce6b75d84debf7b521a4fd3f0c619b5cf59582"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-IQ2_M.gguf",
+   "size": 5356146432,
+   "sha256": "7cc28f0cb8a167e927740edfaff73e4f8b2ead5c2f3d0152d5b468c6fee2d9be"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-IQ3_M.gguf",
+   "size": 6916538112,
+   "sha256": "c1bbb43c304f9fc837bce7bbf4b73d185563fed3f24cb27b81d2e253550fdf0d"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-IQ3_XS.gguf",
+   "size": 6383361792,
+   "sha256": "8b3bf09a2c352dc70754680bdc1229282e411dce6a4a55031950e1a54b514621"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-IQ4_XS.gguf",
+   "size": 8119840512,
+   "sha256": "b922f7232316d8f248a12d91142f48be1431ba5b953a329dbc251bb60c9a4f10"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q2_K.gguf",
+   "size": 5770497792,
+   "sha256": "f40375aa4882106c999603cea2d978fb12a2f1fe5e0780d50ce0ec4811aefa96"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q2_K_L.gguf",
+   "size": 6530817792,
+   "sha256": "2bf19dcb9241fbdba615cb8c4e2271109808f561f0f3fc6787143f536a85f321"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q3_K_L.gguf",
+   "size": 7924768512,
+   "sha256": "4d3e44d8159ea414b4c111b00075a865cf632e549c4fbb3856e2d24e975d1b8c"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q3_K_M.gguf",
+   "size": 7339204352,
+   "sha256": "78719834b341b4a4f25311863202ccdc19be604a2b478fb40037f8bab1ac9bd5"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q3_K_S.gguf",
+   "size": 6659596032,
+   "sha256": "b34a7b0e4d63f71fd3d0e4a51382d988a3a81a525ed213b0e9a8f5382aeeb142"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q3_K_XL.gguf",
+   "size": 8606015232,
+   "sha256": "9fae6490c4442f3cdb509cc1a7b31308e33fe0e444bd327d00146210f363e6cc"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q4_0.gguf",
+   "size": 8544268032,
+   "sha256": "b22706c52b9989b51dee3e6d005a94bba0608c64fad385749cc5eec0cdd83622"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q4_0_4_4.gguf",
+   "size": 8517725952,
+   "sha256": "e641268f7b6e2b4a162eb5f18eb82e44ace8190a14113eb5704f6ce96d20413e"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q4_0_4_8.gguf",
+   "size": 8517725952,
+   "sha256": "d4d63834d27bac29cbfa38088c42f564fbf5fc9e2108171017540986ac82291c"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q4_0_8_8.gguf",
+   "size": 8517725952,
+   "sha256": "1db4d2d1953c2833530698b139adb4afce7e59b7a1a12917baf119a660e08cdb"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q4_K_L.gguf",
+   "size": 9565953792,
+   "sha256": "6f52f53c0bd09a56f44a27270cd0277b05af8986a1383cfab00b0e2e1c3ec33e"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q4_K_M.gguf",
+   "size": 8988110592,
+   "sha256": "f465c1956c3c43e82ff5df48a0d61e8d212de86f95e541b936237c5d8588f670"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q4_K_S.gguf",
+   "size": 8573431552,
+   "sha256": "78ac791a898c95173bb1f7daa0db1e064b9b035c132481bf003261fe5c7fe010"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q5_K_L.gguf",
+   "size": 10989395712,
+   "sha256": "ba7c4649ab0211f00a5b2c0e08e08308c11a4978c928f2d8305cc750431acf4c"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q5_K_M.gguf",
+   "size": 10508873472,
+   "sha256": "ed4dd029dc1d5f4a3185a36be17e042641a0d6f55965d5731c18e747b11abc33"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q5_K_S.gguf",
+   "size": 10266554112,
+   "sha256": "3b3d796e8e7c064484d9bc1a85c180c618fb47cb18deda5e840dfc32a006ba08"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q6_K.gguf",
+   "size": 12124684032,
+   "sha256": "269b283f0f40b2774d261ae3c9c98d676a66a77762d908e6d0dde7ec1c2f64b1"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q6_K_L.gguf",
+   "size": 12501802752,
+   "sha256": "c8efd8918d81ad3e282fe20ab36d03579b395cbb54bee66f8e911a07830368e4"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-Q8_0.gguf",
+   "size": 15701597952,
+   "sha256": "923339f0e9b98013c69804ca38710a3152bd6254d8cd8a68e6f9fdff3c334aa0"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct-f16.gguf",
+   "size": 29547716064,
+   "sha256": "43199294f0158adaf10e1b989160a1eb67c10e5a921b846f2da4ec2a2ab9ea1f"
+  },
+  {
+   "path": "Qwen2.5-14B_Uncensored_Instruct.imatrix",
+   "size": 8563610,
+   "sha256": "575c0ccaef7a6005bcf1e70a45ab361d87d3fbc5d17f8c4a9e4c298cd88b32b7"
+  },
+  {
+   "path": "README.md",
+   "size": 11009,
+   "git_oid": "e3bd72022cb7c6bd9c9a0850ccd254e4df3e7abf"
+  }
+ ]
+}

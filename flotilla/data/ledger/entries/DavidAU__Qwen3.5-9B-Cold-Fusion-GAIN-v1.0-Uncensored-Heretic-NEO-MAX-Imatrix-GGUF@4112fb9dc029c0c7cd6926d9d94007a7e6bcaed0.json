@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Qwen3.5-9B-Cold-Fusion-GAIN-v1.0-Uncensored-Heretic-NEO-MAX-Imatrix-GGUF",
+ "revision": "4112fb9dc029c0c7cd6926d9d94007a7e6bcaed0",
+ "captured": "2026-11-25T05:08:48+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 5936,
+   "git_oid": "b39ea70179d4456367beeb2b5efe681f1ca1fefe"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-IQ2_M.gguf",
+   "size": 4942439104,
+   "sha256": "d370b0d8d21e4bab76adc4712a430417b1b63c7a4538a6c41c1564fc37ec2482"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-IQ3_M.gguf",
+   "size": 5615264448,
+   "sha256": "06f850f30a959bbb28cc9bc0c1fb5c1203fc4d0b6bbaf1e5e981bc37f91612ed"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-IQ4_NL.gguf",
+   "size": 6618096320,
+   "sha256": "a1f91742f716e4a400edb152ee55fc806752e1777fef35f9c7cbd6782952d9d2"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-IQ4_XS.gguf",
+   "size": 6396322496,
+   "sha256": "48e6ae60e044e931d4cf376da18735cfef7975ad1b90dd5705cae962683e88fd"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-MTP-IQ2_M.gguf",
+   "size": 5200998016,
+   "sha256": "c26975dd3d011d08fa1b2798dcd8eb92ba40ef09a7c74d3f5f7a460d9cbffec2"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-MTP-IQ3_M.gguf",
+   "size": 5873823360,
+   "sha256": "02e743f60a6d08be91228ec8e70111512c262dbf5d684c57665ad63d779e033c"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-MTP-IQ4_NL.gguf",
+   "size": 6876655232,
+   "sha256": "ca08b251ef66152b45965ad8c616b0cb00f5cfe7c86cbf15a8b60fdf838298d3"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-MTP-IQ4_XS.gguf",
+   "size": 6654881408,
+   "sha256": "de94ce973d79b3a5d424a88f89ac72236a21175046c7f7bc936e2838d9641880"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-MTP-Q4_K_M.gguf",
+   "size": 7087550080,
+   "sha256": "cc2d708d7252148c75b563d891560e6839f90a988cf6d0177b07be22760c9867"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-MTP-Q4_K_S.gguf",
+   "size": 6810070656,
+   "sha256": "181ff544d78b555bde0288fdd3804c33d35c2dac4cfd656c8a8f4bb92369d09f"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-MTP-Q5_K_M.gguf",
+   "size": 7926410880,
+   "sha256": "14f7d3f9f572fde8957360476f268fa8f8d632e1f2e8de324a96e50369c8e960"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-MTP-Q5_K_S.gguf",
+   "size": 7763750528,
+   "sha256": "3f6d54696a2e2c938c91e6d2198b49ac1d8e3fd7a9d23839ed46ebffa3e075dd"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-MTP-Q6_K.gguf",
+   "size": 8817700480,
+   "sha256": "6ca35765db04193700883dd62cd8945a7d46c837f9cedbbeace05f52fb140dea"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-MTP-Q8_0.gguf",
+   "size": 10739609216,
+   "sha256": "6fd87112bc65459384e8ba7fdf8a11999e344c81ba63850e4c67183f62818c38"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-Q4_K_M.gguf",
+   "size": 6828991168,
+   "sha256": "c66737abc2d68e16bd41107327185806a5e92081a5402a5c24ff09be464a6489"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-Q4_K_S.gguf",
+   "size": 6551511744,
+   "sha256": "b4880bb64ceb83fc5066956bb19023c975bdd614fc4e9477ab49873994593569"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-Q5_K_M.gguf",
+   "size": 7667851968,
+   "sha256": "e05a9d4385c8cfd25f60eecb05453f9acfea6d4d9fba16f49c7b15ea2790d50a"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-Q5_K_S.gguf",
+   "size": 7505191616,
+   "sha256": "45f0abf15a6424f6abd51eb5c11eeb6884a075226ebc1c992627f4cd1973a65c"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-Q6_K.gguf",
+   "size": 8559141568,
+   "sha256": "fdb64babfc1917a250be2a86e40d038b5b175e999dfeaddf7bfca29edcb68b7f"
+  },
+  {
+   "path": "Qwen3.5-9B-C-Fusion-GAIN-UnHeretic-NM-DAU-NEO-MAX-NEO-Q8_0.gguf",
+   "size": 10481050304,
+   "sha256": "d05aae5a02a4f602b9540a6824326f04733e3c9c966b77d141db50005c486efd"
+  },
+  {
+   "path": "README.md",
+   "size": 149753,
+   "git_oid": "b6dce17abce432abb65410d2892ea2d1313be0c6"
+  },
+  {
+   "path": "cold-fusion-barg.jpg",
+   "size": 190656,
+   "sha256": "40de763ce94e133465a08d9770d2f5e51cedf3875172785b041de2825cfcda86"
+  },
+  {
+   "path": "fusion.gif",
+   "size": 3962622,
+   "sha256": "70ab41bdfdaff6a68013a810010595ae1fcce7bb01faa88cf2acb68f7e132eff"
+  },
+  {
+   "path": "mmproj-BF16.gguf",
+   "size": 931146304,
+   "sha256": "05353347512982ee62317b9d8c89372bc815f4b4043580e7ef3ad411ec1a1cd3"
+  },
+  {
+   "path": "mmproj-F16.gguf",
+   "size": 918166080,
+   "sha256": "f70dc3509053962b0d0d3ee8a7eacebf5d60aa560cad78254ae8698516ae029f"
+  },
+  {
+   "path": "mmproj-F32.gguf",
+   "size": 1824062016,
+   "sha256": "a1cd5c1625b44dd0facaec998020e9b36cb78c2225eaee701e73bf2e5b051ce2"
+  }
+ ]
+}

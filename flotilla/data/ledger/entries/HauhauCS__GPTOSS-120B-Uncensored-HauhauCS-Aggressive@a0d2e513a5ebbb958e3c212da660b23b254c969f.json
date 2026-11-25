@@ -1,0 +1,25 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "HauhauCS/GPTOSS-120B-Uncensored-HauhauCS-Aggressive",
+ "revision": "a0d2e513a5ebbb958e3c212da660b23b254c969f",
+ "captured": "2026-11-25T05:08:25+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1609,
+   "git_oid": "0223bb23167f2f674f64f9939f6b3311f627636d"
+  },
+  {
+   "path": "GPTOSS-120B-Uncensored-HauhauCS-Aggressive-MXFP4.gguf",
+   "size": 65369016544,
+   "sha256": "0ed271ff3d05ef6013e7f464766bc8555733fc24dbcb89be9ed5cf1c23299e55"
+  },
+  {
+   "path": "README.md",
+   "size": 1845,
+   "git_oid": "6ec6819b906fc05ff1e3bfec8ca2178b91d0bf3a"
+  }
+ ]
+}

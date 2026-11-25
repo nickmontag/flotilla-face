@@ -1,0 +1,85 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "nvidia/NVIDIA-Nemotron-Labs-Dory1.0-4B-NVFP4",
+ "revision": "64b4039a3468bef85c6744c1e24d5a80801fe965",
+ "captured": "2026-11-25T05:09:41+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1672,
+   "git_oid": "a471f59e8c111ecd76bca35b243a2efa14d08b88"
+  },
+  {
+   "path": "README.md",
+   "size": 29410,
+   "git_oid": "45a7117caf19fedd43ed7bc18c4130bc041e4536"
+  },
+  {
+   "path": "aa432_dory1_4b_vs_models_v10.png",
+   "size": 75513,
+   "git_oid": "c33d34680a2a8f8accf5500eac9db6dbadfa945e"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 10152,
+   "git_oid": "7afbeb759a6786de17cde07485f9c2db387fd94d"
+  },
+  {
+   "path": "config.json",
+   "size": 2753,
+   "git_oid": "3efc165bd1efdba010f04a1147cb2207b0720d49"
+  },
+  {
+   "path": "dory1_4b_output_tokens_factor.png",
+   "size": 69019,
+   "git_oid": "6974e0c8e573f70434691fdb0ae7e8f2749f2877"
+  },
+  {
+   "path": "dory_arch.png",
+   "size": 175249,
+   "sha256": "995a62c6db7d55af185ed8c2bc509f88f03e72128ff5a5fb30ae41f393ac9554"
+  },
+  {
+   "path": "dory_logo1.jpeg",
+   "size": 1339848,
+   "sha256": "e498f041a398c27fcf49cf0a7a2f461f8ebde5b28bc2f6609c470bd206b568cc"
+  },
+  {
+   "path": "explainability.md",
+   "size": 11458,
+   "git_oid": "cc3f700d0cfca294943afbea4241ac3ff4f6dcf2"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 225,
+   "git_oid": "2404c05960cf2360aeab1da98d083df96b907681"
+  },
+  {
+   "path": "hf_quant_config.json",
+   "size": 260,
+   "git_oid": "7ceadee60ad578ce5bcf7dcb3886b6d825541fd6"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 3202498032,
+   "sha256": "ca08dec5d70b653c03e57903dd33725ec8cc80133c53a1bd9c83f99dd03f3e46"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 563,
+   "git_oid": "0451f37912edb7f8a4bf04d77eef13f6130f0515"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 17077484,
+   "sha256": "623c34567aebb18582765289fbe23d901c62704d6518d71866e0e58db892b5b7"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 177209,
+   "git_oid": "c96e5ad00986bfa0b666d4bc425666f1c51d6d1b"
+  }
+ ]
+}

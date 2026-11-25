@@ -1,0 +1,30 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "rzgar/Heretical-Qwen3.5-9B-int8-convrot-Comfy",
+ "revision": "0f2aaa8e2b35d55e540fdae85f8ef0c0d4636db2",
+ "captured": "2026-11-25T05:08:55+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "Heretic-Qwen3.5-9B-int8-convrot-Comfy.safetensors",
+   "size": 11913275920,
+   "sha256": "bdb9b9c251272b56f2701c84b6b5b64ae81796b7ce709d5d8d15c3e1d11cf6f8"
+  },
+  {
+   "path": "README.md",
+   "size": 945,
+   "git_oid": "fe6e22f2cc205ca491007eb3d0cf44ecfeb745f5"
+  },
+  {
+   "path": "workflow/Qwen3.5-9B_workflow.json",
+   "size": 85659,
+   "git_oid": "ffab0b8ab3d10bdca8cf38247a366af6b7e0ec89"
+  }
+ ]
+}

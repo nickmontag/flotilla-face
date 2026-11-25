@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated-GGUF",
+ "revision": "2b465901dd60faa77d4ef23d63549930fcec41c2",
+ "captured": "2026-11-25T05:08:16+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2558,
+   "git_oid": "338183fb949e9a25a7b099d3b71e89f624e82857"
+  },
+  {
+   "path": "Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated.IQ4_XS.gguf",
+   "size": 16557093536,
+   "sha256": "4c6c8b18e09cb32c0e8c0d6e90ff13a1f178188aa333bd8dfc62d819d7b0d20e"
+  },
+  {
+   "path": "Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated.Q2_K.gguf",
+   "size": 11258610336,
+   "sha256": "9f88cc4b8896b403cf1fd48d68409ca81b4df6ef1d14a515aaf633f479bc6eac"
+  },
+  {
+   "path": "Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated.Q3_K_L.gguf",
+   "size": 15900670624,
+   "sha256": "161e825279d6d7c29030590673d378d0542cfc5d32868b57f414d022730a5863"
+  },
+  {
+   "path": "Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated.Q3_K_M.gguf",
+   "size": 14711847584,
+   "sha256": "263dfacd57fafb3d24b6df102a5116018c8dc50d6963e79cf053dd888a1938da"
+  },
+  {
+   "path": "Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated.Q3_K_S.gguf",
+   "size": 13292468896,
+   "sha256": "734fbb6b24922d7cbb81c2d439892cdd613574b48ff90775bbd6834075744b7c"
+  },
+  {
+   "path": "Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated.Q4_K_M.gguf",
+   "size": 18556687008,
+   "sha256": "c83692caa1226fe5747cd6f81ccfc51e6e5fcd390a38c1ae010b6b472a829b40"
+  },
+  {
+   "path": "Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated.Q4_K_S.gguf",
+   "size": 17456009888,
+   "sha256": "f0a832a6f6e698bffa44d5183d25252dd09127ad3447981cef433ffcab7642ca"
+  },
+  {
+   "path": "Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated.Q5_K_M.gguf",
+   "size": 21725581984,
+   "sha256": "4204dac17d6bb741f1cc9ba5cb0690180ebae754c21c4861f07b1a755b5401de"
+  },
+  {
+   "path": "Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated.Q5_K_S.gguf",
+   "size": 21080511136,
+   "sha256": "4344ed877f91b60e10c5e4bcab8bf363e50b2d3e8736381a85501bae62597514"
+  },
+  {
+   "path": "Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated.Q6_K.gguf",
+   "size": 25092532896,
+   "sha256": "e5b28db842f553b973720ca76c24a82b6e6d97196a7a93507f343955d999c5ad"
+  },
+  {
+   "path": "Huihui-Qwen3-30B-A3B-Instruct-2507-abliterated.Q8_0.gguf",
+   "size": 32483932832,
+   "sha256": "14336b6565cfc8186673707c0f99d8e8db6e2b7f308d70a89209e71676d18137"
+  },
+  {
+   "path": "README.md",
+   "size": 4292,
+   "git_oid": "44d08d96546698e516007ee12948c6b9139c8153"
+  }
+ ]
+}

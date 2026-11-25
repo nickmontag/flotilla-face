@@ -1,0 +1,140 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "baidu/Unlimited-OCR-2",
+ "revision": "04647c7a6098d8d58915f003536a741c82eafb40",
+ "captured": "2026-11-25T05:09:22+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1957,
+   "git_oid": "c0778344763173b6fe22020b7ed89a123101b6f9"
+  },
+  {
+   "path": "README.md",
+   "size": 13073,
+   "git_oid": "addf09b88832b8424dda167bc007e7b078fdbbfd"
+  },
+  {
+   "path": "Unlimited-OCR-2.pdf",
+   "size": 1515854,
+   "sha256": "72e95cde363b991cdde1c8d8b0f50dccd40e2e0521ceaf0ca490995cfdb91c49"
+  },
+  {
+   "path": "_sparse_base_impl.py",
+   "size": 221755,
+   "git_oid": "3291637638c1366b7b6cd20fd53b6efafcea8a65"
+  },
+  {
+   "path": "assets/HarryPotter.gif",
+   "size": 156147226,
+   "sha256": "572305c08be5a87c14b0c211d3ef28398a00818b341bfcfdb8152678bffa8ea5"
+  },
+  {
+   "path": "assets/Unlimited-OCR2.png",
+   "size": 1081411,
+   "sha256": "e231defdf9aebbf8d6cf6a6dc15ded22412629a2cbf196436e2d9b58973aa678"
+  },
+  {
+   "path": "assets/leaderboard.png",
+   "size": 1481070,
+   "sha256": "aca406f669dba1af337d7ac9b7be6dafad89b3afbf3570567c578b50dfeb9e8b"
+  },
+  {
+   "path": "assets/logo.png",
+   "size": 129618,
+   "sha256": "e1c533934d3d5abaa1666c8ce858d4f2195b14471c7e3b8f3da772972359652d"
+  },
+  {
+   "path": "config.json",
+   "size": 5525,
+   "git_oid": "a1ea89c4c965d5c5bd5c77b21b928aa710aa7af6"
+  },
+  {
+   "path": "configuration_deepseek_v2.py",
+   "size": 10720,
+   "git_oid": "1c28cf39e8b821ec2623d3762f08ffd77050e8f8"
+  },
+  {
+   "path": "conversation.py",
+   "size": 9253,
+   "git_oid": "65c295e81cd804080ec238b31d1922f33e1f9405"
+  },
+  {
+   "path": "dash_attention.py",
+   "size": 71465,
+   "git_oid": "891d2ff7b5f9dc282cf702f34d7d2cfd69528011"
+  },
+  {
+   "path": "deepencoder.py",
+   "size": 37939,
+   "git_oid": "6b10ea1b896cffb8e6cfb4d799d4b11479d519b8"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 111,
+   "git_oid": "6f7f9313195af78c979fc889accc234edb6e0d3c"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 4998430312,
+   "sha256": "4c40b740f209fd7682040d4ebf19409208acde5c401ccd2dde426d0f41542f18"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 1689875264,
+   "sha256": "9490b82fa47f89e5110eb5577f8ab1b6694c12121905dbc086ddb10207a4ba0c"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 254054,
+   "git_oid": "bc164961600a572ed4ff5215eee526d9fe706774"
+  },
+  {
+   "path": "modeling_deepseekv2.py",
+   "size": 25572,
+   "git_oid": "6cf69a31cbfb09f8d9d54fba51af21ebffc695dc"
+  },
+  {
+   "path": "modeling_unlimitedocr.py",
+   "size": 55724,
+   "git_oid": "2a717b55c0509995978d0a1e78802a997c26660e"
+  },
+  {
+   "path": "packing_patch.py",
+   "size": 8110,
+   "git_oid": "f01b4bd31cffe43135a8b86d5436f04d3a69146b"
+  },
+  {
+   "path": "sparse_gather_e2e_triton.py",
+   "size": 18058,
+   "git_oid": "021575ce952bbded01bbfa99eb95641d271cad7d"
+  },
+  {
+   "path": "sparse_gather_triton.py",
+   "size": 23860,
+   "git_oid": "6621872e78cd318e4bb55aa70c1c8813973c78e7"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 549,
+   "git_oid": "ae2383ca05f494aa736e72e6a874332cd2f1c67e"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 9980278,
+   "git_oid": "d5909a7c1e63a78be90fe2bde6c8464e6e9e8540"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 166632,
+   "git_oid": "e97c1bb98fa1de585d85259b77e4785bf1c195a2"
+  },
+  {
+   "path": "wheel/sglang-0.5.20.dev10+g8d62f5fb9c-py3-none-any.whl",
+   "size": 15281032,
+   "sha256": "a3f3e2c94e09de90b61b43d01475fd5d1aa818d16eec05204b8079c09c2ba70d"
+  }
+ ]
+}

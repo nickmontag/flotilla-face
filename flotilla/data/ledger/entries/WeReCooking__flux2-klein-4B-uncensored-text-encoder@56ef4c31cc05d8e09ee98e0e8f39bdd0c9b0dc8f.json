@@ -1,0 +1,35 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "WeReCooking/flux2-klein-4B-uncensored-text-encoder",
+ "revision": "56ef4c31cc05d8e09ee98e0e8f39bdd0c9b0dc8f",
+ "captured": "2026-11-25T05:08:39+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1578,
+   "git_oid": "921d7077ecde5fb16bbc7612186e90f1f3d7b5a8"
+  },
+  {
+   "path": "LANGUAGE_BIAS_STUDY.md",
+   "size": 4870,
+   "git_oid": "d8da208686556a8d4470ccf6a3245006ac90d8c9"
+  },
+  {
+   "path": "README.md",
+   "size": 2600,
+   "git_oid": "1ab3de1d3904309a18c7547d748150f85d1a2137"
+  },
+  {
+   "path": "gitattributes",
+   "size": 1636,
+   "git_oid": "e76cbaa486c1f136fc2b0b1917f37b0b1d52ffe3"
+  },
+  {
+   "path": "qwen3-4b-abl-q4_0.gguf",
+   "size": 2369547008,
+   "sha256": "842d4ee7c62e8447b6bc122cb7616057c5da1333b0ef815b74812dc5db75047b"
+  }
+ ]
+}

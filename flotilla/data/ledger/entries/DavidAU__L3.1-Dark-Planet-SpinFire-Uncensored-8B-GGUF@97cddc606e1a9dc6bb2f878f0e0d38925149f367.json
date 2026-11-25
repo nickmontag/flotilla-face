@@ -1,0 +1,95 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/L3.1-Dark-Planet-SpinFire-Uncensored-8B-GGUF",
+ "revision": "97cddc606e1a9dc6bb2f878f0e0d38925149f367",
+ "captured": "2026-11-25T05:09:07+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2821,
+   "git_oid": "ff6b8b04ee0c6cc9a24d24a81ca9253da499b8af"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-IQ4_XS.gguf",
+   "size": 4484367488,
+   "sha256": "63348cf478016b702788c7b58d1d5777e48b66a76981f3b26db54c68456ddcc1"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-Q2_k.gguf",
+   "size": 3179136128,
+   "sha256": "0ad5f4ecf46328deea29792ef0924adc9846b2f92dac85df19b26d22b2abde91"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-Q3_k_l.gguf",
+   "size": 4321961088,
+   "sha256": "55c0e3e58c379b5cc5146e781946940cf7cc46a4ffc93be76054ae9c7019b6c0"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-Q3_k_m.gguf",
+   "size": 4018922624,
+   "sha256": "47b22246dd9636cbd99286f5e7209740b2c874311da066b90f70f71fe801dcf7"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-Q3_k_s.gguf",
+   "size": 3664503936,
+   "sha256": "0074e546a901ec04f1eb9c8c8bdeeeb529837e1f7af2115fc4f6fd63d7122794"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-Q4_0_4_4.gguf",
+   "size": 4661216384,
+   "sha256": "075b30143595c7cc2053fd8102fe6f1121e83b83d3dd73f5d3dc8560e847dc5d"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-Q4_0_4_8.gguf",
+   "size": 4661216384,
+   "sha256": "afa929e47d216e3120ae1e9464adc11da3b21c9beaa3b25334ff2b188c962853"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-Q4_0_8_8.gguf",
+   "size": 4661216384,
+   "sha256": "f541c4a8e53cded997e709b4f9714f284b5b1d4407725e9ff51d2f65cee7189e"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-Q4_k_m.gguf",
+   "size": 4920738944,
+   "sha256": "97940023385f63515eb7205a6b93b9126398f6831b54edfb0001f3667daaff82"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-Q4_k_s.gguf",
+   "size": 4692673664,
+   "sha256": "f24d7d6e423750da0bd4a3b6942e135d3cb0e936a8c53545e5f3e70b464f4947"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-Q5_k_s.gguf",
+   "size": 5599298688,
+   "sha256": "c0a632ed87c0ee3b89da246fd7c35f446587f968799f3770c2b1961880fa6ec3"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-Q6_k.gguf",
+   "size": 6596011136,
+   "sha256": "b6d915a89f977ac159387110f4ea26e30020e9243b50fe81fa26cb87c8a7b8f7"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-Q8_0.gguf",
+   "size": 8540775552,
+   "sha256": "79801e717a85ed9a3c8bcf9779d50a4bb860161573351525fe916e3a7bfdd7ca"
+  },
+  {
+   "path": "L3.1-Dark-Planet-SpinFire-Uncensored-8B-D_AU-q5_k_m.gguf",
+   "size": 5732992128,
+   "sha256": "9be72860c9e23d5c1be22a8dcac80b2e0d0ced3a8d302f64ebfca9b223787d8f"
+  },
+  {
+   "path": "README.md",
+   "size": 59188,
+   "git_oid": "9c43ba1aabdc34fe460f4a203a970a43caec4568"
+  },
+  {
+   "path": "dark-spin.jpg",
+   "size": 255860,
+   "git_oid": "afa5f64cf9ef1fdb6365e4de0e166174a4f7c363"
+  }
+ ]
+}

@@ -1,0 +1,570 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "org2ai/Wald-4B",
+ "revision": "d17e09a2bbfea367a7f65e6eb05cf79a8e683dbf",
+ "captured": "2026-11-25T05:09:40+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1810,
+   "git_oid": "c8731b5467f76b676060cb79e637cddd26047211"
+  },
+  {
+   "path": "CITATION.cff",
+   "size": 556,
+   "git_oid": "0f717638fc4be921a0443385117fbaf3fc29561d"
+  },
+  {
+   "path": "CONTAMINATION.md",
+   "size": 2544,
+   "git_oid": "00577d4c64f3dc522214660cf075521ef12c3fcd"
+  },
+  {
+   "path": "Dockerfile",
+   "size": 1221,
+   "git_oid": "824e2701a482230bb7e211abee3ddd3a9617f077"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11358,
+   "git_oid": "57bc88a15a0ee8266c259b2667e64608d3f7e292"
+  },
+  {
+   "path": "MANIFEST.json",
+   "size": 15717,
+   "git_oid": "57c48bfc09aadf8efb28cdad7bdbf3da4c1f28c7"
+  },
+  {
+   "path": "NOTICE",
+   "size": 1778,
+   "git_oid": "8d014431e0efd4f1f577ff96c1ca4f08f5abf1a8"
+  },
+  {
+   "path": "PROVENANCE.md",
+   "size": 1176,
+   "git_oid": "e19be91e482dd476015dd3f0b99cc7dc50c0ddb2"
+  },
+  {
+   "path": "README.md",
+   "size": 7197,
+   "git_oid": "6303a93e304b4190e30a970e84a8437ec72abc0e"
+  },
+  {
+   "path": "RUNBOOK.md",
+   "size": 7098,
+   "git_oid": "baf3d3ec81eb281fc639f509ab111d053894fd48"
+  },
+  {
+   "path": "SHA256SUMS",
+   "size": 1326,
+   "git_oid": "f90442989b169235bca8df016a982a2393346765"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7756,
+   "git_oid": "a585dec894e63da457d9440ec6aa7caa16d20860"
+  },
+  {
+   "path": "config.json",
+   "size": 3161,
+   "git_oid": "557d961b205319c6a7da5f757f565b69b3967b7d"
+  },
+  {
+   "path": "contamination/trained-on-di-ids.json",
+   "size": 7016,
+   "git_oid": "2ca8acfe18a6cd30cd1d991741ab6fbd6b0f1590"
+  },
+  {
+   "path": "docs/api.md",
+   "size": 7193,
+   "git_oid": "85ba8f8cadcc9f625940c2b6e69ebd951a8c13fb"
+  },
+  {
+   "path": "evaluation/v2.1/README.md",
+   "size": 1130,
+   "git_oid": "585ef397e2b4a787d216b335097296514ef29140"
+  },
+  {
+   "path": "evaluation/v2.1/latency.json",
+   "size": 136,
+   "git_oid": "2a81792f3dc3bf72bce493f6f67fcf42d9e144bb"
+  },
+  {
+   "path": "evaluation/v2.1/serving-parity.json",
+   "size": 866,
+   "git_oid": "61a129d021e0486a15fe3b625ec10ce8e2b2a73e"
+  },
+  {
+   "path": "evaluation/v2.1/summary.json",
+   "size": 1052,
+   "git_oid": "03a5c166cc0b76ca7a7d1696e13cd6b18d674935"
+  },
+  {
+   "path": "evaluation/v2.1/video.json",
+   "size": 2719,
+   "git_oid": "63fa5593c39ecb895c93116aa031a7d62b83db72"
+  },
+  {
+   "path": "evaluation/v2/README.md",
+   "size": 2711,
+   "git_oid": "bdc8b10951f2d1d790c909db08d3009a053ab064"
+  },
+  {
+   "path": "evaluation/v2/code/di03_native_auto_engine.py",
+   "size": 3578,
+   "git_oid": "6f78566e8cf56ae84e0f9b90ed670a607e5e3e40"
+  },
+  {
+   "path": "evaluation/v2/code/di03_parallel.py",
+   "size": 5703,
+   "git_oid": "9b0fb55022b65fe02967c4d506c79ae76de99682"
+  },
+  {
+   "path": "evaluation/v2/gguf-parity.json",
+   "size": 1558,
+   "git_oid": "c9599925c10017dc139e9327f4670000ad6b87d2"
+  },
+  {
+   "path": "evaluation/v2/latency.json",
+   "size": 306,
+   "git_oid": "f9e806dcbde2533d52d1922a1c47ddbaa34369ae"
+  },
+  {
+   "path": "evaluation/v2/serving-parity.json",
+   "size": 1703,
+   "git_oid": "c6d0ad5883bc509a2ae0e6f108b83aeeadca04a0"
+  },
+  {
+   "path": "evaluation/v2/summary.json",
+   "size": 3170,
+   "git_oid": "91083769a21f01eec1491887d9f8cac3745e1936"
+  },
+  {
+   "path": "evaluation/v2/vision-sanity.json",
+   "size": 728,
+   "git_oid": "31b58780e23f8aa18b132df4a6844f0dac89c9c6"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 116,
+   "git_oid": "31ec2a53cc9cde720b0a8fbc68b9c4e73ac5a18f"
+  },
+  {
+   "path": "graft-manifest.json",
+   "size": 113687,
+   "git_oid": "1fa2d3b35aabc1183c0afd7b12e64eb51a186e16"
+  },
+  {
+   "path": "graft-report.json",
+   "size": 794,
+   "git_oid": "512a9ab4e0e43c114a87d8858f11aad5ee6c9013"
+  },
+  {
+   "path": "history/v1.0/CONTAMINATION.md",
+   "size": 25982,
+   "git_oid": "f1fe0b6956dad60b5d19ea185be17dda580b8b0c"
+  },
+  {
+   "path": "history/v1.0/README.md",
+   "size": 10529,
+   "git_oid": "da8b40b605cf3fe615e0d4f1208f04acf083b681"
+  },
+  {
+   "path": "history/v1.0/RUNBOOK.md",
+   "size": 6268,
+   "git_oid": "ce32df39b2eae47fed2a1becef21c99770df367a"
+  },
+  {
+   "path": "history/v1.0/docs/lora-cli.md",
+   "size": 7501,
+   "git_oid": "f727b215fecc00db0049463896aa242c4942c43e"
+  },
+  {
+   "path": "history/v1.0/docs/observations/one-lora-all-verticals.md",
+   "size": 8245,
+   "git_oid": "34c79493f542cc3d64aed61b4868b12c4b3478c8"
+  },
+  {
+   "path": "history/v1.0/figures/data.json",
+   "size": 31885,
+   "git_oid": "ead688c8a5ef5497f4f3882bcd57c1f41a3a69e3"
+  },
+  {
+   "path": "history/v1.0/figures/di-areas.svg",
+   "size": 7525,
+   "git_oid": "62cd538804d167a07567898a227b09cbe267facc"
+  },
+  {
+   "path": "history/v1.0/figures/di-vs-size.svg",
+   "size": 11492,
+   "git_oid": "4ebdd1ca5c92c4539168a15b7bca2482f061f206"
+  },
+  {
+   "path": "history/v1.0/figures/latency-cost.svg",
+   "size": 5068,
+   "git_oid": "a05b00d6b607fac6e14821251edcebd7649c6c80"
+  },
+  {
+   "path": "history/v1.0/figures/lora-cli-architecture.svg",
+   "size": 13169,
+   "git_oid": "360447e510d7f3d4dc54e16929ead5daae583445"
+  },
+  {
+   "path": "history/v1.0/figures/verticals.svg",
+   "size": 17902,
+   "git_oid": "d3365f8996243a60edfa990e29ee64a2fe316a3e"
+  },
+  {
+   "path": "history/v1.0/tools/export_figure_data.py",
+   "size": 10121,
+   "git_oid": "fdccc1ede758d7bbfab288855696942155e0b96a"
+  },
+  {
+   "path": "history/v1.0/tools/make_figures.py",
+   "size": 19067,
+   "git_oid": "b10d0c19c7c163645c151eed93715809d4495387"
+  },
+  {
+   "path": "history/v1.1/evaluation/benchmark-summary.json",
+   "size": 36014,
+   "git_oid": "db56450138d7f4918814f9b088d07af0f55d64ce"
+  },
+  {
+   "path": "history/v1.1/evaluation/index.json",
+   "size": 10559,
+   "git_oid": "d292c8d3bf67784cdef974eac4def8398ff02b61"
+  },
+  {
+   "path": "history/v1.1/evaluation/release-validation.json",
+   "size": 413,
+   "git_oid": "aab87e0cc43fbb1164aaf0d8f8da95b893626135"
+  },
+  {
+   "path": "history/v1.1/evaluation/scores.json",
+   "size": 33084,
+   "git_oid": "1c1957fbf1a5d068ce3a510405042ca1fa029bea"
+  },
+  {
+   "path": "history/v1.1/evaluation/serial-latency-preflight-corrected.json",
+   "size": 336,
+   "git_oid": "8da16bf772a34a881bc6fb6ee2e75eb7584a706c"
+  },
+  {
+   "path": "llms.txt",
+   "size": 1261,
+   "git_oid": "67574c1079b0ec120d5671949e00f2e0023ed743"
+  },
+  {
+   "path": "merges.txt",
+   "size": 3353259,
+   "git_oid": "a494e019ca1502219fd0128658b979e5f05ae8e8"
+  },
+  {
+   "path": "model-00001-of-00003.safetensors",
+   "size": 4757977272,
+   "sha256": "1bf33f0d7f7722ae8f87bca21a9d5ebca8328962e6b170abd09d354d2c978a57"
+  },
+  {
+   "path": "model-00002-of-00003.safetensors",
+   "size": 3653581040,
+   "sha256": "7cccb8e4ea4c9858c8c78754bee789f5ccc8b437836b307c7919a15165097aef"
+  },
+  {
+   "path": "model-00003-of-00003.safetensors",
+   "size": 908262184,
+   "sha256": "9a8340e453e63f70185e56fde60aeae26085fe3c39e20ac1662b4325f01a78eb"
+  },
+  {
+   "path": "model-files/serving.json",
+   "size": 1202,
+   "git_oid": "d655143819fcacb761c6b156fb962350aad4bbdc"
+  },
+  {
+   "path": "model-info.json",
+   "size": 5888,
+   "git_oid": "07f98b8683f83abbd0626badd7aa997d1792bd1c"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 67340,
+   "git_oid": "d8b08b6e28021dfeac282124d1c75d5c988dcae4"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "reference/README.md",
+   "size": 823,
+   "git_oid": "a2cc0fe7c4f875c8c94fa3a550b1a037cecf4870"
+  },
+  {
+   "path": "reference/eval/__init__.py",
+   "size": 0,
+   "git_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+  },
+  {
+   "path": "reference/eval/native_answer_acceptance_v1.py",
+   "size": 19406,
+   "git_oid": "08f2926e492d9e1cf7eb038d2ce4b7c0da924872"
+  },
+  {
+   "path": "reference/eval/systemone_vllm.py",
+   "size": 36069,
+   "git_oid": "ab0f77071877447af4cd568fe0e2a845d40193fb"
+  },
+  {
+   "path": "reference/eval/vllm_letter.py",
+   "size": 16993,
+   "git_oid": "7225f77dd9d470d8963ebbb3546857761607cef5"
+  },
+  {
+   "path": "reference/kev/__init__.py",
+   "size": 0,
+   "git_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+  },
+  {
+   "path": "reference/kev/api.py",
+   "size": 7086,
+   "git_oid": "a4ec517078601fb0d34b30e79c71169675cd2ded"
+  },
+  {
+   "path": "reference/midtrain/__init__.py",
+   "size": 0,
+   "git_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+  },
+  {
+   "path": "reference/midtrain/encode.py",
+   "size": 19164,
+   "git_oid": "b939c41c5d95def0d572c5dd9dd9d64e409454aa"
+  },
+  {
+   "path": "reference/midtrain/letter.py",
+   "size": 22075,
+   "git_oid": "1efc28e840f61263edd9615e1d550932baaf6063"
+  },
+  {
+   "path": "reference/midtrain/rawprompt.py",
+   "size": 14571,
+   "git_oid": "082740ce4f86cc8efa4ed25ad153a0b8b07bfc04"
+  },
+  {
+   "path": "reference/midtrain/tokens.py",
+   "size": 3488,
+   "git_oid": "a96542ed99349af069392d9847502d1ab9801923"
+  },
+  {
+   "path": "reference/source-pins.json",
+   "size": 962,
+   "git_oid": "22b6f8727d2deed0d4c1f3c4ad95380724da8d00"
+  },
+  {
+   "path": "run.sh",
+   "size": 994,
+   "git_oid": "de859733088e68260f491b9b40c95ed6d1e7e8d9"
+  },
+  {
+   "path": "server/CHANGELOG.md",
+   "size": 1321,
+   "git_oid": "f607fbe1c05aaedb4e333d7df5765cbe0e08fc11"
+  },
+  {
+   "path": "server/README.md",
+   "size": 5479,
+   "git_oid": "19859590b54c2d0144235d70ce38a0a9bd5f5ab4"
+  },
+  {
+   "path": "server/pyproject.toml",
+   "size": 905,
+   "git_oid": "6882538d0f426d3d20879d3fa795a8a97ef5a382"
+  },
+  {
+   "path": "server/src/wald_serve/__init__.py",
+   "size": 200,
+   "git_oid": "7456228a374f3201aec09c82f8efd89d6c4e1b1d"
+  },
+  {
+   "path": "server/src/wald_serve/__main__.py",
+   "size": 51,
+   "git_oid": "0a68a649c4d3dc0a673e24a3a7cde6d9393578d6"
+  },
+  {
+   "path": "server/src/wald_serve/engine.py",
+   "size": 14814,
+   "git_oid": "561d53aee1c522639b6abeacecb7b2f5b4467576"
+  },
+  {
+   "path": "server/src/wald_serve/native.py",
+   "size": 17130,
+   "git_oid": "6d01e9dd92662cd257196bd49ab9fc8ee6ff771e"
+  },
+  {
+   "path": "server/src/wald_serve/native_llamacpp.py",
+   "size": 3827,
+   "git_oid": "09310d6aecd9198e1d68559f2f2d4240decf60a5"
+  },
+  {
+   "path": "server/src/wald_serve/native_reference/eval/native_answer_acceptance_v1.py",
+   "size": 19406,
+   "git_oid": "08f2926e492d9e1cf7eb038d2ce4b7c0da924872"
+  },
+  {
+   "path": "server/src/wald_serve/native_reference/eval/systemone_vllm.py",
+   "size": 36069,
+   "git_oid": "ab0f77071877447af4cd568fe0e2a845d40193fb"
+  },
+  {
+   "path": "server/src/wald_serve/native_reference/eval/vllm_letter.py",
+   "size": 16993,
+   "git_oid": "7225f77dd9d470d8963ebbb3546857761607cef5"
+  },
+  {
+   "path": "server/src/wald_serve/native_reference/kev/api.py",
+   "size": 7086,
+   "git_oid": "a4ec517078601fb0d34b30e79c71169675cd2ded"
+  },
+  {
+   "path": "server/src/wald_serve/native_reference/midtrain/encode.py",
+   "size": 19164,
+   "git_oid": "b939c41c5d95def0d572c5dd9dd9d64e409454aa"
+  },
+  {
+   "path": "server/src/wald_serve/native_reference/midtrain/letter.py",
+   "size": 22075,
+   "git_oid": "1efc28e840f61263edd9615e1d550932baaf6063"
+  },
+  {
+   "path": "server/src/wald_serve/native_reference/midtrain/rawprompt.py",
+   "size": 14571,
+   "git_oid": "082740ce4f86cc8efa4ed25ad153a0b8b07bfc04"
+  },
+  {
+   "path": "server/src/wald_serve/native_reference/midtrain/tokens.py",
+   "size": 3488,
+   "git_oid": "a96542ed99349af069392d9847502d1ab9801923"
+  },
+  {
+   "path": "server/src/wald_serve/native_reference/source-pins.json",
+   "size": 962,
+   "git_oid": "22b6f8727d2deed0d4c1f3c4ad95380724da8d00"
+  },
+  {
+   "path": "server/src/wald_serve/native_vision.py",
+   "size": 12010,
+   "git_oid": "c406cfdfa91c1eda81835464388f2f90cfd9c046"
+  },
+  {
+   "path": "server/src/wald_serve/prompt.py",
+   "size": 4192,
+   "git_oid": "fe25b67e3c64d2c45d35aa0fc76bbd291137cb87"
+  },
+  {
+   "path": "server/src/wald_serve/server.py",
+   "size": 10020,
+   "git_oid": "55d665d6b6b37db07b5e2a5956aea09c7087e504"
+  },
+  {
+   "path": "server/src/wald_serve/video.py",
+   "size": 24537,
+   "git_oid": "563334b24953c0c6f487b0f29e0ff93cf33b68a1"
+  },
+  {
+   "path": "server/src/wald_serve/vision_v2.py",
+   "size": 14004,
+   "git_oid": "e9b5e8051ba143a0f24edb2f7cef6d4bb8466868"
+  },
+  {
+   "path": "server/src/wald_serve/wire.py",
+   "size": 3670,
+   "git_oid": "6a42af7727fef7d32f17d917be97944bfb8cf1ce"
+  },
+  {
+   "path": "server/tests/fakevllm.py",
+   "size": 4167,
+   "git_oid": "0bbb45c65888bb180dfa4bf10f47deb5937a0e5e"
+  },
+  {
+   "path": "server/tests/fixtures/default-responses-0.2.1.json",
+   "size": 43039,
+   "git_oid": "5b3cf634a45ccfe9328b4f7cef54852848f3af0c"
+  },
+  {
+   "path": "server/tests/record_default_fixtures.py",
+   "size": 3929,
+   "git_oid": "91ab44d753d91e009a961c450f889587365b5e2a"
+  },
+  {
+   "path": "server/tests/stubengine.py",
+   "size": 3597,
+   "git_oid": "e956926600f73ba10eba30f84048edfa8bb9f033"
+  },
+  {
+   "path": "server/tests/test_native_v2.py",
+   "size": 7236,
+   "git_oid": "fcbcdfeb05183d9780d29780143a1a6ac0108a0e"
+  },
+  {
+   "path": "server/tests/test_noul_floor.py",
+   "size": 2347,
+   "git_oid": "79525921607f8622e89de36a9d97f7dbaefce9d5"
+  },
+  {
+   "path": "server/tests/test_parity.py",
+   "size": 4392,
+   "git_oid": "c4fb767eb56bf3ee86584b5e26a05c9a20a800ab"
+  },
+  {
+   "path": "server/tests/test_server.py",
+   "size": 13844,
+   "git_oid": "38458ea35042c7a4c00b4d135dab15edd33a63a1"
+  },
+  {
+   "path": "server/tests/test_video.py",
+   "size": 20812,
+   "git_oid": "4852f7659952d2d28db34a0958a08184fc2fe8eb"
+  },
+  {
+   "path": "server/tests/test_vision_v2.py",
+   "size": 5926,
+   "git_oid": "de185e877c85a58a12f4ed354d75f2343f3f50a8"
+  },
+  {
+   "path": "serving.json",
+   "size": 1202,
+   "git_oid": "87a0a9eaea316195b9a4fcf2292c50cc44fd0fae"
+  },
+  {
+   "path": "temperature.json",
+   "size": 2717,
+   "git_oid": "349cd29a7c275cf9b8f9ec1921b8350b6cfd8585"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989509,
+   "sha256": "bd53432f0de26d67a83b634040d4f043053da4ecd0c759e7f4b24ad4f8bb9a81"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1123,
+   "git_oid": "6913705fa6a05ee4498df98d776803ba8b39f413"
+  },
+  {
+   "path": "tools/secret_scan.py",
+   "size": 1698,
+   "git_oid": "fd0a181fa4d0db08d4e2aaa0415a84420417aaf5"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  },
+  {
+   "path": "vocab.json",
+   "size": 6722759,
+   "git_oid": "0aa0ce0658d60ac4a5d609f4eadb0e8e43514176"
+  }
+ ]
+}

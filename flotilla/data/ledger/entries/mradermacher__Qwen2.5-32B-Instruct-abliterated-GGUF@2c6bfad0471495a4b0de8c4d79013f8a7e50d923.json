@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen2.5-32B-Instruct-abliterated-GGUF",
+ "revision": "2c6bfad0471495a4b0de8c4d79013f8a7e50d923",
+ "captured": "2026-11-25T05:08:33+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2404,
+   "git_oid": "761a7e161f0ed3d339b816ac3c2e969b0349fe0e"
+  },
+  {
+   "path": "Qwen2.5-32B-Instruct-abliterated.IQ4_XS.gguf",
+   "size": 17870101664,
+   "sha256": "f157190d92a442824100873e0251db96ed77b9ceccf3d80eed46fffda3912542"
+  },
+  {
+   "path": "Qwen2.5-32B-Instruct-abliterated.Q2_K.gguf",
+   "size": 12313099424,
+   "sha256": "4b17d2e47507752f1261140bdf1fc3e934669f279aca17240659ea00e9249c9c"
+  },
+  {
+   "path": "Qwen2.5-32B-Instruct-abliterated.Q3_K_L.gguf",
+   "size": 17247079584,
+   "sha256": "8f4dafa2ca29eaf914d78f1af247dd368bc408addadde6b1f72d1a6eed469e1d"
+  },
+  {
+   "path": "Qwen2.5-32B-Instruct-abliterated.Q3_K_M.gguf",
+   "size": 15935048864,
+   "sha256": "f74c1689f5f7ba2b7e22c65cd4b0cb9c8cf6da7227fc6e4ce35f6919c46f894d"
+  },
+  {
+   "path": "Qwen2.5-32B-Instruct-abliterated.Q3_K_S.gguf",
+   "size": 14392331424,
+   "sha256": "034d1ad8bb0e346ed5252dd0462a82bf97fa2676526239a50020435de442cc93"
+  },
+  {
+   "path": "Qwen2.5-32B-Instruct-abliterated.Q4_K_M.gguf",
+   "size": 19851336864,
+   "sha256": "e63617fd56c8585fe78fe05bcbb3b36e0b5ef3857e11233cdd1dc9ba56f38001"
+  },
+  {
+   "path": "Qwen2.5-32B-Instruct-abliterated.Q4_K_S.gguf",
+   "size": 18784410784,
+   "sha256": "e0c1067d72f45f2ffc8dfd282e1d4d8575c689b6fa8edb5f402701de017dc51d"
+  },
+  {
+   "path": "Qwen2.5-32B-Instruct-abliterated.Q5_K_M.gguf",
+   "size": 23262157984,
+   "sha256": "a8f00760366aecb235b41fa603fb92acffa28b6d638055337beee92fc7479ecf"
+  },
+  {
+   "path": "Qwen2.5-32B-Instruct-abliterated.Q5_K_S.gguf",
+   "size": 22638255264,
+   "sha256": "da0ee10ba2f26f446aae9fc6589c10625a32631730f141f5e70d41af9b31c0d0"
+  },
+  {
+   "path": "Qwen2.5-32B-Instruct-abliterated.Q6_K.gguf",
+   "size": 26886155424,
+   "sha256": "05707718ab9113ef7edb5ad9937d98072b4a026e0512e57b3fb3a5f6f9edd0f9"
+  },
+  {
+   "path": "Qwen2.5-32B-Instruct-abliterated.Q8_0.gguf",
+   "size": 34820885664,
+   "sha256": "ee38e41e8b9f1c2154db7fb0ced2a90feb010ff0ac17cbbd772e24ac5363ca62"
+  },
+  {
+   "path": "README.md",
+   "size": 3681,
+   "git_oid": "e3e7ffde61af58a9c6ef17f6d5320c3f29aacf0b"
+  }
+ ]
+}

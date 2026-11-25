@@ -1,0 +1,90 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Huihui-Ornith-1.5-9B-abliterated-GGUF",
+ "revision": "ea07de5ddbf7bac67aee9db5d525e9ea830e9e0d",
+ "captured": "2026-11-25T05:08:51+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2653,
+   "git_oid": "80042bf371d9dff869e20d552b89a2cb1ed62bcb"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.IQ4_XS.gguf",
+   "size": 5227898304,
+   "sha256": "a6737e96b0cd9a420d4ff7ddbb41d81b2a2213494c2fbc9b8203316bb8775212"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.Q2_K.gguf",
+   "size": 3827262912,
+   "sha256": "8ea32c7d77357dbccb2c450bc296438825c5d33f4bd0feb8a00f97000a13e4dc"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.Q3_K_L.gguf",
+   "size": 4925515200,
+   "sha256": "570f52f929ac69efbd4b72e05f9b1fa3b8aa96e8020b46a32da1ffd382b63662"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.Q3_K_M.gguf",
+   "size": 4623525312,
+   "sha256": "d78cc13c69c163d31ab39b7c05dd7f9cd5763ad23655f98ab9a88a425bba75b3"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.Q3_K_S.gguf",
+   "size": 4259407296,
+   "sha256": "506782df6cf78632b7444365585067c4bcda56dc5a6c98e1b2a4db78efef57e8"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.Q4_K_M.gguf",
+   "size": 5629109696,
+   "sha256": "84779a40e0a237f1f0275ac86bb92ae1a0fb5245f127b7b2e25a4ddabf7d03ad"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.Q4_K_S.gguf",
+   "size": 5351630272,
+   "sha256": "443bb76b3c192d42da16b1553fcde46cc02eb7270381b4415f845843a4f68ce0"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.Q5_K_M.gguf",
+   "size": 6467970496,
+   "sha256": "2e2347833c07ee8cd11b47a1b9ce5ca418ff610472a5a221efdde63ca5b50116"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.Q5_K_S.gguf",
+   "size": 6305310144,
+   "sha256": "26fbfd18f0718eff208a524daa43bfb44cd3d0e0b0b0e7b56c940985e35d0b11"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.Q6_K.gguf",
+   "size": 7359260096,
+   "sha256": "a428d77fa67f8c325ab340dfa96949ba5f57e3dc70a985cc3b0039080a75c6bf"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.Q8_0.gguf",
+   "size": 9527502272,
+   "sha256": "2688a36167d0dc209173ce2ed9891e0edac81bcb28b8ef37ac70738f9d316088"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.f16.gguf",
+   "size": 17920697792,
+   "sha256": "733f6bdf972cc45f502fec96264e4161aabacc02fdd3f8ceaef380ba1f659118"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.mmproj-Q8_0.gguf",
+   "size": 624229824,
+   "sha256": "9cdb2c6083a11eaecd8b88b365dc53686b2629df3134b478024e64b98cec2c42"
+  },
+  {
+   "path": "Huihui-Ornith-1.5-9B-abliterated.mmproj-f16.gguf",
+   "size": 918166080,
+   "sha256": "7e5bd6a013e5655c8d697d3c8ad750c8ddad15ea1eb12eecf90d07a7e0d85883"
+  },
+  {
+   "path": "README.md",
+   "size": 4478,
+   "git_oid": "04ec5c4e0a62da766919aeefae65a80c39bd3b9c"
+  }
+ ]
+}

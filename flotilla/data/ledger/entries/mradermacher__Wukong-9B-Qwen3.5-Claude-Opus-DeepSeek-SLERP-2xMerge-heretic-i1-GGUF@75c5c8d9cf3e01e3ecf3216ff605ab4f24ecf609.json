@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Wukong-9B-Qwen3.5-Claude-Opus-DeepSeek-SLERP-2xMerge-heretic-i1-GGUF",
+ "revision": "75c5c8d9cf3e01e3ecf3216ff605ab4f24ecf609",
+ "captured": "2026-11-25T05:09:04+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1962,
+   "git_oid": "7a3589156b6022dda25a2697863bb635f9df364c"
+  },
+  {
+   "path": "README.md",
+   "size": 3894,
+   "git_oid": "535f0a16dcaef5da0612bcf876cce43d54a01685"
+  },
+  {
+   "path": "Wukong-9B-Qwen3.5-Claude-Opus-DeepSeek-SLERP-2xMerge-heretic.i1-IQ3_M.gguf",
+   "size": 4576260928,
+   "sha256": "0995d61f892c4f723b0f99bbe97ab4add7aeb170e0d60be7c8edcdb9cff1ebb9"
+  },
+  {
+   "path": "Wukong-9B-Qwen3.5-Claude-Opus-DeepSeek-SLERP-2xMerge-heretic.i1-Q2_K.gguf",
+   "size": 4009341760,
+   "sha256": "b37ab7daa8d2c2a39ff4612b666bf902449777ee06a279f13fa43a882ec2c29f"
+  },
+  {
+   "path": "Wukong-9B-Qwen3.5-Claude-Opus-DeepSeek-SLERP-2xMerge-heretic.i1-Q4_K_S.gguf",
+   "size": 5494846272,
+   "sha256": "709759877070729ee97ee541c059e9686577f163ec498675b8d87139d7fb7761"
+  },
+  {
+   "path": "Wukong-9B-Qwen3.5-Claude-Opus-DeepSeek-SLERP-2xMerge-heretic.imatrix.gguf",
+   "size": 8719552,
+   "sha256": "9fcb8c17630a312e9c1487cc6617bbb440a1e0655236d5b7735120fc8c0fd66e"
+  }
+ ]
+}

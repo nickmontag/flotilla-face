@@ -1,0 +1,140 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Huihui-Kolibri-1-BF16-abliterated-i1-GGUF",
+ "revision": "8377c1215674c9c9137b96a1e4f29582188ab56f",
+ "captured": "2026-11-25T05:08:57+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3545,
+   "git_oid": "c7a0c690b0d8082c28fe604a829cd281329dd953"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-IQ1_M.gguf",
+   "size": 17686127296,
+   "sha256": "018d57085df30a2c52ba8b444753731d6ed0381e953b3ae23a126dfeaa4bb48e"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-IQ1_S.gguf",
+   "size": 15927560896,
+   "sha256": "f8c52fb9ac951805b7a8289dffc68eec1e8527da086ecf599ea01ff31992a16b"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-IQ2_M.gguf",
+   "size": 25628783296,
+   "sha256": "fe27fb08e5c6eae6229fe25f9dd81fde1d2aacfdd6f728e6aa60a0d4701870a5"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-IQ2_S.gguf",
+   "size": 23284028096,
+   "sha256": "4556aadf4a540f4940c29a2945b799c47510ca5da752dd0ae75deb6983523ac3"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-IQ2_XS.gguf",
+   "size": 22986402496,
+   "sha256": "74a96d736a961eb295bd9fb287c5baa20db3441b660ba86fa634e430831c9662"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-IQ2_XXS.gguf",
+   "size": 20617071296,
+   "sha256": "e2bb4c000562e03c11029b5ac353924d8cf2736a0e366b73ec61be3c0bdcb648"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-IQ3_M.gguf",
+   "size": 34385519296,
+   "sha256": "35479046ed52aced652f3855f52ccd1f105cf5ca88b9b7b3586f40f018941852"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-IQ3_S.gguf",
+   "size": 33878946496,
+   "sha256": "fee3ef64034c989e3d56c356acb17a756a879c0c8cdde6787a479de2bfd87fcd"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-IQ3_XS.gguf",
+   "size": 32088584896,
+   "sha256": "f98b6f6ec442423eff9330281fec84ecc741f11f580d28d5dfb944d683493f34"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-IQ3_XXS.gguf",
+   "size": 30194082496,
+   "sha256": "8c3b656d2a4a06bf4f4188a450f20aec2de3c9ce45cf121fd176babfda616d71"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-IQ4_XS.gguf",
+   "size": 41774498496,
+   "sha256": "d3556f98006cc50c7857d93697d04e623aa0c81a43734d7b8e5aa4a3dacca458"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-Q2_K.gguf",
+   "size": 28634018496,
+   "sha256": "9732734f3e2e06fe1ae8bf60d5792d81abbb18681eb45a04444d201a0e85da02"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-Q2_K_S.gguf",
+   "size": 26701218496,
+   "sha256": "db31d7392721e1539a20192286982169d4613ec28c2fb1b9dd2ab020dd2fef42"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-Q3_K_L.gguf",
+   "size": 40594850496,
+   "sha256": "a63c7ae03e68fad8b78a9007c1bff59f0dbe411d90894af6298c5d17e9262366"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-Q3_K_M.gguf",
+   "size": 37523997376,
+   "sha256": "34f45bec23a8883260f6da37a12556f25e2453a8762fa089744ad6455937ccb6"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-Q3_K_S.gguf",
+   "size": 33870242496,
+   "sha256": "c725b5615500482017ed0f3e5d12f590566e60559baa62d445b7488ab5896677"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-Q4_0.gguf",
+   "size": 44382421696,
+   "sha256": "5c63599f2cbb5293912986705fcb76566b0036fea2fc1dfb00575b37a26cd66d"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-Q4_1.gguf",
+   "size": 49051042496,
+   "sha256": "4b75f1a935507ffea67eb11f91061639a75c108639ac24a241a9258f98a70d90"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-Q4_K_M.gguf",
+   "size": 47454114496,
+   "sha256": "37bfb449c8e5b8880e2e35f276858f3bcd514d1a5215b62ac96fb0d810058038"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-Q4_K_S.gguf",
+   "size": 44572312256,
+   "sha256": "f55b88aa1c1dbe2cf55418f63ccbf190039978ef6d1e7737c1191f60375b295b"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-Q5_K_M.gguf",
+   "size": 55588770496,
+   "sha256": "7fc958a56fa0e059422df5110f53e5bd508cdf376fe822b3d35d2dac63b1bfc8"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-Q5_K_S.gguf",
+   "size": 53908898496,
+   "sha256": "758058a4480ab19110ab2ed0718e9d28fed990172ef01c7904eb228c87430600"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.i1-Q6_K.gguf",
+   "size": 64231842496,
+   "sha256": "683ba3a02e4785cab8c7508f6f9d997779f5785b1029e016779e382f59530035"
+  },
+  {
+   "path": "Huihui-Kolibri-1-BF16-abliterated.imatrix.gguf",
+   "size": 874303808,
+   "sha256": "f6202bd3f811a3cb48b356ff4829848e31eb60133d82beb15c22cf9938d1c965"
+  },
+  {
+   "path": "README.md",
+   "size": 6770,
+   "git_oid": "a765e7b46e10ff1d6f8a31a99ceb787cd303ced4"
+  }
+ ]
+}

@@ -1,0 +1,95 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "sensenova/SenseNova-Loop-9B-GGUF",
+ "revision": "5889ddb1bd7b1e00248696d08fa1fc88d2b62aa3",
+ "captured": "2026-11-25T05:09:39+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2367,
+   "git_oid": "a176ed99e3acc374a6194d9b3e2a8d85f2ed6f51"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11357,
+   "git_oid": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64"
+  },
+  {
+   "path": "README.md",
+   "size": 17815,
+   "git_oid": "8afa982414c67146f10ddbb57159acd7c8c4acec"
+  },
+  {
+   "path": "README_CN.md",
+   "size": 17222,
+   "git_oid": "f4436495e459ad2b6530ad5dfb47873b26b3d05e"
+  },
+  {
+   "path": "SenseNova-Loop-9B-BF16.gguf",
+   "size": 18419909536,
+   "sha256": "489f1a439f9794a4cb3cf2eb27d82ebdce8ba3f5627f00c60dd2cca9cb6d81cd"
+  },
+  {
+   "path": "SenseNova-Loop-9B-Q4_K_M.gguf",
+   "size": 5818631072,
+   "sha256": "5528b06c41a92d0a2413e827ab08531be56b10f881606c6659361b5da507eeed"
+  },
+  {
+   "path": "SenseNova-Loop-9B-Q5_K_M.gguf",
+   "size": 6668501920,
+   "sha256": "5f1f7fd99d4153648a5845045f407716c3a8fc8c7d3c600727cdb19ea9fc37d5"
+  },
+  {
+   "path": "SenseNova-Loop-9B-Q8_0.gguf",
+   "size": 9798648736,
+   "sha256": "0db6188dbba93527cfd8e162ad6f8331593025d9f9b9e9a3e846a5faa601a0d1"
+  },
+  {
+   "path": "assets/hero.png",
+   "size": 1268243,
+   "sha256": "10b0967b49757bde086e09c454b8daab9ce083f81b0a3138b63ee2b63d6b3bd1"
+  },
+  {
+   "path": "assets/loop_scaling_zh_latest.png",
+   "size": 671352,
+   "sha256": "ecc512649b49fc29e6228e3ef6099460b8d0643b5519eaa55e96f87737e41e87"
+  },
+  {
+   "path": "assets/release_benchmark_iuua.png",
+   "size": 213954,
+   "sha256": "22401ec63c9ff95de78d2cb0582d6a0d185016fb4bcba66992fde83991efde19"
+  },
+  {
+   "path": "assets/showcase_ref_3d.gif",
+   "size": 6197267,
+   "sha256": "ca73d5e70313dbe8b36b70790d4a68de4202db40b7564c74e58795dae0fb5260"
+  },
+  {
+   "path": "assets/showcase_ref_coast.gif",
+   "size": 4103296,
+   "sha256": "c2fdf76be00bdd1c2635a9b000681db6a334c12f7812e2966c1d524469ae97d2"
+  },
+  {
+   "path": "assets/showcase_ref_orbit.gif",
+   "size": 3100817,
+   "sha256": "0185113c4e46675edaa5ad3aab8232704158fbbb6a76eb18bfcb4d401a0170c4"
+  },
+  {
+   "path": "assets/showcase_ref_poster.gif",
+   "size": 4261659,
+   "sha256": "f454c69089c58ef392a89240ff2a90034d4edc6e98bd665294aedf8853dddfa8"
+  },
+  {
+   "path": "assets/showcase_ref_web.gif",
+   "size": 2212639,
+   "sha256": "ae345ddb9c26514a13f2e11279ff29dd891f64aa70269dcbc8cb8483ef193620"
+  },
+  {
+   "path": "mmproj-SenseNova-Loop-9B-F16.gguf",
+   "size": 918165984,
+   "sha256": "1bb6afd085020f555b3dca73b6d2139f3a7b28455228b0f07285d0f0ebc61481"
+  }
+ ]
+}

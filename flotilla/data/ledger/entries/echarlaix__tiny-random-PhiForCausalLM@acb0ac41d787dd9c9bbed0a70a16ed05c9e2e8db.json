@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "echarlaix/tiny-random-PhiForCausalLM",
+ "revision": "acb0ac41d787dd9c9bbed0a70a16ed05c9e2e8db",
+ "captured": "2026-11-25T05:13:12+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 28,
+   "git_oid": "154df8298fab5ecf322016157858e08cd1bccbe1"
+  },
+  {
+   "path": "config.json",
+   "size": 881,
+   "git_oid": "73151e522de99249c5e82b31ca12963f067ed720"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 132,
+   "git_oid": "40326eefe3e18a145416bb009c7bd4a61b4bd7c3"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 323520,
+   "sha256": "6fbbc177683bcd0c8d694d552461d9dba3cd6e7f5a883cb8c6c6cce36ce6882e"
+  },
+  {
+   "path": "openvino/openvino_model.bin",
+   "size": 330488,
+   "sha256": "20fd0bbe41c621f8e9fbcc7c75592e9b431d39ab38604c9c9c891e2b12c2d4a9"
+  },
+  {
+   "path": "openvino/openvino_model.xml",
+   "size": 170582,
+   "git_oid": "b0a8f03fa5eae72e48dcd0606881f98483d64c1b"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 99,
+   "git_oid": "0204ed10c186a4c7c68f55dff8f26087a45898d6"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 31312,
+   "git_oid": "f6b6a20cbb5b3ed19913f15b35dc6e3be5ecbf61"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 237,
+   "git_oid": "af28df4f9190240e1c3fb77a27b6f3d9bdd41c2d"
+  }
+ ]
+}

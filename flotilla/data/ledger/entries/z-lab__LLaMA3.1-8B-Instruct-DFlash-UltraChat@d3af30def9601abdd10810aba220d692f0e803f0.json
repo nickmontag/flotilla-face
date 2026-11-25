@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "z-lab/LLaMA3.1-8B-Instruct-DFlash-UltraChat",
+ "revision": "d3af30def9601abdd10810aba220d692f0e803f0",
+ "captured": "2026-11-25T05:13:09+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1580,
+   "git_oid": "aad9294c74eb1ef1fbb18fe10fca9bf37788be74"
+  },
+  {
+   "path": "README.md",
+   "size": 7089,
+   "git_oid": "36c0f1ed1526cbaf6ed85775aff51843cf864a9e"
+  },
+  {
+   "path": "assets/dflash_system.png",
+   "size": 338153,
+   "sha256": "bea1f82796909c1e4f7261ee3c08af743ec3c25057b83fca918808b76af4a7dc"
+  },
+  {
+   "path": "assets/speedup.png",
+   "size": 66921,
+   "git_oid": "e8e3d9b2bcd714e4d2393ead9f1b8f5a190cbcf0"
+  },
+  {
+   "path": "config.json",
+   "size": 1099,
+   "git_oid": "12ebea778228c728a0f34b6468e6c4fba9b51cf7"
+  },
+  {
+   "path": "dflash.py",
+   "size": 12340,
+   "git_oid": "f3cd5d26057e92f4721977cf53195c2d738a6b76"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 2097259104,
+   "sha256": "738b12235328a8f3323b69e7d56bb7847c70908481fb86a209d12ca9d6cc1f3c"
+  },
+  {
+   "path": "utils.py",
+   "size": 5731,
+   "git_oid": "a05eee433eac10792f8ab6bb75b7d3cf7027ed56"
+  }
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llmfan46/Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved-GGUF",
+ "revision": "a6b6a6d9385fe7850644e56bfdc93a04a6cb2ee8",
+ "captured": "2026-11-25T05:08:59+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2912,
+   "git_oid": "5fa64b35a648b4a5256d1c58bbc3bb1a0d4974b6"
+  },
+  {
+   "path": "Qwen3.6-27B-mmproj-BF16.gguf",
+   "size": 931146048,
+   "sha256": "c5c8c41da6d155a61edd21b7e3aa50b6ef77f122d502d36afe4a4d5c3e494d4f"
+  },
+  {
+   "path": "Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved-BF16.gguf",
+   "size": 54657736800,
+   "sha256": "d0de78771d9fe59d286db008dfc11d96e2196f896355c82a1ed231c9c8976e74"
+  },
+  {
+   "path": "Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved-Q3_K_L.gguf",
+   "size": 15164555360,
+   "sha256": "4aa7c4eaefa1c66b7e5ed958f497c3acb055efa5c765088f42483e5abc58044d"
+  },
+  {
+   "path": "Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved-Q3_K_M.gguf",
+   "size": 14105493600,
+   "sha256": "99772ac4f23e45295315317c8ee5f014245222d2541c512b806856ddb4b42ed3"
+  },
+  {
+   "path": "Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved-Q4_K_M.gguf",
+   "size": 17211797600,
+   "sha256": "c07c48d259126eb613df7618c4c073d5cb86c7946723a73d73d83ebd8f70033e"
+  },
+  {
+   "path": "Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved-Q4_K_S.gguf",
+   "size": 16226381920,
+   "sha256": "a2f80b98dbe52552d2392abcbc708ad74f0a37b79019a641784dd824f80e29ce"
+  },
+  {
+   "path": "Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved-Q5_K_M.gguf",
+   "size": 19745091680,
+   "sha256": "9d309b8fadd5788bfa8ee26cd34c37b26df0205613a3be34394ba4da7d5a4285"
+  },
+  {
+   "path": "Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved-Q5_K_S.gguf",
+   "size": 19181072480,
+   "sha256": "eaee59f77382b4eeecf5557a01949b760465aec489aec31f68389e444afb9db0"
+  },
+  {
+   "path": "Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved-Q6_K.gguf",
+   "size": 22802407520,
+   "sha256": "bac53ccfa45c6a1cdfb5185a847214c095ff4940592f32bca4a2e43643e8ea35"
+  },
+  {
+   "path": "Qwen3.6-27B-uncensored-heretic-v2-Native-MTP-Preserved-Q8_0.gguf",
+   "size": 29047087200,
+   "sha256": "bb0a4a050d598fd88d570b326b8331b9b11767acb10e9cc8b0b899f4c3350539"
+  },
+  {
+   "path": "README.md",
+   "size": 74370,
+   "git_oid": "b104973085ab08f8c3f10458fa9038a314d49fd6"
+  },
+  {
+   "path": "llmfan_Qwen3.6-27B-uncensored-heretic-v2-MTP-IQ4_KS.gguf",
+   "size": 16238928224,
+   "sha256": "5fdb06b2b2d114a8026324874241113e2015cce763c4d1f439998e5d5d6726af"
+  }
+ ]
+}

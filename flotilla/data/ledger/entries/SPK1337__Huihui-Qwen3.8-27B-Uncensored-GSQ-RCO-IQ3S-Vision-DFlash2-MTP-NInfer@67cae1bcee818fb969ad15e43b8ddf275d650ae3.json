@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "SPK1337/Huihui-Qwen3.8-27B-Uncensored-GSQ-RCO-IQ3S-Vision-DFlash2-MTP-NInfer",
+ "revision": "67cae1bcee818fb969ad15e43b8ddf275d650ae3",
+ "captured": "2026-11-25T05:08:46+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1609,
+   "git_oid": "a6c48377813ae718ad84b9e46234dee6f346ca6f"
+  },
+  {
+   "path": "BENCHMARK-RTX4090.md",
+   "size": 7923,
+   "git_oid": "ea1443de922c41904d70f4db32d2707c87e31ea3"
+  },
+  {
+   "path": "Huihui-Qwen3.8-27B-GSQ-RCO-IQ3S-Vision-DFlash2.ninfer",
+   "size": 15017456896,
+   "sha256": "a410396311ccb27048008a7ccb8a38f91099f6f6a8e10d10bd8baed7248c046a"
+  },
+  {
+   "path": "Huihui-Qwen3.8-27B-GSQ-RCO-IQ3S-Vision-DFlash2.ninfer.conversion.json",
+   "size": 533748,
+   "git_oid": "6489e8b4bb91a149ab9a21b1fe19dd6cda962c6a"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11358,
+   "git_oid": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+  },
+  {
+   "path": "NOTICE",
+   "size": 4281,
+   "git_oid": "4acc5136c7a00c336ab23b14482fac521eadfefe"
+  },
+  {
+   "path": "README.md",
+   "size": 10694,
+   "git_oid": "7489aab56eb72809f83a644a59b6008ed49db451"
+  },
+  {
+   "path": "SHA256SUMS",
+   "size": 256,
+   "git_oid": "c00a16bdb5f0a03aad60ed8845c7ae20ef5dab38"
+  }
+ ]
+}

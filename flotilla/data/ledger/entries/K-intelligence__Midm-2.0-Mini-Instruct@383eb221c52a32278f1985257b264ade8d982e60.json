@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "K-intelligence/Midm-2.0-Mini-Instruct",
+ "revision": "383eb221c52a32278f1985257b264ade8d982e60",
+ "captured": "2026-11-25T05:13:11+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1622,
+   "git_oid": "11df01631c06bdc43bdfb40311cfe4af2fce9381"
+  },
+  {
+   "path": "LICENSE.txt",
+   "size": 1071,
+   "git_oid": "df5e8f4a0a26b13a21dc8dd976819493b33b4862"
+  },
+  {
+   "path": "README.md",
+   "size": 17933,
+   "git_oid": "c73fb4c1351aafe4e2ab10e5e6f71623ced15e8b"
+  },
+  {
+   "path": "assets/image_1.png",
+   "size": 67045,
+   "git_oid": "83d659762b24855878b75513c523792dde9de67d"
+  },
+  {
+   "path": "assets/image_2.png",
+   "size": 129157,
+   "sha256": "5a1236b68af31cbe5f8cc951f1ddec8c0623bcf34ef1213b39000c806b7a644f"
+  },
+  {
+   "path": "config.json",
+   "size": 746,
+   "git_oid": "8588d43f14203f3931a3d94f717cbabe58ca24c4"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 185,
+   "git_oid": "2a1504f2c2dfde04ec6361fbe386652b94158b76"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 4611084960,
+   "sha256": "03755deae6cc183c9957bcf7b753924b0d1284e1b44aea95aaa822594765e70b"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 301,
+   "git_oid": "cfabacc2620186cd3dd4b1dde9a37e057208636e"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 10398090,
+   "git_oid": "c8b90aeb6f12598eaf191dcf856eb8c32ef9d74a"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 21692,
+   "git_oid": "5fcb4f95d9c8acbe57ce62dee52d6f01704e499b"
+  }
+ ]
+}

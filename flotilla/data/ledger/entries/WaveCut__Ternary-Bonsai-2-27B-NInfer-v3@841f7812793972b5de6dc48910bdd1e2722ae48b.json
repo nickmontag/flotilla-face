@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "WaveCut/Ternary-Bonsai-2-27B-NInfer-v3",
+ "revision": "841f7812793972b5de6dc48910bdd1e2722ae48b",
+ "captured": "2026-11-25T05:13:06+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1593,
+   "git_oid": "6c5d6076c70927ccb05f812a0fd5166656675764"
+  },
+  {
+   "path": "NOTICE",
+   "size": 2567,
+   "git_oid": "adc10ae2d460d7308a321cd1e142d03783da25cc"
+  },
+  {
+   "path": "README.md",
+   "size": 14009,
+   "git_oid": "2259d26e43fb2ea2c0a30e966e2f8e23caea6567"
+  },
+  {
+   "path": "SHA256SUMS",
+   "size": 104,
+   "git_oid": "372ee37a1cade13e8f77f2a35aba686fb988b4f3"
+  },
+  {
+   "path": "Ternary-Bonsai-2-27B-ninfer-v3.ninfer",
+   "size": 9520051456,
+   "sha256": "cdc4810b0ff17c40d0f62cf214b6e0bcd08346e9eb05ca53371507037793c14a"
+  },
+  {
+   "path": "Ternary-Bonsai-2-27B-ninfer-v3.ninfer.conversion.json",
+   "size": 477278,
+   "git_oid": "7731a9ff88f663ef847c0952ff60129537a8d151"
+  }
+ ]
+}

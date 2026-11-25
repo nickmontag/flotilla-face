@@ -1,0 +1,30 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "pottokao/MiniMax-H3-TextEncoder-Qwen3VL-32B-abliterated-GGUF",
+ "revision": "fcab56761c77a203f93c40722181cbc773a34615",
+ "captured": "2026-11-25T05:08:29+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1713,
+   "git_oid": "6743e10228070421ec2673539e4dfe00dfdf6fd0"
+  },
+  {
+   "path": "MiniMax-H3-TextEncoder-Qwen3VL-32B-abliterated-Q3_K_S.gguf",
+   "size": 11455997344,
+   "sha256": "354ebe8cc2ff05a42848fe446f92f0274ec9f487c1e203ec41f446ab8e16022b"
+  },
+  {
+   "path": "MiniMax-H3-TextEncoder-Qwen3VL-32B-abliterated-Q3_K_S_vis.gguf",
+   "size": 12646554528,
+   "sha256": "74b04cd89568fe4e74f371ebec3c52bbe16ffe25a9f3ba0c50687db556e6151d"
+  },
+  {
+   "path": "README.md",
+   "size": 2776,
+   "git_oid": "6aa4c804472a6286993c200d95a62f776890f42c"
+  }
+ ]
+}

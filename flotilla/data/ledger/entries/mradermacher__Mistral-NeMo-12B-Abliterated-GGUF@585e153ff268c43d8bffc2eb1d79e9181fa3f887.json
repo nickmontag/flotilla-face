@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Mistral-NeMo-12B-Abliterated-GGUF",
+ "revision": "585e153ff268c43d8bffc2eb1d79e9181fa3f887",
+ "captured": "2026-11-25T05:08:49+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2360,
+   "git_oid": "56355a73de3202a73d2230f0b16304c3afbe7e24"
+  },
+  {
+   "path": "Mistral-NeMo-12B-Abliterated.IQ4_XS.gguf",
+   "size": 6800057696,
+   "sha256": "56fc109371076d4c227f10581adaa72a18e64b4e2367b1183ca689b6818e5774"
+  },
+  {
+   "path": "Mistral-NeMo-12B-Abliterated.Q2_K.gguf",
+   "size": 4791051616,
+   "sha256": "aff99568fb9814f196122b0c99bf1131f7c8c16ca7fde72f48f6ca31007a0b9f"
+  },
+  {
+   "path": "Mistral-NeMo-12B-Abliterated.Q3_K_L.gguf",
+   "size": 6561506656,
+   "sha256": "fae120bc9fc3b2f6437e841e04e239cb0cba510ef8906af02c63984c39d56fd0"
+  },
+  {
+   "path": "Mistral-NeMo-12B-Abliterated.Q3_K_M.gguf",
+   "size": 6083093856,
+   "sha256": "7b7bc16684cc633e9b50adba61e26bfa4f2a1bceb0933841f6e363b8913353d7"
+  },
+  {
+   "path": "Mistral-NeMo-12B-Abliterated.Q3_K_S.gguf",
+   "size": 5534229856,
+   "sha256": "35b5260d69a23d22a24600fa758326108518d04fc2ed3dc9bc304248674b7d12"
+  },
+  {
+   "path": "Mistral-NeMo-12B-Abliterated.Q4_K_M.gguf",
+   "size": 7477208416,
+   "sha256": "47cbdd0b8f45e6c2b0ea353a96bf93f45ca5571be044f2f1c1c3fe8f42eae33f"
+  },
+  {
+   "path": "Mistral-NeMo-12B-Abliterated.Q4_K_S.gguf",
+   "size": 7120201056,
+   "sha256": "50e3a94db83698fc76b6972068bc309b92272e1b3b6eda3d3cc31aff88f9a10a"
+  },
+  {
+   "path": "Mistral-NeMo-12B-Abliterated.Q5_K_M.gguf",
+   "size": 8727635296,
+   "sha256": "3e30f6df7f537c6e15921671a74bd7ac8f5f23f690f8ed1e2aa3373dbddff089"
+  },
+  {
+   "path": "Mistral-NeMo-12B-Abliterated.Q5_K_S.gguf",
+   "size": 8518739296,
+   "sha256": "ce2ba42120a449e984319168cd3d458fc792a80bfd631d6af33ae5b043e8d16a"
+  },
+  {
+   "path": "Mistral-NeMo-12B-Abliterated.Q6_K.gguf",
+   "size": 10056213856,
+   "sha256": "555a6f64d6f3cf8654e48c5c2b09262447e329b208f65b87e2f873621f9403db"
+  },
+  {
+   "path": "Mistral-NeMo-12B-Abliterated.Q8_0.gguf",
+   "size": 13022373216,
+   "sha256": "28791f6bf491bdea7edf5c3f92ad8f99ac6cb794a8168b785b66fbd6b6c82575"
+  },
+  {
+   "path": "README.md",
+   "size": 3769,
+   "git_oid": "39242190645058a1d8e7b5bd1f88e356414ca660"
+  }
+ ]
+}

@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "AtomicChat/NVIDIA-Nemotron-3.5-Bolt-74B-A9B-Uncensored-GGUF",
+ "revision": "7db849cc4d9d064833d037c9ac896a9e58e8573a",
+ "captured": "2026-11-25T05:08:29+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 11592,
+   "git_oid": "4ec2da805e030fd9cb81df6ef9ef4be42eed356e"
+  },
+  {
+   "path": "NVIDIA-Nemotron-3.5-Bolt-74B-A9B-Uncensored-AD-IQ1_M_S.gguf",
+   "size": 21939907936,
+   "sha256": "66b4413118e678c58f8c82090d27c06847567baf507c6570968b34d903f34812"
+  },
+  {
+   "path": "NVIDIA-Nemotron-3.5-Bolt-74B-A9B-Uncensored-AD-IQ2_XS.gguf",
+   "size": 29080644960,
+   "sha256": "2a34284e72544cc35dc0bfa5f917e80678a390107de3bf6d7c5ed49c94a7c003"
+  },
+  {
+   "path": "NVIDIA-Nemotron-3.5-Bolt-74B-A9B-Uncensored-AD-Q4_K_M-00001-of-00002.gguf",
+   "size": 44278339744,
+   "sha256": "063d0aee84ef7a2a59e26018a6b092775adbf17459e58427751c3ac71a8e53fb"
+  },
+  {
+   "path": "NVIDIA-Nemotron-3.5-Bolt-74B-A9B-Uncensored-AD-Q4_K_M-00002-of-00002.gguf",
+   "size": 7431394688,
+   "sha256": "3890b0070f7b5271fb23b5ca327891c4988ee4a7084e877693e6feedd69f0f34"
+  },
+  {
+   "path": "README.md",
+   "size": 15790,
+   "git_oid": "cc36b09a9d57e8a13dd81e7908f210c7505034ef"
+  },
+  {
+   "path": "mmproj-NVIDIA-Nemotron-3.5-Bolt-74B-A9B-Uncensored-BF16.gguf",
+   "size": 1733686752,
+   "sha256": "00c0f6e066dd9a1051044e0020563065648c29b5b850415362efa61a9ed53d4f"
+  },
+  {
+   "path": "mmproj-NVIDIA-Nemotron-3.5-Bolt-74B-A9B-Uncensored-F16.gguf",
+   "size": 1727788512,
+   "sha256": "83dfe222e467b529c2f6adf9c64a297da05b1f275ff17f59733cc3bde167984b"
+  },
+  {
+   "path": "mmproj-NVIDIA-Nemotron-3.5-Bolt-74B-A9B-Uncensored-Q8_0.gguf",
+   "size": 966915552,
+   "sha256": "f0543497720ecce0ef9b01a7d6d92a1133f6e9077c533423e7d67fe7743ec544"
+  }
+ ]
+}

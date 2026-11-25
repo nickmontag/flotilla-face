@@ -1,0 +1,525 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "hotocooo/Qwen3.8-Flash-Next-Abliterated-Uncensored-Turbo-Brilliance-50x-Reasoning-Instruct-GSQ-RCO-DFlash",
+ "revision": "5d496ec0f1f26a600ff66d7ac01d144a438ac183",
+ "captured": "2026-11-25T05:08:33+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2899,
+   "git_oid": "6a93a6ae1dbc9026703538930a1e8ad0b0a24115"
+  },
+  {
+   "path": "README.md",
+   "size": 13694,
+   "git_oid": "3642ff352dbc3b988a37217aac98ecec22108950"
+  },
+  {
+   "path": "archive/base/model.safetensors",
+   "size": 1206140008,
+   "sha256": "d6723f2a359eaf33ec0c95f22ae8edda896774020c552296a85e1913b4d3186f"
+  },
+  {
+   "path": "archive/dflash2-q8-dv.gguf",
+   "size": 1100368544,
+   "sha256": "32cd18db68465301d3281dd9a9e5a9e50f97ee070e5fd40683b1e5e822797312"
+  },
+  {
+   "path": "archive/v1-tuned/model.safetensors",
+   "size": 1206140008,
+   "sha256": "ffebb0ce0267a9a87a16caebe12d7184604a03823eed49cf043dbb826d6f05b7"
+  },
+  {
+   "path": "draft_vocab_v2.bin",
+   "size": 163840,
+   "sha256": "550c9d13ee6327add3e32c4dc96ffcea5e367b45ad41a120dcf6b74a61539aaf"
+  },
+  {
+   "path": "evidence/bench/README.md",
+   "size": 6636,
+   "git_oid": "69d7a3ed2dbabac9741e185d8c1f2304f3700640"
+  },
+  {
+   "path": "evidence/bench/greedy-mtp.json",
+   "size": 12947,
+   "git_oid": "d001fd86484ce2567dbc536af5fadc7b9aeba1fb"
+  },
+  {
+   "path": "evidence/bench/greedy-tuned.json",
+   "size": 12947,
+   "git_oid": "d001fd86484ce2567dbc536af5fadc7b9aeba1fb"
+  },
+  {
+   "path": "evidence/bench/long-102k-engine-lines.txt",
+   "size": 863,
+   "git_oid": "c41a29000160e8194039d008ca338b168c6e9f8a"
+  },
+  {
+   "path": "evidence/bench/matrix.tsv",
+   "size": 3524,
+   "git_oid": "e007e0d9e31b331f765124d36c4d7168b820d52d"
+  },
+  {
+   "path": "evidence/bench/scripts/long120.py",
+   "size": 1432,
+   "git_oid": "0ae4fa2b2d3fb171422ce9e33dfa5d2d6d46b4d8"
+  },
+  {
+   "path": "evidence/bench/scripts/matrix.py",
+   "size": 3985,
+   "git_oid": "dab453e734a57ee32f7f346594a90c4f76632892"
+  },
+  {
+   "path": "evidence/bench/scripts/matrix2.py",
+   "size": 3797,
+   "git_oid": "e45792da56b2005e06e52a7ca0d65ed864e960bc"
+  },
+  {
+   "path": "evidence/bench/scripts/matrix3.py",
+   "size": 3801,
+   "git_oid": "3710dc5eba44d0996e198598422bdb97b9f967e1"
+  },
+  {
+   "path": "evidence/bench/scripts/run.py",
+   "size": 1704,
+   "git_oid": "347a13dcf16f5f940a4fb76afd4f55936d6db6a3"
+  },
+  {
+   "path": "evidence/bench/scripts/swap.sh",
+   "size": 519,
+   "git_oid": "88d7855ece7c448f2d35bb7c6e6931f8828ef6d0"
+  },
+  {
+   "path": "evidence/engine-logs/strata-dflash.log",
+   "size": 856205,
+   "git_oid": "becb8c43a5e18de2fce7a647424c475d6786b6fc"
+  },
+  {
+   "path": "evidence/engine-logs/strata-iq3_s.log",
+   "size": 243742,
+   "git_oid": "d64a2f5e0f58df9e6f8874612a469c6bddd98705"
+  },
+  {
+   "path": "evidence/mtp-provenance/mtp-inventory.json",
+   "size": 7514,
+   "git_oid": "1feccc2ea445c09c789eeab1c894ebc1fdc555dc"
+  },
+  {
+   "path": "evidence/mtp-provenance/mtp-inventory.md",
+   "size": 2437,
+   "git_oid": "67bae8679b6126d7ebe6b25321db3cffcfb50631"
+  },
+  {
+   "path": "evidence/mtp-provenance/mtp-manifest.json",
+   "size": 11643,
+   "git_oid": "fca1a9dbe92813e6881aeecda205c1f84e384092"
+  },
+  {
+   "path": "evidence/mtp-provenance/mtp-q2_0.gguf.report.json",
+   "size": 3589,
+   "git_oid": "c4bf5e2dc2e564f1c497bfc118b37622c886f89e"
+  },
+  {
+   "path": "evidence/training/eval.txt",
+   "size": 1899,
+   "git_oid": "5eae8b4c69f19ccef3dd5b9e483009ea113abbcd"
+  },
+  {
+   "path": "evidence/training/held-fixed.txt",
+   "size": 13348,
+   "git_oid": "9beb78916a263b540a1115dbeff2b52c72ec88bc"
+  },
+  {
+   "path": "evidence/training/train.log",
+   "size": 3701,
+   "git_oid": "d019e22598b429c791d3f3c6ef9d2125508b5133"
+  },
+  {
+   "path": "evidence/training/train.py",
+   "size": 14502,
+   "git_oid": "88ad3ba12b2b197a6fbbce2cbe4c0c59033836b8"
+  },
+  {
+   "path": "evidence/v2/checkpoint-eval-8k.txt",
+   "size": 693,
+   "git_oid": "05b4398745b7de18fb130508c79ac40de5c486a8"
+  },
+  {
+   "path": "evidence/v2/greedy/greedy-mtp.json",
+   "size": 12947,
+   "git_oid": "d001fd86484ce2567dbc536af5fadc7b9aeba1fb"
+  },
+  {
+   "path": "evidence/v2/greedy/greedy-v2-IQ4_NL.json",
+   "size": 12947,
+   "git_oid": "d001fd86484ce2567dbc536af5fadc7b9aeba1fb"
+  },
+  {
+   "path": "evidence/v2/greedy/greedy-v2-IQ4_XS.json",
+   "size": 12947,
+   "git_oid": "d001fd86484ce2567dbc536af5fadc7b9aeba1fb"
+  },
+  {
+   "path": "evidence/v2/greedy/greedy-v2-Q4_0.json",
+   "size": 12947,
+   "git_oid": "d001fd86484ce2567dbc536af5fadc7b9aeba1fb"
+  },
+  {
+   "path": "evidence/v2/greedy/greedy-v2-Q5_0.json",
+   "size": 12947,
+   "git_oid": "d001fd86484ce2567dbc536af5fadc7b9aeba1fb"
+  },
+  {
+   "path": "evidence/v2/greedy/greedy-v2-Q8_0.json",
+   "size": 12947,
+   "git_oid": "d001fd86484ce2567dbc536af5fadc7b9aeba1fb"
+  },
+  {
+   "path": "evidence/v2/held-8k.txt",
+   "size": 124862,
+   "git_oid": "a5405e00581c45fe80e6ecd76e1cc6d04d6a290f"
+  },
+  {
+   "path": "evidence/v2/held-fixed-v2.txt",
+   "size": 15822,
+   "git_oid": "be30506d047b602b55d11a0c455d13cee759aea3"
+  },
+  {
+   "path": "evidence/v2/imatrix.dat",
+   "size": 669327,
+   "sha256": "986d8809e102988b8435c70b1e4d4490b8c8ebd2419f9cfb02cd2a8482bf5d96"
+  },
+  {
+   "path": "evidence/v2/mac-speed-repeated.tsv",
+   "size": 777,
+   "git_oid": "1f1993b20aa215b9b8373a5e995825740de4aae3"
+  },
+  {
+   "path": "evidence/v2/mac-speed.tsv",
+   "size": 486,
+   "git_oid": "d355d0b2fe59b9d1a60d9299e78d3a2417d365eb"
+  },
+  {
+   "path": "evidence/v2/quality.tsv",
+   "size": 1810,
+   "git_oid": "48464147101712d09c645fbce1ddabc1fee9989f"
+  },
+  {
+   "path": "evidence/v2/quant-logs/BF16.log",
+   "size": 17673,
+   "git_oid": "2b1210962cc40009c7712b515d555285d0945894"
+  },
+  {
+   "path": "evidence/v2/quant-logs/F16.log",
+   "size": 19446,
+   "git_oid": "383527f11d6ac341a07349d47bbe048382379ae7"
+  },
+  {
+   "path": "evidence/v2/quant-logs/F32.log",
+   "size": 19483,
+   "git_oid": "8a9590f5c24710c7233675baa968ed4eb362a322"
+  },
+  {
+   "path": "evidence/v2/quant-logs/IQ4_NL.log",
+   "size": 19626,
+   "git_oid": "e8d336e77b183fb8d0b4717fb100e166031ae712"
+  },
+  {
+   "path": "evidence/v2/quant-logs/IQ4_XS.log",
+   "size": 19626,
+   "git_oid": "c77ae091b1be3a99a7eb87bef3fbdca6c98b720f"
+  },
+  {
+   "path": "evidence/v2/quant-logs/MAC-IQ4_NL.log",
+   "size": 19841,
+   "git_oid": "81e977cda1540bf3107316196abfb5b6928550b3"
+  },
+  {
+   "path": "evidence/v2/quant-logs/MAC-IQ4_XS.log",
+   "size": 19841,
+   "git_oid": "eccff0f3e093d162537bcb4bbd3b3b963c28e4b3"
+  },
+  {
+   "path": "evidence/v2/quant-logs/MAC-Q4_0.log",
+   "size": 19737,
+   "git_oid": "814303a613d4c39bfc7b471b381f3ad7f535fa0b"
+  },
+  {
+   "path": "evidence/v2/quant-logs/MAC-Q5_0.log",
+   "size": 19740,
+   "git_oid": "9e2a1735b88399c415321ea35af2bcaa64039593"
+  },
+  {
+   "path": "evidence/v2/quant-logs/MAC-Q8_0.log",
+   "size": 19538,
+   "git_oid": "749a154fc3f27797e9950f7e0430725968d018e3"
+  },
+  {
+   "path": "evidence/v2/quant-logs/Q4_0.log",
+   "size": 19534,
+   "git_oid": "c6dda5a9f5b4605c6fcb57d451f619751e29f3a1"
+  },
+  {
+   "path": "evidence/v2/quant-logs/Q4_1.log",
+   "size": 19534,
+   "git_oid": "53ed79665e7eefc11ce6547189ec17155a6c81b5"
+  },
+  {
+   "path": "evidence/v2/quant-logs/Q4_K_M.log",
+   "size": 19538,
+   "git_oid": "a619ea607c12d5a7bc552f387e3f26fd14a0a67e"
+  },
+  {
+   "path": "evidence/v2/quant-logs/Q4_K_S.log",
+   "size": 19538,
+   "git_oid": "8de1e57d74fb963a074bc561bfe82404f79eb78b"
+  },
+  {
+   "path": "evidence/v2/quant-logs/Q5_0.log",
+   "size": 19534,
+   "git_oid": "daa7e96f11f9ec0a6c272a216e4c20726e500486"
+  },
+  {
+   "path": "evidence/v2/quant-logs/Q5_1.log",
+   "size": 19534,
+   "git_oid": "b42416bc25bae57d6e0f5519589fb89dd021f38c"
+  },
+  {
+   "path": "evidence/v2/quant-logs/Q5_K_M.log",
+   "size": 19538,
+   "git_oid": "7258de4413e556e4570e7779318e919daf53ee44"
+  },
+  {
+   "path": "evidence/v2/quant-logs/Q5_K_S.log",
+   "size": 19538,
+   "git_oid": "36935476f8085bcb5f7afb2b5a1ef6852f716b43"
+  },
+  {
+   "path": "evidence/v2/quant-logs/Q6_K.log",
+   "size": 19534,
+   "git_oid": "3df9b4fb151fb499d762cc6aa98645abc6220f3b"
+  },
+  {
+   "path": "evidence/v2/quant-logs/Q8_0.log",
+   "size": 19534,
+   "git_oid": "be45e7cb97d418e862e37b93b5de31fc09beee39"
+  },
+  {
+   "path": "evidence/v2/scripts/build_db.sh",
+   "size": 1783,
+   "git_oid": "30123f112ea4266c71423d9c82abde4d2e3b9826"
+  },
+  {
+   "path": "evidence/v2/scripts/gen.py",
+   "size": 1137,
+   "git_oid": "6ed910644407313bbf638b540cc14d5acc9c77f6"
+  },
+  {
+   "path": "evidence/v2/scripts/greedy.sh",
+   "size": 525,
+   "git_oid": "7e4139361cb74bd9f439347050c7821bcf94d47d"
+  },
+  {
+   "path": "evidence/v2/scripts/ladder.sh",
+   "size": 2607,
+   "git_oid": "155251c18bb8ecfd6f77ae7458458e6a45f10ed3"
+  },
+  {
+   "path": "evidence/v2/scripts/mac.sh",
+   "size": 1591,
+   "git_oid": "2783b9bdf795bcbfa2ddcf332bf8beedbf1e838a"
+  },
+  {
+   "path": "evidence/v2/scripts/matrix-v2.py",
+   "size": 4110,
+   "git_oid": "d499f0a4f8d7f5c5fc63e47bb43f7a5540ce8e9c"
+  },
+  {
+   "path": "evidence/v2/scripts/matrix-v2b.py",
+   "size": 4050,
+   "git_oid": "659e47386c6cce9e4d3d8266a147170c0d0ed1e3"
+  },
+  {
+   "path": "evidence/v2/scripts/qtool.py",
+   "size": 10670,
+   "git_oid": "403312698b903eb69f737b37e07d8b7aa9601d93"
+  },
+  {
+   "path": "evidence/v2/scripts/run.py",
+   "size": 1704,
+   "git_oid": "347a13dcf16f5f940a4fb76afd4f55936d6db6a3"
+  },
+  {
+   "path": "evidence/v2/scripts/train.py",
+   "size": 18187,
+   "git_oid": "10c27c2659a9a225dd2ecc3f8b911ce7f73c6c98"
+  },
+  {
+   "path": "evidence/v2/sweep-base-1e-4.log",
+   "size": 585,
+   "git_oid": "042d71d881e3e4c3feae586648ec0832cc974e0b"
+  },
+  {
+   "path": "evidence/v2/sweep-base-1e-5.log",
+   "size": 898,
+   "git_oid": "7a8f82c35e992229c94ca9350b22bbe187b4dcda"
+  },
+  {
+   "path": "evidence/v2/sweep-base-2e-5.log",
+   "size": 898,
+   "git_oid": "a89b730059b170ab950020861858a4b9a37bd156"
+  },
+  {
+   "path": "evidence/v2/sweep-base-5e-5.log",
+   "size": 898,
+   "git_oid": "ed6bf1be661de13f22605a82dd4f787cafab22c0"
+  },
+  {
+   "path": "evidence/v2/sweep-ctx2048.log",
+   "size": 73,
+   "git_oid": "8b5943f159c7b35f758e2717778e3ce987e3a70b"
+  },
+  {
+   "path": "evidence/v2/sweep-ctx2k.log",
+   "size": 240,
+   "git_oid": "a637519f4fc4a7e7bb94f58cd74dfb2986718166"
+  },
+  {
+   "path": "evidence/v2/sweep-ref.log",
+   "size": 255,
+   "git_oid": "ada2c10dece54d0d8f3f22ca1101291a4017dc0a"
+  },
+  {
+   "path": "evidence/v2/sweep-t3000.log",
+   "size": 894,
+   "git_oid": "188688add0bcd46b2d4f758ad796086b469fad5a"
+  },
+  {
+   "path": "evidence/v2/train.log",
+   "size": 13297,
+   "git_oid": "1dd9e61974b4261dd4f19d9793003f9e5211a0cd"
+  },
+  {
+   "path": "gguf/DFlash2-v2-BF16.gguf",
+   "size": 1765106912,
+   "sha256": "6c1405750b181b5f607eb1367705ca6c74b835ab279537aede20a094488f4a10"
+  },
+  {
+   "path": "gguf/DFlash2-v2-F16.gguf",
+   "size": 1765106912,
+   "sha256": "b9d488ffd4d8f671a351178bc1e6d1647c40ac33ce005d492b36e7ed6cd026c4"
+  },
+  {
+   "path": "gguf/DFlash2-v2-F32.gguf",
+   "size": 3180684512,
+   "sha256": "b73c3bec585705e9cfaf7ce72ecadc9e2a5a16b1823650a05436484b1dd0db0e"
+  },
+  {
+   "path": "gguf/DFlash2-v2-IQ4_NL.gguf",
+   "size": 776332512,
+   "sha256": "ed08328f6ed7e8ae0b0d5c96a014a7d4b784cd68f801008b1c65e65bba352f92"
+  },
+  {
+   "path": "gguf/DFlash2-v2-IQ4_XS.gguf",
+   "size": 757900512,
+   "sha256": "a2da889a232ff831999e0199c8ea5f434d2e84e545255a62db1338e18b4abe24"
+  },
+  {
+   "path": "gguf/DFlash2-v2-Q4_0.gguf",
+   "size": 774694112,
+   "sha256": "d005d77da04ff56269afec6c33f210ec07785e6432a8816a8e2b0777f9b187a3"
+  },
+  {
+   "path": "gguf/DFlash2-v2-Q4_1.gguf",
+   "size": 812377312,
+   "sha256": "fd6b2c3f94c58d7254ec4546d260b9300d7583bdf9e1ad5580475d587dc3da23"
+  },
+  {
+   "path": "gguf/DFlash2-v2-Q4_K_M.gguf",
+   "size": 786183392,
+   "sha256": "8fdb5585fa716c2f6463876d8393ae14b843fcd79ee68ec546cc12cbb0585569"
+  },
+  {
+   "path": "gguf/DFlash2-v2-Q4_K_S.gguf",
+   "size": 776004832,
+   "sha256": "03d5c62e4de665e770ce214bafc0319b8d7e32261994144daa60b31153e27ebe"
+  },
+  {
+   "path": "gguf/DFlash2-v2-Q5_0.gguf",
+   "size": 850060512,
+   "sha256": "6e29c6311375aeca7513bad24d40ba17d2a99496e63fa5a07731e06abbf9230a"
+  },
+  {
+   "path": "gguf/DFlash2-v2-Q5_1.gguf",
+   "size": 887743712,
+   "sha256": "21e9bd1ec9b624a00755102219d5405b7132b39690abddd2c8d9ebfda1477653"
+  },
+  {
+   "path": "gguf/DFlash2-v2-Q5_K_M.gguf",
+   "size": 855979232,
+   "sha256": "772c0d64933b700f6cd72cba643470abe219c653e75b05d2dc5701ae8c649f60"
+  },
+  {
+   "path": "gguf/DFlash2-v2-Q5_K_S.gguf",
+   "size": 850060512,
+   "sha256": "f3be7ad28cc4a5abc0da1756afebf7626fb5983f6bb2baa230dc0c60f77e5003"
+  },
+  {
+   "path": "gguf/DFlash2-v2-Q6_K.gguf",
+   "size": 930137312,
+   "sha256": "48f93107281bd3dbe22248f03eb7e934c5e99635f43dc535cc382b852afefb59"
+  },
+  {
+   "path": "gguf/DFlash2-v2-Q8_0.gguf",
+   "size": 1101554912,
+   "sha256": "5afa38b9598e42d091491a96f443f276fb3fa03b0b14925deeb72ec5137a6a2b"
+  },
+  {
+   "path": "mac/DFlash2-v2-mac-IQ4_NL.gguf",
+   "size": 811230432,
+   "sha256": "cce6de1eb7aa99f75f41092d6860071d46236d7fdec93cd6e30c7a097704ffab"
+  },
+  {
+   "path": "mac/DFlash2-v2-mac-IQ4_XS.gguf",
+   "size": 793085152,
+   "sha256": "eba7d9d22464214e4e39b35b78ab7de9cf9081703d63bd5cffab1afed2a2a0be"
+  },
+  {
+   "path": "mac/DFlash2-v2-mac-Q4_0.gguf",
+   "size": 811230432,
+   "sha256": "55a02329d6fb07d4a91aa81a45010ee80dc74de8bf4d4528556799e44f18a0d2"
+  },
+  {
+   "path": "mac/DFlash2-v2-mac-Q5_0.gguf",
+   "size": 883811552,
+   "sha256": "ec3120507c071a11c589d884eeb16af58bd581e03ab2e4915372b7334e736bea"
+  },
+  {
+   "path": "safetensors/config.json",
+   "size": 1236,
+   "git_oid": "b370fddafd42756538af6e1cbe8273cab6e6d803"
+  },
+  {
+   "path": "safetensors/model.safetensors",
+   "size": 1206140008,
+   "sha256": "61c4ed868fe7cc8e0330fd216195629afe64bdbb17336846aa72f77e0996a5c6"
+  },
+  {
+   "path": "sha256.txt",
+   "size": 1955,
+   "git_oid": "a4947569cc49c64eb4be73f30c0dd6c313aa84fe"
+  },
+  {
+   "path": "t3000-q8-dv.gguf",
+   "size": 1100368064,
+   "sha256": "e5412a73583755eea8daa4c4c5793f5b827af1fbc0e76bcdd5cc181cdbf46eb1"
+  },
+  {
+   "path": "upload.log",
+   "size": 1188,
+   "git_oid": "127ab5f26b52363b1ce9a847a2259c6fe8f9a5ee"
+  }
+ ]
+}

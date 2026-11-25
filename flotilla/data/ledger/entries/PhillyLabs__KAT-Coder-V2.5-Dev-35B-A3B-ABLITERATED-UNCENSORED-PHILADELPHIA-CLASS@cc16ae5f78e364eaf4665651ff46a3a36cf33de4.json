@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "PhillyLabs/KAT-Coder-V2.5-Dev-35B-A3B-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS",
+ "revision": "cc16ae5f78e364eaf4665651ff46a3a36cf33de4",
+ "captured": "2026-11-25T05:08:20+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2268,
+   "git_oid": "d097524518234e3945226da25c6380069e0824f3"
+  },
+  {
+   "path": "Q4_K_M-KAT-Coder-V2.5-Dev-35B-A3B-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.gguf",
+   "size": 21166758464,
+   "sha256": "ba33e8f1ab6c5da48510f89f327f6a6e9496d6454942968deea8a81aa49a1b60"
+  },
+  {
+   "path": "Q5_K_M-KAT-Coder-V2.5-Dev-35B-A3B-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.gguf",
+   "size": 24729131584,
+   "sha256": "8d0edd9a32daa74d9e019783ef7bdfa03d5d07a261e4be5254a190489a3ffb6c"
+  },
+  {
+   "path": "Q8_0-KAT-Coder-V2.5-Dev-35B-A3B-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.gguf",
+   "size": 36903139904,
+   "sha256": "8990ed7256dc8130c29af63835696ad790f4c08a3eb00707f62723c041ed87e8"
+  },
+  {
+   "path": "README.md",
+   "size": 5065,
+   "git_oid": "036f191701c0e852a4abf3dd6d70c6038a787d39"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7759,
+   "git_oid": "4818ebc4dc4abab1d1297e9e84f7e6be41447212"
+  },
+  {
+   "path": "config.json",
+   "size": 3196,
+   "git_oid": "942b8c7c47a2ace64e77a9238522f4c56eeb347e"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 214,
+   "git_oid": "0bc3addd19dc59c5c8899fc1fb887d50b592e7c3"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 69321315200,
+   "sha256": "a1b59feea964ed13b7c1174a957e0b6ec6fff421bad94c01fe8ea1605a12c956"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989325,
+   "sha256": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1165,
+   "git_oid": "1d134cd298be1e3be25db393d93a1cefe80e3214"
+  }
+ ]
+}

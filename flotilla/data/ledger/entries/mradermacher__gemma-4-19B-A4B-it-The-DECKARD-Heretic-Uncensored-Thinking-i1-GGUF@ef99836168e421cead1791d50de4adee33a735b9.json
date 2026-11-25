@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking-i1-GGUF",
+ "revision": "ef99836168e421cead1791d50de4adee33a735b9",
+ "captured": "2026-11-25T05:08:52+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 4255,
+   "git_oid": "d40a573e1b2bef530bcf0f4c75df7b2f91c62575"
+  },
+  {
+   "path": "README.md",
+   "size": 8874,
+   "git_oid": "9a5de96e566511736f50700b8ce1434212a50cce"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-IQ1_M.gguf",
+   "size": 6395799648,
+   "sha256": "36db2dfee57141a72909234008a3b8f656d3dee2fa7180344ad74247efe2f67b"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-IQ1_S.gguf",
+   "size": 6123351648,
+   "sha256": "2a0d1450f3301a15f1de013ef74267b36a09e219ad12ff634fbaf5fc10f0f631"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-IQ2_M.gguf",
+   "size": 7645793888,
+   "sha256": "b26e40e094a1a17dbeb3e2e16a8c721c3eaead3a517c4df62d28485cd5f2526b"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-IQ2_S.gguf",
+   "size": 7282529888,
+   "sha256": "2bbc1e3d258951208ec0fa3208c57342004fb94f9b7abc6ea3c29e8a6627bbea"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-IQ2_XS.gguf",
+   "size": 7225759328,
+   "sha256": "3496e275f76bafb0e229ed45df9be71e6c89d1ce32039bac517d6c005eff5676"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-IQ2_XXS.gguf",
+   "size": 6849879648,
+   "sha256": "aebe2b634c6cf0953de1a4b7179512fb9a98b583d4b691564f30d6237c8ce4af"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-IQ3_M.gguf",
+   "size": 9138014816,
+   "sha256": "fa5ff89d3ea1d142a164a23501bd3e3e087cc2b48f983f0387bcb173500c79d8"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-IQ3_S.gguf",
+   "size": 8996110944,
+   "sha256": "a4d770157292f187eff4ac5ce0cf612f78169b400a064a2689d23f77315a19fc"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-IQ3_XS.gguf",
+   "size": 8572207200,
+   "sha256": "546cac72bd1c49f3e9bd1385e51ca3f567bb7ed6ab8bd1a7151746f74e03d83f"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-IQ3_XXS.gguf",
+   "size": 8311271008,
+   "sha256": "5a9f4924980b111af940118b389ec8966948a92a11c435d33c59961ddbef3e07"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-IQ4_NL.gguf",
+   "size": 10612748384,
+   "sha256": "8488758694c19834a9fe6baca3dbc680a54407bd903b03b6169282c563277581"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-IQ4_XS.gguf",
+   "size": 10232363104,
+   "sha256": "a668efdbd0cc719b8b7e939d926f9c6d3690fa3e8031004059d7f03696cf247e"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-Q2_K.gguf",
+   "size": 7815502944,
+   "sha256": "d9cbcc23a5f928e15183c756f2da15c0514723a5cac161b7a3668ce4cefe60fa"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-Q2_K_S.gguf",
+   "size": 7828997216,
+   "sha256": "32337126fcf8c723660710b8f37c49bf78e38ecaaf10f59679402906510198b7"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-Q3_K_L.gguf",
+   "size": 10174437984,
+   "sha256": "8207d0729888d9faceb40a08b916fe540b68972bee55588cd02140824a0f643c"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-Q3_K_M.gguf",
+   "size": 9773225568,
+   "sha256": "217d58a537f749d945089c7e8b445efb3cc992a189e9f5d00511dfed069e0fbf"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-Q3_K_S.gguf",
+   "size": 8996110944,
+   "sha256": "30a2cb50226ad4cb21a7f5e0ef4453f884843584d4fcf6ad203b50effddf918d"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-Q4_0.gguf",
+   "size": 10647317600,
+   "sha256": "88522734f6bcf5a2ba6357fc102d137889b224953ae5e532d5b45abc33365c8b"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-Q4_1.gguf",
+   "size": 11719211104,
+   "sha256": "a16e4d588218a37c37021b527bef713e26f133e4d1ad6a0456dad83d0b7c1f96"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-Q4_K_M.gguf",
+   "size": 12291399776,
+   "sha256": "7332666ec8526df5f5a36b13fe25b98fdaf79feef9dc5e8420a08ad7b07abe38"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-Q4_K_S.gguf",
+   "size": 11341585504,
+   "sha256": "cbfde21a14e11f210913995645dbd777a717e40c91757e03cd514a0e45ffd030"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-Q5_K_M.gguf",
+   "size": 13987938400,
+   "sha256": "03862b202d41097eb6074d203377078c2c7a873c13973d0ae872b1c96a2e4d66"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-Q5_K_S.gguf",
+   "size": 13171365984,
+   "sha256": "839ad1c98dd8ab5979bc265c7516fbe4d77e35b07eeabd8f08b39525acb184c8"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.i1-Q6_K.gguf",
+   "size": 16516464224,
+   "sha256": "87055b8fb0f2ae82b1413d34533a26ba00f22f9e9f22e1761a93bbfde9b53738"
+  },
+  {
+   "path": "gemma-4-19B-A4B-it-The-DECKARD-Heretic-Uncensored-Thinking.imatrix.gguf",
+   "size": 40882656,
+   "sha256": "c255a8b672eafa6e4d6e0af29609e575b5836db8fcf8e855ba005a39e8d64fc6"
+  }
+ ]
+}

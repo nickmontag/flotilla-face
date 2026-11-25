@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/DeepSeek-R1-Distill-Qwen-14B-Uncensored-GGUF",
+ "revision": "a1f9e170f63d441bba2fc045b7975ba20c1c09a1",
+ "captured": "2026-11-25T05:08:37+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2481,
+   "git_oid": "b2a45d01625a89bebdb4cbad427e932ba3013c07"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-14B-Uncensored.IQ4_XS.gguf",
+   "size": 8183426016,
+   "sha256": "2321e7db94455197b338a875109d2b6b8ea33651cd339447710e85bce68c0c5c"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-14B-Uncensored.Q2_K.gguf",
+   "size": 5768143072,
+   "sha256": "cb38648aa8a596da9fee5024bd1f0501292573f9141a64f378ee096222013b40"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-14B-Uncensored.Q3_K_L.gguf",
+   "size": 7922206304,
+   "sha256": "a5d57a9c6517e5fd51ece6df966ebf598efc9b4bf30ed6c98c4f7c404cec309c"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-14B-Uncensored.Q3_K_M.gguf",
+   "size": 7336642144,
+   "sha256": "ec86e260d705b2ad2b9b5498966e2fa95640fada103fc2716ecdc60ef99a32be"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-14B-Uncensored.Q3_K_S.gguf",
+   "size": 6657033824,
+   "sha256": "c988f4617997f25e7a2a5e0fd446a6239a2b4cc14a881f03bff7ebc674692646"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-14B-Uncensored.Q4_K_M.gguf",
+   "size": 8985277056,
+   "sha256": "1b496760ec55dfbbd293ed377eaaff0f532f868872d053eee45ce57aae46ddcb"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-14B-Uncensored.Q4_K_S.gguf",
+   "size": 8570598016,
+   "sha256": "10fadc4890b1bbf3dbb0664e32f1c0637021a8041b8c0e298fffb8f7e52631c8"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-14B-Uncensored.Q5_K_M.gguf",
+   "size": 10505784576,
+   "sha256": "8420e505dc2713a9e767e4a58e4931ddbfc41bbbc890f144cf6cf38b7c5edb05"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-14B-Uncensored.Q5_K_S.gguf",
+   "size": 10263465216,
+   "sha256": "9df420cbc7933f0704c1455541a3b7ad7f924c3b5aa79a27eb55817163dd7869"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-14B-Uncensored.Q6_K.gguf",
+   "size": 12121323840,
+   "sha256": "35458c1b3dfdbb5280750a23dc20124220ced7c66e056d5dd6af16bddcf5750c"
+  },
+  {
+   "path": "DeepSeek-R1-Distill-Qwen-14B-Uncensored.Q8_0.gguf",
+   "size": 15697248192,
+   "sha256": "7ef7b9a4afd1213b49eb13bc46e5b3406d2d0510321d064d5ef0d9c74a56e83d"
+  },
+  {
+   "path": "README.md",
+   "size": 3693,
+   "git_oid": "97377ac8425a1fd5f7d1bd1a4f8782e8b53cace9"
+  }
+ ]
+}

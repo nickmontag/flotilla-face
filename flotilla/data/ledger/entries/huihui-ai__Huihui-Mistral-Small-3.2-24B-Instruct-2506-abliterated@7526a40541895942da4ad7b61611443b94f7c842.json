@@ -1,0 +1,125 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "huihui-ai/Huihui-Mistral-Small-3.2-24B-Instruct-2506-abliterated",
+ "revision": "7526a40541895942da4ad7b61611443b94f7c842",
+ "captured": "2026-11-25T05:08:48+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1567,
+   "git_oid": "ed18453a3dbda4c3ae158368dc6a42bf6488d24c"
+  },
+  {
+   "path": "README.md",
+   "size": 7224,
+   "git_oid": "0bceed82bc23baddc111a57cb904fd1a63d98a68"
+  },
+  {
+   "path": "SYSTEM_PROMPT.txt",
+   "size": 2384,
+   "git_oid": "6945458c945b26af9d1b081d9c1819b75a49e647"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 14722,
+   "git_oid": "7e8f4ae73ae48ebf31c9b1d5f80a3575c1be671b"
+  },
+  {
+   "path": "config.json",
+   "size": 1349,
+   "git_oid": "6b45cd22dc9194b2e6f30c8d23698e76b11c93bd"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 180,
+   "git_oid": "038c98e7570b5df175e082ecea2e458aae5b02f8"
+  },
+  {
+   "path": "model-00001-of-00010.safetensors",
+   "size": 4883550696,
+   "sha256": "b6c0aee6ef4400979ad35bb5c7f89091f4bc12fd53db11aa13c985cb086488c4"
+  },
+  {
+   "path": "model-00002-of-00010.safetensors",
+   "size": 4781593336,
+   "sha256": "c63148065bc0c7de433027543d41e01adfc9b027d9f8dcd02733d3894019d758"
+  },
+  {
+   "path": "model-00003-of-00010.safetensors",
+   "size": 4886472224,
+   "sha256": "22f806b86685424bf13c431972b11e724b26359cc100846db7451b17c3520461"
+  },
+  {
+   "path": "model-00004-of-00010.safetensors",
+   "size": 4781593376,
+   "sha256": "10a28fc859213762fbd72b22b54b39f28192741b1bf973b23b659065c058e9af"
+  },
+  {
+   "path": "model-00005-of-00010.safetensors",
+   "size": 4781593368,
+   "sha256": "162992b3fe6ac2e0c9e767859160e7967f5e5b019d826387b51a94fd8cec6c79"
+  },
+  {
+   "path": "model-00006-of-00010.safetensors",
+   "size": 4886472248,
+   "sha256": "60d3d05c046f1c1371634d73361e47a6357d9363609d3b072c97419a660ef140"
+  },
+  {
+   "path": "model-00007-of-00010.safetensors",
+   "size": 4781593376,
+   "sha256": "ecc86e754771d334bce1c5e6085c888b3b3fb4b7c0293a22f533e7c119888173"
+  },
+  {
+   "path": "model-00008-of-00010.safetensors",
+   "size": 4781593368,
+   "sha256": "96476a3e9dad642fc7a4ab7c4282b56188af1d073a2f311cbd9e389b9344b1e4"
+  },
+  {
+   "path": "model-00009-of-00010.safetensors",
+   "size": 4886472248,
+   "sha256": "a093fe44298079abe18c10eb53f0c96df1478e0b9f57e94c672eba2f1bc9780e"
+  },
+  {
+   "path": "model-00010-of-00010.safetensors",
+   "size": 4571866320,
+   "sha256": "101361dc32a90cb123ce3724642ef15a78ab071027911e31900590c390b1e42d"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 58537,
+   "git_oid": "ff69e24f6916e0023492e05eb39db955e1812001"
+  },
+  {
+   "path": "params.json",
+   "size": 768,
+   "git_oid": "94420c6d4e7c5659e3609fa1954b8b8988ec0227"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 634,
+   "git_oid": "e6fae040b04cba893fc9a65582c4eec3c525fb79"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 189,
+   "git_oid": "0092b0f4fb04cc78378859f013badda71e5262c5"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 21440,
+   "git_oid": "85ee48c59283474406aaff78fa9e75b2c474a216"
+  },
+  {
+   "path": "tekken.json",
+   "size": 19399895,
+   "sha256": "6e2501687ccd0e1f30f36319eaf2b46958b897811e246cd8eb5d385b9e3de7d1"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 213240,
+   "git_oid": "972bf951b3d0bd0f82b18e3c982c09a909c1a07c"
+  }
+ ]
+}

@@ -1,0 +1,115 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "turintech/gemma-4-E4B-it-Artemis-GGUF",
+ "revision": "55c5a89496c682f1b998282d5f080762327555b6",
+ "captured": "2026-11-25T05:09:18+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2247,
+   "git_oid": "dd80402decbe520d80cc0828253596800cb459ca"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11544,
+   "git_oid": "f938136e3adacfd92be087f6e113b5d6d97f678f"
+  },
+  {
+   "path": "MTP/mtp-gemma-4-E4B-it-Artemis-Q4_0.gguf",
+   "size": 76979616,
+   "sha256": "2f0856e0eb45c4bcc50a907fb9823ac4944f8a743224b46e1873896aab602f61"
+  },
+  {
+   "path": "NOTICE",
+   "size": 1409,
+   "git_oid": "495c0e57cccc629dbfae7833e49b665c220391ce"
+  },
+  {
+   "path": "README.md",
+   "size": 34575,
+   "git_oid": "f860fd62ef464859f0799af213056822cbfa61bd"
+  },
+  {
+   "path": "RESULTS.md",
+   "size": 37968,
+   "git_oid": "a3d17ccf853a01e8c5d57aa7a9b5933a3fe365c5"
+  },
+  {
+   "path": "assets/buttons/artemis.png",
+   "size": 5954,
+   "git_oid": "95b4cf1f20c6ab8bc35bced63d5d93e5ce0928c4"
+  },
+  {
+   "path": "assets/buttons/discord.png",
+   "size": 6227,
+   "git_oid": "3c6d28ce7a8cea6c4309b3f49e3fadb739f76557"
+  },
+  {
+   "path": "assets/buttons/lm-studio.png",
+   "size": 6576,
+   "git_oid": "2dcaf97e3786a20bc9e02075e189bb1b94471ed1"
+  },
+  {
+   "path": "assets/buttons/ollama.png",
+   "size": 4983,
+   "git_oid": "07f36038d99388b64bec950f8355fa0a2f5ddb0a"
+  },
+  {
+   "path": "assets/buttons/other-models.png",
+   "size": 7906,
+   "git_oid": "1d5cda1007ee4964c2fb80cc80792baf402b9396"
+  },
+  {
+   "path": "assets/buttons/turintech.png",
+   "size": 5298,
+   "git_oid": "a67be37eab234d5e931b6d93b0913904186c25ac"
+  },
+  {
+   "path": "assets/comparison.png",
+   "size": 131520,
+   "sha256": "d020ea5d02e4dfd796f33f2070ea20cc4635e5af9ac55a7c5fcbb5167619201e"
+  },
+  {
+   "path": "assets/turintech-logo-v2.png",
+   "size": 48639,
+   "git_oid": "3f1bdbd70fc316aa23d972978ea77de8f6791458"
+  },
+  {
+   "path": "assets/turintech-logo.png",
+   "size": 7208,
+   "git_oid": "cde63db569b6a0232c1f8dd00ac48fad4db6e9fd"
+  },
+  {
+   "path": "gemma-4-E4B-it-Artemis-IQ3_M.gguf",
+   "size": 3841354080,
+   "sha256": "7d19112172d02bfe3edd711627bb988330e3fea8714c77362e2b77ae1634ac39"
+  },
+  {
+   "path": "gemma-4-E4B-it-Artemis-Q3_K_M.gguf",
+   "size": 3555092832,
+   "sha256": "182f4a4f29461620f7404b9eb25a03bd7fe9f91de49718662c9146c01c9d3547"
+  },
+  {
+   "path": "gemma-4-E4B-it-Artemis-Q4_0.gguf",
+   "size": 4215695712,
+   "sha256": "1d23b7340a5828d12c50ee60a9fd0662c6cf23117d4cd4f6a7e3ec1bfb503260"
+  },
+  {
+   "path": "mmproj-BF16.gguf",
+   "size": 991552192,
+   "sha256": "e73e2d8fd14b45b184620fc90cb2b9ed2783d7a37f8afdcacf93439670496920"
+  },
+  {
+   "path": "mmproj-F16.gguf",
+   "size": 990372544,
+   "sha256": "b2abc3148c97f6d0ad820cef6b37db8cd1477eccb949f5722a8976c2f942c135"
+  },
+  {
+   "path": "mtp-gemma-4-E4B-it-Artemis.gguf",
+   "size": 76979616,
+   "sha256": "2f0856e0eb45c4bcc50a907fb9823ac4944f8a743224b46e1873896aab602f61"
+  }
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/dolphin-2.9.2-Phi-3-Medium-abliterated-i1-GGUF",
+ "revision": "7226f25491e2be20a89427ccd47ee86e55f56ac5",
+ "captured": "2026-11-25T05:08:37+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3447,
+   "git_oid": "e623e3a8400f2125a8ffc96a59f4a1f48cc1c838"
+  },
+  {
+   "path": "README.md",
+   "size": 6382,
+   "git_oid": "2040a67e2ec949381461706acd0b919e3836a8b2"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-IQ1_M.gguf",
+   "size": 3332276096,
+   "sha256": "e7f2500894d4d565b484564ee60c3a57c866f361692c404348e683cb87ae8cf5"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-IQ1_S.gguf",
+   "size": 3054260096,
+   "sha256": "85a57bb6e031c147efe4d8a386c2d4ab509a5291c8c6dd0c0f714472523b26c1"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-IQ2_M.gguf",
+   "size": 4780501376,
+   "sha256": "dd2593e91aebfa4cd6799916b7e489a70ec4b7718a644f1e7f035234bc43af31"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-IQ2_S.gguf",
+   "size": 4409813376,
+   "sha256": "5d2d532db14aca65fa397ebb7fedb88068926151013c51587858a038552fa11d"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-IQ2_XS.gguf",
+   "size": 4199092096,
+   "sha256": "1e58f1eaf7e4e0e167e21b751526ad30701838e84201e58d5ff4252aadbf41d4"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-IQ2_XXS.gguf",
+   "size": 3795636096,
+   "sha256": "b22cc2c1d3976f1eb73353af7448911268d17e40e66f5a28b504705734f25b01"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-IQ3_M.gguf",
+   "size": 6299904896,
+   "sha256": "e401ed9574dd2e357c1f85426073453450adf9ef8e00d56e7db258e3fc130d0a"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-IQ3_S.gguf",
+   "size": 6099712896,
+   "sha256": "184e2e3890f2280f8f6b703788b2c1ad080fd0b3ef7012fb7eba452dfcdf29a4"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-IQ3_XS.gguf",
+   "size": 5780224896,
+   "sha256": "f277fa60c1b0ac8a07d164fcce96a38df65f078931d807d9362cc637828be12d"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-IQ3_XXS.gguf",
+   "size": 5418453376,
+   "sha256": "8aac7578ea560fababbc165e28f91cddb27495896ac1881356152c75ec82f586"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-IQ4_XS.gguf",
+   "size": 7506978176,
+   "sha256": "03f5ba50dc873c487b4dbbc737b8afd87e70c633c3545431be2f8bdadee7dd4f"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-Q2_K.gguf",
+   "size": 5204447616,
+   "sha256": "75f68b6e8fa023bffe5e5f8dce3a61b0cc6c523041536d234e71c3d6c0ff59b6"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-Q3_K_L.gguf",
+   "size": 7348992896,
+   "sha256": "b3f23f76f621a1bc58a355522e89b8cf9924c07e0fcdf18e47692e310828e6d3"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-Q3_K_M.gguf",
+   "size": 6750976896,
+   "sha256": "b884263268bb71a29379a01fe90cb585626b92b6997bf5f8c8efedd91df7acdb"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-Q3_K_S.gguf",
+   "size": 6064896896,
+   "sha256": "5a9a7f56395968339f6632febbde29026ce4041b0c074ebad27f36e28795ca94"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-Q4_0.gguf",
+   "size": 7925804416,
+   "sha256": "b824e62e8b630b4f3682e053f3119de3084d0cd77ab2e347a819245991620f42"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-Q4_K_M.gguf",
+   "size": 8404012416,
+   "sha256": "6d4fb21c20381f4570624c4bcc314538d620651d4fc4bb74d0f69d91570ed542"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-Q4_K_S.gguf",
+   "size": 7957753216,
+   "sha256": "4c11fd2554b7e2190215780059c8acccc6041777124cc606302611841dced29e"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-Q5_K_M.gguf",
+   "size": 9882709376,
+   "sha256": "fc68300bba3abaccdd1264bc76df010d0c78913fc18d94348f723a496653225e"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-Q5_K_S.gguf",
+   "size": 9621589376,
+   "sha256": "e81a9473cbf80c221ed1251a03bf969e7c46db2f202e9ffd915274dd839c451b"
+  },
+  {
+   "path": "dolphin-2.9.2-Phi-3-Medium-abliterated.i1-Q6_K.gguf",
+   "size": 11453824896,
+   "sha256": "f97a1877ab41bfb82facd542ef4945e2d9eef6459386740e196f9f73f1235589"
+  },
+  {
+   "path": "imatrix.dat",
+   "size": 7791671,
+   "sha256": "66595b6f1d3f3835ca1694d8d60ee06cfa83dd039001a8c85e4397d93dd80dc7"
+  }
+ ]
+}

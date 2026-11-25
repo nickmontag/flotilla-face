@@ -1,0 +1,165 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Qwen3.6-40B-Claude-4.6-Opus-Deckard-Heretic-Uncensored-Thinking",
+ "revision": "8529c2306460227f00896d698a57658ea70f4747",
+ "captured": "2026-11-25T05:08:20+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1620,
+   "git_oid": "bb9c7964d693d2ab089f594077b133ba80b269a3"
+  },
+  {
+   "path": "README.md",
+   "size": 133543,
+   "git_oid": "56dc4d89587f0da4c29d4aab617645738beddd2a"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7764,
+   "git_oid": "a8755d827c0a7b614c246c4060dfd58ab352a8ff"
+  },
+  {
+   "path": "config.json",
+   "size": 5470,
+   "git_oid": "96a773cce906035756e63c483e72382c763a6fb2"
+  },
+  {
+   "path": "configuration.json",
+   "size": 51,
+   "git_oid": "3a6d425685de8896b2bc8b59b671e41aea1d7bf3"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 202,
+   "git_oid": "023756cfadf88e5bf69eefeee3e172f38c448d64"
+  },
+  {
+   "path": "model-00001-of-00017.safetensors",
+   "size": 2542796928,
+   "sha256": "994d372da0812952c05a3fb1093db5b1245e314385290892f0dce3883f4c2643"
+  },
+  {
+   "path": "model-00002-of-00017.safetensors",
+   "size": 4842451936,
+   "sha256": "9a5f01c026f49d19701002e8f3a67c6ac7e2648f4fd1b51d1ce6d22d8df0752c"
+  },
+  {
+   "path": "model-00003-of-00017.safetensors",
+   "size": 4965217656,
+   "sha256": "27d1a6d524913995c43a039a6156a73600a9688de621b9cd408442b00836069a"
+  },
+  {
+   "path": "model-00004-of-00017.safetensors",
+   "size": 4912829672,
+   "sha256": "2f4916b7761becdab55dafe7cb99a0a364fa85c20fb80b31eb66a38a3d4090e3"
+  },
+  {
+   "path": "model-00005-of-00017.safetensors",
+   "size": 4829966416,
+   "sha256": "8cf1dc0f1228083313f610848ee56d739b6959507bf8c7cd3c873ec208ff3a4d"
+  },
+  {
+   "path": "model-00006-of-00017.safetensors",
+   "size": 4911732776,
+   "sha256": "09381dabcbf83218e10fdac82b2dc50c24ac9f663d339c82a6f5953bf4dcf70c"
+  },
+  {
+   "path": "model-00007-of-00017.safetensors",
+   "size": 4945363240,
+   "sha256": "009f1e76cfee4374873765f0ac21bd48d8228913faf5d028984e9cdc9e02a038"
+  },
+  {
+   "path": "model-00008-of-00017.safetensors",
+   "size": 4941059704,
+   "sha256": "86c91c9a94d4b522ca0562731a784c9ea785179a38737298d27deb18a166ebc2"
+  },
+  {
+   "path": "model-00009-of-00017.safetensors",
+   "size": 4924369080,
+   "sha256": "f1095bee67a6b86c6d7dd46242d1fb6a27b5c06e4f6d88ef684b3313ec7139db"
+  },
+  {
+   "path": "model-00010-of-00017.safetensors",
+   "size": 4840465248,
+   "sha256": "dc0edd952ccd93a54071dd88e44bc815a4a1473215007bfe2409ce2429cd23c0"
+  },
+  {
+   "path": "model-00011-of-00017.safetensors",
+   "size": 4965247528,
+   "sha256": "d63dd834331e55f4fd8855b608043d9cdb7fad5fdbb53a64ee7d8be218ae8e40"
+  },
+  {
+   "path": "model-00012-of-00017.safetensors",
+   "size": 4911733960,
+   "sha256": "eb72c13be32f0205992fce81953043ee27701f66bab7bab596fafe8759edbffb"
+  },
+  {
+   "path": "model-00013-of-00017.safetensors",
+   "size": 4848814856,
+   "sha256": "b3b95cf3468fb1adc406fa287d35d68fcca68a74d562a9057cf33d4f7236d0de"
+  },
+  {
+   "path": "model-00014-of-00017.safetensors",
+   "size": 4996697312,
+   "sha256": "f0eb5161ed489f9c65f9bfe216edd8639336f941f8e90592a873e27b6687a484"
+  },
+  {
+   "path": "model-00015-of-00017.safetensors",
+   "size": 4933789824,
+   "sha256": "bb01f7bfb8e65358e09f8f4c76c5479401a703def3bb02d3a5e0db61094c57a8"
+  },
+  {
+   "path": "model-00016-of-00017.safetensors",
+   "size": 4911732712,
+   "sha256": "6f20b6125250d126961e9b6ba95e4e109948a2ff21fd463ce480957b3b745a5f"
+  },
+  {
+   "path": "model-00017-of-00017.safetensors",
+   "size": 2842590120,
+   "sha256": "b0ced92b0a9a8e250690ab57657ea789190adddb3aa095b98847d5e04cd2d154"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 154576,
+   "git_oid": "ebce99097b7cdd0f4f6b92961e20c8cf4a50cc99"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1191,
+   "git_oid": "33818c7f9e991ad735fd240209f4fa73e6c28c50"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 12807982,
+   "sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 16718,
+   "git_oid": "28d96ff303d1d20350185caf4bf037045916ed35"
+  },
+  {
+   "path": "valhalla.webp",
+   "size": 4336184,
+   "sha256": "010bce05f9f652093f5b1504f797e540a905871211572ddfc53a0e256d2f84aa"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  },
+  {
+   "path": "vocab.json",
+   "size": 6722759,
+   "git_oid": "0aa0ce0658d60ac4a5d609f4eadb0e8e43514176"
+  }
+ ]
+}

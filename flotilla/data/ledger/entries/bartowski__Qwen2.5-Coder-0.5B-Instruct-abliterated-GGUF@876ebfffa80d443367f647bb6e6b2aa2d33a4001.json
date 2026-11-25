@@ -1,0 +1,115 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bartowski/Qwen2.5-Coder-0.5B-Instruct-abliterated-GGUF",
+ "revision": "876ebfffa80d443367f647bb6e6b2aa2d33a4001",
+ "captured": "2026-11-25T05:08:44+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3100,
+   "git_oid": "34167a5a93d01c0883515447774eeaf1cb04baf6"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-IQ3_M.gguf",
+   "size": 342752800,
+   "sha256": "5c0973c0c8cb627737aed766b856193f60584f70a9f27a4f5248dce3b59af347"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-IQ4_XS.gguf",
+   "size": 349402912,
+   "sha256": "f337a875f03f04b0218f92019dababace72ce9d587febe42ae651adfd5a74c31"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q3_K_L.gguf",
+   "size": 369358624,
+   "sha256": "572c0db4d0ef5ad006ce4cb8750f969d56b0fdbc4007fd73cfcabce027897299"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q3_K_XL.gguf",
+   "size": 369358624,
+   "sha256": "572c0db4d0ef5ad006ce4cb8750f969d56b0fdbc4007fd73cfcabce027897299"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q4_0.gguf",
+   "size": 352972576,
+   "sha256": "28696f87c0f6d954f8e843763746530d0b09d4188615036d0d5efeb6323ed5fe"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q4_0_4_4.gguf",
+   "size": 352155424,
+   "sha256": "339d3540c1d5865a2728705ce9573aa5aea712f74813a251615dbc70be746547"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q4_0_4_8.gguf",
+   "size": 352155424,
+   "sha256": "61680e35fbfc1ca7c933fd7ebc895ea1c6371370fc1aa0715e1a42216f8f55f9"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q4_0_8_8.gguf",
+   "size": 352155424,
+   "sha256": "70241d94e45b9813dcd23c1b2c51ba62f03d11e88294427da70a67fd170c474a"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q4_K_L.gguf",
+   "size": 397808416,
+   "sha256": "4ef305ffe4d769f9637df26d0e0d56cfe9f2fd8284e34e2827be496c8cd0674b"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q4_K_M.gguf",
+   "size": 397808416,
+   "sha256": "4ef305ffe4d769f9637df26d0e0d56cfe9f2fd8284e34e2827be496c8cd0674b"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q4_K_S.gguf",
+   "size": 385472288,
+   "sha256": "0df0ec4ffc106cafc5a5028185d04d5f7e88938a90a2f43daeafd9748e1ce9bf"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q5_K_L.gguf",
+   "size": 420086560,
+   "sha256": "10912f1963bf253fefbb4372c72208ce9547eb8c5d1654814899dc1ce43081e4"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q5_K_M.gguf",
+   "size": 420086560,
+   "sha256": "10912f1963bf253fefbb4372c72208ce9547eb8c5d1654814899dc1ce43081e4"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q5_K_S.gguf",
+   "size": 412710688,
+   "sha256": "f75b2030ccd44b501ccc1a88a10365fc120e2abb287b081a4a7f5634a2d03b9e"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q6_K.gguf",
+   "size": 505736992,
+   "sha256": "ac3a5e305540cc418072fccd612f57424f8ba0b43bc82f82b66b9b9ada0a0ed0"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q6_K_L.gguf",
+   "size": 505736992,
+   "sha256": "ac3a5e305540cc418072fccd612f57424f8ba0b43bc82f82b66b9b9ada0a0ed0"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-Q8_0.gguf",
+   "size": 531068704,
+   "sha256": "5ed368b693aae7b9f0d1838baeff048b7ba91cec9da435dd3c6a6653f677ae07"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated-f16.gguf",
+   "size": 994157024,
+   "sha256": "cdeb352a1aa78140b9571c937c8532402d8f69961d3922fca6be8a83a7634f63"
+  },
+  {
+   "path": "Qwen2.5-Coder-0.5B-Instruct-abliterated.imatrix",
+   "size": 988610,
+   "git_oid": "59bcf95949025b42805e5ff84d700a755d3db7f6"
+  },
+  {
+   "path": "README.md",
+   "size": 10224,
+   "git_oid": "54dca0e09b182c543cacc6a09341adc05dc3c912"
+  }
+ ]
+}

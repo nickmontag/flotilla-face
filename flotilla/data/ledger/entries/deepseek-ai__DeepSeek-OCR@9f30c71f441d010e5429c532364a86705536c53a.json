@@ -1,0 +1,115 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "deepseek-ai/DeepSeek-OCR",
+ "revision": "9f30c71f441d010e5429c532364a86705536c53a",
+ "captured": "2026-11-25T05:09:14+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1783,
+   "git_oid": "12296852e0362bac092cd2a53bb676d7af4023be"
+  },
+  {
+   "path": ".ipynb_checkpoints/README-checkpoint.md",
+   "size": 4342,
+   "git_oid": "e0795e7c5455a8de9151974fdaa4871946b2021a"
+  },
+  {
+   "path": "LICENSE",
+   "size": 1084,
+   "git_oid": "d62e3bef9f054f21b7fc616365850fbf879a99ff"
+  },
+  {
+   "path": "README.md",
+   "size": 6308,
+   "git_oid": "c6b3fb147ef7261513f4f76020def3e73f9a75ae"
+  },
+  {
+   "path": "assets/fig1.png",
+   "size": 396104,
+   "sha256": "3a709eb3fdb51cf6d8a546ffb8efe3c80bef61ae0183c2c8476a4c4a41efa3f1"
+  },
+  {
+   "path": "assets/show1.jpg",
+   "size": 116813,
+   "sha256": "887e88e60e5833bc10a2cd7edb89ea7e6992abaae5e1550b027c611b8b8456f2"
+  },
+  {
+   "path": "assets/show2.jpg",
+   "size": 216011,
+   "sha256": "81d08f7f33d9d39b95dd9b8162506659e6822d621b9829a208f3830c34c2b4d0"
+  },
+  {
+   "path": "assets/show3.jpg",
+   "size": 247052,
+   "sha256": "cd24b0cfc7b6c0b1b34bd1aa55bc385e746298fdd82410db6c0d4e0bf69085c0"
+  },
+  {
+   "path": "assets/show4.jpg",
+   "size": 268763,
+   "sha256": "2fe88eacc470c34d00225151372d3770948864f3d9cfaae16afa15b2432d7793"
+  },
+  {
+   "path": "config.json",
+   "size": 2666,
+   "git_oid": "0bc764cb729cfad6649038ce3b5fa6c29e0c5b34"
+  },
+  {
+   "path": "configuration_deepseek_v2.py",
+   "size": 10646,
+   "git_oid": "a8622c20101ed06940eb7fb6164babbc499bc524"
+  },
+  {
+   "path": "conversation.py",
+   "size": 9253,
+   "git_oid": "65c295e81cd804080ec238b31d1922f33e1f9405"
+  },
+  {
+   "path": "deepencoder.py",
+   "size": 38008,
+   "git_oid": "de1687dfec3a4a8a00980a8444baba0082ce779b"
+  },
+  {
+   "path": "model-00001-of-000001.safetensors",
+   "size": 6672547120,
+   "sha256": "1169e7cdc28ff2fb6186556acb2175db148ad26a62097df4c45a17e523180d3f"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 246759,
+   "git_oid": "76a9e9987d31aec961c934257dc0159b295fdaa6"
+  },
+  {
+   "path": "modeling_deepseekocr.py",
+   "size": 40133,
+   "git_oid": "05ebf949161b9e0684a676de9526089b1deaa636"
+  },
+  {
+   "path": "modeling_deepseekv2.py",
+   "size": 82224,
+   "git_oid": "ff008470d58b98d3f8304ecfb6ee1bd04c877739"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 460,
+   "git_oid": "9153af2ad5e59ad9cf24fed29cf286fcf10d389a"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 801,
+   "git_oid": "d59d312be868edc63b195e19e256c730dba685ad"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 9979544,
+   "git_oid": "c93a1c4d2ecf31bb5a9ec39eb73dfbf915aaf77e"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 165938,
+   "git_oid": "ba9d4175d69cde58ad9f68a76a4758df091eaffa"
+  }
+ ]
+}

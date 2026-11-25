@@ -1,0 +1,35 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "TrevorJS/Muse-Glimmer-30B-uncensored-GGUF",
+ "revision": "ce4ff13f8b7794f558f5655a17fdefae19fa0200",
+ "captured": "2026-11-25T05:09:03+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1767,
+   "git_oid": "ea98d98cc4d546f0f3cc89038387b38d53be440e"
+  },
+  {
+   "path": "Muse-Glimmer-30B-abliterated-s1.0-Q4_K_M.gguf",
+   "size": 16935292096,
+   "sha256": "b78d9c89c5ba42cab7f59baaeddb3726715649227eea35b11ca29fcdd7dd48d9"
+  },
+  {
+   "path": "Muse-Glimmer-30B-abliterated-s1.0-Q8_0.gguf",
+   "size": 29612958656,
+   "sha256": "6580dc0e257dafa545fa2ed74b7e433a823110a93122827d0d70a6a393b9a4e2"
+  },
+  {
+   "path": "README.md",
+   "size": 2542,
+   "git_oid": "3550fd16b03b5d4cf3a3c3aaf35b2f6811aa677c"
+  },
+  {
+   "path": "mmproj-Muse-Glimmer-30B-abliterated-s1.0-F16.gguf",
+   "size": 3847368000,
+   "sha256": "31552cc1418a2b1beb1d2ab61afec163bd30bbad5c8dc294e61be53f87b86e90"
+  }
+ ]
+}

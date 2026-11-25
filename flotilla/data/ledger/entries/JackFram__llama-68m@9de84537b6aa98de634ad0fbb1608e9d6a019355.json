@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "JackFram/llama-68m",
+ "revision": "9de84537b6aa98de634ad0fbb1608e9d6a019355",
+ "captured": "2026-11-25T05:13:05+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 2331,
+   "git_oid": "4e497129c27a420f0f0466b9f4d2014c65a786fb"
+  },
+  {
+   "path": "config.json",
+   "size": 545,
+   "git_oid": "7875767a83ee3c048219e7fd65bd4b9e1a2bbc2c"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 137,
+   "git_oid": "6f04706e07a1816bda5a614e0749e05ae56ef214"
+  },
+  {
+   "path": "optimizer.pt",
+   "size": 544254207,
+   "sha256": "98c8db22f1e32abde97b0ad294e886e80888aee88ad71334941df69033ed7942"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 272128630,
+   "sha256": "e13fbc9fc40633b8c98c5462782b01564733574cb57c13b0f91319717e4b46a0"
+  },
+  {
+   "path": "rng_state.pth",
+   "size": 14575,
+   "sha256": "b2278a87cdf86c3f9219223c847f6b27f6b7f15b8226b617f38936e8ff2cbcde"
+  },
+  {
+   "path": "scheduler.pt",
+   "size": 627,
+   "sha256": "32162e6db5ed836a6649bb4993dd80201f2297b648f005a9551dd86d5e3d997a"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 411,
+   "git_oid": "d85ba6cb6820b01226ef8bd40b46bb489041c6a8"
+  },
+  {
+   "path": "tokenizer.model",
+   "size": 499723,
+   "sha256": "9e556afd44213b6bd1be2b850ebbbd98f5481437a8021afaf58ee7fb1818d347"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 747,
+   "git_oid": "64f06a66afae5b4c87d043ecebc00eb7dc63f841"
+  },
+  {
+   "path": "trainer_state.json",
+   "size": 371317,
+   "git_oid": "23199c9c7a40da5e19f3d525f00517298af71b2d"
+  },
+  {
+   "path": "training_args.bin",
+   "size": 3899,
+   "sha256": "289e7b5895eae1afe427ff0d525e22daa9bfe5da85a181648beb3903f3818170"
+  }
+ ]
+}

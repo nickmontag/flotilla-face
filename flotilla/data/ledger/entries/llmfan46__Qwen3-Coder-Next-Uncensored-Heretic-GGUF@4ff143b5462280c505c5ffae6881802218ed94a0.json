@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llmfan46/Qwen3-Coder-Next-Uncensored-Heretic-GGUF",
+ "revision": "4ff143b5462280c505c5ffae6881802218ed94a0",
+ "captured": "2026-11-25T05:08:16+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2353,
+   "git_oid": "59c893ede8b39e7cb63ebe3425f7b9db73ee6c4b"
+  },
+  {
+   "path": "Qwen3-Coder-Next-Uncensored-Heretic-BF16.gguf",
+   "size": 159458414368,
+   "sha256": "abd4040176e49b07d0ddcf59fe798cadee15f23985b4b21ce3a0d93718ca81b6"
+  },
+  {
+   "path": "Qwen3-Coder-Next-Uncensored-Heretic-Q3_K_L.gguf",
+   "size": 42821209504,
+   "sha256": "ae6ce774523a34ef8ea981cc15d30c38729b8135a9bf9cf97120b25ae4759225"
+  },
+  {
+   "path": "Qwen3-Coder-Next-Uncensored-Heretic-Q3_K_M.gguf",
+   "size": 39801310624,
+   "sha256": "7c54177563e7aea9172557d2632707c47f2811016ae8012cf0ac488b14f330e6"
+  },
+  {
+   "path": "Qwen3-Coder-Next-Uncensored-Heretic-Q3_K_S.gguf",
+   "size": 36177431968,
+   "sha256": "d43d4639b4dd46a765ad2c299df806ea785c4ae04818abe6e290215c5b29f1a0"
+  },
+  {
+   "path": "Qwen3-Coder-Next-Uncensored-Heretic-Q4_K_M.gguf",
+   "size": 49766976928,
+   "sha256": "6b0276bbd6ce240c0eec117c4c2af18d639bae16fb42dd9d0d80f2932cb8bed3"
+  },
+  {
+   "path": "Qwen3-Coder-Next-Uncensored-Heretic-Q4_K_S.gguf",
+   "size": 46847741344,
+   "sha256": "17faaec81527d8f01150bc0c0ea0f6d43b533b52be42e07097023296adc676c5"
+  },
+  {
+   "path": "Qwen3-Coder-Next-Uncensored-Heretic-Q5_K_M.gguf",
+   "size": 57820040608,
+   "sha256": "f427944541b6e66582fb3e1c61285cfcb5ec8659181ebc4eb98aeb618294c94c"
+  },
+  {
+   "path": "Qwen3-Coder-Next-Uncensored-Heretic-Q5_K_S.gguf",
+   "size": 56108764576,
+   "sha256": "4548271b1527aa52969155cc1e625f9f566ca295c989b18944823a7221e16c07"
+  },
+  {
+   "path": "Qwen3-Coder-Next-Uncensored-Heretic-Q6_K.gguf",
+   "size": 66376420768,
+   "sha256": "7b82235501ed8835c0a2137185bf628ce8d45fc4dea3852e7dd2a2047cdfc245"
+  },
+  {
+   "path": "Qwen3-Coder-Next-Uncensored-Heretic-Q8_0.gguf",
+   "size": 85099793824,
+   "sha256": "d516e8ede3a8477e39e5fe8b92ce79bf428aeeb0a4f0cf8b5c65795dd5ff9d38"
+  },
+  {
+   "path": "README.md",
+   "size": 11262,
+   "git_oid": "e4d3aee45051959da811b9a2c9efe125720f9792"
+  }
+ ]
+}

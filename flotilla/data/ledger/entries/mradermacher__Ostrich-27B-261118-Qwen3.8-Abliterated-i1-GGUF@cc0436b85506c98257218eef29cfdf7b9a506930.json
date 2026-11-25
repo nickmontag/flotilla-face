@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Ostrich-27B-261118-Qwen3.8-Abliterated-i1-GGUF",
+ "revision": "cc0436b85506c98257218eef29cfdf7b9a506930",
+ "captured": "2026-11-25T05:09:06+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1874,
+   "git_oid": "c4a42f27fe74b2fb431c766ba418c4584867baa8"
+  },
+  {
+   "path": "Ostrich-27B-261118-Qwen3.8-Abliterated.i1-IQ3_M.gguf",
+   "size": 12768332992,
+   "sha256": "cf028086f725d37c0a4503b5e353decb66152c29461993c0155052d43d1f02a3"
+  },
+  {
+   "path": "Ostrich-27B-261118-Qwen3.8-Abliterated.i1-Q2_K.gguf",
+   "size": 10864594112,
+   "sha256": "46763d86818c54f7f0d031c9dca22b50a92f23f74ca40a6b373e96ae1c2fe890"
+  },
+  {
+   "path": "Ostrich-27B-261118-Qwen3.8-Abliterated.i1-Q4_K_S.gguf",
+   "size": 15825300672,
+   "sha256": "89071bab8c73645e2ae45d288ed8ac80e8991f979827f7c45e92162e9c2e2303"
+  },
+  {
+   "path": "Ostrich-27B-261118-Qwen3.8-Abliterated.imatrix.gguf",
+   "size": 27300160,
+   "sha256": "e3df47a889d222ecb1d9629e2949f388129ce5c834ee7fb998381e87cd96a06f"
+  },
+  {
+   "path": "README.md",
+   "size": 3445,
+   "git_oid": "f18c6ceea92fad34c0295467c4c13aa3693663c8"
+  }
+ ]
+}

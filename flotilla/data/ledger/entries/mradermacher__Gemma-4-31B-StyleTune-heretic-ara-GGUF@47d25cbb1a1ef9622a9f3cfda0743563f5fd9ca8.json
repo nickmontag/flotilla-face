@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Gemma-4-31B-StyleTune-heretic-ara-GGUF",
+ "revision": "47d25cbb1a1ef9622a9f3cfda0743563f5fd9ca8",
+ "captured": "2026-11-25T05:09:03+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2415,
+   "git_oid": "5ddb540b95ffa8c7675ace0bb069525c5c897c6e"
+  },
+  {
+   "path": "Gemma-4-31B-StyleTune-heretic-ara.IQ4_XS.gguf",
+   "size": 17610917216,
+   "sha256": "19a5b1feac61a5eb1dcace8f4afd30eb5e753ec4d4ec492997da64aea617c084"
+  },
+  {
+   "path": "Gemma-4-31B-StyleTune-heretic-ara.Q2_K.gguf",
+   "size": 12378735968,
+   "sha256": "5bb7d6cbfd17a8cd6aecb45b029818639ec084dcdb9fc7d3971fb8bee145c303"
+  },
+  {
+   "path": "Gemma-4-31B-StyleTune-heretic-ara.Q3_K_L.gguf",
+   "size": 17233823072,
+   "sha256": "dc61c8d57fe98eb2f2ff6e46180ea6b24925a975738675342d6f3b84de48df72"
+  },
+  {
+   "path": "Gemma-4-31B-StyleTune-heretic-ara.Q3_K_M.gguf",
+   "size": 15892661600,
+   "sha256": "40830e14183a2ed27e6b92be1da823bf371840fb56b18cd861d582f78a008f43"
+  },
+  {
+   "path": "Gemma-4-31B-StyleTune-heretic-ara.Q3_K_S.gguf",
+   "size": 14366909792,
+   "sha256": "ca5593cfcf97a9edd0c4fe1fbba80fce139927dac5eb0803e4e645266ff46f52"
+  },
+  {
+   "path": "Gemma-4-31B-StyleTune-heretic-ara.Q4_K_M.gguf",
+   "size": 19479786848,
+   "sha256": "f6d70564296d2b11e81e1cdebb0db43757d179394ea66b2b7194e09b6dcea13c"
+  },
+  {
+   "path": "Gemma-4-31B-StyleTune-heretic-ara.Q4_K_S.gguf",
+   "size": 18555888992,
+   "sha256": "8f3d11d5c0422d0a6e9f89848b2445616ef137d30258fa6a98e3a436f270134a"
+  },
+  {
+   "path": "Gemma-4-31B-StyleTune-heretic-ara.Q5_K_M.gguf",
+   "size": 22814455136,
+   "sha256": "2a82b8d6bf0e9c37d5dad23e76e0e8cdc8878af8db6cb2834224b97ad50a4d78"
+  },
+  {
+   "path": "Gemma-4-31B-StyleTune-heretic-ara.Q5_K_S.gguf",
+   "size": 22280725856,
+   "sha256": "d1a44863362bc68f2b477249bf807019dc1f5df4f6bb699bb5f6934a41a6b2d4"
+  },
+  {
+   "path": "Gemma-4-31B-StyleTune-heretic-ara.Q6_K.gguf",
+   "size": 26357540192,
+   "sha256": "1ed6fbe6bbf52b3ba3cc5265bf2e3466d39d24de8bc4d51756c34836a6f050f3"
+  },
+  {
+   "path": "Gemma-4-31B-StyleTune-heretic-ara.Q8_0.gguf",
+   "size": 34133042528,
+   "sha256": "a3ca493c81b5c700c996d78472b8b85dcbfa1c159b97ff155513e1e26a50f412"
+  },
+  {
+   "path": "README.md",
+   "size": 4225,
+   "git_oid": "ab7507a2d4b854c1145245b5ecd2be46ba73cea7"
+  }
+ ]
+}

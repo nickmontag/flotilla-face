@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llamafactory/tiny-random-Llama-3",
+ "revision": "bf2a2e3bf199ad2ee96f02a3c00246c608db22a8",
+ "captured": "2026-11-25T05:09:21+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 150,
+   "git_oid": "2ffa9b7d76471b6d1624903b01d0bc9bed69e170"
+  },
+  {
+   "path": "config.json",
+   "size": 847,
+   "git_oid": "6707c21303e20ec451e6ce8f43f90a85538aef74"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 184,
+   "git_oid": "cc7276afd599de091142c6ed3005faf8a74aa257"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 8227120,
+   "sha256": "0a06cae562cbe4123d9bf81dce50d5fba1ee8a6ae1c05e8bd6112be7f57736a4"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 73,
+   "git_oid": "d8cd5076496dbe4be2320312abc10adc43097b81"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 9085657,
+   "git_oid": "5cc5f00a5b203e90a27a3bd60d1ec393b07971e8"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 50911,
+   "git_oid": "22bce6e7a691d7618343d9bda77403bf5e48a359"
+  },
+  {
+   "path": "value_head.safetensors",
+   "size": 260,
+   "sha256": "ce845e5efd5acd35e2e1e9ac3657b247ff0d3551b2d0ef6d39dca5bbd4092ce2"
+  }
+ ]
+}

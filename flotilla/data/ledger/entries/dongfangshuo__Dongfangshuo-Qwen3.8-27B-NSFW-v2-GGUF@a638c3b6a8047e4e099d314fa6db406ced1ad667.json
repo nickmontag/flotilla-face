@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "dongfangshuo/Dongfangshuo-Qwen3.8-27B-NSFW-v2-GGUF",
+ "revision": "a638c3b6a8047e4e099d314fa6db406ced1ad667",
+ "captured": "2026-11-25T05:13:12+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1729,
+   "git_oid": "4fabc684b40ff409160b0f9c86531e4502b50e92"
+  },
+  {
+   "path": "BENCHMARK.md",
+   "size": 6450,
+   "git_oid": "795c192da2e43fc949991d463af5de44149fd290"
+  },
+  {
+   "path": "Dongfangshuo-Qwen3.8-27B-NSFW-v2-Q4_K_M.gguf",
+   "size": 16547400128,
+   "sha256": "bee0bbbff16da3f5beb97625e52bdd4fbf149c29b364ad7dcbe72412ca3d03f2"
+  },
+  {
+   "path": "Modelfile",
+   "size": 367,
+   "git_oid": "2c48f36e854119fe16b5fd5e629aead9ef139be5"
+  },
+  {
+   "path": "README.md",
+   "size": 7504,
+   "git_oid": "94d993f7cfb2e3b87d57882bfb46bcb9e5f2a0fa"
+  },
+  {
+   "path": "lora/adapter_config.json",
+   "size": 830,
+   "git_oid": "cd2f88e75ce45e05da432a787d577ca732f9026b"
+  },
+  {
+   "path": "lora/adapter_model.safetensors",
+   "size": 1867782664,
+   "sha256": "1b1b697b8716291f5c1ac04592b54dcb75a1ad7d8638ac4da0389e7ae804e210"
+  },
+  {
+   "path": "mmproj-model-bf16.gguf",
+   "size": 931145888,
+   "sha256": "c9a09064683620bea3d3bfed5d4462e1a97a7d2fff7e5045d6862a0a85eeb5b5"
+  }
+ ]
+}

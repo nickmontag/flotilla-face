@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "huihui-ai/Huihui-gemma-4-12B-agentic-fable5-abliterated",
+ "revision": "22ec22666885116efcc285ee80fcc7efa4cf2aa4",
+ "captured": "2026-11-25T05:08:25+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 2347,
+   "git_oid": "3f5dae5cd02c28b80060a1d2803c295f9d8b14ce"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 17466,
+   "git_oid": "e61bbfe9a31db79ea1e4e557b046f895ad7899d0"
+  },
+  {
+   "path": "config.json",
+   "size": 4503,
+   "git_oid": "0250e566e31c2bdb4bedc7b973fc38dd4935edef"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 273,
+   "git_oid": "e41ee7aff535c25f3dd1cff5ce299f6116ba9752"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 23919548728,
+   "sha256": "11b24899d30255c4ca07e27be0495ccdb3a96397a13d2f17f50cb70a2b8c4ea1"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1382,
+   "git_oid": "b889adcd78015bf5a0139438c5fb0b7067529a61"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 32169626,
+   "sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 2844,
+   "git_oid": "4fb0c4d5474062346fd41f69217ed7eb0c5677a1"
+  }
+ ]
+}

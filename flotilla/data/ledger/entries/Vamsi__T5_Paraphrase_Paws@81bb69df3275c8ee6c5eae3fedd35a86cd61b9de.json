@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Vamsi/T5_Paraphrase_Paws",
+ "revision": "81bb69df3275c8ee6c5eae3fedd35a86cd61b9de",
+ "captured": "2026-11-25T05:13:05+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 491,
+   "git_oid": "505a7adf8be9e5fdf06aabbfbe9046e6c811f91b"
+  },
+  {
+   "path": "README.md",
+   "size": 1824,
+   "git_oid": "f385dc475e2860c391b87a850488e7f52849be83"
+  },
+  {
+   "path": "checkpointepoch=0.ckpt",
+   "size": 2675005600,
+   "sha256": "2904c61af292729025b2460745f1510f4da245ccd3bfa7b6d54363edef462ccf"
+  },
+  {
+   "path": "config.json",
+   "size": 1208,
+   "git_oid": "c360f5f4046ca9d7f2ea7d098126ecabc596fbe5"
+  },
+  {
+   "path": "flax_model.msgpack",
+   "size": 891625348,
+   "sha256": "67fdc5dc27f108c94d799b702ac867e0617c255907eef57aefd27cd51ef8c7ae"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 891646390,
+   "sha256": "f4a7d691b8add83ca47dc6da06256e97126a06095528e8fc9c7cb29d652f698a"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 891689022,
+   "sha256": "e326e2a8ff029fa7ac0e3b3b866183ba8db57a829a031e4cf6e72f0de533f181"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 1786,
+   "git_oid": "881bdbffc06e471924ecea57f962bc5f8e2a9f21"
+  },
+  {
+   "path": "spiece.model",
+   "size": 791656,
+   "git_oid": "4e28ff6ebdf584f5372d9de68867399142435d9a"
+  },
+  {
+   "path": "tf_model.h5",
+   "size": 892147952,
+   "sha256": "b1dfc3923bc7a599ba79508f3462435d426d6e1d70cd37437744b31daed677cc"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 25,
+   "git_oid": "34ddbd64a4cd3f2d9d8a9120d3662d0bf91baead"
+  }
+ ]
+}

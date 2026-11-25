@@ -1,0 +1,215 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llava-hf/llava-onevision-qwen2-0.5b-ov-hf",
+ "revision": "74dd0bf867a4cda7950c17663794267c60cf4b40",
+ "captured": "2026-11-25T05:09:34+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 9582,
+   "git_oid": "981286aff1f11df4f355dab8b9dd0ba5488a576c"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 122,
+   "git_oid": "f4d12380a35b1f8032caad7bc7a006f5d3fa759e"
+  },
+  {
+   "path": "chat_template.json",
+   "size": 826,
+   "git_oid": "68724c68b1612e9ab2e31f84e3279099ad656ff6"
+  },
+  {
+   "path": "config.json",
+   "size": 2591,
+   "git_oid": "d1fcc2ccafee7f4c82166f07f0f1918c8334553b"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 126,
+   "git_oid": "9f451858a72667b8ed295a9c44c14cefb99deb8f"
+  },
+  {
+   "path": "llava_onevision_arch.png",
+   "size": 208818,
+   "git_oid": "ed815fb345c3bec58952a241b9e9657f501b303d"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671853,
+   "git_oid": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 1787445680,
+   "sha256": "07b3362c3412de79baf2379e44e5b0b2a8f4b965ebebd11d7b5b3eb4450fe96e"
+  },
+  {
+   "path": "onnx/decoder_model_merged.onnx",
+   "size": 1994025808,
+   "sha256": "28f22cb3162626a3a4f052b72ef5652cc16d935fbc03f9dbe44834295fe5b686"
+  },
+  {
+   "path": "onnx/decoder_model_merged_bnb4.onnx",
+   "size": 295863516,
+   "sha256": "a4a0dccf252c1d2f5d6e10a839544a2947903b09f97e03ba67789874780be561"
+  },
+  {
+   "path": "onnx/decoder_model_merged_fp16.onnx",
+   "size": 997472723,
+   "sha256": "be46b9b128a2765cd02dfe0164fba18340920814b5480789b819ffc748215f8f"
+  },
+  {
+   "path": "onnx/decoder_model_merged_int8.onnx",
+   "size": 512154211,
+   "sha256": "cc674946412447fa76df18686c32541b1388c0fa62cbf53c36dccd1a90649c3f"
+  },
+  {
+   "path": "onnx/decoder_model_merged_q4.onnx",
+   "size": 326738324,
+   "sha256": "76b912a695768539fd63a155ccf7ee4eeffeb7e82e56d008593c7577ac4e05c8"
+  },
+  {
+   "path": "onnx/decoder_model_merged_q4f16.onnx",
+   "size": 287346295,
+   "sha256": "0ec93a115c9756adc8a9e7e8adf6b031c24a4ab16b63b8dc17a56810fe03b12c"
+  },
+  {
+   "path": "onnx/decoder_model_merged_quantized.onnx",
+   "size": 512154211,
+   "sha256": "cc674946412447fa76df18686c32541b1388c0fa62cbf53c36dccd1a90649c3f"
+  },
+  {
+   "path": "onnx/decoder_model_merged_uint8.onnx",
+   "size": 512154296,
+   "sha256": "39f89681a425c8d55c437f6864080f3795e7c3394f1db334dcc3602ba4ea5046"
+  },
+  {
+   "path": "onnx/embed_tokens.onnx",
+   "size": 544768302,
+   "sha256": "9a4c7906766ba2fe21448715e58fd10ed3bfb6f7949d5a1d801afff691b33e4e"
+  },
+  {
+   "path": "onnx/embed_tokens_bnb4.onnx",
+   "size": 544768321,
+   "sha256": "b60e16c36e6b9f66d9768a65bab8285ad5d10ae84954f62f6ed2a952e2334128"
+  },
+  {
+   "path": "onnx/embed_tokens_fp16.onnx",
+   "size": 272384452,
+   "sha256": "e76a118db87244aa315d8a8585ca0f3f58c1aec91b1ca44bc81bb7b7d7448aa1"
+  },
+  {
+   "path": "onnx/embed_tokens_int8.onnx",
+   "size": 136192544,
+   "sha256": "4b4dec69949d75a775d871c5e1dc3db6bd4fd6e8ceffb3deafe64e8f16a8323d"
+  },
+  {
+   "path": "onnx/embed_tokens_q4.onnx",
+   "size": 544768321,
+   "sha256": "b60e16c36e6b9f66d9768a65bab8285ad5d10ae84954f62f6ed2a952e2334128"
+  },
+  {
+   "path": "onnx/embed_tokens_q4f16.onnx",
+   "size": 272384471,
+   "sha256": "8e293817d606044bc377d25639e5f3f1911ddeeba92312e3d9fecf1bb7945367"
+  },
+  {
+   "path": "onnx/embed_tokens_quantized.onnx",
+   "size": 136192544,
+   "sha256": "4b4dec69949d75a775d871c5e1dc3db6bd4fd6e8ceffb3deafe64e8f16a8323d"
+  },
+  {
+   "path": "onnx/embed_tokens_uint8.onnx",
+   "size": 136192544,
+   "sha256": "4054003183ee1f97514b34ab1c59ae2a6b54d1162f29a9440caeebbec486bc8a"
+  },
+  {
+   "path": "onnx/vision_encoder.onnx",
+   "size": 1598932026,
+   "sha256": "06cf8f4eefdea6cb8f095724e37da8fa0358820a3506e1c85915d5d2bdadab43"
+  },
+  {
+   "path": "onnx/vision_encoder_bnb4.onnx",
+   "size": 231929646,
+   "sha256": "1b1f4cffc59c992d2af6a6ce0c14d828130ba179e8a7c31080308dcefc4cddd9"
+  },
+  {
+   "path": "onnx/vision_encoder_fp16.onnx",
+   "size": 799767232,
+   "sha256": "31b66d6b44dd56c7d3a94b6a0414eebb85daa5d07c64c9a149968e1d5b880f66"
+  },
+  {
+   "path": "onnx/vision_encoder_int8.onnx",
+   "size": 404097518,
+   "sha256": "d284a45f927b2dbf8a61622444b1c622275c323d95cbd1d07bd3a38c72caf1bb"
+  },
+  {
+   "path": "onnx/vision_encoder_q4.onnx",
+   "size": 257082918,
+   "sha256": "02509d861e604a9501f8a160b87ab1446e6e0d53e514cab483eafa7bacbd37ab"
+  },
+  {
+   "path": "onnx/vision_encoder_q4f16.onnx",
+   "size": 228394416,
+   "sha256": "a921a473839f50aa2cdb09d77e41bcd899dac788489e4d1ff9a05478aac37e08"
+  },
+  {
+   "path": "onnx/vision_encoder_quantized.onnx",
+   "size": 404097602,
+   "sha256": "0191aa785ce1a65b6e45de14641dbcb37a65f49773e322029118803592cb28b2"
+  },
+  {
+   "path": "onnx/vision_encoder_uint8.onnx",
+   "size": 404097602,
+   "sha256": "0191aa785ce1a65b6e45de14641dbcb37a65f49773e322029118803592cb28b2"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 1732,
+   "git_oid": "1ff68626f165d5d9e234e1d6d293e646f7d269bf"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 178,
+   "git_oid": "7779c690fef0fe2026261c1f68eac18c57448319"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 367,
+   "git_oid": "2c53454aff27c6d22873cc28c884c2b2d5d07693"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7028579,
+   "git_oid": "532b756b16b09479d11b1b5696d96d773555a053"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1800,
+   "git_oid": "36ffab84cf909f8f7940f5a85a81e516ce0f4026"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 621,
+   "git_oid": "54bfac33b4d586990eabc014123202e3322e1f22"
+  },
+  {
+   "path": "video_processor/preprocessor_config.json",
+   "size": 428,
+   "git_oid": "97be8d6340dc9e9c8c3c0df03f84a1bdfc623290"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

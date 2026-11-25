@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bowmanslayer/Ornith-1.5-9B-Uncensored-GGUF",
+ "revision": "21bf0c7e15d6dad6ea75c8c62c00a050c472f545",
+ "captured": "2026-11-25T05:08:39+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1951,
+   "git_oid": "ae091d6dfb8bb4498b1c7759aec71bdd3363461e"
+  },
+  {
+   "path": "Ornith-1.5-9B-Uncensored-BF16.gguf",
+   "size": 18407320992,
+   "sha256": "6dd78f20c5ac9dbea74515f2eee5a3bf970935ae33b5cfa93071b02e75465e71"
+  },
+  {
+   "path": "Ornith-1.5-9B-Uncensored-Q3_K_M.gguf",
+   "size": 4737609120,
+   "sha256": "338967e5c848ce08fe866c83e1c89b94ce5db6c1953905c5bc3b843e0581ac24"
+  },
+  {
+   "path": "Ornith-1.5-9B-Uncensored-Q4_K_M.gguf",
+   "size": 5780090272,
+   "sha256": "bd96d9c8cbca078416f57c7504d85c1f23a38738e604825affe57b7cd3ee03a1"
+  },
+  {
+   "path": "Ornith-1.5-9B-Uncensored-Q5_K_M.gguf",
+   "size": 6642544032,
+   "sha256": "13c9319f01db0c983820cdf48bb58ee19d1fdd1e752aa036dc6f62e8cf7a7f9d"
+  },
+  {
+   "path": "Ornith-1.5-9B-Uncensored-Q6_K.gguf",
+   "size": 7558901152,
+   "sha256": "20c54f277076b93b525311c22b191bce77d5e64f25fb08f90bc6f782c5c28c78"
+  },
+  {
+   "path": "Ornith-1.5-9B-Uncensored-Q8_0.gguf",
+   "size": 9786060192,
+   "sha256": "2af90425147e4af235215649a48365904b1826684650b0aecfe0c25b387f1e12"
+  },
+  {
+   "path": "README.md",
+   "size": 10550,
+   "git_oid": "940f10828e7febe197c4315b4fc14c2c3c8a92a0"
+  }
+ ]
+}

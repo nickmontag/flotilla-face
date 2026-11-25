@@ -1,0 +1,245 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "rSalone/DeepSeek-V4.1-Flash-1017-GSQ-RCO-uncensored-t1-4-GGUF",
+ "revision": "401a0f816f3ad0142826f90eba3e966171905fa9",
+ "captured": "2026-11-25T05:08:35+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3140,
+   "git_oid": "21bbb05a923b893d57da105e79c1764c3b382d0c"
+  },
+  {
+   "path": "DeepSeek-V4.1-Flash-1017-GSQ-RCO-IQ2_XXS-uncensored-t1-4-00001-of-00006.gguf",
+   "size": 5780704,
+   "sha256": "7b272ec4c85df0c744306fd346795588f602f8e38157fe9afe72b723f64ec052"
+  },
+  {
+   "path": "DeepSeek-V4.1-Flash-1017-GSQ-RCO-IQ2_XXS-uncensored-t1-4-00002-of-00006.gguf",
+   "size": 39768761664,
+   "sha256": "7463aac77aaa6243301ba0ed52905132e05be5b8757053def772fd9a3b2723bd"
+  },
+  {
+   "path": "DeepSeek-V4.1-Flash-1017-GSQ-RCO-IQ2_XXS-uncensored-t1-4-00003-of-00006.gguf",
+   "size": 39953963840,
+   "sha256": "973c0c40672338d06a4b40cea06eddb4282b6055617573ffffcb577ead97607f"
+  },
+  {
+   "path": "DeepSeek-V4.1-Flash-1017-GSQ-RCO-IQ2_XXS-uncensored-t1-4-00004-of-00006.gguf",
+   "size": 39254160224,
+   "sha256": "f8e12dc9b73b1a7b49d4d94e848addab4d63bb57019f3f91e27f399ddb343833"
+  },
+  {
+   "path": "DeepSeek-V4.1-Flash-1017-GSQ-RCO-IQ2_XXS-uncensored-t1-4-00005-of-00006.gguf",
+   "size": 19975394432,
+   "sha256": "180a3d8a60492b231addfc26c781afe90384f07ce0b9e7a231f2e2893102fe5c"
+  },
+  {
+   "path": "DeepSeek-V4.1-Flash-Engram-IQ4_NL.gguf",
+   "size": 110595290816,
+   "sha256": "3dac4c54893ad7aa89103c0028500eadc78e74112cef3a2930a97e67dc9fb4f3"
+  },
+  {
+   "path": "LICENSE",
+   "size": 1084,
+   "git_oid": "d62e3bef9f054f21b7fc616365850fbf879a99ff"
+  },
+  {
+   "path": "README.md",
+   "size": 40301,
+   "git_oid": "42743f6aa6f7bb04d6cafe2a930ae028e64b3cb3"
+  },
+  {
+   "path": "README_ja.md",
+   "size": 42975,
+   "git_oid": "19896380f48ca11f7f2e7dd9bfe55493c8f0b7b8"
+  },
+  {
+   "path": "engram-IQ4_NL.gguf",
+   "size": 110595290816,
+   "sha256": "eb19f30d368d393784e1fc54fdfaffc427ebb2110bf3762fdf5a8fbb9a2d740a"
+  },
+  {
+   "path": "exp_probs_b_vl.f32",
+   "size": 61440,
+   "git_oid": "f2c0700f7b7dd770d85fe6e57291e1f805c8c807"
+  },
+  {
+   "path": "images/fig1_results_en.png",
+   "size": 95725,
+   "git_oid": "e2fd48ce98dbe37275aa3db1f02ebddae0561705"
+  },
+  {
+   "path": "images/fig1_results_ja.png",
+   "size": 107116,
+   "sha256": "d33ba5ce6e2126913d6d1b38b8b26ccd5e94987cb39d66ee80f7fac4a119daa7"
+  },
+  {
+   "path": "images/fig2_work_en.png",
+   "size": 128449,
+   "sha256": "3040ddd87a8fb3ac72fbe1922b65cd438157c463f41a42be5247beca7cb92024"
+  },
+  {
+   "path": "images/fig2_work_ja.png",
+   "size": 142012,
+   "sha256": "53181514d376d0c26005c7c47e1971d4fb86caec2d1c55998795c61bc5a9fcc5"
+  },
+  {
+   "path": "images/fig3_positions_en.png",
+   "size": 82248,
+   "git_oid": "cf6b62f91cfcf116e5ea59f01627b17821b1552f"
+  },
+  {
+   "path": "images/fig3_positions_ja.png",
+   "size": 98889,
+   "git_oid": "12e07934e1bab1ab18f05e60ac2b97dad3d767ac"
+  },
+  {
+   "path": "images/fig4_heatmap_en.png",
+   "size": 161680,
+   "sha256": "5b47f9471995a7c6f69cf6846f11319326272053807634b83ca78dd84bd0c48b"
+  },
+  {
+   "path": "images/fig4_heatmap_ja.png",
+   "size": 170805,
+   "sha256": "c9a51cb3fddb68f1372bdca9a8d9f07b6c8b58f15581b0dcd7eb1fa27edb078a"
+  },
+  {
+   "path": "images/fig5_layers_en.png",
+   "size": 88204,
+   "git_oid": "e7bfff1456f051658eeadf24cc12c856ec1b57b8"
+  },
+  {
+   "path": "images/fig5_layers_ja.png",
+   "size": 92389,
+   "git_oid": "1249361d23ad1134db0f5da5116efc50cd5587c6"
+  },
+  {
+   "path": "images/figA_first_direction_en.png",
+   "size": 47624,
+   "git_oid": "157ac87e08c8ac14332ed5b7a93ddb9d69d776f8"
+  },
+  {
+   "path": "images/figA_first_direction_ja.png",
+   "size": 55274,
+   "git_oid": "2b216cbfbf6a95dc66ea0543bba6adceb4b51fec"
+  },
+  {
+   "path": "images/figB_residual_en.png",
+   "size": 77547,
+   "git_oid": "2aa0dfffa890102dbd4e5453049271256aa9286c"
+  },
+  {
+   "path": "images/figB_residual_ja.png",
+   "size": 83677,
+   "git_oid": "c5516ca6dc09b95852569b00afff1aef35658762"
+  },
+  {
+   "path": "images/figE_edited_layers_en.png",
+   "size": 44450,
+   "git_oid": "a7b0c824da6f1a679b49b52f8a9b025aad1388b8"
+  },
+  {
+   "path": "images/figE_edited_layers_ja.png",
+   "size": 45725,
+   "git_oid": "91a40d6a33e444ab3fdfd5dc81521d550bbe2532"
+  },
+  {
+   "path": "images/fig_candidates_en.png",
+   "size": 282467,
+   "sha256": "875f0b30d14b35252da5febd9326ddb9b43c40907095c01ad824ff57574c865d"
+  },
+  {
+   "path": "images/fig_candidates_ja.png",
+   "size": 285224,
+   "sha256": "eb1882b23b68c3b669de63562ecff45b71e9dd9d5d9291d66db01f5eb44505df"
+  },
+  {
+   "path": "mmproj-BF16.gguf",
+   "size": 972208096,
+   "sha256": "0fdc4b7693f287e9665940cf42bd39c546ffe4f0def89c569d7d0e45d60d2df1"
+  },
+  {
+   "path": "overlay-00001-of-00005.gguf",
+   "size": 2042688704,
+   "sha256": "f1c551d0d1d6db88e00e4c34184dc6e65fa3f31e5eff485c29953a5d446a7b8d"
+  },
+  {
+   "path": "overlay-00002-of-00005.gguf",
+   "size": 39075714624,
+   "sha256": "d46efb67ccffd8fb5d7f18b423896381b9e06d8491e161c370ddf3b05b07e050"
+  },
+  {
+   "path": "overlay-00003-of-00005.gguf",
+   "size": 39388449504,
+   "sha256": "cec1b2c3da429dc768b8bb9bc4dc4403d81f74d34db660a6a34ee3e555bf2c70"
+  },
+  {
+   "path": "overlay-00004-of-00005.gguf",
+   "size": 39246891616,
+   "sha256": "9d9c2140fcb134a0b9a74dedd0e5167e68077af6d08ce7f856bce112f0a35dd3"
+  },
+  {
+   "path": "overlay-00005-of-00005.gguf",
+   "size": 20527837312,
+   "sha256": "9b790a2297ed3cdede379fc984f4a52bb95f3b23724c797af11d1fa6a69db059"
+  },
+  {
+   "path": "pack/compat-bf16.json",
+   "size": 9449,
+   "git_oid": "9a74e599559de17d5c94bb30f437668263e23d64"
+  },
+  {
+   "path": "pack/dense.bin",
+   "size": 364489728,
+   "sha256": "fbc67ac99bb2bcff8bc54535f9276b5196f77754d36edb99cd58fc5e40b35269"
+  },
+  {
+   "path": "pack/engram.txt",
+   "size": 796,
+   "git_oid": "f5f14bdae25183415de6219a53e774e6f85fca05"
+  },
+  {
+   "path": "pack/engram_token_map.u32",
+   "size": 517120,
+   "sha256": "c60a86322ec17b4142bfef3c57a8d81fb428550cdf487f88a4320cb59fe46481"
+  },
+  {
+   "path": "pack/index.txt",
+   "size": 72590,
+   "git_oid": "a0f7501313d5e9c4073fae28601b9fd64f681f64"
+  },
+  {
+   "path": "pack/native_experts.txt",
+   "size": 4012,
+   "git_oid": "b4b0cfe167132de3e654acbdc16bd02632f3d080"
+  },
+  {
+   "path": "pack/tokenizer/chat_template.jinja",
+   "size": 7423,
+   "git_oid": "37cd8131b219a025fd74ca8f72fb5b3f4cae5707"
+  },
+  {
+   "path": "pack/tokenizer/merges.txt",
+   "size": 1504833,
+   "git_oid": "458716d3c1dc78fe1f67c15b283fb7c2a841e980"
+  },
+  {
+   "path": "pack/tokenizer/token_type.json",
+   "size": 387840,
+   "git_oid": "25928b6b9d1c303a0c132d5d6d0237f71609a63b"
+  },
+  {
+   "path": "pack/tokenizer/tokenizer.json",
+   "size": 619,
+   "git_oid": "dcdff8cca49b5cb07c78cf63e1fc23a35ce9b8bc"
+  },
+  {
+   "path": "pack/tokenizer/vocab.json",
+   "size": 2730577,
+   "git_oid": "a6d70cc383e225bb4b4abfede17d300bbb09b123"
+  }
+ ]
+}

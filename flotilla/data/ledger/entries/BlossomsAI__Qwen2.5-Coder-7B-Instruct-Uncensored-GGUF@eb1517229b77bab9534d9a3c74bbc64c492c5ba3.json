@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "BlossomsAI/Qwen2.5-Coder-7B-Instruct-Uncensored-GGUF",
+ "revision": "eb1517229b77bab9534d9a3c74bbc64c492c5ba3",
+ "captured": "2026-11-25T05:08:42+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1897,
+   "git_oid": "ce5e3034c97d5bb5f3637039a61f97588cd99f47"
+  },
+  {
+   "path": "README.md",
+   "size": 2287,
+   "git_oid": "5042a6360a77fb64c4023abc2e1847e34b447d75"
+  },
+  {
+   "path": "q2_k.gguf",
+   "size": 3015940096,
+   "sha256": "ddc0a6e3c6a33192255191b6068aa4ac2fbd9a60f6aacfdf28966426921aedcd"
+  },
+  {
+   "path": "q3_k_m.gguf",
+   "size": 3808391168,
+   "sha256": "5d4123f952a912629fd9422d9dd305bf2b712fa9d78c100e3653a155348b8702"
+  },
+  {
+   "path": "q4_k_m.gguf",
+   "size": 4683073536,
+   "sha256": "e6b94e0740eb10cd425875a7cc54b0765786d51f543b9394c0e8e555f1cc5ee6"
+  },
+  {
+   "path": "q4_k_s.gguf",
+   "size": 4457768960,
+   "sha256": "6b3d0058db211b9383933d8d9d65a1ded1656dbc33cc27827cc56e1ae7ffbf52"
+  },
+  {
+   "path": "q5_k_m.gguf",
+   "size": 5444831232,
+   "sha256": "ebc5b0138bdba45219be0d8828320206c0783531cfa829cf3f2bec341ba186d9"
+  },
+  {
+   "path": "q5_k_s.gguf",
+   "size": 5315176448,
+   "sha256": "1367aad0fb8d7c9483fae97a276c60f6a42ee5920e894cd3a9106c99e15b4399"
+  },
+  {
+   "path": "q6_k.gguf",
+   "size": 6254198784,
+   "sha256": "943adfcf3304d480030b9671a84545de2b8c9a98f33151494de9907d353e54c0"
+  },
+  {
+   "path": "q8_0.gguf",
+   "size": 8098525184,
+   "sha256": "c508d6dec5276532f67d71451089b1b609e179c25024b25db7470ba4a0464292"
+  }
+ ]
+}

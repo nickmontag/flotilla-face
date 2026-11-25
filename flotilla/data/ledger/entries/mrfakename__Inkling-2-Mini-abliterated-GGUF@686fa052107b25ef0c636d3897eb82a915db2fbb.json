@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mrfakename/Inkling-2-Mini-abliterated-GGUF",
+ "revision": "686fa052107b25ef0c636d3897eb82a915db2fbb",
+ "captured": "2026-11-25T05:08:52+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2066,
+   "git_oid": "6c0a12366326c1292dc1baecef4f1482eb43e699"
+  },
+  {
+   "path": "Inkling-2-Mini-abliterated-IQ4_NL.gguf",
+   "size": 17627940768,
+   "sha256": "e9a5c9898737f8eacb08d347fac0d1d219ba5a90ca511f7860ed913390f22948"
+  },
+  {
+   "path": "Inkling-2-Mini-abliterated-Q8_0.gguf",
+   "size": 27820099264,
+   "sha256": "fe522ee31f90d5eb7dad854823f073bc3109d354295b2a2ef7d668b370974291"
+  },
+  {
+   "path": "Inkling-2-Mini-abliterated-UD-Q2_K_XL.gguf",
+   "size": 9138716608,
+   "sha256": "5202e2e89c32d8ef4d52fe02b34fab908960c80c1e8688a08986cdb624b06b84"
+  },
+  {
+   "path": "Inkling-2-Mini-abliterated-UD-Q4_K_XL.gguf",
+   "size": 17629760736,
+   "sha256": "1ec8e76f9cb195270d3bc4df6afd51e62578db1809b8bcb4af280f2b95e5a889"
+  },
+  {
+   "path": "README.md",
+   "size": 5437,
+   "git_oid": "4cb7f9b6be5fd17bc72ecd481b0b0f6b460a5580"
+  },
+  {
+   "path": "Unsloth_Layout/Inkling-2-Mini-abliterated-UD-Q2_K_XL.gguf",
+   "size": 9138715328,
+   "sha256": "1478b35ffd4be5276e3236a04fbf81367c7f0e68c8818308fd233a36c0321b63"
+  },
+  {
+   "path": "Unsloth_Layout/Inkling-2-Mini-abliterated-UD-Q4_K_XL.gguf",
+   "size": 17629759456,
+   "sha256": "9dc4e98e7724b9e071a627680105ff75df63ef5851093bf32180334be5027805"
+  },
+  {
+   "path": "abliteration-edit.npz",
+   "size": 12012,
+   "sha256": "8ada36fb84a9db6419e78af282871873f2eeb2f7746294f86db3a2d65bdaa7ee"
+  },
+  {
+   "path": "abliteration-lora.gguf",
+   "size": 32200000,
+   "sha256": "f3af8126f6cec77d753ec4de66864133c9681e7810f1fc759b1bbc1d05dd5ed5"
+  },
+  {
+   "path": "mmproj-Inkling-2-Mini-BF16.gguf",
+   "size": 641805984,
+   "sha256": "e914997fe07fb2066bfdce855ec7275c15bc2b624e5423149f1027839593d9cb"
+  },
+  {
+   "path": "mmproj-Inkling-2-Mini-Q8_0.gguf",
+   "size": 345910944,
+   "sha256": "233287272ec5ac39b4168677aba54a4c024f202410f5629fac1830e1059f8abb"
+  },
+  {
+   "path": "patch-stats.txt",
+   "size": 26996,
+   "git_oid": "ea5edd5861b6bbb828857eae982abf1b0761d4cf"
+  },
+  {
+   "path": "stats.png",
+   "size": 128281,
+   "sha256": "ffa829ffe6821db45f965aab637fde537f5ab430926d700741ef6b69dcfc873b"
+  }
+ ]
+}

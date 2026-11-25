@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "openbmb/MiniCPM-OCR-Jev",
+ "revision": "90bc4c4768c082f769f5352479fa0df84da42c1a",
+ "captured": "2026-11-25T05:09:32+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1840,
+   "git_oid": "92f45337f21dad96c17cd9a2d8ab6821e835071c"
+  },
+  {
+   "path": "README.md",
+   "size": 8517,
+   "git_oid": "2962d7bf312398319752507c2cbd2a82449d7264"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7755,
+   "git_oid": "0ef09f214eaa6d9bca297988afc1454b5827b2c7"
+  },
+  {
+   "path": "config.json",
+   "size": 2775,
+   "git_oid": "a084a54fe0864551476ecc4a5a3569dda96805d7"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 176,
+   "git_oid": "f26986db57950014c12378022e102f6a84672d44"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 4426567144,
+   "sha256": "6e8e43049340a9d18f711634dcc88eb5880a3cd69c852815e76d5de3aea28dcc"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1191,
+   "git_oid": "33818c7f9e991ad735fd240209f4fa73e6c28c50"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989325,
+   "sha256": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1165,
+   "git_oid": "1d134cd298be1e3be25db393d93a1cefe80e3214"
+  }
+ ]
+}

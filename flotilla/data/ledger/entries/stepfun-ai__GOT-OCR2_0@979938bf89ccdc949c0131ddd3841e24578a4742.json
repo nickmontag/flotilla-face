@@ -1,0 +1,85 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "stepfun-ai/GOT-OCR2_0",
+ "revision": "979938bf89ccdc949c0131ddd3841e24578a4742",
+ "captured": "2026-11-25T05:09:38+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 3959,
+   "git_oid": "143dd5a9fb155fe07d8bd198ab28c501e98b3d6c"
+  },
+  {
+   "path": "assets/got_logo.png",
+   "size": 510573,
+   "git_oid": "a896fa83405eb7e198b0f0099e930a6cfb86cac0"
+  },
+  {
+   "path": "assets/got_support.jpg",
+   "size": 198197,
+   "git_oid": "0a3a025f682178fa6587498ffd45c491c540a03c"
+  },
+  {
+   "path": "assets/train_sample.jpg",
+   "size": 155378,
+   "git_oid": "ad3c31a44bdece8f91faef096ea0c15df6a44cf9"
+  },
+  {
+   "path": "config.json",
+   "size": 986,
+   "git_oid": "ff2eecec298d8b4456a5eec2b431d768e2e033b3"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 117,
+   "git_oid": "1b23b70fa0eabcdd1dc2099c9c3a5e67e2e5022f"
+  },
+  {
+   "path": "got_vision_b.py",
+   "size": 16106,
+   "git_oid": "108fac3e0cd05f0706de8b41d9d28d760c569a25"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 1432121416,
+   "sha256": "77d6144039548b14253176b6eb264896bc39eba532f8894700f210a7fd2a5956"
+  },
+  {
+   "path": "modeling_GOT.py",
+   "size": 33771,
+   "git_oid": "65f5e43cdee0ce2e0565ff52619a4d31deb3906e"
+  },
+  {
+   "path": "qwen.tiktoken",
+   "size": 2561218,
+   "git_oid": "9b9b0e0416d84d7c88333eb261c77e5fe2d7f7be"
+  },
+  {
+   "path": "render_tools.py",
+   "size": 1992,
+   "git_oid": "a830ec663f1575b6a7d1adaeb50c18e9d6ca516f"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 149,
+   "git_oid": "9a7e772d88976469ee300204ae54f912cdb0521e"
+  },
+  {
+   "path": "tokenization_qwen.py",
+   "size": 9470,
+   "git_oid": "f041a9cb10209072c21a0a1efe90e6b7d963f834"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 300,
+   "git_oid": "6fdd6990cee677399365579a449cd8920bd11e99"
+  }
+ ]
+}

@@ -1,0 +1,130 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Naphula/Goetia-26B-A4B-v1.3-Absolute-Heretic-ARA",
+ "revision": "7ae646b5517bb7e65467e43815718637030a9823",
+ "captured": "2026-11-25T05:08:42+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1618,
+   "git_oid": "b208d29d3cca2b6dd4cdb548f6056a3a879d5701"
+  },
+  {
+   "path": "Goetia.jpeg",
+   "size": 229116,
+   "sha256": "8fb81d3d476ff0b48d035eda4daa2266969c6f90f37ebb9f04dde35d172b22d2"
+  },
+  {
+   "path": "README.md",
+   "size": 42434,
+   "git_oid": "7846e7080f38097bbf866338d6048c6f9a087420"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 16447,
+   "git_oid": "f0791bfc3df022512a10df525fbc1eb2d9c5af10"
+  },
+  {
+   "path": "config.json",
+   "size": 3795,
+   "git_oid": "d64a04c18e74c3343afa49ea3798826b1eeef25b"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 153,
+   "git_oid": "5f38f833e2d7f3cb6596ff83390a31402b0bcae6"
+  },
+  {
+   "path": "mergekit_config.yml",
+   "size": 2406,
+   "git_oid": "c38dfc7fdd2ff571b276f63e4a4255517151df57"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 49323334202,
+   "sha256": "d52d7ee36f3415465161ccf3fe6d8f52e78ff856e71f4e9afab7a9d78198eac9"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 2288675130,
+   "sha256": "a7b590c56d5f8f56a3e58631117d97ce362b0a401c9e6e25d8ed3d30defdb611"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 103196,
+   "git_oid": "90f7a2518675910fc7f98d6514b22f3f4b4ef576"
+  },
+  {
+   "path": "python_surgical_grip/config.py",
+   "size": 15092,
+   "git_oid": "b343d05db263e1c40811c2738ede11b61d66369e"
+  },
+  {
+   "path": "python_surgical_grip/mainPhase1.py",
+   "size": 49602,
+   "git_oid": "28914c52f3cd9e6a377b9d0557bd41ebd31b6c24"
+  },
+  {
+   "path": "python_surgical_grip/mainPhase2.py",
+   "size": 52087,
+   "git_oid": "a28a27e83cce079d0531f16c109dba6f3ae06095"
+  },
+  {
+   "path": "python_surgical_grip/model.py",
+   "size": 42730,
+   "git_oid": "26261e3a2200519f8fc0eb5550f911c2c3c61ca8"
+  },
+  {
+   "path": "python_surgical_grip/modelARI.py",
+   "size": 42392,
+   "git_oid": "12facaf2b060dd29deb6b8645b4dbeec94981160"
+  },
+  {
+   "path": "python_surgical_grip/modelTokenizerPatch.py",
+   "size": 44177,
+   "git_oid": "8660e1549c7240254c6410f145b7f70cd8407d9f"
+  },
+  {
+   "path": "reproduce/Naphula--Goetia-26B-A4B-v1.3.jsonl",
+   "size": 299398,
+   "git_oid": "61668c715d1d5c3d3cc7ff502170e84c0cd6ca2c"
+  },
+  {
+   "path": "reproduce/README.md",
+   "size": 3733,
+   "git_oid": "d546c8a29e11d4731398ad196e70f383ece183ec"
+  },
+  {
+   "path": "reproduce/SHA256SUMS",
+   "size": 198,
+   "git_oid": "e5d912a6091b69f0940739ab20f12d31143d80d8"
+  },
+  {
+   "path": "reproduce/config.toml",
+   "size": 3433,
+   "git_oid": "e96013f56d84a6b4f567a4a70da2d06c88bf44b7"
+  },
+  {
+   "path": "reproduce/reproduce.json",
+   "size": 557,
+   "git_oid": "909e9a512e8941cd0a564cb7d23fb50f5ba4e439"
+  },
+  {
+   "path": "reproduce/requirements.txt",
+   "size": 4041,
+   "git_oid": "5a023f28840b25e96124bc644c1c26ae1da2b791"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 32170224,
+   "sha256": "94ee542d8c2f3c3e6c1170e5c6fc253ca3f26a4e545f6ac4662727e818c45d3a"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1527,
+   "git_oid": "9e016a80c2201ffba705e001a6efc7e7fc6321fc"
+  }
+ ]
+}

@@ -1,0 +1,90 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "OpenOneRec/OneRec-1.7B",
+ "revision": "cc4d0b5b7294ecf75e40be1c77fa6b7d284bb84b",
+ "captured": "2026-11-25T05:13:12+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1738,
+   "git_oid": "9e369cea4423e0b71750328b2c09bfbd0646580c"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11341,
+   "git_oid": "03ac7c519815e160457b99c614188750e538e9c2"
+  },
+  {
+   "path": "README.md",
+   "size": 10101,
+   "git_oid": "ef96b349877d3485e36f329b4b367eb4502e02e0"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 587253,
+   "git_oid": "6096b9051d3fcbd06340b0cd39f4cf402cb7289c"
+  },
+  {
+   "path": "assets/benchmark.png",
+   "size": 516381,
+   "sha256": "d37d8deb51486c75745cbbc1223cc3a90c0c0a1ce29e450aeb06babccbf29018"
+  },
+  {
+   "path": "assets/framework.png",
+   "size": 572024,
+   "sha256": "428b5244d4e0d8049c2e7991995b525772334dafb9e7187f9442969b8a8b858b"
+  },
+  {
+   "path": "assets/onerec.png",
+   "size": 173199,
+   "sha256": "3c70fd0d371127c78dbbdf52a81b991bcd890bb181fb09acdbf15da8db5fc3a5"
+  },
+  {
+   "path": "config.json",
+   "size": 1366,
+   "git_oid": "3565b855ae5623db6569555fa52c80dbcaf134d2"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 214,
+   "git_oid": "aae4bea99feafeeb5526928b89ce09695bc6eb08"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671853,
+   "git_oid": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+  },
+  {
+   "path": "model-00000-of-00001.safetensors",
+   "size": 4263793656,
+   "sha256": "cabc217fad6129ab15643753b7f7a2d8791f245f8c25a51c87f92499c574628d"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 25604,
+   "git_oid": "3930d500e74502e910d93cccdf9f69ce9bbb8dc2"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 613,
+   "git_oid": "ac23c0aaa2434523c494330aeb79c58395378103"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 16015414,
+   "sha256": "0ccf4231869d9f8755b55133c211b48521a298a86cddf8b59ba9fe0481ecd9ba"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 4356741,
+   "git_oid": "fa78c386b767b8b217b5ebab7c8cb7d6758ae3bd"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

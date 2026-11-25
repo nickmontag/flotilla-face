@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Qwen/Qwen2-VL-2B-Instruct",
+ "revision": "895c3a49bc3fa70a340399125c650a463535e71c",
+ "captured": "2026-11-25T05:09:18+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11343,
+   "git_oid": "6634c8cc3133b3848ec74b9f275acaaa1ea618ab"
+  },
+  {
+   "path": "README.md",
+   "size": 17392,
+   "git_oid": "069d978f02c1c1eb03153ef9d986334b77168182"
+  },
+  {
+   "path": "chat_template.json",
+   "size": 1050,
+   "git_oid": "732bd68bc5427d1fb6c06a59b3bf2456b2155d24"
+  },
+  {
+   "path": "config.json",
+   "size": 1196,
+   "git_oid": "8e922d54443e7d2ad46c01baea1b772ecbc6228e"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 272,
+   "git_oid": "896384ee102f9a2696e2f6eb02ba5a143f198fac"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671839,
+   "git_oid": "20024bfe7c83998e9aeaf98a0cd6a2ce6306c2f0"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 3988609112,
+   "sha256": "994ac2b03f97de8bc647d0fe5eba2e4b632b3e28dc03574c29bdfc36cf47e1b9"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 429441656,
+   "sha256": "92540d8353c8d226a589a3b179bdb33851c970ee2cc2ac7ba035f79425e7b833"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 56411,
+   "git_oid": "293d54cd8408e82d1bdd2eabd07d9311eb406b52"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 347,
+   "git_oid": "c8bf52bdaee98b049e28da3ef94119f896b03a8d"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7029741,
+   "git_oid": "f5195cf97e3c90290b670d48a7c46fef5f145ebc"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 4190,
+   "git_oid": "ecbc13d75ff851c4f1e57990064f81303b2494f6"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

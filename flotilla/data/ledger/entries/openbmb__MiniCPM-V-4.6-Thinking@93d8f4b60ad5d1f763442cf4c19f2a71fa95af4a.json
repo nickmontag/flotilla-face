@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "openbmb/MiniCPM-V-4.6-Thinking",
+ "revision": "93d8f4b60ad5d1f763442cf4c19f2a71fa95af4a",
+ "captured": "2026-11-25T05:13:01+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 19798,
+   "git_oid": "9b8eda2d6b9fc2f40aed1f8d2f97e3abb8464bbc"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7300,
+   "git_oid": "6c5faef3ae708bc2f6fc68a5d569f2bfd7342c59"
+  },
+  {
+   "path": "config.json",
+   "size": 2378,
+   "git_oid": "dbe7f74b10746936eb2637ba14f5bf5515b5721c"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 214,
+   "git_oid": "b80dd7cba268869847631d044ba360aeff64ba7c"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 2600957528,
+   "sha256": "d4cbc46a9ac4b87d0b4604e7f89ac71eb19f6d385f7591d8dc4dca0946577a0a"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 315,
+   "git_oid": "f8619291054b6d574c16d9903c0070aa61c73bd0"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19992481,
+   "sha256": "33861e37bb955af1e3f3061182b820f347eba2b9c2c1011c82794bf0d6e77b54"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 8996,
+   "git_oid": "74a13bf11d7adad3183dc7aaf86baf94b9634893"
+  }
+ ]
+}

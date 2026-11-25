@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "TinyLlama/TinyLlama-1.1B-intermediate-step-1431k-3T",
+ "revision": "59f6f375b26bde864a6ca194a9a3044570490064",
+ "captured": "2026-11-25T05:13:10+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 5840,
+   "git_oid": "4e6addad1455f8029a884b706ec4a0c277201dce"
+  },
+  {
+   "path": "config.json",
+   "size": 560,
+   "git_oid": "6a20305540fec9201e5c28b99dcd32c1000201fd"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 129,
+   "git_oid": "89c1930ccf07b1ba0c1bf146b2ad2d2666761dfb"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 4400216536,
+   "sha256": "9dc1c1a8c6b29e153dea7aaf2ed6c4d242163489add0e7c14c23889745437be4"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 4400254027,
+   "sha256": "2f71ffc28a0118384d5b3888c8a1fdc1498ed0666c808b68873d4e2dc3351c5b"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 414,
+   "git_oid": "451134b2ddc2e78555d1e857518c54b4bdc2e87d"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 1842767,
+   "git_oid": "a6e931b92caff4c79c5c56282f1e89569a0ae558"
+  },
+  {
+   "path": "tokenizer.model",
+   "size": 499723,
+   "sha256": "9e556afd44213b6bd1be2b850ebbbd98f5481437a8021afaf58ee7fb1818d347"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 776,
+   "git_oid": "2ef41cbc275000b29afe157ba487f0530b8c26dc"
+  }
+ ]
+}

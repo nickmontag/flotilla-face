@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Losew/NVIDIA-Nemotron-3.5-Bolt-E4B-heretic-GGUF",
+ "revision": "64e52d35329c09e2ed7a2ab18c1d8ad7d2ec401b",
+ "captured": "2026-11-25T05:09:00+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2213,
+   "git_oid": "a1ef5e1ab7a33aad93b13b6c3fa0c747e83f70ea"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-BF16.gguf",
+   "size": 14942973440,
+   "sha256": "713697006160aa8b66e335b1445776b4d47e5264b59d60a8847c6d5a49b6d313"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-IQ2_M.gguf",
+   "size": 3787300608,
+   "sha256": "9ceaad403983fa974af9e913e1dfd67602cdc720ff9cae426b4362ad6cbcf5b5"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-IQ3_XXS.gguf",
+   "size": 3982843648,
+   "sha256": "2904caee682db72f823324b5588a1509071f22594cea7cd70661f7cf68fc8e44"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-Q2_K.gguf",
+   "size": 4376784384,
+   "sha256": "fc23fa19ccf86a006a8abf48604dce0a8c6bffec365597848c3a5f420f40338c"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-Q3_K_M.gguf",
+   "size": 4823064064,
+   "sha256": "7837945461ccdc69213dc2b28daa4804ec51e01a896c548c386ccba86a821406"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-Q4_K_M.gguf",
+   "size": 5302275584,
+   "sha256": "6c97d919691bc1b620279bd956fb974cfca4a560ecc437ed6484baa4a72518e5"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-Q5_K_M.gguf",
+   "size": 5723999744,
+   "sha256": "3c491c30c98aac20a2daae2aaea3f2224472701efa225501abd6f3a8dd407de0"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-Q6_K.gguf",
+   "size": 6172081664,
+   "sha256": "929a4d41d34158214e9f71c441cabfe2d73efb289ad109cee1503ae6baddf5fd"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-Q8_0.gguf",
+   "size": 7972728320,
+   "sha256": "ae4769e0ecd7dd185e317a0f16aaa28975b4e86f47c97c7f238bc04875e70458"
+  },
+  {
+   "path": "README.md",
+   "size": 2442,
+   "git_oid": "91bbf5544c01661c7f5804eee1afc267a2439ef3"
+  }
+ ]
+}

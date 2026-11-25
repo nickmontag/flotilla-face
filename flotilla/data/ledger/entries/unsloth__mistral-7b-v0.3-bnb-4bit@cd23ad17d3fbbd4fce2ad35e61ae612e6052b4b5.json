@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "unsloth/mistral-7b-v0.3-bnb-4bit",
+ "revision": "cd23ad17d3fbbd4fce2ad35e61ae612e6052b4b5",
+ "captured": "2026-11-25T05:09:25+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 3675,
+   "git_oid": "397514b6566177fb1a7571d7fad34c994cf83e53"
+  },
+  {
+   "path": "config.json",
+   "size": 1196,
+   "git_oid": "9918d409c37839f9b4e0d92da7157d9f3678196b"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 157,
+   "git_oid": "58acfd99f5f5abb7a230611cacb14803f89458f5"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 4138270821,
+   "sha256": "6109bad30e121fa35279915ddd638993c0119913b80871d9aa870db1323f2106"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 446,
+   "git_oid": "90783327897b5228bbc6a68ec01da23129a91198"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 1961548,
+   "git_oid": "d8cdfaf45956818eac3c44696cdf824638943933"
+  },
+  {
+   "path": "tokenizer.model",
+   "size": 587404,
+   "sha256": "37f00374dea48658ee8f5d0f21895b9bc55cb0103939607c8185bfd1c6ca1f89"
+  },
+  {
+   "path": "tokenizer.model.v3",
+   "size": 587404,
+   "git_oid": "d8233e5b061987d32b63dbfb38fe86d7d4fc8a18"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 136734,
+   "git_oid": "2fb3ec3cd64834809edb2f77b4402bc63b941def"
+  }
+ ]
+}

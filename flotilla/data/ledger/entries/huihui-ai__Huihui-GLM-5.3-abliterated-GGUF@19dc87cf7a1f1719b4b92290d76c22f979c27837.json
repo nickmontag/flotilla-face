@@ -1,0 +1,35 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "huihui-ai/Huihui-GLM-5.3-abliterated-GGUF",
+ "revision": "19dc87cf7a1f1719b4b92290d76c22f979c27837",
+ "captured": "2026-11-25T05:08:36+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1620,
+   "git_oid": "b440f324a57fbfd4175c79720d20c559622526aa"
+  },
+  {
+   "path": "README.md",
+   "size": 5125,
+   "git_oid": "b9495b4fd88b8e5680e6e13e0108232267e70b43"
+  },
+  {
+   "path": "patch-unsloth-Q2/Huihui-GLM-5.3-abliterated-GGUF-patch-Q2-1.gguf",
+   "size": 6453963488,
+   "sha256": "53bcf27b85623c61231ae36e28e0630462bb70c2cdfd6709bd7bca45bee97c0c"
+  },
+  {
+   "path": "patch-unsloth-Q2/README-Unsloth.md",
+   "size": 3388,
+   "git_oid": "eb33aa6d34c69835855277848823cf38b937f381"
+  },
+  {
+   "path": "patch-unsloth-Q2/patch-unsloth-GLM-5.3-all.py",
+   "size": 7192,
+   "git_oid": "00bb88ad7be693fe2c1b78589531418ad910bf96"
+  }
+ ]
+}

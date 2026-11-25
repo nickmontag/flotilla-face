@@ -1,0 +1,90 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "AEON-7/Qwen3.6-27B-AEON-Ultimate-Uncensored-BF16",
+ "revision": "ab5dd22a0869e3f6d5353614bc08122081919b45",
+ "captured": "2026-11-25T05:08:15+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1620,
+   "git_oid": "0caea137ba6a15613e782ed0a5d7b77d3a89bce3"
+  },
+  {
+   "path": "README.md",
+   "size": 45863,
+   "git_oid": "141026926f23f6819cdade6a499f885a9096560d"
+  },
+  {
+   "path": "assets/perf/qwen27b_variant_family.svg",
+   "size": 3131,
+   "git_oid": "274b01598809d49dbfdd71076cd173e64b8c8396"
+  },
+  {
+   "path": "assets/perf/sib_q27bf16_concurrency.svg",
+   "size": 4587,
+   "git_oid": "c9e19f94b6946e7b767a45979568d349f82ad672"
+  },
+  {
+   "path": "cartridge.jpg",
+   "size": 374782,
+   "sha256": "e613e97c39d145759bb54003ad4ca4f44ed8d0fc7a4b1edd628999a93ad7032e"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7764,
+   "git_oid": "a8755d827c0a7b614c246c4060dfd58ab352a8ff"
+  },
+  {
+   "path": "config.json",
+   "size": 3687,
+   "git_oid": "9c6b454eaee15faccbf4b0de5a25a6d86e9990cd"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 213,
+   "git_oid": "36402170f0e084225065bfb95a0f7c4086332549"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 49825162976,
+   "sha256": "8e33decf771ed4260264937f133a638785506f86813ebd528de0bbf215142226"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 4888445168,
+   "sha256": "4d17bdcdff6686b722b923a272c450c256515ca8da735c99b18292ecffa3e0f5"
+  },
+  {
+   "path": "model-mtp-extension.safetensors",
+   "size": 849400424,
+   "sha256": "ecba8ef1d0c35b401090ea7e6beee462a738d745d86959e965c54bb4eaf6e4b6"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 112235,
+   "git_oid": "1de74cfeef6b8003bc35f31380880ee4a0d6836e"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 11071634,
+   "sha256": "530dc3d0de71a4d102af7d2f92a2a9178f430b489b1d5b48feb56d9c37e6a54e"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1124,
+   "git_oid": "d1a20cc3a8838d08eca9de8a7b84d510d60a0524"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  }
+ ]
+}

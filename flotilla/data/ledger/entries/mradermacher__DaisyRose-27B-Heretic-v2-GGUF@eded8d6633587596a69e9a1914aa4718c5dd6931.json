@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/DaisyRose-27B-Heretic-v2-GGUF",
+ "revision": "eded8d6633587596a69e9a1914aa4718c5dd6931",
+ "captured": "2026-11-25T05:09:05+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2033,
+   "git_oid": "93b0747fdb6b67ac5ee4691ff285006b49e9f8a5"
+  },
+  {
+   "path": "DaisyRose-27B-Heretic-v2.Q2_K.gguf",
+   "size": 11065555072,
+   "sha256": "63239fe1562d3f0ec1d0323e1b2e8fd58d09a19414ed7abfdfbbc27dedf74999"
+  },
+  {
+   "path": "DaisyRose-27B-Heretic-v2.Q3_K_M.gguf",
+   "size": 13509843072,
+   "sha256": "8aaa38bbbf36b6c4d8c7faf0d8ef20fa0a80d6a7143196d0e5042f0d03f3cbd4"
+  },
+  {
+   "path": "DaisyRose-27B-Heretic-v2.Q4_K_S.gguf",
+   "size": 15598106752,
+   "sha256": "d7873f59698f9f8ea767d8b7e288d1ad906362b75676b4be17eddeb93426372c"
+  },
+  {
+   "path": "DaisyRose-27B-Heretic-v2.Q6_K.gguf",
+   "size": 22082525312,
+   "sha256": "d3ccae63e534cb778a58021b17c610bfb319ecdf185e9ccffcfe067bf29a0827"
+  },
+  {
+   "path": "DaisyRose-27B-Heretic-v2.Q8_0.gguf",
+   "size": 28595759232,
+   "sha256": "178c568a3c8040e76bb746e8600a950b6c83cfee92b21d8e79b2f0b3de00816e"
+  },
+  {
+   "path": "DaisyRose-27B-Heretic-v2.mmproj-Q8_0.gguf",
+   "size": 629247456,
+   "sha256": "dc5c94244957562d7375a25343a635a5822a3a9efe63290617f0691db1b6ac05"
+  },
+  {
+   "path": "DaisyRose-27B-Heretic-v2.mmproj-f16.gguf",
+   "size": 927607392,
+   "sha256": "0016914aadb0131c6aa9581d16a20ff16f5434f5b96d3cd356a457de12ce34b2"
+  },
+  {
+   "path": "README.md",
+   "size": 2453,
+   "git_oid": "791bf4e2ebbdecec944f5e36b2f015a75631ad2d"
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llmfan46/gemma-4-26B-A4B-it-qat-q4_0-uncensored-heretic-GGUF",
+ "revision": "5d83ec7e22c3413dd63a2bf340668687c4490645",
+ "captured": "2026-11-25T05:08:43+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1712,
+   "git_oid": "68305f7d5817ebbbc7705ceb019c3db55025913a"
+  },
+  {
+   "path": "README.md",
+   "size": 37369,
+   "git_oid": "14384d578c371c0f559b2b154f37a11aa83894f3"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-uncensored-heretic-Q4_0.gguf",
+   "size": 16035251200,
+   "sha256": "9f3d470c04fb60a12361fd41aa5f4c32b043a62d40c5f43682ffe03741fea489"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-uncensored-heretic-mmproj-BF16.gguf",
+   "size": 1194827840,
+   "sha256": "e034cf9e7bbc851bca0a3d2273b53f149ba003c13ba68fafb753f2b02b8c419b"
+  }
+ ]
+}

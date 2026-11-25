@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "HuggingFaceTB/SmolLM2-360M",
+ "revision": "f8027fd0eaeea54caa13c31d31b9fdc459c38b49",
+ "captured": "2026-11-25T05:09:13+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 6623,
+   "git_oid": "75cae4c3d8f5f25a3f22ef6427403db2bb3dc83b"
+  },
+  {
+   "path": "config.json",
+   "size": 689,
+   "git_oid": "2c111af0f7d9845b3b9910d3d18f7cdd94bf16c4"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 111,
+   "git_oid": "0fce861c328ff24830f3037d91ce773254447bf7"
+  },
+  {
+   "path": "merges.txt",
+   "size": 466391,
+   "git_oid": "69503b13f727ba3812b6803e97442a6de05ef5eb"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 723674912,
+   "sha256": "7aaff6661428bed033abba9522bec81938678642cca3181fe752b6ca9e1e540f"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 831,
+   "git_oid": "f6652f246cb895ca1edfb16d10b57917b266e335"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 2104556,
+   "git_oid": "f922b1797f0c88e71addc8393787831f2477a4bd"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 3658,
+   "git_oid": "d45192775d58298087a1fedf5967fe5b63b091ab"
+  },
+  {
+   "path": "vocab.json",
+   "size": 800662,
+   "git_oid": "0ad5ecc2035b7031b88afb544ee95e2d49baa484"
+  }
+ ]
+}

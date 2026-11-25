@@ -1,0 +1,45 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "XHToken/Spark-X2.5-1.7B-GGUF",
+ "revision": "1f7fa33b1245c14730da39e125714ad3a327901b",
+ "captured": "2026-11-25T05:09:30+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1782,
+   "git_oid": "4bd439095e0e5102549df1c0c4beaedd43cb55de"
+  },
+  {
+   "path": "README.md",
+   "size": 1635,
+   "git_oid": "30404e9a6a88feb24259fff2c637c179a23b29cf"
+  },
+  {
+   "path": "Spark-X2.5-1.7B-Q4_K_M.gguf",
+   "size": 1107457856,
+   "sha256": "902bde2522394954ac17821b3e5fd0df02defbc6944f122253f2580acf0503f4"
+  },
+  {
+   "path": "Spark-X2.5-1.7B-Q8_0.gguf",
+   "size": 1820112704,
+   "sha256": "cd77c03185a834bb1162a4b7713520be5838058bfc54873645beff470bb24442"
+  },
+  {
+   "path": "Spark-X2.5-1.7B.gguf",
+   "size": 3420931904,
+   "sha256": "67d5f2f06e6d898efcf0dc40cab8528bc82b871c8dafb0936784183d2c10cdd9"
+  },
+  {
+   "path": "images/post_training_pipeline.svg",
+   "size": 10324,
+   "git_oid": "ed82f033b1fd027b3f74050d00118c28fccf3725"
+  },
+  {
+   "path": "images/spark3-hybrid-architecture-light.png",
+   "size": 429073,
+   "sha256": "5eddac6baf8e8460cc2a75b96070eff4074428674f3c33665bc2ff9479756bbd"
+  }
+ ]
+}

@@ -1,0 +1,200 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "nvidia/NVIDIA-Nemotron-Parse-2.0",
+ "revision": "4e021c03edc92e715d5d788921a927d0cbb4b4d1",
+ "captured": "2026-11-25T05:09:20+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1600,
+   "git_oid": "3eafdebc1e200d6adddb10f91631624561936d81"
+  },
+  {
+   "path": "CONTRIBUTING.md",
+   "size": 2537,
+   "git_oid": "2e876739104902eda67a24eaeb80f3aae1d160e5"
+  },
+  {
+   "path": "Dockerfile",
+   "size": 1672,
+   "git_oid": "67599550e20954ca300c114dd3c0b90a19d16926"
+  },
+  {
+   "path": "LICENSE",
+   "size": 2980,
+   "git_oid": "e84714414183cc673d7cc077face89dc59f51516"
+  },
+  {
+   "path": "README.md",
+   "size": 19985,
+   "git_oid": "f5607d8e798492a6609119374f5a644f1e574baf"
+  },
+  {
+   "path": "VLLM_COMPATIBILITY.md",
+   "size": 1313,
+   "git_oid": "d6172c5910f676f4773b2c92b293e8e85e35fa00"
+  },
+  {
+   "path": "auxiliary_prediction_heads.json",
+   "size": 718,
+   "git_oid": "9fec53b17271628c810d9cc498851dd10dfc4af6"
+  },
+  {
+   "path": "auxiliary_prediction_heads.safetensors.extra",
+   "size": 8397256,
+   "sha256": "8d5a627313cd51dd643593ad7ea08aa06fc52af647bb63b9fc636f78f42260fd"
+  },
+  {
+   "path": "bias.md",
+   "size": 2350,
+   "git_oid": "8e3fdda883aa81a6bd43847fdf1c6693de942eda"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 66,
+   "git_oid": "2a257b90f24f9f7f62851a00e29180ef5187fe1c"
+  },
+  {
+   "path": "config.json",
+   "size": 10927,
+   "git_oid": "8367573bce3e7cb60dd924a9551de064a641b39a"
+  },
+  {
+   "path": "docker-compose.yaml",
+   "size": 928,
+   "git_oid": "2444075fdf6b49f5be8916aa82d38296ec939537"
+  },
+  {
+   "path": "example_with_processor.py",
+   "size": 3480,
+   "git_oid": "4c72f752b9cf0ec4b3f3e397453501a9e6a7fb01"
+  },
+  {
+   "path": "explainability.md",
+   "size": 2529,
+   "git_oid": "64c0dabe8e32a9b6d1808a436ac7659e6c90f297"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 284,
+   "git_oid": "86ee2d8e3d14c0fb43b2645b2f343ff4c0ad245f"
+  },
+  {
+   "path": "golden_outputs.json",
+   "size": 2362,
+   "git_oid": "44c7ca8b3bcd23cdf430d67062914a088e845575"
+  },
+  {
+   "path": "hf_logits_processor.py",
+   "size": 14332,
+   "git_oid": "b1a9357059d7fa92fd4c82c03687002b5098282d"
+  },
+  {
+   "path": "hf_nemotron_parse_config.py",
+   "size": 5280,
+   "git_oid": "c80617e91983e9b59fa4e6791a6d7bda800e5148"
+  },
+  {
+   "path": "hf_nemotron_parse_modeling.py",
+   "size": 35091,
+   "git_oid": "2c97b223c217c9f67c75dfa3a115e3d62e6cbf18"
+  },
+  {
+   "path": "hf_nemotron_parse_processor.py",
+   "size": 15961,
+   "git_oid": "4d0fe87f38cee4999c479d4511fb19f4a56a8c50"
+  },
+  {
+   "path": "latex2html.py",
+   "size": 26900,
+   "git_oid": "5e9c9e5c6f5a378b7bb809225d5db216a8a4b335"
+  },
+  {
+   "path": "logitsprocs/nemotron_parse_vllm_logitprocs.py",
+   "size": 11836,
+   "git_oid": "d112a7ff5638fe3f60a5ffa2da556a94729d2003"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 3612281104,
+   "sha256": "8257a724e949ce2609bd36afbc31707a8f36b5e9008b7bc5d26b7d4557afe3ba"
+  },
+  {
+   "path": "postprocessing.py",
+   "size": 4320,
+   "git_oid": "ff376e55764de3b70a0a834b05a1ce8a398d2371"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 720,
+   "git_oid": "4e928e1485b42aa6d7c04b098accbb08230e0f75"
+  },
+  {
+   "path": "privacy.md",
+   "size": 1368,
+   "git_oid": "3390b0ba17ce44c2909ded071c2b20652f2e5231"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 287,
+   "git_oid": "4959a42e3da9cb1fe6173d2096d0ccf3b37bcb44"
+  },
+  {
+   "path": "pyproject.toml",
+   "size": 1058,
+   "git_oid": "f8359215956287aa1d7e058c4107c9c2ed8b1680"
+  },
+  {
+   "path": "run_transformers_inference.py",
+   "size": 3445,
+   "git_oid": "586196814e783cc74aabdd3c3ee4cf9d5fb20ddd"
+  },
+  {
+   "path": "safety.md",
+   "size": 2426,
+   "git_oid": "5481d1df4a1d6758e1c54a6fb653fefc2399a696"
+  },
+  {
+   "path": "safety_security.md",
+   "size": 543,
+   "git_oid": "ff28213f0fbc1bf0f330b9cc5688acdeac1532fa"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 747,
+   "git_oid": "0a7046614fdd6368c44cbb4b182d83a9d18b61bf"
+  },
+  {
+   "path": "test_golden.py",
+   "size": 22342,
+   "git_oid": "5837b1aaf991381ff77d5b6468edbbce4e8e79fb"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7580523,
+   "git_oid": "3214c2f3bb385c69d55c881d87fc8ba2a031d92f"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 414355,
+   "git_oid": "48f6677397a294f3c87237f77f5bf4cc7f4b79eb"
+  },
+  {
+   "path": "uv.lock",
+   "size": 270282,
+   "git_oid": "4b9779bef0e3d58dc49e559c4d1ee535e2e9cccd"
+  },
+  {
+   "path": "vllm_example.py",
+   "size": 6523,
+   "git_oid": "c497de38e6289a4b8ee8f5dde538661f8d45d3ed"
+  },
+  {
+   "path": "vllm_tied_patch/sitecustomize.py",
+   "size": 1751,
+   "git_oid": "9f5daf892940ac73fc61ba84bb2cae7bce402f49"
+  }
+ ]
+}

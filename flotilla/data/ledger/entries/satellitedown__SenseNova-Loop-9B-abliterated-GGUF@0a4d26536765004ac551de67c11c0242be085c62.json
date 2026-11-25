@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "satellitedown/SenseNova-Loop-9B-abliterated-GGUF",
+ "revision": "0a4d26536765004ac551de67c11c0242be085c62",
+ "captured": "2026-11-25T05:08:46+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1673,
+   "git_oid": "a9742d90927cff857e96713832ebb45c88e7964b"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11358,
+   "git_oid": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+  },
+  {
+   "path": "NOTICE",
+   "size": 599,
+   "git_oid": "0c64b24046ebb47a44d76032cb0349056768eac2"
+  },
+  {
+   "path": "README.md",
+   "size": 4873,
+   "git_oid": "a74af36c6c5126762e03bc37391aecf8192e58cf"
+  },
+  {
+   "path": "SenseNova-Loop-9B-abliterated-Q4_K_M.gguf",
+   "size": 5637767264,
+   "sha256": "af9d1ee39eb2e5fe3bc6090ec57ea407e9057364f5a8fdc6c0458898490e6a4e"
+  },
+  {
+   "path": "SenseNova-Loop-9B-abliterated-Q6_K.gguf",
+   "size": 7379271776,
+   "sha256": "956b2bc301d6b4de6bc15ab3123ec9902e8720159dfe302f5a4152cd5fd71163"
+  },
+  {
+   "path": "patches/0001-sensenova_loop-keep-the-mHC-router-weights-F32-in-th.patch",
+   "size": 1356,
+   "git_oid": "d3f366121e583ee87a0b64a4dcf86eaa5d4b741d"
+  },
+  {
+   "path": "patches/0002-ggml-metal-add-MHC_ROUTE-MHC_MERGE-kernels.patch",
+   "size": 20679,
+   "git_oid": "db9b55ebb0b7e4f1741a29e2790b8f5134729b48"
+  },
+  {
+   "path": "patches/0003-sensenova_loop-convert-release-checkpoints-drop-the-.patch",
+   "size": 1173,
+   "git_oid": "b6c8c7c0c8d81baca46fee31eb46258a4df02194"
+  },
+  {
+   "path": "patches/0004-server-keep-the-checkpoint-at-the-first-user-message.patch",
+   "size": 4330,
+   "git_oid": "c6a0b26c17a0558d941e3d62c04fc881088a6fed"
+  }
+ ]
+}

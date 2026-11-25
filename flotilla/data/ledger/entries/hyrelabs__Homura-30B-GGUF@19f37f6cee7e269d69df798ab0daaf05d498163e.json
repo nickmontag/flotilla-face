@@ -1,0 +1,30 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "hyrelabs/Homura-30B-GGUF",
+ "revision": "19f37f6cee7e269d69df798ab0daaf05d498163e",
+ "captured": "2026-11-25T05:09:41+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1578,
+   "git_oid": "844285021f6415515692ee52014b676174387a9c"
+  },
+  {
+   "path": "Homura-30B-Q4_K_M.gguf",
+   "size": 16935291488,
+   "sha256": "fd4dc394b193ac1cc0f4bb9fb44bff3d6eebd34df62246fc753104c0cc98cc51"
+  },
+  {
+   "path": "README.md",
+   "size": 5159,
+   "git_oid": "4f67bb04dc2d0691c5face219b8a3d42630415c2"
+  },
+  {
+   "path": "homura_protocol.py",
+   "size": 6346,
+   "git_oid": "2c775a1469d41ee92793f084532a5a07750807a1"
+  }
+ ]
+}

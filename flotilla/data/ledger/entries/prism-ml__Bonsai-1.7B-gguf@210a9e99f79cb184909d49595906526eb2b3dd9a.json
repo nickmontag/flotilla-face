@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "prism-ml/Bonsai-1.7B-gguf",
+ "revision": "210a9e99f79cb184909d49595906526eb2b3dd9a",
+ "captured": "2026-11-25T05:09:32+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".eval_results/gsm8k.yaml",
+   "size": 151,
+   "git_oid": "57e2007b2fd3b49f78c92775263fcf06e7ac5ed6"
+  },
+  {
+   "path": ".gitattributes",
+   "size": 1720,
+   "git_oid": "87b817f74ec976541be2abeb73762faea0e342d0"
+  },
+  {
+   "path": "Bonsai-1.7B-Q1_0.gguf",
+   "size": 248302272,
+   "sha256": "3d7c6c90dd98717a203adb22d5eacd2581850e40aa5327e144b97766cae5f7e3"
+  },
+  {
+   "path": "Bonsai-1.7B.gguf",
+   "size": 248302272,
+   "sha256": "3d7c6c90dd98717a203adb22d5eacd2581850e40aa5327e144b97766cae5f7e3"
+  },
+  {
+   "path": "LICENSE",
+   "size": 10174,
+   "git_oid": "66a27ec5ff940d3a9652d2948746ebac4c9d0188"
+  },
+  {
+   "path": "NOTICE.txt",
+   "size": 416,
+   "git_oid": "51641c7f0f79daea37ccaf7524cedad3d1cff4d3"
+  },
+  {
+   "path": "README.md",
+   "size": 7027,
+   "git_oid": "5c443a39a27a2967da5e15d9c297b297fbe601b2"
+  },
+  {
+   "path": "assets/bonsai-logo.svg",
+   "size": 515,
+   "git_oid": "6e2df3a48b38d3eb980db8772cfd942f8b97a328"
+  },
+  {
+   "path": "assets/frontier.png",
+   "size": 106645,
+   "sha256": "2bcd6744b00403f436fb2c6ab9b0412c19fa7bcef5c33b8439b401dc0e0d2275"
+  },
+  {
+   "path": "assets/frontier.svg",
+   "size": 10448,
+   "git_oid": "867a5958715e039f49801fd23f64a246140b377f"
+  }
+ ]
+}

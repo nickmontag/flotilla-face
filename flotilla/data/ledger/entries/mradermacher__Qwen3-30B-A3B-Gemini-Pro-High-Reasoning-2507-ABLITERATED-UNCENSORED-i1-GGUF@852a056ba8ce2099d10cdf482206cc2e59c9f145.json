@@ -1,0 +1,140 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED-i1-GGUF",
+ "revision": "852a056ba8ce2099d10cdf482206cc2e59c9f145",
+ "captured": "2026-11-25T05:09:04+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 4361,
+   "git_oid": "50c4b790a5a8e8ed6015663a8e090ab5574a96f6"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-IQ1_M.gguf",
+   "size": 7078293024,
+   "sha256": "2d10d162b0d1db851d99302f6defcd217c135f9b6334c3cd7c057dd389cda646"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-IQ1_S.gguf",
+   "size": 6416510496,
+   "sha256": "9110e89427c33d447c03e945e8e3d953a940a11985821b0a8ae3ab8785e7cffa"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-IQ2_M.gguf",
+   "size": 10169509408,
+   "sha256": "886de4da2f8e9bc1eec8f48c8b1a38face39ec123f5c1310dd4aac5aecf7cd85"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-IQ2_S.gguf",
+   "size": 9287132704,
+   "sha256": "929695b6a3bf4d8242176d0e37889c143d93f5e84d8f22531afd01f4da2c56ba"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-IQ2_XS.gguf",
+   "size": 9076223520,
+   "sha256": "a856bb1438b97340c1bde1b0858193cad1f08dde85a8415f24809058725c5a19"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-IQ2_XXS.gguf",
+   "size": 8181263904,
+   "sha256": "8d77f5c247a39eb9b9f323118e16939292a196598192c01a1c62d6eeeffa7083"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-IQ3_M.gguf",
+   "size": 13513063968,
+   "sha256": "9ead2c257b2ab5ff0dab03178342a1d944341ddc3ac0c4f146abfd3b2c74304e"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-IQ3_S.gguf",
+   "size": 13299154464,
+   "sha256": "fa12e73bdbed077c5dcc6fca35391ff7a46b30d85228ecfbc6a036ea239462b3"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-IQ3_XS.gguf",
+   "size": 12598443552,
+   "sha256": "8ed5af1e46b463317f467bb34407fdb96e232cd4558e25c74973d45c617cc8c3"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-IQ3_XXS.gguf",
+   "size": 11849328160,
+   "sha256": "2bd990bbd653bce7d765f5f41431034a10b0eba0149de587273cc9629005ec40"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-IQ4_XS.gguf",
+   "size": 16368350752,
+   "sha256": "1ac741052edcc63d4452d76d9fb34f120ad85c7fe5f6fe621ab8c98a25ae8d82"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-Q2_K.gguf",
+   "size": 11258611232,
+   "sha256": "02621179f23df2f5c7b19403259cb5b5238eb691a1141eda6f3643a53ddc9205"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-Q2_K_S.gguf",
+   "size": 10519365152,
+   "sha256": "721360c92737f621c85b8b357dcba79c12bcc7afc9c4755fd04d7d751aa44830"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-Q3_K_L.gguf",
+   "size": 15900671520,
+   "sha256": "a28336b52c3cad417e30f1c903463e06697c829c8a23b20a7e8f4b297b251461"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-Q3_K_M.gguf",
+   "size": 14711848480,
+   "sha256": "2cb6ec6c403c80f8e4c886b4bfa043f02805e9d6de698dc1dae2fb0c843714cb"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-Q3_K_S.gguf",
+   "size": 13292469792,
+   "sha256": "2080dd25db7d2f8653bed7c68228030102f7b0979c3da7d159815e14f0013d67"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-Q4_0.gguf",
+   "size": 17379989024,
+   "sha256": "5b79f2b32c9fcfb3fd7dac3e8e89365cc3ab62b3920417e63482c24c02f22f15"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-Q4_1.gguf",
+   "size": 19192501792,
+   "sha256": "2bb25efd0a7cff9aedd40904a9e5f4de2658912a41cfee03ba91833e3a639fd4"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-Q4_K_M.gguf",
+   "size": 18556687904,
+   "sha256": "915122966bbfa5f0ee6fb73ddd9146bffe3b575628f814f442db2b14dc73ae2f"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-Q4_K_S.gguf",
+   "size": 17456010784,
+   "sha256": "c67b536e987453a6fe6ee70e37f5e9a4e5a80c84c325b34212e1cc01a1c703bb"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-Q5_K_M.gguf",
+   "size": 21725582880,
+   "sha256": "436ff3301d0496b86f31e45a2f6183b3e1f68d562506f47d2c3482450b961124"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-Q5_K_S.gguf",
+   "size": 21080512032,
+   "sha256": "d0fa3d461a10e5a0d37199bcd0d5ad26b2227a3b9fac8cbcb0b1935570ca507f"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.i1-Q6_K.gguf",
+   "size": 25092533792,
+   "sha256": "cc6dfcb19a9c4c5262d2b2b5584ed944be22a6a8e90d7e80e6f0b388426dad63"
+  },
+  {
+   "path": "Qwen3-30B-A3B-Gemini-Pro-High-Reasoning-2507-ABLITERATED-UNCENSORED.imatrix.gguf",
+   "size": 122029312,
+   "sha256": "c7f920042b0462c2ecf9dddfcba2cb33c57775dc75260b1d7f6f79df59916a14"
+  },
+  {
+   "path": "README.md",
+   "size": 8722,
+   "git_oid": "c709f04f42287864366b931184bc76ca36d05bf0"
+  }
+ ]
+}

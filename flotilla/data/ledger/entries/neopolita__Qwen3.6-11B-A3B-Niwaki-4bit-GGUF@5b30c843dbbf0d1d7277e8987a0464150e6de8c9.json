@@ -1,0 +1,35 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "neopolita/Qwen3.6-11B-A3B-Niwaki-4bit-GGUF",
+ "revision": "5b30c843dbbf0d1d7277e8987a0464150e6de8c9",
+ "captured": "2026-11-25T05:13:09+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1718,
+   "git_oid": "18ddb617816a6aa05bfc2425b1f2f25423d39a32"
+  },
+  {
+   "path": "Qwen3.6-11B-A3B-Niwaki-4bit-Q4_K_M.gguf",
+   "size": 7031953568,
+   "sha256": "9ac6ad9047b4beafb4f1d4469cfa798eb7ee1ba404386b2a7aa7ecdf2f33f0e5"
+  },
+  {
+   "path": "Qwen3.6-11B-A3B-Niwaki-4bit-UD-Q3K.gguf",
+   "size": 5906854048,
+   "sha256": "32ec5cc2f29d0756d9b431d45d6bcc33547b40c925c27a8189b978032a90189d"
+  },
+  {
+   "path": "README.md",
+   "size": 3382,
+   "git_oid": "7c69f9a8468149accf4ace9924cdd845c946e77d"
+  },
+  {
+   "path": "niwaki.png",
+   "size": 2314144,
+   "sha256": "344814ab4e63619fe283c0a7b308e3196052b2de97328ca753e1d2534e2edca7"
+  }
+ ]
+}

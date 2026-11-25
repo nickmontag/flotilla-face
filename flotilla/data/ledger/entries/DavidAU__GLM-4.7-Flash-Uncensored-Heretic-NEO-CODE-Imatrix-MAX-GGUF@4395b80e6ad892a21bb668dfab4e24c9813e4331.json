@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/GLM-4.7-Flash-Uncensored-Heretic-NEO-CODE-Imatrix-MAX-GGUF",
+ "revision": "4395b80e6ad892a21bb668dfab4e24c9813e4331",
+ "captured": "2026-11-25T05:08:26+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2649,
+   "git_oid": "436ac408267e33612c3f7399eedb215583fb590c"
+  },
+  {
+   "path": "GLM-4.7-Flash-Uncen-Hrt-NEO-CODE-MAX-imat-D_AU-IQ2_M.gguf",
+   "size": 10314638272,
+   "sha256": "7ea32884884d8eda55b3e2abb658676f3e3172dd9f1b129575ac07579df7335f"
+  },
+  {
+   "path": "GLM-4.7-Flash-Uncen-Hrt-NEO-CODE-MAX-imat-D_AU-IQ3_M.gguf",
+   "size": 13585456064,
+   "sha256": "4dc6b9ca03c08d433a9c7e232054e8ac510027473088c31322a9f45f7e62d4e1"
+  },
+  {
+   "path": "GLM-4.7-Flash-Uncen-Hrt-NEO-CODE-MAX-imat-D_AU-IQ4_NL.gguf",
+   "size": 17330212800,
+   "sha256": "8dad4615288e66e2fb3398a93b9d333c480600d9e41b8eb8e8f4d3ad5e3a1041"
+  },
+  {
+   "path": "GLM-4.7-Flash-Uncen-Hrt-NEO-CODE-MAX-imat-D_AU-IQ4_XS.gguf",
+   "size": 16407478208,
+   "sha256": "c0e559480d4a3e54bce13699f8695fba20fbc230086e93a604eaee678df90b55"
+  },
+  {
+   "path": "GLM-4.7-Flash-Uncen-Hrt-NEO-CODE-MAX-imat-D_AU-Q4_1.gguf",
+   "size": 19181457344,
+   "sha256": "f1f902abdecd809f9f09c8662f27ce827c2561bc1ee394497fe1082aafc1f891"
+  },
+  {
+   "path": "GLM-4.7-Flash-Uncen-Hrt-NEO-CODE-MAX-imat-D_AU-Q4_K_M.gguf",
+   "size": 18506911680,
+   "sha256": "6eb0adad2033705c1b107c6303673a6bcff6cf6df8c798bc3dcaa5879fffd287"
+  },
+  {
+   "path": "GLM-4.7-Flash-Uncen-Hrt-NEO-CODE-MAX-imat-D_AU-Q4_K_S.gguf",
+   "size": 17446621120,
+   "sha256": "9ff44d89d4ce7ba3b89e0c5bc63ac9eb63762e1a587fd907bf392a6c3825da6c"
+  },
+  {
+   "path": "GLM-4.7-Flash-Uncen-Hrt-NEO-CODE-MAX-imat-D_AU-Q5_1.gguf",
+   "size": 22883946432,
+   "sha256": "9408b81c07f16afa56eba439cddb33bc3f9c8115cca336b3ed17c732db0cd260"
+  },
+  {
+   "path": "GLM-4.7-Flash-Uncen-Hrt-NEO-CODE-MAX-imat-D_AU-Q5_K_M.gguf",
+   "size": 21638705088,
+   "sha256": "444467bf5b8d43f8d8b81291f4392bc26b9cfa5ef9627ee4746ff2534949f514"
+  },
+  {
+   "path": "GLM-4.7-Flash-Uncen-Hrt-NEO-CODE-MAX-imat-D_AU-Q5_K_S.gguf",
+   "size": 21038477248,
+   "sha256": "dba1f084885197bcfea6b6482afd2c2e998141a3d4dc040778464cd4e84a0480"
+  },
+  {
+   "path": "GLM-4.7-Flash-Uncen-Hrt-NEO-CODE-MAX-imat-D_AU-Q6_K.gguf",
+   "size": 24988976064,
+   "sha256": "544d5b58ec3797add72a589d6732a3c7bddc5095745199c767322dbd7a4bb972"
+  },
+  {
+   "path": "GLM-4.7-Flash-Uncen-Hrt-NEO-CODE-MAX-imat-D_AU-Q8_0.gguf",
+   "size": 32140169152,
+   "sha256": "6e13bc93b85ddeee371c00a9ec182d1e1e98cd75b04df31cf2bffdbb1ef506f4"
+  },
+  {
+   "path": "README.md",
+   "size": 6002,
+   "git_oid": "42cae13ecf7b673eff2fa7cffd56a7c67f204ab1"
+  }
+ ]
+}

@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Mellum2.1-12B-A2.5B-Thinking-abliterated-i1-GGUF",
+ "revision": "3dc198853a42c3844eca523ad5cf11c407fb560d",
+ "captured": "2026-11-25T05:09:04+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3805,
+   "git_oid": "7c0f21afbb973f3e11c6dd7c08cc16c3950d5833"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-IQ1_M.gguf",
+   "size": 4101799264,
+   "sha256": "f46367a7746322a381d5c68098f38a6a59d44ebb7e96d6d1a2be5383632db34c"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-IQ1_S.gguf",
+   "size": 3921423712,
+   "sha256": "4f1aa45b35ea93985e5b57b29fbfc276a87270737a98b283c391775ee7eb9fb4"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-IQ2_M.gguf",
+   "size": 4951846240,
+   "sha256": "863c4bffc30c2e00d3b514419efe1f0660dbb9e9848c32496a9ae338c665f56d"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-IQ2_S.gguf",
+   "size": 4711345504,
+   "sha256": "b9179c8868376ce0db18f6279d4535e619574d6f62ac860643dddd1f0cb4e057"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-IQ2_XS.gguf",
+   "size": 4651183456,
+   "sha256": "b2cac0632fcf2aaee0acaf396f975036028e10521551d0c38ce4c22d816f55e7"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-IQ2_XXS.gguf",
+   "size": 4402425184,
+   "sha256": "2ee2e91e5dccb6901f6785999e052403f2034c29b820d14782ab4916471337ce"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-IQ3_M.gguf",
+   "size": 5908319584,
+   "sha256": "473affb20a3fd46fab10ec68d07f1b515a8ea5d2e4f342526eca60035ac8b32c"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-IQ3_S.gguf",
+   "size": 5823679840,
+   "sha256": "e00496336f8b527a67a78876913726242cf7f6087c74c8fb8fcb6357397ca536"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-IQ3_XS.gguf",
+   "size": 5549632864,
+   "sha256": "eb456ad6278a4147eab305f2af31d35b429599f29d950076981adcd8ca98f7b4"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-IQ3_XXS.gguf",
+   "size": 5414268256,
+   "sha256": "7484edbe17332f48a54f4ed5db155e2960482367c4a112f5a6afb23967ee1f16"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-IQ4_NL.gguf",
+   "size": 6915112288,
+   "sha256": "495b46ddc1ca7deb348597f0503904a110cac5b59b903706dfb428220e3d7283"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-IQ4_XS.gguf",
+   "size": 6659276128,
+   "sha256": "c0de6e912c33494bb5cea8ed20f9adc7e5c528d5776f905522e855dce4a7be19"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-Q2_K.gguf",
+   "size": 5019049312,
+   "sha256": "d834a2bdb4a73a1b5f6a0f9a62ed77ba5705e3882a1b5954aff28c48be24ace5"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-Q2_K_S.gguf",
+   "size": 5041757536,
+   "sha256": "a255c2df1fa6d05fc02cc397ef5a79b5937801bc0a77ccb1c57ea2a2fa6a53b4"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-Q3_K_L.gguf",
+   "size": 6589566304,
+   "sha256": "9acfc501725b8aa45641714c055b298c63456e6e9f5ee690c641d71a1b1b2543"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-Q3_K_M.gguf",
+   "size": 6329748832,
+   "sha256": "6fdf437f86e0d2d48211ac3cc6d59d07a4ffad8c1fad5969973e367f2af9f677"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-Q3_K_S.gguf",
+   "size": 5819293024,
+   "sha256": "c098841b6a4d49867038a81e307f586203a175a151141a267618d397d4060242"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-Q4_0.gguf",
+   "size": 6935756128,
+   "sha256": "8534940c4f8e18ef9423209b68d155e42c2693b3deb6efcf3ff21472fd68fbdb"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-Q4_1.gguf",
+   "size": 7655931232,
+   "sha256": "ef230c871f29905eacfb3292f5d4be8b2fe4c91882660397f9ee03373a9211b6"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-Q4_K_M.gguf",
+   "size": 8071296352,
+   "sha256": "7580afb7210d61b324a550c1e1e7886e2d7fbc4dd7d2ae0100f7c262acb774a7"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-Q4_K_S.gguf",
+   "size": 7398767968,
+   "sha256": "1fb80d85d493f13d28400bbd2b8726ef8780642951c3ac564ffb4ead54014382"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-Q5_K_M.gguf",
+   "size": 9212310880,
+   "sha256": "0c482e48deda69672aa15c2ae0700fac36ed1332289a721e631a020527156ef9"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-Q5_K_S.gguf",
+   "size": 8632089952,
+   "sha256": "e164612c71173288e1be32d010c40edf891801015ddf1d56704d7b0647a0f3d8"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.i1-Q6_K.gguf",
+   "size": 10879835488,
+   "sha256": "fd47b74b48b3dee7a632dc4f868a2d5d47177b0a65121e465891ca5dcc6a4def"
+  },
+  {
+   "path": "Mellum2.1-12B-A2.5B-Thinking-abliterated.imatrix.gguf",
+   "size": 81985920,
+   "sha256": "026e0073e3791ec9ff921b8d43ad13e6f430c8c68c348447985656252f583bc9"
+  },
+  {
+   "path": "README.md",
+   "size": 7293,
+   "git_oid": "98abd642672d1d8bffc58f771126cf25dbab0bc3"
+  }
+ ]
+}

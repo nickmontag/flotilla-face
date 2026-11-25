@@ -1,0 +1,100 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "ReadyArt/Wicked-Stuff-31B-Final-GGUF",
+ "revision": "95591a992249bb557927596a27ff373b5e40d29b",
+ "captured": "2026-11-25T05:13:11+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2641,
+   "git_oid": "330e35b4db077c425d3911d0a586d29892d312f8"
+  },
+  {
+   "path": "LICENSE.txt",
+   "size": 426,
+   "git_oid": "033827fb98db16264ff6a6c61608faf4cfe1b1fe"
+  },
+  {
+   "path": "README.md",
+   "size": 11922,
+   "git_oid": "daef7eae2a5898d850240474a696f6a634c9e3a9"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final-Q4_K_M.gguf",
+   "size": 18687064640,
+   "sha256": "7c0a9cacee5613c4d671e973eacc22a7a688f58192434927b07119e87e2be34a"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final-Q5_K_S.gguf",
+   "size": 21311842880,
+   "sha256": "817d695e511b27dcef7f6975416c57ea09df2eb17153c03168eee646262b524e"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final-Q6_K.gguf",
+   "size": 25201486400,
+   "sha256": "4ddf6ace173d8cbfa126d9d1320e1c7d122f697b987330fa8e7ecfdc331e5fd9"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final-Q8_0_hb16.gguf",
+   "size": 33956883296,
+   "sha256": "2229adf75737aff01168d10700a17dca8f2dc72956bfac51da05590d9168db14"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final.i1-IQ2_XS_hb16.gguf",
+   "size": 11380048736,
+   "sha256": "1473d2dd16c7552b0265b1436a5737a82220c3cb0b3b09740c54e453a62699fc"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final.i1-IQ3_XS_hb16.gguf",
+   "size": 14734887776,
+   "sha256": "e16d120103c05caa30d92078d7981716d1c57527180944c7547ee4cccbe95e42"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final.i1-IQ4_NL_hb16.gguf",
+   "size": 19313519456,
+   "sha256": "5b694a4801a940f37e9b4f5207b4845283612a47ceaef61a05b11ea65e027472"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final.i1-IQ4_XS_hb16.gguf",
+   "size": 18398309216,
+   "sha256": "06919493fdeb61cff684ac721d8f1760830b0a6d8947d0a1ca181623bd5d7dff"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final.i1-Q3_K_M_hb16.gguf",
+   "size": 16949627744,
+   "sha256": "955d9e04c19983588a7e2ff332c694b2d78b840e61db85c460bff3a8701a704f"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final.i1-Q4_K_M_hb16.gguf",
+   "size": 20349582176,
+   "sha256": "f8866bd3f427a7436d7f4e79e2e6fae7843dbcdf79c4d7bb08580f785139e343"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final.i1-Q4_K_S_hb16.gguf",
+   "size": 19425684320,
+   "sha256": "4bd838bc5687ac2f24bb708f64435d08ae479e13aff7f1134de4143c67d09cb7"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final.i1-Q5_K_M_hb16.gguf",
+   "size": 23508089696,
+   "sha256": "535f8dc58e3a27892b313f48f49fe966f951a315b837d80b87bed782a53bce33"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final.i1-Q5_K_S_hb16.gguf",
+   "size": 22974360416,
+   "sha256": "e73a948ba80c1e19224bd1e6a6bfe4a01a110f66451b8c4b35227595301ae5de"
+  },
+  {
+   "path": "Wicked-Stuff-31B-Final.i1-Q6_K_hb16.gguf",
+   "size": 26864003936,
+   "sha256": "e664264ad430856421585800ab48062f65eaa7ed2177e3707dc538c6f5b7f668"
+  },
+  {
+   "path": "imatrix.gguf",
+   "size": 27520224,
+   "sha256": "f26e9ae8c6c9a4498b122149bd38142cd8f414131904099520bfec1ad77abd47"
+  }
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "huihui-ai/Huihui-Qwen3.8-27B-Coder390-EfficientThink-abliterated",
+ "revision": "14c13fcf593d692a5b96f29afecca6fe2fc030e6",
+ "captured": "2026-11-25T05:08:20+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 10210,
+   "git_oid": "8d67dfa03159366704dec90a9c16f6cf0caacf52"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 8952,
+   "git_oid": "c0c686f9c38d70d179fb7b5f5aa7530bc913dda3"
+  },
+  {
+   "path": "config.json",
+   "size": 3799,
+   "git_oid": "6b011b862e83d1786bd35cadcdc7d98aadcd856a"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 214,
+   "git_oid": "c53835dc1fca33e4e840690f5c458c9983f97fc6"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 49825162944,
+   "sha256": "ed26e377ae37bcdf757ea88b610b97eb62356607cd4a6ce172096bb97cbf5a8c"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 4888445136,
+   "sha256": "dc4148719a4fa8b36244320bf619e68652f3db983cd2fec29ae61282d80cc8b7"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 112034,
+   "git_oid": "bf269d4174a951dd8144ce28ac43fced528d3a2a"
+  },
+  {
+   "path": "mtp-bf16.safetensors",
+   "size": 849400424,
+   "sha256": "90fa0e3eed5a647c035c6df9ecabc416c0f8d573ff84ac12485b085f00a7cdf2"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989325,
+   "sha256": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1075,
+   "git_oid": "0f19934ef65115549ff9629ff2c83d15e40e32d8"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  }
+ ]
+}

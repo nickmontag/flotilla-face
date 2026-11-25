@@ -1,0 +1,35 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "pottokao/MiniMax-H3-TextEncoder-16GB-abliterated-GGUF",
+ "revision": "58964486de6d8954974b4b02aac8b8885666cc6e",
+ "captured": "2026-11-25T05:08:28+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1813,
+   "git_oid": "dffe652b5355117a4af30d5b556dd979fa16748e"
+  },
+  {
+   "path": "MiniMax-H3-TextEncoder-Qwen3VL-32B-abliterated-11.5G_vis.gguf",
+   "size": 12648274624,
+   "sha256": "2c76edc6c32e8f35aff57756171e3d1a2857990ec7739b33491f5b9b1e7d6db7"
+  },
+  {
+   "path": "MiniMax-H3-TextEncoder-Qwen3VL-32B-abliterated-12.5G_vis.gguf",
+   "size": 13698284224,
+   "sha256": "0fae39d7618ef442d87667bd63ca1989c415656f35f892505cb207050a338fe2"
+  },
+  {
+   "path": "MiniMax-H3-TextEncoder-Qwen3VL-32B-abliterated-13.6G_vis.gguf",
+   "size": 14798019264,
+   "sha256": "bcb2ae74de88b9db9e710baa12e8c2bee1b377dc64576c8f57ad37092a30aef0"
+  },
+  {
+   "path": "README.md",
+   "size": 3940,
+   "git_oid": "c311c757a8954ff24dc4067d869cc15fed5ae5f4"
+  }
+ ]
+}

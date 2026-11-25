@@ -1,0 +1,45 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "HauhauCS/Qwen3VL-8B-Uncensored-HauhauCS-Aggressive",
+ "revision": "131a3da6324520b0471196ed0012386d701543a6",
+ "captured": "2026-11-25T05:08:32+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1967,
+   "git_oid": "344d30a7e1749fdd1a51b2a2254184fd72fd8676"
+  },
+  {
+   "path": "Qwen3VL-8B-Uncensored-HauhauCS-Aggressive-BF16.gguf",
+   "size": 16388044896,
+   "sha256": "56b96d04856213f43f4037ea28eaa51530e53c7c626f034d1332b8ebd5bb6330"
+  },
+  {
+   "path": "Qwen3VL-8B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf",
+   "size": 5027784800,
+   "sha256": "56ffae5a3741a9d46ee88520c4511fbc610d7ff67d0f8e7e4dd98b102fe5f016"
+  },
+  {
+   "path": "Qwen3VL-8B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf",
+   "size": 6725900384,
+   "sha256": "0447bbaea9f2844b9ca5fa975c04d56d44a5e53deb37ae4497e46194fde508cf"
+  },
+  {
+   "path": "Qwen3VL-8B-Uncensored-HauhauCS-Aggressive-Q8_0.gguf",
+   "size": 8709519456,
+   "sha256": "5ab780e687ee9fcfcfa4bcc83fd6f749dce55039eddb76d8b3817d63c9ebeee9"
+  },
+  {
+   "path": "Qwen3VL-8B-Uncensored-HauhauCS-Aggressive-mmproj-f16.gguf",
+   "size": 1162568832,
+   "sha256": "a36cc092c85e262bc7339a81c4940bd8866e27a1eb004a8ceb2f03a3d9b8a2b8"
+  },
+  {
+   "path": "README.md",
+   "size": 1781,
+   "git_oid": "c891b37aeab5d5673e363c724972c0e116d50c95"
+  }
+ ]
+}

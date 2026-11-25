@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "ibm-research/PowerMoE-3b",
+ "revision": "13fcb5a98001438bed01cf1ac4b423751dc4c2ea",
+ "captured": "2026-11-25T05:13:04+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 3849,
+   "git_oid": "96f2d75dfa4104d1bb16b55f6beb5113060867ba"
+  },
+  {
+   "path": "config.json",
+   "size": 928,
+   "git_oid": "16e897e5b33d1bd9b65bdf25e34b6a8dbd2de415"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 137,
+   "git_oid": "51ffea4978adc2afd0062606233e4475d115554a"
+  },
+  {
+   "path": "model-00001-of-00003.safetensors",
+   "size": 4759191760,
+   "sha256": "410fe4e5985463497cfab62f2a7e1d1399ca33ea6030966187f106d76b494b5c"
+  },
+  {
+   "path": "model-00002-of-00003.safetensors",
+   "size": 4834947880,
+   "sha256": "2c318c4e0cb92c1385968a9c03e7a7c1ba4b536d47dab7ab37e2aaf50f221009"
+  },
+  {
+   "path": "model-00003-of-00003.safetensors",
+   "size": 3903040856,
+   "sha256": "948cbf3057a50c450d6322bcbaf1e9adb8cdd22915010aee14a58ebd5fcbdf3a"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 25582,
+   "git_oid": "c3fbf7fa06597bdec97f9d43257a85ae7d5101cf"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 906,
+   "git_oid": "87a2385ffddf24c750cb09ef69d64faa0d73ff3f"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 2057451,
+   "git_oid": "4aa94164a898c41c89c347f753c08a82b52e620f"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 4126,
+   "git_oid": "e72c686d55d39777040cda554da071a1df3c3f38"
+  }
+ ]
+}

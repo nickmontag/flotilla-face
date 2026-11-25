@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llmfan46/gemma-4-31B-it-uncensored-heretic-GGUF",
+ "revision": "eee61b81461ac75eb920a24ca9e5d420bb66e33d",
+ "captured": "2026-11-25T05:08:21+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2386,
+   "git_oid": "1068bd3df1e718e2e627e7f3620a5a99b827179c"
+  },
+  {
+   "path": "README.md",
+   "size": 36116,
+   "git_oid": "131dd5e5b2580b5e6a3fd8e7de704504ba1c1fd0"
+  },
+  {
+   "path": "gemma-4-31B-it-mmproj-BF16.gguf",
+   "size": 1200726208,
+   "sha256": "21487ff26d08f7ddd1d654d3bbfc1ae1020aab3119f5bf654742ce4697732e4e"
+  },
+  {
+   "path": "gemma-4-31B-it-uncensored-heretic-BF16.gguf",
+   "size": 61413188736,
+   "sha256": "5d818d2895c746f8de5a28c237b253157d37191b83fdfe04af59ce47555674aa"
+  },
+  {
+   "path": "gemma-4-31B-it-uncensored-heretic-Q3_K_L.gguf",
+   "size": 16628270208,
+   "sha256": "5aa95f563b58cf6267c9224b7787708db0bcb2663feeddfd3a9383e20c3cd60c"
+  },
+  {
+   "path": "gemma-4-31B-it-uncensored-heretic-Q3_K_M.gguf",
+   "size": 15287108736,
+   "sha256": "c0e2810df3603c8bcd103f9b7bbe0fa76c1422df8724c2989d6091641f5a4a10"
+  },
+  {
+   "path": "gemma-4-31B-it-uncensored-heretic-Q4_K_M.gguf",
+   "size": 18687063168,
+   "sha256": "7c65a35e7c4e53cba6c5e02cc9eeb850eb4251f4d9ad120c2caa6de23c5a6395"
+  },
+  {
+   "path": "gemma-4-31B-it-uncensored-heretic-Q4_K_S.gguf",
+   "size": 17763165312,
+   "sha256": "4f6feaf69a3c9703bc74a5431900bb5af961a335d5c43f0aceb2ecba78a15975"
+  },
+  {
+   "path": "gemma-4-31B-it-uncensored-heretic-Q5_K_M.gguf",
+   "size": 21845570688,
+   "sha256": "c46aa8fe6a55e0d86fd50b1ec13d8412bcd8990468505f0c3e1b4c2c188430f8"
+  },
+  {
+   "path": "gemma-4-31B-it-uncensored-heretic-Q5_K_S.gguf",
+   "size": 21311841408,
+   "sha256": "087e5ebfa2c1af848d8aba9a0d0d5b67e6d08488e4c32c31624fbbee1687e78c"
+  },
+  {
+   "path": "gemma-4-31B-it-uncensored-heretic-Q6_K.gguf",
+   "size": 25201484928,
+   "sha256": "ec331ca8d40bef30bc00312b506a78e01bd9bdc6aa98d449d79b2942eca6efc1"
+  },
+  {
+   "path": "gemma-4-31B-it-uncensored-heretic-Q8_0.gguf",
+   "size": 32635675776,
+   "sha256": "fc1096ef2a43023469beecaa5a7fa3ba804d3f1684ade80f8f083e7e27a1028e"
+  }
+ ]
+}

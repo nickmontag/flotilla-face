@@ -1,0 +1,215 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "codeparrot/codeparrot-small",
+ "revision": "e7e4f5d39319551a760f07c0e1035e379617c721",
+ "captured": "2026-11-25T05:09:39+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1412,
+   "git_oid": "9cf3d564d319c3d0bdba5c055ab2310f14f4e23d"
+  },
+  {
+   "path": "README.md",
+   "size": 2203,
+   "git_oid": "7ecc231f756d37a83bdf22678c82866db8361bb3"
+  },
+  {
+   "path": "codeparrot_training.py",
+   "size": 8812,
+   "git_oid": "9578ae2d59e56850c80f53e2e650f7673c2d5210"
+  },
+  {
+   "path": "config.json",
+   "size": 903,
+   "git_oid": "c820162dc880be85bec0158d5c43caffaa996599"
+  },
+  {
+   "path": "log/debug_0.log",
+   "size": 22992728,
+   "sha256": "6a33bea23e477172105ae80f5cebc35cb70eef09e4d95bd808f4973dddf0930b"
+  },
+  {
+   "path": "log/debug_1.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_10.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_11.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_12.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_13.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_14.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_15.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_2.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_3.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_4.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_5.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_6.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_7.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_8.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "log/debug_9.log",
+   "size": 89,
+   "git_oid": "5cc7a28a190008be1f1c4117823f9067791c7404"
+  },
+  {
+   "path": "merges.txt",
+   "size": 276927,
+   "git_oid": "afc78d78ccfce0ed5e6c6e675326bbff6e4f83ba"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 456677609,
+   "sha256": "c7fc3b2bc56bf6ef0fcabf1d529fd6aefd48a69fbeb70a5efb88b1a909d25b06"
+  },
+  {
+   "path": "requirements.txt",
+   "size": 86,
+   "git_oid": "c99fcb118c4f961ef5cac3b7487a071052c2f8cf"
+  },
+  {
+   "path": "runs/Nov06_21-16-12_leandro-16x-v100/1636233372.3289735/events.out.tfevents.1636233372.leandro-16x-v100.4368.1",
+   "size": 1438,
+   "sha256": "a0e4c545c8c00c8dd32e5dadf4db351c0ee2811281dd482a24268755c1c39c00"
+  },
+  {
+   "path": "runs/Nov06_21-16-12_leandro-16x-v100/events.out.tfevents.1636233372.leandro-16x-v100.4368.0",
+   "size": 27535087,
+   "sha256": "2cd9716067e9f59fda4a7b67e25db6034c5b4465db63524decb1c80001219215"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 90,
+   "git_oid": "817762d631ad6f9c799f6b9dc713c46420e65546"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 840293,
+   "git_oid": "155376dcb3cd67b66864822e8acee1aec8464a42"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 259,
+   "git_oid": "55263b9a4e2e3fd88fbde06fbc68a9b54dee6b37"
+  },
+  {
+   "path": "vocab.json",
+   "size": 496947,
+   "git_oid": "bdc4cd3d7c332f9ed88aae0bc72d812a06d1d7cd"
+  },
+  {
+   "path": "wandb/debug-internal.log",
+   "size": 52,
+   "git_oid": "6615553d26c049a48f071ffbfd53be087dcadb64"
+  },
+  {
+   "path": "wandb/debug.log",
+   "size": 43,
+   "git_oid": "8d0d109ef7e770c6768aeecffb43d5ba99f359d8"
+  },
+  {
+   "path": "wandb/latest-run",
+   "size": 28,
+   "git_oid": "9ad8f5624a9c5b7d758e898d9e203801cb7fc9e4"
+  },
+  {
+   "path": "wandb/run-20211106_211610-dtkf2u0m/files/conda-environment.yaml",
+   "size": 3431,
+   "git_oid": "278c2316d4cd0a69a8bc647a9905328244f8313d"
+  },
+  {
+   "path": "wandb/run-20211106_211610-dtkf2u0m/files/config.yaml",
+   "size": 1376,
+   "git_oid": "76769e49508ac473a3ad016a11d9bdec2778d4b6"
+  },
+  {
+   "path": "wandb/run-20211106_211610-dtkf2u0m/files/output.log",
+   "size": 9292524,
+   "git_oid": "1bf58423bae8935fcaf6493a994662487b702c66"
+  },
+  {
+   "path": "wandb/run-20211106_211610-dtkf2u0m/files/requirements.txt",
+   "size": 1418,
+   "git_oid": "9eaa775ee980f52b43522e728e9962a106758e25"
+  },
+  {
+   "path": "wandb/run-20211106_211610-dtkf2u0m/files/wandb-metadata.json",
+   "size": 795,
+   "git_oid": "797248c5e8cc79b13f7c9c33a0ba5e3f4511b21c"
+  },
+  {
+   "path": "wandb/run-20211106_211610-dtkf2u0m/files/wandb-summary.json",
+   "size": 227,
+   "git_oid": "7b3a5a39f5073e9cca33b7193f6e6722ba27ba74"
+  },
+  {
+   "path": "wandb/run-20211106_211610-dtkf2u0m/logs/debug-internal.log",
+   "size": 67421355,
+   "sha256": "53d06c5a631b6282f504e2581be60edaf25b6922e2ee3189c9140c2e3460d2c4"
+  },
+  {
+   "path": "wandb/run-20211106_211610-dtkf2u0m/logs/debug.log",
+   "size": 3143,
+   "git_oid": "39486f3db2e3153d50bfb8648270f7227c97191b"
+  },
+  {
+   "path": "wandb/run-20211106_211610-dtkf2u0m/run-dtkf2u0m.wandb",
+   "size": 51195135,
+   "sha256": "65fd3ed9e21bd18b6b28e3984baf05f344d8d2728f5429650ae99a1c9aae34c8"
+  }
+ ]
+}

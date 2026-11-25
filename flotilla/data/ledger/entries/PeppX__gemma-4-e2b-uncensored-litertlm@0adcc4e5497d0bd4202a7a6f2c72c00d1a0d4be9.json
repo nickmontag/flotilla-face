@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "PeppX/gemma-4-e2b-uncensored-litertlm",
+ "revision": "0adcc4e5497d0bd4202a7a6f2c72c00d1a0d4be9",
+ "captured": "2026-11-25T05:08:29+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1780,
+   "git_oid": "850ced9331189f9ab957e6626b9107b55ea7d577"
+  },
+  {
+   "path": "README.md",
+   "size": 8158,
+   "git_oid": "24d7278e0756090adfd99cca52b074ecbacf905e"
+  },
+  {
+   "path": "gemma-4-E2B-it-Uncensored-MAX.litertlm",
+   "size": 2550041824,
+   "sha256": "34738f7eb50d04ee123d23dcea0df0b49e074b555134101251685f9416f39bb9"
+  },
+  {
+   "path": "gemma4_uncensored_INT4_8192.litertlm",
+   "size": 2570459088,
+   "sha256": "7c1dd5e4723e8a6d20fbb5f11f34141eb1f8e413d2049aa52211f533966d785e"
+  },
+  {
+   "path": "gemma4_v2_metadata.json",
+   "size": 377,
+   "git_oid": "7781e091519bf9dc9e3e6bc4edda06d0563a998e"
+  },
+  {
+   "path": "model.litertlm",
+   "size": 2570459088,
+   "sha256": "4b5ed1c0dd944e77435f389b6ae314e383592cc53ae2c05b07146d35431cf853"
+  }
+ ]
+}

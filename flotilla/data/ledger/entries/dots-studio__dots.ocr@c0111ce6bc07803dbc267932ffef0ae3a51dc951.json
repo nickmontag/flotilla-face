@@ -1,0 +1,110 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "dots-studio/dots.ocr",
+ "revision": "c0111ce6bc07803dbc267932ffef0ae3a51dc951",
+ "captured": "2026-11-25T05:09:29+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "NOTICE",
+   "size": 80471,
+   "git_oid": "4d433fabf5fc5d02cb6236e567341722c4f8331b"
+  },
+  {
+   "path": "README.md",
+   "size": 33567,
+   "git_oid": "6ddfcf16d1d61060cd8699b37f196653139293d7"
+  },
+  {
+   "path": "chat_template.json",
+   "size": 1109,
+   "git_oid": "87a662f7ffedeacec6a2bc7acfb60f638d7eb72d"
+  },
+  {
+   "path": "config.json",
+   "size": 1474,
+   "git_oid": "7ea2c09f6a238715eeaa9e649bb2556fe204c59e"
+  },
+  {
+   "path": "configuration_dots.py",
+   "size": 3038,
+   "git_oid": "f128b8a5c6190f89efafd75d1d0b0d72d9637d39"
+  },
+  {
+   "path": "dots.ocr LICENSE AGREEMENT",
+   "size": 15532,
+   "git_oid": "69c62cc31e4eacdb4c9100b90a805f7d5d74210c"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 74,
+   "git_oid": "c6f6906647405a39703b00f42eafcc3e15b0fac7"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671839,
+   "git_oid": "20024bfe7c83998e9aeaf98a0cd6a2ce6306c2f0"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 4292758192,
+   "sha256": "ea1d532184f3adf5cbcfcc00b2cf5b2abfa6fe182768a3ae63d441a9b5fc99ac"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 1785673544,
+   "sha256": "26ab1ec6c8b4e4116befbd59af42159f1dbcb0ad0c045a15e890bb2f6e8b0dae"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 52250,
+   "git_oid": "8a62c0793d30c8ab47418a5198485939ff4acb35"
+  },
+  {
+   "path": "modeling_dots_ocr.py",
+   "size": 4981,
+   "git_oid": "79d1c2561c0fba50fbba002e332d992432ed570a"
+  },
+  {
+   "path": "modeling_dots_ocr_vllm.py",
+   "size": 17510,
+   "git_oid": "a8ba8d066620dc811695feaf7936039052b4da5f"
+  },
+  {
+   "path": "modeling_dots_vision.py",
+   "size": 20040,
+   "git_oid": "42a570e49f6649f37bb31c2e3da247044419987b"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 432,
+   "git_oid": "c5e511aefbe5e8e927ff02410fcaee3d31fabe66"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 494,
+   "git_oid": "ec36c2f94529d5711c1b4ce135b723bdfe85ee77"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7036028,
+   "git_oid": "54a3cca8cde7c075fa20b941ceeb28eb4e7acc4d"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 9310,
+   "git_oid": "a7055e5dbff6ce5c1b594ecbf9c2a9e9e83199bd"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

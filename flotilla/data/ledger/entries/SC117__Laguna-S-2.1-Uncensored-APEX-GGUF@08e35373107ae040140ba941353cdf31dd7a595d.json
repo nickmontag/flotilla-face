@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "SC117/Laguna-S-2.1-Uncensored-APEX-GGUF",
+ "revision": "08e35373107ae040140ba941353cdf31dd7a595d",
+ "captured": "2026-11-25T05:08:46+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1903,
+   "git_oid": "40b573d36a6a90a6f2949e7c2fcca79969aaf61a"
+  },
+  {
+   "path": "Laguna-S-2.1-Uncensored-APEX-I-Balanced.gguf",
+   "size": 85229205664,
+   "sha256": "def8d4618177349e4d32f527e20d9cf8a2a4851d3e20e7e1daed648006d5d8d0"
+  },
+  {
+   "path": "Laguna-S-2.1-Uncensored-APEX-I-Compact.gguf",
+   "size": 55097528224,
+   "sha256": "70da561d9a53e810a932fb784179146761bbba0c6dc413b563da9d9ec16c9abc"
+  },
+  {
+   "path": "Laguna-S-2.1-Uncensored-APEX-I-Mini.gguf",
+   "size": 44367725216,
+   "sha256": "0001c14a830f13f2c965d043ff71415a4a857440533f717a9763aa9a9fd0bf01"
+  },
+  {
+   "path": "Laguna-S-2.1-Uncensored-APEX-I-Quality.gguf",
+   "size": 74659559584,
+   "sha256": "d5a643ab43b81e11b62fc077cefff6e88a4ca2f7d42462b53c4c89792982d2c6"
+  },
+  {
+   "path": "README.md",
+   "size": 22674,
+   "git_oid": "910ab12367aff0974f578c18fff6632ddd85626c"
+  },
+  {
+   "path": "README_zh.md",
+   "size": 22435,
+   "git_oid": "28cbd267e98e8df964d6665aa4cd7b81a03b3aea"
+  },
+  {
+   "path": "laguna-s-2.1-DFlash-BF16.gguf",
+   "size": 2233764224,
+   "sha256": "2ee8aa30338d6599bc7a8ce008cc57c56f2c2b2fdc21f6db9ecda203c751bfd4"
+  }
+ ]
+}

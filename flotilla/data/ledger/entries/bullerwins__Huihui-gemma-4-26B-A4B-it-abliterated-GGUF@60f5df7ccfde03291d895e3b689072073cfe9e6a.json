@@ -1,0 +1,130 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bullerwins/Huihui-gemma-4-26B-A4B-it-abliterated-GGUF",
+ "revision": "60f5df7ccfde03291d895e3b689072073cfe9e6a",
+ "captured": "2026-11-25T05:08:32+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3394,
+   "git_oid": "ebbc52f0ef8ef5de8399a6cf9010d66c180458d7"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-IQ3_M.gguf",
+   "size": 12392558752,
+   "sha256": "24acf8ee8aabbce40cf193e9cdbed7b40600c2f6072ad08cf43d1122bf291330"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-IQ3_S.gguf",
+   "size": 12222404768,
+   "sha256": "9446b3b5358f5d1f926f3339f187f6ca9251253cb1efc5a3c82f3eee3ce782ec"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-IQ4_NL.gguf",
+   "size": 14585439904,
+   "sha256": "e05e88f7800beafcfb78b9b22cc6e60df209e431faebd9e4473373819d2d6be4"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-IQ4_XS.gguf",
+   "size": 14063804064,
+   "sha256": "d444e803e766143e0b4130c8e04b23d0aca779e7d6d478da9c58e39e5c9309f6"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-MXFP4_MOE.gguf",
+   "size": 14727174816,
+   "sha256": "f4de5717e8d48e2523b28653d081a8c0539c8d078c88cc348ec50cc5017ec611"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q2_K.gguf",
+   "size": 10582732448,
+   "sha256": "25bde2b1b03a1f363422a95262e30cc549ae42bc0bdfc6c4b73d961dafd60fb1"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q3_K_L.gguf",
+   "size": 13824483488,
+   "sha256": "adb7a4b0dbc483774b145acd5317dfb81fcb591299cb557905c137b8d8811692"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q3_K_M.gguf",
+   "size": 13286728864,
+   "sha256": "b34c293a61498dd576a190f9457df7c16c014a63cc437f3416d6022545b11e6e"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q3_K_S.gguf",
+   "size": 12222404768,
+   "sha256": "35134681292301901e7d8f4e44fd7f78ce0442eeaca0688a1cdcaf1710c49d6b"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q4_0.gguf",
+   "size": 14439357088,
+   "sha256": "c916fc619ba990b52e474408675ab1b2cf8241a2b51a43e93573e20eb8b9e195"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q4_1.gguf",
+   "size": 15969571488,
+   "sha256": "8cf5e67cbf39938a2980d7ed34e62b382bebf042c3ecadbf5b4c562706b22505"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q4_K_M.gguf",
+   "size": 16796011168,
+   "sha256": "240b1703458982eb4f2d64096093481401e650a5f0ecb78c6678d33df50d870f"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q4_K_S.gguf",
+   "size": 15464820384,
+   "sha256": "be6772257cae6569fa13ba2a3ce5318ff0751c1dafc7290e2af9b7bb8ea3ff67"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q5_0.gguf",
+   "size": 17499785888,
+   "sha256": "5a939c3b620ff5c3feeb63ce38536d95c0cac809c9ae789cfc95620b8f7d33fe"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q5_1.gguf",
+   "size": 19030000288,
+   "sha256": "111bbec32ae7c00b2916437fe77efd99c584880b7b026c587cc6d114a2eb103b"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q5_K_M.gguf",
+   "size": 19132885664,
+   "sha256": "e54c25db91ce4717a3506d7b6f99033d5e32a7e7bfff09749576bae0809789a8"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q5_K_S.gguf",
+   "size": 17986728608,
+   "sha256": "2c172da62df6833e49deeb2d2ecc1048e6e035f24821d3d82ff55f31810a324d"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q6_K.gguf",
+   "size": 22638394528,
+   "sha256": "c7e21130c3b1b8fa53c6b3fd3469c0bcfe5ef0adb0698e95278dda64a052efeb"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-Q8_0.gguf",
+   "size": 26859854496,
+   "sha256": "e608f04a6c5b253cc990d2e082719392a422b4e9b3b3ebcaa51422aac7dbbe04"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-TQ1_0.gguf",
+   "size": 8570953888,
+   "sha256": "1b749e53d85658d88d359c4bf9d24920368d7b2da272e977cd5dce673080c078"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-TQ2_0.gguf",
+   "size": 9353407648,
+   "sha256": "af9336b712abe36e26120304c52bc698936f03638626d39828b9cf07ad01dd60"
+  },
+  {
+   "path": "Huihui-gemma-4-26B-A4B-it-abliterated-bf16.gguf",
+   "size": 50505130656,
+   "sha256": "f94b3dcfc8097260c5869cd89520b300ff656303b962b0aa3e119eff4e86da6e"
+  },
+  {
+   "path": "README.md",
+   "size": 2477,
+   "git_oid": "92bd7d54d10b0f20c8204901f96aac3d6be1c5d8"
+  }
+ ]
+}

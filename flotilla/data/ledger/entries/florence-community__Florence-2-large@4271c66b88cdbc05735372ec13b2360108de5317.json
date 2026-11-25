@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "florence-community/Florence-2-large",
+ "revision": "4271c66b88cdbc05735372ec13b2360108de5317",
+ "captured": "2026-11-25T05:09:35+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 13445,
+   "git_oid": "13432fe84bf0c09679e76066d541a384bf1515bd"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 22430,
+   "git_oid": "45a441f0d1c61f68475ae6cb6aec35cd7d679671"
+  },
+  {
+   "path": "config.json",
+   "size": 2396,
+   "git_oid": "cd8afca2a304f967bbcce53b83117f8d7d493656"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 292,
+   "git_oid": "bd4a1d37522d13285c2f753d75af4c07ca463167"
+  },
+  {
+   "path": "merges.txt",
+   "size": 456318,
+   "git_oid": "226b0752cac7789c48f0cb3ec53eda48b7be36cc"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 1553541016,
+   "sha256": "7715423d6549bf1e71188bdd84f4ac960cc0597886af24a5ef7b66f128660685"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 603,
+   "git_oid": "e7e0dbc98f7a0985ea42428925d863c19ce1b222"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 2264,
+   "git_oid": "2dace493360deb05053d62f362df1db802d03aa9"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 146627,
+   "git_oid": "d748fe272a81974cb735e2d1d6821bb294566849"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 3748144,
+   "git_oid": "d03cc512bed8bc7e6012be4d5b20edb6a2d8ee3e"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 197922,
+   "git_oid": "7aec00347e73f5f33f60a05aa382b4defc3931d6"
+  },
+  {
+   "path": "vocab.json",
+   "size": 798293,
+   "git_oid": "4ebe4bb3f3114daf2e4cc349f24873a1175a35d7"
+  }
+ ]
+}

@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3.5-0.8B-Heretic-Uncensored-i1-GGUF",
+ "revision": "be1d87c0f9ce31573306469c3ec7441260b5a401",
+ "captured": "2026-11-25T05:09:00+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3580,
+   "git_oid": "466b08247bc3fdd95637280ca446d5b4651b6319"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-IQ1_M.gguf",
+   "size": 338332800,
+   "sha256": "d260620bda4e2d0e3dcb90fcd9000d81356a427392fd38be00cf672f3277df48"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-IQ1_S.gguf",
+   "size": 329950848,
+   "sha256": "94394ef11a76ca6b9681fefa732e62399f8d25d76b60ce9ad46aaff86e40fe0c"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-IQ2_M.gguf",
+   "size": 377935488,
+   "sha256": "32a3fb6f09bb1f46d82035d1a4e1ac6cf189036f2c5652faece131febfdd5442"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-IQ2_S.gguf",
+   "size": 366759552,
+   "sha256": "d5ff5e5223f264282cc22d52cde404b0930b8677e0bf57ef5f0202966689abf8"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-IQ2_XS.gguf",
+   "size": 363871872,
+   "sha256": "c27e8fdc91d571b4840d73d0fa803f22be5a655c42cd78d929967e0ea10db11f"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-IQ2_XXS.gguf",
+   "size": 352302720,
+   "sha256": "f9a65af3dd36b0d00f09fc24a550a7548a3bc5e07b3be2086d8db704a5fc7dee"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-IQ3_M.gguf",
+   "size": 453956224,
+   "sha256": "81a2b2e90b6b10214d53e4d1f17b746b2471fe66a7bf648d796ac10537bf985c"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-IQ3_S.gguf",
+   "size": 450822784,
+   "sha256": "ccb6f6371f82731544067942e53d9389e0fce1ca8d21d78b7687ec28e6e0553e"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-IQ3_XS.gguf",
+   "size": 443302528,
+   "sha256": "1cbd3ecb1e60228d0d9fe37d8a2afb6a14740219d517acdcbd0d27d7969f87bf"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-IQ3_XXS.gguf",
+   "size": 398001792,
+   "sha256": "07c6ea4d91aac35bcb40905a94072d6e5f74feb87a34bd339275d04599f06d46"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-IQ4_NL.gguf",
+   "size": 516002944,
+   "sha256": "b722fda03867859f2b188d53a68667ca987828c4bacc21285146be441e6b42b2"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-IQ4_XS.gguf",
+   "size": 504089728,
+   "sha256": "65f651a9ca83936cd8c77c4ae1c75f3bc6c1ed45bd31a2ab39a415ac6702c613"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-Q2_K.gguf",
+   "size": 422328448,
+   "sha256": "f7a1e20260dfc47f78b3c467f171647e41f09cbf04c590cde3063c6ed316894e"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-Q2_K_S.gguf",
+   "size": 414685312,
+   "sha256": "0a25ed55a112497f5f6aeda36ec2a3433b1d46c4c1a491e8aabbbbac5d8f850d"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-Q3_K_L.gguf",
+   "size": 491324032,
+   "sha256": "8e332be63a92ab10e16396a8a3e4dfdda414cb94476ecc034c45f7960cdd099d"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-Q3_K_M.gguf",
+   "size": 466223744,
+   "sha256": "cfdb7f517f523a7e345510406f6fbfe240ba060231f8978e5ccc9c5b9021919c"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-Q3_K_S.gguf",
+   "size": 435364480,
+   "sha256": "ace3bd2027b6404a3f7f0c1ac25bae5d1b4f1b9347de98c5e116c4ca36ed8431"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-Q4_0.gguf",
+   "size": 502142080,
+   "sha256": "1d02af5050fc23b6745525317f2f4c560491dd3d24c328019bc329051d0eb5c4"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-Q4_1.gguf",
+   "size": 532554880,
+   "sha256": "c3cbb5a75fd8bd0161a0b09278025fe2dff954630dfff2a93d89233f4bacca18"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-Q4_K_M.gguf",
+   "size": 529298560,
+   "sha256": "542c9d8151d6b8b71b3bf70dc09f4aee90b43aaec1a1ac690dc0c43653b60709"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-Q4_K_S.gguf",
+   "size": 505255040,
+   "sha256": "146dc1c0503cc9cdfc5092461843d89b54d69257032ab10231e72eccbd860fbd"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-Q5_K_M.gguf",
+   "size": 578000000,
+   "sha256": "b07bb791259ff9fd72a2b4ccfea4effe62d030a3d0505c28103f2a9889b36c1c"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-Q5_K_S.gguf",
+   "size": 563655808,
+   "sha256": "36b97384418d068acfe4ac9508245908de0de0916e529a3a243a3162633dcbaf"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.i1-Q6_K.gguf",
+   "size": 629745280,
+   "sha256": "2108efa256515fb4ef1cd8d22748a1ebe25f8b9bb1146ca52033be492726404c"
+  },
+  {
+   "path": "Qwen3.5-0.8B-Heretic-Uncensored.imatrix.gguf",
+   "size": 2275008,
+   "sha256": "2e85e370f64ec4ac19a9e25926abe39a043574451001afc55e1f6c9e4cb21e34"
+  },
+  {
+   "path": "README.md",
+   "size": 7006,
+   "git_oid": "3be6e175ab70e77d31028f44ecbba437cbb3348e"
+  }
+ ]
+}

@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "SupraLabs/Supra2-100M-Instruct",
+ "revision": "2c90ade6ab47b910f48d0157a3e4c421d6311ed5",
+ "captured": "2026-11-25T05:09:40+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1580,
+   "git_oid": "9176691129e15027d37e0dce3346284b3461224a"
+  },
+  {
+   "path": "README.md",
+   "size": 22430,
+   "git_oid": "a5a835d103837127f7c5861dd60a6732b2292ebd"
+  },
+  {
+   "path": "Supra2-100M-SFT-F16.gguf",
+   "size": 202580384,
+   "sha256": "f88228c3dcc13b5ee2333cbb6fc2416de908e5b8adabd39bf9ee4378f28451eb"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 155,
+   "git_oid": "524a0643979a51098c1ddb6990252403dad25fac"
+  },
+  {
+   "path": "config.json",
+   "size": 1044,
+   "git_oid": "6cdd30f91c5467333e1cb2954bcbe33346dde886"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 215,
+   "git_oid": "eb1a724c41de9628f9986eae46262ee179f73602"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 402750928,
+   "sha256": "a13180cc056c58e037cf0e22092751cac1c5704d246cd60ac981a1544a005999"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 2327627,
+   "git_oid": "dae0f265773c7d17a544a1e5aa430dbba006ea2d"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 791,
+   "git_oid": "eaf0aa16c1e95d59eddc986a54bbf8201017e795"
+  }
+ ]
+}

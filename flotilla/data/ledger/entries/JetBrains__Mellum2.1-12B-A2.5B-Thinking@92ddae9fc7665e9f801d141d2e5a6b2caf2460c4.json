@@ -1,0 +1,90 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "JetBrains/Mellum2.1-12B-A2.5B-Thinking",
+ "revision": "92ddae9fc7665e9f801d141d2e5a6b2caf2460c4",
+ "captured": "2026-11-25T05:09:29+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1576,
+   "git_oid": "7624774fc4ca389dd2cfde597233efae6b302281"
+  },
+  {
+   "path": "README.md",
+   "size": 8907,
+   "git_oid": "1da06e0d214a2bc6232556430566ea8c0a3aa84d"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 4849,
+   "git_oid": "116fec1e4c4f6d8c370111d0ad694ef752858412"
+  },
+  {
+   "path": "config.json",
+   "size": 2329,
+   "git_oid": "51a8384f7f486efa2b78b5a1f8ee82760c0de50a"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 111,
+   "git_oid": "a9500a728d7ffc4a81bec6d90377f7863321446e"
+  },
+  {
+   "path": "mellum-logo-dark.svg",
+   "size": 5176,
+   "git_oid": "0e8d124bdcef96aef2b74476c9b9a3f0014136ed"
+  },
+  {
+   "path": "mellum21_summary.png",
+   "size": 174934,
+   "sha256": "2a86585d0f7075c56a9a3ae7cd582561dc7020aff87e094a065651d5d4f92324"
+  },
+  {
+   "path": "model-00001-of-00005.safetensors",
+   "size": 4999531104,
+   "sha256": "f5ccf8012c7d44fd2598325bf2482b8fc21792ef888de68f9ca8c9053c2e022f"
+  },
+  {
+   "path": "model-00002-of-00005.safetensors",
+   "size": 4996604776,
+   "sha256": "266beea6f34dea9c86414d8bf8cb35c0f4a53330731d99ed41ec666390758e39"
+  },
+  {
+   "path": "model-00003-of-00005.safetensors",
+   "size": 4996605688,
+   "sha256": "da9a04fb6ea121f71e30920c7657b889ca0078aea57d878e5cb768ebb3e4483a"
+  },
+  {
+   "path": "model-00004-of-00005.safetensors",
+   "size": 4996605688,
+   "sha256": "32f27ab7f38ff5d98ac3d50dabb57ab8a55a8aa552febd42c2a5b01f4116262a"
+  },
+  {
+   "path": "model-00005-of-00005.safetensors",
+   "size": 4311191552,
+   "sha256": "d8bbb9b829cb3279e23f59af55bf68ec00cc8ad30923c227d8b13c7d831e6b3b"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 526510,
+   "git_oid": "1f2d70f3a8c3e48a2bdd0c6ff137b20964f3a82c"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 1185,
+   "git_oid": "8245cf33537325c3cf60028ce625da5aee09d124"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7091587,
+   "git_oid": "6d5c16d2f9452829c41ad4441f9e0c89833d5ef4"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 7033,
+   "git_oid": "360a848ea68319c453479a3f49edd60fb74d80ab"
+  }
+ ]
+}

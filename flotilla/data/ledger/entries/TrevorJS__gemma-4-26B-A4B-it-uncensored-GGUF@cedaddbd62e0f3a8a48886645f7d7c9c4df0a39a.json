@@ -1,0 +1,30 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "TrevorJS/gemma-4-26B-A4B-it-uncensored-GGUF",
+ "revision": "cedaddbd62e0f3a8a48886645f7d7c9c4df0a39a",
+ "captured": "2026-11-25T05:08:17+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1673,
+   "git_oid": "b23a566fbc89dd097da4ad12ef4435f7dc2ef12f"
+  },
+  {
+   "path": "README.md",
+   "size": 1515,
+   "git_oid": "751223ba6a652dd45fad179993fd4b9ec4b4fd8e"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-uncensored-Q4_K_M.gguf",
+   "size": 16796011072,
+   "sha256": "d482a5daba09e67c925359a1786c4c713d1c3bb35856d199cf296f7cf7bc6cb3"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-uncensored-Q8_0.gguf",
+   "size": 26859854400,
+   "sha256": "64e5c7cf7a828ea2a2213ff1b9268b05a68b255176f0ab9234f082d0974cf3b8"
+  }
+ ]
+}

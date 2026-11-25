@@ -1,0 +1,155 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bartowski/huihui-ai_Qwen3-14B-abliterated-GGUF",
+ "revision": "623c0f3fc42a4699d4583fb16e022942c003d1b7",
+ "captured": "2026-11-25T05:08:22+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3662,
+   "git_oid": "0103f907e4b2961f823c707dfc09188d0aa2d72c"
+  },
+  {
+   "path": "README.md",
+   "size": 16265,
+   "git_oid": "cd16334d291ae9fd2999cb21dc37f12e0bf15130"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-IQ2_M.gguf",
+   "size": 5322937408,
+   "sha256": "fb8620877c14d4af00ec701c9c0c9c4d34798ee662daf0ba6fd1f874f293369e"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-IQ2_S.gguf",
+   "size": 4963308608,
+   "sha256": "407f4ea4e1787ae69f596f3bf46b90d1fa593bfb934d6da302495ecfdbb471e1"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-IQ2_XS.gguf",
+   "size": 4691585088,
+   "sha256": "41e95613ba07a1f2eec57e0421e99749bef66185a8c56ee3670820091d206b37"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-IQ3_M.gguf",
+   "size": 6883405888,
+   "sha256": "dd9dfa9e42c8f7287953143ae5e7ed4fee5db7fc479e561a29407fc4098754a9"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-IQ3_XS.gguf",
+   "size": 6375297088,
+   "sha256": "c72d3c1a576d131e70a35e40ac00e86617a443b692ee5c55a05589eb0d3c14f6"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-IQ3_XXS.gguf",
+   "size": 5942662208,
+   "sha256": "c0c570977106578235e7ed8c11b6c64fb6d4c34973cec8e2147843479efdb91d"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-IQ4_NL.gguf",
+   "size": 8541359168,
+   "sha256": "62fc582fa08c0767fce7f10fabc2d7ad00befbc02b565570144608dcd46d08e1"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-IQ4_XS.gguf",
+   "size": 8110726208,
+   "sha256": "fde485b8b10b12f166f6b27dd6744bd849c94b899a32aafef2120fffd3c19d47"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q2_K.gguf",
+   "size": 5753979968,
+   "sha256": "c48c51a8ab6016b3fca86fb307475670a77d8dec8fca85c26de8e2b78f7288bb"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q2_K_L.gguf",
+   "size": 6513659968,
+   "sha256": "c1d16d5dd11be00b4edee539bebd50c9d287a934cd9b894885ade11dfc9f46a7"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q3_K_L.gguf",
+   "size": 7900647488,
+   "sha256": "a69fecdb3d6ea95144bb36b64456327a5d4249b20b2a1f003a5fec659833dac9"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q3_K_M.gguf",
+   "size": 7321309248,
+   "sha256": "2369b5a70feb5419b7db4968ee8d189018d6b3722d7f8d9cb4e802dfeca21280"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q3_K_S.gguf",
+   "size": 6657101888,
+   "sha256": "a3ab90db124569913cfcac11b354d4890a5b9dc88c10c55ce7f22f6f6edc8be1"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q3_K_XL.gguf",
+   "size": 8581320768,
+   "sha256": "891c0965076384a22523f1f1bf435128ad3e08ca4d2106d8202ef5bcc05e1c63"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q4_0.gguf",
+   "size": 8542997568,
+   "sha256": "e1c533ecae1663ecf1e16408001914c63858a14ce2d03795e03e9b21d40b7d93"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q4_1.gguf",
+   "size": 9389517888,
+   "sha256": "70eb4af4d2acc9bab3dd1d2d3bb7ffbbba78a213769de9c4608a62f6fc08ecdd"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q4_K_L.gguf",
+   "size": 9579106368,
+   "sha256": "04fb64d031c931e058b643b0f3128439e0b8eb13374c24b80e1365afb9e8565c"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q4_K_M.gguf",
+   "size": 9001749568,
+   "sha256": "d76889059a3bfab30bc565012a0184827ff2bdc10197f6babc24541b98451dbe"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q4_K_S.gguf",
+   "size": 8573471808,
+   "sha256": "5bbedee9784d868ae22aa0463fd8798dd6d7a1776e293bf8e991788c9e82a392"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q5_K_L.gguf",
+   "size": 10994683968,
+   "sha256": "1f9ed0a6d9d8f3f662066d680d8a8d2ca25eeba45ac141d92c2417061450b368"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q5_K_M.gguf",
+   "size": 10514566208,
+   "sha256": "736734da98c4af5fa2093c065036de596b7bf5e96014d9301144633bdf14f55a"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q5_K_S.gguf",
+   "size": 10263891008,
+   "sha256": "8b005ce5029a1d67a098598e6f82bd46edaa4e05af0922fade88987e3e5216ee"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q6_K.gguf",
+   "size": 12121933888,
+   "sha256": "d449c72782138a8e0e3c799862812571e342c25959387df0e6c2d300fdac5dfb"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q6_K_L.gguf",
+   "size": 12498735168,
+   "sha256": "5bf1a37b98ba20758170b8b0653a4c99be3c28c459be8e80df4a7590b13e8906"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-Q8_0.gguf",
+   "size": 15698530368,
+   "sha256": "905faf8018ad511bc3c50e8930810883d8b519d33d23bd3bbd69ac6b7f8fc138"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated-bf16.gguf",
+   "size": 29543419680,
+   "sha256": "c9e5ea7bc3401b8f0058a11dea31e976e79679104f6089ed323711e4355cb760"
+  },
+  {
+   "path": "huihui-ai_Qwen3-14B-abliterated.imatrix",
+   "size": 7709778,
+   "sha256": "c808c31792cc93f087b1467749dccab7d2fa053688675a3c8217054193b46fe9"
+  }
+ ]
+}

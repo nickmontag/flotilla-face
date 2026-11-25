@@ -1,0 +1,380 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bartowski/NousResearch_Arete-27B-GGUF",
+ "revision": "9762c8502a79bd2b8634735d75f426b9febe092c",
+ "captured": "2026-11-25T05:09:40+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3659,
+   "git_oid": "a4a2c9ff99094a8243e33746a266be3ad7208b8b"
+  },
+  {
+   "path": "NousResearch_Arete-27B-IQ2_M.gguf",
+   "size": 10283265024,
+   "sha256": "73d7c1c97f6bebc6c24ae9719c75f089a3484ec7841eead5e610dad60b46ecd7"
+  },
+  {
+   "path": "NousResearch_Arete-27B-IQ2_S.gguf",
+   "size": 9445059584,
+   "sha256": "13788be76cb5d856be57ea30c71da63ff552dbfd1b067b5e59b25b2d3427ca82"
+  },
+  {
+   "path": "NousResearch_Arete-27B-IQ2_XS.gguf",
+   "size": 8849542144,
+   "sha256": "3daf04103401832d37395274fe4ce33a3d833377df01bd287ffdbd592ec33bce"
+  },
+  {
+   "path": "NousResearch_Arete-27B-IQ2_XXS.gguf",
+   "size": 8642284544,
+   "sha256": "12359883809ceba15c999cf0edb080a6cfb0e66e06c8ec3b39f0a70395b97446"
+  },
+  {
+   "path": "NousResearch_Arete-27B-IQ3_M.gguf",
+   "size": 14621645824,
+   "sha256": "caab07593e74246195b17dc97e02bbd6cc9f5404819a76f4da520f5f4a92be41"
+  },
+  {
+   "path": "NousResearch_Arete-27B-IQ3_XS.gguf",
+   "size": 12560620544,
+   "sha256": "10debf1c6913e0444c3c9eccc34547f71108f3b598facd0407b8166bc06f220d"
+  },
+  {
+   "path": "NousResearch_Arete-27B-IQ3_XXS.gguf",
+   "size": 12081183744,
+   "sha256": "ad207c67aa6a5fa6ecc211cb75423cbb876c6edbd0be065a97cf5e0ea8629891"
+  },
+  {
+   "path": "NousResearch_Arete-27B-IQ4_NL.gguf",
+   "size": 17203416064,
+   "sha256": "956cdae87b78c2c4bdd82a7fb1a1f2ac175fc145ae4971664d0dc92b99531b64"
+  },
+  {
+   "path": "NousResearch_Arete-27B-IQ4_XS.gguf",
+   "size": 15236967424,
+   "sha256": "a242619b10dec44ae00e9b2de094354e76bef0e1888e64b4495a5d10cec855b3"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q2_K.gguf",
+   "size": 10582559744,
+   "sha256": "82adeba79391bef9aa34fb482092517739059e581938bf8f5fcdbffb202fb858"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q3_K_L.gguf",
+   "size": 13883833344,
+   "sha256": "a4d2ed87a4bf3b15e54aa3a35a28d75d0fd573d1876f5fc66e21f1fc4cdb3804"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q3_K_M.gguf",
+   "size": 13165067264,
+   "sha256": "b3059ba64a9171cc6e3b8d18f3e1f71e1d9efe06cf0ef074bdbab2ee6947e4c6"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q3_K_S.gguf",
+   "size": 12500900864,
+   "sha256": "d8d70f021c5bbbe0fa550434058798574d41beeaf79a80a5bead73b65716cd00"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q4_0.gguf",
+   "size": 16109784064,
+   "sha256": "bc3db36106bb53515ad075a618725f71ac8fd3fa53f52b16295b87d68722f771"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q4_1.gguf",
+   "size": 17586473984,
+   "sha256": "1d7f05a18aff2fa77c2bae6867595c7a49172e349197dc300291f5640e8be310"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q4_K_L.gguf",
+   "size": 18581720064,
+   "sha256": "152917e81840b022fb38f22c743e22d601e6d8ebd2200253550192ba44201aba"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q4_K_M.gguf",
+   "size": 17203416064,
+   "sha256": "6f186a1fe0c4f741acb3a35b5df96bc2fc7279651f48500246e56079418f091b"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q4_K_S.gguf",
+   "size": 16124529664,
+   "sha256": "e630ba8354f91b4082b62c2d8ee380b9e73aa6c43879bea91836021759c2def2"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q5_K_M.gguf",
+   "size": 20684893184,
+   "sha256": "c55830a7b604295bef54703760daacef18f5bda4902383bf9099e69c5a376c0c"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q5_K_S.gguf",
+   "size": 19327929344,
+   "sha256": "9440cafc905a77f1a085fa39b6e71335ac89d78fd554cb7d9c1721e89328541a"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q6_K.gguf",
+   "size": 23621581824,
+   "sha256": "5b4588c250b941d8dcbbfc610eb43d8303b83270229fc6da5b5ae174f52a23c3"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q6_K_L.gguf",
+   "size": 24719924224,
+   "sha256": "5762acdc8461772e163adb94540b5c48c4fec5d04ab697b2c2a9107c744d175d"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q6_K_S.gguf",
+   "size": 22618471424,
+   "sha256": "76c585f807d6abde8ce78510d5bb761da3638bb6187bc2f855ad2b80beb52a8c"
+  },
+  {
+   "path": "NousResearch_Arete-27B-Q8_0.gguf",
+   "size": 28665068544,
+   "sha256": "0eda873a5b19cddb40e598117b6d31f98a0c0bfdc26a4e7b518064a35a03021b"
+  },
+  {
+   "path": "NousResearch_Arete-27B-bf16/NousResearch_Arete-27B-bf16-00001-of-00002.gguf",
+   "size": 39960209760,
+   "sha256": "1f47e5ffda55601d2de8b5eaac21c11160c795678d855df310e5279495976009"
+  },
+  {
+   "path": "NousResearch_Arete-27B-bf16/NousResearch_Arete-27B-bf16-00002-of-00002.gguf",
+   "size": 13848072768,
+   "sha256": "5a09bc1d3c0637ceffc8ac8f8144c4457edc3e94198b1499eb4cccc822cc23df"
+  },
+  {
+   "path": "NousResearch_Arete-27B-calibration-v6.txt",
+   "size": 1258850,
+   "git_oid": "ae31ba58ff794d7dacb49555270dafb1343a80bd"
+  },
+  {
+   "path": "NousResearch_Arete-27B-imatrix.gguf",
+   "size": 27300224,
+   "sha256": "ed788f33619bb64f155d0c5ce48fc22371f8deb477076ec3a840501854b22fb4"
+  },
+  {
+   "path": "README.md",
+   "size": 20876,
+   "git_oid": "e43e58b7119a6da2232d4c19536caf4d674d3952"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ2_M.layout.json",
+   "size": 12980,
+   "git_oid": "3548c480d8bf27ed60140a79c953e82c2ec1c524"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ2_M.tensor-types.txt",
+   "size": 16572,
+   "git_oid": "17a2994ec64173a1f553ccad3607705aef7eeb56"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ2_S.layout.json",
+   "size": 13055,
+   "git_oid": "ec6bf7fe0feced81f08d53a27cc6ba89f3ae657f"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ2_S.tensor-types.txt",
+   "size": 16787,
+   "git_oid": "6a941778922a8be86a1e46ef9866517a998a5b43"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ2_XS.layout.json",
+   "size": 12953,
+   "git_oid": "c27ab1505865e5d6c421c8ce844898c5f546c8db"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ2_XS.tensor-types.txt",
+   "size": 16884,
+   "git_oid": "3e5bccc0928b430461ee1dc93cb676dc04af649d"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ2_XXS.layout.json",
+   "size": 13044,
+   "git_oid": "1b4f4ec2adfeb6d372820e5eb357731925bbb396"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ2_XXS.tensor-types.txt",
+   "size": 17148,
+   "git_oid": "b089d8314dfb22d8900f3e788a50bb92f79f6607"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ3_M.layout.json",
+   "size": 12909,
+   "git_oid": "acc3133f6d2b0d25caa75929450ea2d461a5ce00"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ3_M.tensor-types.txt",
+   "size": 16315,
+   "git_oid": "c9c578e752a8f865415f259cb284fa9f78f9fc8b"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ3_XS.layout.json",
+   "size": 12964,
+   "git_oid": "d8d170e3ee904c37f5341490d508dac425c0e2cb"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ3_XS.tensor-types.txt",
+   "size": 16447,
+   "git_oid": "a5722784189bed9f1ea9f5cdcf0abf300a93c13e"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ3_XXS.layout.json",
+   "size": 13024,
+   "git_oid": "04024b31980f287a7f4570fc1995a514f3069dd7"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ3_XXS.tensor-types.txt",
+   "size": 16967,
+   "git_oid": "5cc10b05d33742d024deffcbbdfc87c5bdece32b"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ4_NL.layout.json",
+   "size": 12976,
+   "git_oid": "663e740bf6b6af5f958faba3cd78e02aa01f7e7a"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ4_NL.tensor-types.txt",
+   "size": 16628,
+   "git_oid": "aa783ef1c19dad703f4a421322758b41bdefcd76"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ4_XS.layout.json",
+   "size": 12940,
+   "git_oid": "e9f7f7217b02d65e20aa1b917ae6deed551695e9"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-IQ4_XS.tensor-types.txt",
+   "size": 16772,
+   "git_oid": "d7cff8c820539ff92ace60a6c2722ebf5d26fe2a"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q2_K.layout.json",
+   "size": 12963,
+   "git_oid": "683241eacc19168d893744bd168d68d4bf6134ad"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q2_K.tensor-types.txt",
+   "size": 16114,
+   "git_oid": "a8cf155482b5de9b10e826b7fd112b18857301a8"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q3_K_L.layout.json",
+   "size": 13007,
+   "git_oid": "d990fb6cb3e4446db117100de7051f4f053efefe"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q3_K_L.tensor-types.txt",
+   "size": 16114,
+   "git_oid": "f690bad6852c9b25fcd121b9a5614f4cd75fbfaa"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q3_K_M.layout.json",
+   "size": 13008,
+   "git_oid": "0da1f9083b4d9e6a8bc6e512a3846f2bbcdf5f5a"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q3_K_M.tensor-types.txt",
+   "size": 16114,
+   "git_oid": "5bb994d32ddfed2652d7986b14570570c8de0d52"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q3_K_S.layout.json",
+   "size": 12884,
+   "git_oid": "4bf5670b86afc62a6937d4842aafc55f72fcf185"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q3_K_S.tensor-types.txt",
+   "size": 16114,
+   "git_oid": "1ad91e30064bfec75a9322055351ddda9d1a14b1"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q4_K_L.layout.json",
+   "size": 12956,
+   "git_oid": "fa0290d93a8eed6fa67568f10c86bbc2a237e08f"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q4_K_L.tensor-types.txt",
+   "size": 16114,
+   "git_oid": "572713b5afd1db72f3047589c837856813bcb260"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q4_K_M.layout.json",
+   "size": 12955,
+   "git_oid": "8ec1b32b9804dcafaeb5868e818641f7bac71b2f"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q4_K_M.tensor-types.txt",
+   "size": 16114,
+   "git_oid": "65b4d9d7fbdb4d0cdf758e82d45f384690033946"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q4_K_S.layout.json",
+   "size": 12903,
+   "git_oid": "6742720f4d523a21af7368c19811c91abe15bf03"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q4_K_S.tensor-types.txt",
+   "size": 16114,
+   "git_oid": "67cdd7e16dac103dc509e78d3e5918d32b3de6c3"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q5_K_M.layout.json",
+   "size": 12888,
+   "git_oid": "aa0ca59a9d99057b16e99059422bd31ad9c96fa9"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q5_K_M.tensor-types.txt",
+   "size": 16114,
+   "git_oid": "a2327a9ce5573aae6d4f75ec404d7d2118f907f3"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q5_K_S.layout.json",
+   "size": 12868,
+   "git_oid": "e69aaedc44f741a5f9787e34f0e41733f11f69b0"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q5_K_S.tensor-types.txt",
+   "size": 16114,
+   "git_oid": "d81700227515a7a0efa2552fd0cd6bff26a7bb56"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q6_K.layout.json",
+   "size": 12849,
+   "git_oid": "5751981851bd767a103f894c8611009fd626d3e0"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q6_K.tensor-types.txt",
+   "size": 16114,
+   "git_oid": "c085dbcaffc004d409b90daa7e6ea02e69a58048"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q6_K_L.layout.json",
+   "size": 12855,
+   "git_oid": "4daecff303b365f12f6c8d15baa3f8460951db37"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q6_K_L.tensor-types.txt",
+   "size": 16114,
+   "git_oid": "8f4e14a1e6877aa081dce45f10d3e7350d9feb79"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q6_K_S.layout.json",
+   "size": 12852,
+   "git_oid": "df3552b541e2b3699fb4cc3b6c8f5b7ff3ec12be"
+  },
+  {
+   "path": "layouts/NousResearch_Arete-27B-Q6_K_S.tensor-types.txt",
+   "size": 16114,
+   "git_oid": "bfca4bb1ee6d8e37adefab40227143e02429657d"
+  },
+  {
+   "path": "mmproj-NousResearch_Arete-27B-bf16.gguf",
+   "size": 931146048,
+   "sha256": "f5a344f7492d26d4b0097e302864092ca2e6a24ff7cd8b4c3aacba2cbe5aa96c"
+  },
+  {
+   "path": "mmproj-NousResearch_Arete-27B-f16.gguf",
+   "size": 927607104,
+   "sha256": "0c9844f4193e2d25642dc62c5921aef23fd71855b8283cb2b2543a77934966f8"
+  }
+ ]
+}

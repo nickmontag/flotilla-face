@@ -1,0 +1,130 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Luni/Nanbeige-4.3-33B-Heretic-GGUF",
+ "revision": "d6fc2313a7a049aae741056a0e7aace31d2d723f",
+ "captured": "2026-11-25T05:08:37+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3115,
+   "git_oid": "2ee7ee93a89e78891a6ea8288d017ad843c008d8"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.IQ1_M.gguf",
+   "size": 8282440256,
+   "sha256": "c37f43168e6c9ef4236ba649dce43af0bb20426ce2182187db93179247b3aa96"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.IQ1_S.gguf",
+   "size": 7656071744,
+   "sha256": "5733c04a3a7f25e6054769b085d13e2fb77658846422896f3ddc23feaa30014c"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.IQ2_M.gguf",
+   "size": 11673592384,
+   "sha256": "68ced63f65f829e12f31647f5bf6d58f06d3a8d5dde83cbd4c55e5f2acfa449e"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.IQ2_S.gguf",
+   "size": 10838434368,
+   "sha256": "d21c786510879acf4fe15fff6f31de0ef3c48d92b02720530e67fbb395eadc91"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.IQ2_XS.gguf",
+   "size": 10245038656,
+   "sha256": "f2c316e453d3e0612ba8af92824752087df3459887b8f475824ce3d321113b84"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.IQ2_XXS.gguf",
+   "size": 9326387776,
+   "sha256": "e23f0b5abf6ec750f4add7cfdfaa1c7e2c795ac1a82f4c7dcce932669b74752e"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.IQ3_M.gguf",
+   "size": 15236145728,
+   "sha256": "70576aab5ffaefcdd1e8234f6cd9b204ff3aeeaaa0d0568e1674087aee4485ce"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.IQ3_S.gguf",
+   "size": 14755545664,
+   "sha256": "e13c1d074a238a67f4af40028eaa873ad93c7100c8ef5510477ef5519efa20ba"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.IQ3_XS.gguf",
+   "size": 14035419712,
+   "sha256": "b380e0b16a9bbda838ffe2fb7c310b092a068fb8a80e9ae86a7eba457ad821f6"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.IQ3_XXS.gguf",
+   "size": 13108683328,
+   "sha256": "21bf3cc15797440cce218b20d7f74c4f30a3d2245c16541d4948399c7c4c435c"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.IQ4_NL.gguf",
+   "size": 18992177728,
+   "sha256": "3cf3f2be1834bfb8b94f1843a8d98a6cc308a5f9258579cd5baca98d2a9b7331"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.IQ4_XS.gguf",
+   "size": 18006549056,
+   "sha256": "6d722258129064f339291e7fe293233c93da3a48e032124d892012b539de84d1"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.Q2_K.gguf",
+   "size": 12657041984,
+   "sha256": "ccf178c23ba5e86c8c661b25eb75535c49e5e5f09e5e27c81993868dbeb06c01"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.Q3_K_L.gguf",
+   "size": 17607721536,
+   "sha256": "c19727d345cf856a23b64080abf335b0c3a531a276ddb218123945d5ac64a2fa"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.Q3_K_M.gguf",
+   "size": 16261284416,
+   "sha256": "c56e7a89bd60a14043e3a16653e6276840a91f25d6ce0b95a6633bd0a4cebd95"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.Q3_K_S.gguf",
+   "size": 14704853568,
+   "sha256": "1595a79a4eef9c52d71350115cb19269a8742d268c7c2bac7f1bc2a8e7b36df0"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.Q4_K_M.gguf",
+   "size": 20051493440,
+   "sha256": "05e677fbde6aab5965c6c7d51fea19248d4e594db11d1a2c8f059d8c84365205"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.Q4_K_S.gguf",
+   "size": 19066495552,
+   "sha256": "c6961bab2d35420be78a6cb4b666f90546c5d9b1f8ed1d70885df62cd561fd2f"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.Q5_K_M.gguf",
+   "size": 23504978496,
+   "sha256": "d9874fe285d46b4c96cc73745beb0af12fc7fb69092a262ea58abb4bf0300a32"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.Q5_K_S.gguf",
+   "size": 22934692416,
+   "sha256": "511fc25b9e5841ad303458c50f799bc1045cd118ca82d5f95445834b1434144c"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.Q6_K.gguf",
+   "size": 27174306368,
+   "sha256": "f3f8b1eb0f95804f25d6695bdb973531ba83ea0c5c937bc38506b0da7ebf7f61"
+  },
+  {
+   "path": "Nanbeige-4.3-33B-Heretic.Q8_0.gguf",
+   "size": 35195126336,
+   "sha256": "853660745501c6c570355108f42a68d6aa8c16d3428b61d0d47f0a672695b5fa"
+  },
+  {
+   "path": "README.md",
+   "size": 4415,
+   "git_oid": "62da4b4f7887a446bedee83e52fc44ab567742bb"
+  }
+ ]
+}

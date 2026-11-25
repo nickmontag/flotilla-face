@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "hotdogs/Qwen3.8-27B-abliterated-cyber-preview-MTP-GGUF",
+ "revision": "1f021d59cafaa7f251ed2769906b5652f710ea5a",
+ "captured": "2026-11-25T05:09:00+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2042,
+   "git_oid": "ded97b084bf05498bca41c320f696db08a762773"
+  },
+  {
+   "path": "Qwen3.8-27B-abliterated-cyber-imatrix.dat",
+   "size": 13642656,
+   "sha256": "3744684e36efab8f1f7c8da6ceb59f221e61b81f5dd53f62ba33ce3528c61fa2"
+  },
+  {
+   "path": "Qwen3.8-27B-abliterated-cyber-preview-MTP-IQ3_M.gguf",
+   "size": 12768331136,
+   "sha256": "22779e1098615c2b324425d89c6771c220f2e154558277317b957981152f3402"
+  },
+  {
+   "path": "Qwen3.8-27B-abliterated-cyber-preview-MTP-IQ4_NL.gguf",
+   "size": 16041567616,
+   "sha256": "e0c61e3d6d997be9ac6763e83297dce55668f0f61d4d9d9493c975d5b8d9e42b"
+  },
+  {
+   "path": "Qwen3.8-27B-abliterated-cyber-preview-MTP-Q4_K_M.gguf",
+   "size": 16810714496,
+   "sha256": "a5e5080b2e9d33ae3b48278dae0ce78a0fb43482e52086e4560a1c1eafd771f4"
+  },
+  {
+   "path": "Qwen3.8-27B-abliterated-cyber-preview-MTP-Q6_K.gguf",
+   "size": 22430999936,
+   "sha256": "83c617195d6590c3bc0d9548868ba948e3724f46bcde2e1ca956225f4604f104"
+  },
+  {
+   "path": "Qwen3.8-27B-abliterated-cyber-preview-MTP-bf16.gguf",
+   "size": 54657733760,
+   "sha256": "4dc925732bea2bf0e609ff418915b68aa1804a1b18e3944dfeb3b18710c0bac9"
+  },
+  {
+   "path": "Qwen3.8-27B-calibration-BEST.txt",
+   "size": 2387284,
+   "git_oid": "17b88d3bb50956d6447089b0b6b88656970b27c3"
+  },
+  {
+   "path": "README.md",
+   "size": 3991,
+   "git_oid": "c7023d1eb96affbfed975845b8501073b2785248"
+  }
+ ]
+}

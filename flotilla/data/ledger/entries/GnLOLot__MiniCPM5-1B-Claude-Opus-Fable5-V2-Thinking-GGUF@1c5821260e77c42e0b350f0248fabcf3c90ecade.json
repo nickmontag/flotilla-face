@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "GnLOLot/MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-GGUF",
+ "revision": "1c5821260e77c42e0b350f0248fabcf3c90ecade",
+ "captured": "2026-11-25T05:13:01+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1696,
+   "git_oid": "d53f18d45ac540f06f19955b50c324aa29a7511f"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-F16.gguf",
+   "size": 2166551904,
+   "sha256": "7651b8292bd1b3d922397802ca03522b93ad55f3e74f52ca945d6548f6425b81"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-Q8_0.gguf",
+   "size": 1153529184,
+   "sha256": "fc3ee1eddd305c155f63b6bd7bb189daa4d5f226ca325ab219bd7acd3b00ec77"
+  },
+  {
+   "path": "README-cn.md",
+   "size": 4066,
+   "git_oid": "8a43e9d6ca32dff00004ee35351482aba343e146"
+  },
+  {
+   "path": "README.md",
+   "size": 4571,
+   "git_oid": "6d301a3101febe56176287e7fc70e72daaf80364"
+  },
+  {
+   "path": "assets/banner.png",
+   "size": 59948,
+   "git_oid": "dac26f500aed4e12f392bce7ed47446bccd0b9dc"
+  }
+ ]
+}

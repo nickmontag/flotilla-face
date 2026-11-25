@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "AtomicChat/DeepSeek-V4.1-Flash-1017-Uncensored-DwarfStar-GGUF",
+ "revision": "36c3f1413965b2df09f49e8bedd80dad1db76284",
+ "captured": "2026-11-25T05:08:27+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1617,
+   "git_oid": "13ab921c0fd95e12c2bca43468d5242e661fc868"
+  },
+  {
+   "path": "DeepSeek-V4.1-Flash-1017-Uncensored-IQ2_XXS-Q2_K-imatrix.gguf",
+   "size": 365713686528,
+   "sha256": "09fb38b9482a43582027bb5ccf379d1827bd2380f5399fcc273af654b3a00ab1"
+  },
+  {
+   "path": "LICENSE",
+   "size": 1084,
+   "git_oid": "d62e3bef9f054f21b7fc616365850fbf879a99ff"
+  },
+  {
+   "path": "README.md",
+   "size": 4750,
+   "git_oid": "8240023cae8ffaa6d7a96140b7f5cbcd2dae74f7"
+  },
+  {
+   "path": "bake.json",
+   "size": 15495,
+   "git_oid": "c1cf64ebffeff4ac897a7a9ffe803c6c1116b3d1"
+  },
+  {
+   "path": "writers.types",
+   "size": 4635,
+   "git_oid": "6d5023f06851953a87137d3c7e6ac64b5912ef51"
+  }
+ ]
+}

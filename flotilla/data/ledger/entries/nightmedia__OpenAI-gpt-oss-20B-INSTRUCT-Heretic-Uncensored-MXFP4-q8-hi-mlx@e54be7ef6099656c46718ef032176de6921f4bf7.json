@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "nightmedia/OpenAI-gpt-oss-20B-INSTRUCT-Heretic-Uncensored-MXFP4-q8-hi-mlx",
+ "revision": "e54be7ef6099656c46718ef032176de6921f4bf7",
+ "captured": "2026-11-25T05:09:01+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 913,
+   "git_oid": "22cae15ba2eaf7123aab45a8b20354943c6d3396"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 15078,
+   "git_oid": "a3650f886e98b2834c25727759c8e0ab8495f316"
+  },
+  {
+   "path": "config.json",
+   "size": 34079,
+   "git_oid": "c205a7da26f4e837408c4729fc6165de4c532ec8"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 170,
+   "git_oid": "922140c3ace16707889bf3cda86f391140946bdc"
+  },
+  {
+   "path": "model-00001-of-00003.safetensors",
+   "size": 5358163400,
+   "sha256": "47fcf1ea3c0a705362c810704a390515bddd8cf9729c77cc40d32057955592fc"
+  },
+  {
+   "path": "model-00002-of-00003.safetensors",
+   "size": 5301488551,
+   "sha256": "fbebb0a916fca711684c33bcf8eb7ca01192654ea8cf7d67d2de824ad08796a9"
+  },
+  {
+   "path": "model-00003-of-00003.safetensors",
+   "size": 1528760465,
+   "sha256": "ee04dcebfbc47798e1a19423bde0cc53ba325f3970552fc0a14333d64f41d654"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 67046,
+   "git_oid": "b05292fc6143c8be6d16e126c335c83aa5bcd4fe"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 27868174,
+   "sha256": "0614fe83cadab421296e664e1f48f4261fa8fef6e03e63bb75c20f38e37d07d3"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 390,
+   "git_oid": "1c4c2287d1762d1a7a6883ffe80c24d1480bd99b"
+  }
+ ]
+}

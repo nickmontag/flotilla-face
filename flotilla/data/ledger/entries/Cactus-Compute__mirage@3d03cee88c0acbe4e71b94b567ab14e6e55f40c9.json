@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Cactus-Compute/mirage",
+ "revision": "3d03cee88c0acbe4e71b94b567ab14e6e55f40c9",
+ "captured": "2026-11-25T05:13:02+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1623,
+   "git_oid": "e28b1818d7c9b28a89c3f5ceb48eff37a3bd2524"
+  },
+  {
+   "path": "README.md",
+   "size": 1263,
+   "git_oid": "ed3772001c5c7fe41bb4adaaa000ca0bd1b5d43d"
+  },
+  {
+   "path": "assets/overview.png",
+   "size": 624400,
+   "sha256": "e679dc7b7dc0f5966d8b035fb5b1fc89f0ac842156dff5e8f18287a06e7dd743"
+  },
+  {
+   "path": "config.json",
+   "size": 1430,
+   "git_oid": "c3b3ad2dc5db355553f4eaaafdcea696ba573673"
+  },
+  {
+   "path": "mirage.cact",
+   "size": 21611043,
+   "sha256": "4249a0f7515272ff76b9414bec17d7e7daf84b15b66c7fb4f17fce1e66f9f237"
+  },
+  {
+   "path": "mirage.safetensors",
+   "size": 216370504,
+   "sha256": "6ba97c5c1bef661c9b0c80782135682b38b4312fb33e0b645c93c10604bb16cd"
+  }
+ ]
+}

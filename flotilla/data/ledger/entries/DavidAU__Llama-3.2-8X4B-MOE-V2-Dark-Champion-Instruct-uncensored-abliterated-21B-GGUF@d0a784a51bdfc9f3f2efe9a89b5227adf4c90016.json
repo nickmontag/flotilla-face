@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Llama-3.2-8X4B-MOE-V2-Dark-Champion-Instruct-uncensored-abliterated-21B-GGUF",
+ "revision": "d0a784a51bdfc9f3f2efe9a89b5227adf4c90016",
+ "captured": "2026-11-25T05:08:46+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2720,
+   "git_oid": "75225687e20408a5ed23afd59d31639d50ddb310"
+  },
+  {
+   "path": "L3.2-8X4B-MOE-V2-Dark-Champion-Inst-21B-uncen-ablit-D_AU-IQ4_XS.gguf",
+   "size": 11519751776,
+   "sha256": "8906fc224cb3e5145eab938008da9efce6a972a3b3852f0353abaf8f188bf0b1"
+  },
+  {
+   "path": "L3.2-8X4B-MOE-V2-Dark-Champion-Inst-21B-uncen-ablit-D_AU-Q2_k.gguf",
+   "size": 7980992096,
+   "sha256": "b8f691b31da3f43afc9afa0d0de3352ea02ebafcc3d517b8ea31b51ad6a0acd2"
+  },
+  {
+   "path": "L3.2-8X4B-MOE-V2-Dark-Champion-Inst-21B-uncen-ablit-D_AU-Q3_k_m.gguf",
+   "size": 10266271328,
+   "sha256": "396b6922aa2fa129cd6aa13ab849f6522745e0bd86a4bfab9ea5cd8a09d7d2b3"
+  },
+  {
+   "path": "L3.2-8X4B-MOE-V2-Dark-Champion-Inst-21B-uncen-ablit-D_AU-Q3_k_s.gguf",
+   "size": 9360301664,
+   "sha256": "1a683966e2ed010e30d9fbd744deb9819ab04eab8f59c67fc73ef4428b887038"
+  },
+  {
+   "path": "L3.2-8X4B-MOE-V2-Dark-Champion-Inst-21B-uncen-ablit-D_AU-Q4_k_m.gguf",
+   "size": 12850124384,
+   "sha256": "c32b9b0222e63ebeebeb6a918af528b82f43db8a24f0bc374cedae40b12a3789"
+  },
+  {
+   "path": "L3.2-8X4B-MOE-V2-Dark-Champion-Inst-21B-uncen-ablit-D_AU-Q4_k_s.gguf",
+   "size": 12120315488,
+   "sha256": "ca4024951bc6816a9227aa223ac47b9c1c5dcdab53607784e09dd068b296724a"
+  },
+  {
+   "path": "L3.2-8X4B-MOE-V2-Dark-Champion-Inst-21B-uncen-ablit-D_AU-Q5_k_s.gguf",
+   "size": 14522570336,
+   "sha256": "266407c821266ff485257e61c5b318740126dbed181b7d5281efdcbc00f3134c"
+  },
+  {
+   "path": "L3.2-8X4B-MOE-V2-Dark-Champion-Inst-21B-uncen-ablit-D_AU-Q6_k.gguf",
+   "size": 17222028896,
+   "sha256": "f65ecd712369980763f50078c3d36dd0c6f3d7e50744be28ef518c407faac522"
+  },
+  {
+   "path": "L3.2-8X4B-MOE-V2-Dark-Champion-Inst-21B-uncen-ablit-D_AU-Q8_0.gguf",
+   "size": 22239993440,
+   "sha256": "eaa7697e9109f1dc68a70b4f65a99a350d0b94d629c8007a215076cab15552d1"
+  },
+  {
+   "path": "L3.2-8X4B-MOE-V2-Dark-Champion-Inst-21B-uncen-ablit-D_AU-q5_k_m.gguf",
+   "size": 14950389344,
+   "sha256": "aa22917839e666ca093ae7d1ee73cb3fd5e826b248c8f429ef06e5201e675255"
+  },
+  {
+   "path": "README.md",
+   "size": 60105,
+   "git_oid": "cbf9d682b906251e1a310c20fc57d42ebcf39d50"
+  },
+  {
+   "path": "drk-explode.jpg",
+   "size": 249015,
+   "sha256": "b5eff8548010a1bb5bb8784c846f481ea9ac9f3472f20ea4020fc8d42905d4ff"
+  }
+ ]
+}

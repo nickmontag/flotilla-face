@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "prism-ml/Ternary-Bonsai-8B-gguf",
+ "revision": "c2aefbeb4b24469cd11579c3384b990404c17a30",
+ "captured": "2026-11-25T05:13:06+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".eval_results/gsm8k.yaml",
+   "size": 149,
+   "git_oid": "bb1ab82b514d1a47eb9886f99c5edb0d5ace3c8e"
+  },
+  {
+   "path": ".gitattributes",
+   "size": 1960,
+   "git_oid": "7a1ee8744afb25e0f21dcfa210ba34a0ef0fdf59"
+  },
+  {
+   "path": "LICENSE",
+   "size": 10174,
+   "git_oid": "66a27ec5ff940d3a9652d2948746ebac4c9d0188"
+  },
+  {
+   "path": "NOTICE.txt",
+   "size": 412,
+   "git_oid": "bd212b6d0d17df528e2adf9dee3d2b57daab0c7a"
+  },
+  {
+   "path": "README.md",
+   "size": 6566,
+   "git_oid": "b4d3a2884b2b1beda3c6016ecfa9ba9d758beed8"
+  },
+  {
+   "path": "Ternary-Bonsai-8B-F16.gguf",
+   "size": 16383663200,
+   "sha256": "a6abfaf896c1e36db825112fc0a18e49adea05eeca1c6b2fba4d785ca7e947ff"
+  },
+  {
+   "path": "Ternary-Bonsai-8B-PQ2_0.gguf",
+   "size": 2182184672,
+   "sha256": "1376f942aa90e60f7b570c1d81b3916fea1315ff85aa1c4d19006af68fb4b922"
+  },
+  {
+   "path": "Ternary-Bonsai-8B-Q2_0.gguf",
+   "size": 2182184672,
+   "sha256": "3c8d70470a5d97e5a2b9410ddd899cb740116591462626c60cb2fead6448f60b"
+  },
+  {
+   "path": "Ternary-Bonsai-8B-Q2_0_g64.gguf",
+   "size": 2310125920,
+   "sha256": "e17b298d84ee78797916ae5c2ecc8211469cc65cccfe3080cd9a9bb503fbc55e"
+  },
+  {
+   "path": "assets/bonsai-logo.svg",
+   "size": 515,
+   "git_oid": "6e2df3a48b38d3eb980db8772cfd942f8b97a328"
+  },
+  {
+   "path": "assets/frontier.png",
+   "size": 78499,
+   "git_oid": "6035ebf683142581c55ea05f30cbe066a8eb14f1"
+  },
+  {
+   "path": "assets/frontier.svg",
+   "size": 9758,
+   "git_oid": "034dfe9ffc255c7d9d36f7499c6de18a63f1b8f9"
+  }
+ ]
+}

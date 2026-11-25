@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "EleutherAI/gpt-neo-1.3B",
+ "revision": "dbe59a7f4a88d01d1ba9798d78dbe3fe038792c8",
+ "captured": "2026-11-25T05:13:14+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 848,
+   "git_oid": "f200428e0a85720faad71764c8cf8a23eb66281f"
+  },
+  {
+   "path": "README.md",
+   "size": 5240,
+   "git_oid": "eab8596f530234d38b336ddb6f687a2ddb5195cf"
+  },
+  {
+   "path": "config.json",
+   "size": 1347,
+   "git_oid": "e81f3d5a7f3c9d3d2489894e36e29d3c682e8df1"
+  },
+  {
+   "path": "flax_model.msgpack",
+   "size": 5262314590,
+   "sha256": "602bd11047e19395d0e1d24ef6c34cdde1d5cb0c77a2725f86e6869c839828f4"
+  },
+  {
+   "path": "merges.txt",
+   "size": 456356,
+   "git_oid": "6636bda4a1fd7a63653dffb22683b8162c8de956"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 5312673800,
+   "sha256": "2aaebad3c9d77b82f3d9a5f6a8e043a65b039b3e0c9c9a312125258a49eafb26"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 5312753599,
+   "sha256": "9df5c8861b5f7a1e6139ed957bad5d1e795827e54761a264655b0c0390c8dd70"
+  },
+  {
+   "path": "rust_model.ot",
+   "size": 5312743379,
+   "sha256": "ccd34b62f86e7c4e06821a9899473bec4a6c4baf18c8582ff2a665b78607ef1e"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 90,
+   "git_oid": "817762d631ad6f9c799f6b9dc713c46420e65546"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 200,
+   "git_oid": "ddcabb4ad76163e2bae42b720c07d509c99494e0"
+  },
+  {
+   "path": "vocab.json",
+   "size": 798156,
+   "git_oid": "84ef7fb594b5c0979e48bdeddb60a0adef33df0b"
+  }
+ ]
+}

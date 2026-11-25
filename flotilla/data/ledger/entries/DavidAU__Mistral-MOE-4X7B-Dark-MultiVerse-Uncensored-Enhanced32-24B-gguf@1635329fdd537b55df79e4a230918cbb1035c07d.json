@@ -1,0 +1,120 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Mistral-MOE-4X7B-Dark-MultiVerse-Uncensored-Enhanced32-24B-gguf",
+ "revision": "1635329fdd537b55df79e4a230918cbb1035c07d",
+ "captured": "2026-11-25T05:08:45+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3278,
+   "git_oid": "7c10ad9925478bcf8bad09c7d93223380c0da10d"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-D_AU-IQ4_XS.gguf",
+   "size": 13142165312,
+   "sha256": "9ff7d4362f638d0d721455404ffabf2fc71dfc9f403f9f9fa3af271caf3ec529"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-D_AU-Q2_k.gguf",
+   "size": 8905393984,
+   "sha256": "37f3b6216e5ffca1016d4286d99dae8ea3f8a8b7790048accf52f715feb472e1"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-D_AU-Q3_k_l.gguf",
+   "size": 12593235776,
+   "sha256": "8736d6060aca34ac9c6674d079659bc74135058d2fad65996017f1b1af5bb114"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-D_AU-Q3_k_m.gguf",
+   "size": 11629594432,
+   "sha256": "6ecc81b8d2427df3052f9a976924ab9713d668a5486f2fce5e1b26acdf03e2df"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-D_AU-Q3_k_s.gguf",
+   "size": 10482452288,
+   "sha256": "074bacd8b5a68e5ec49f5c222ea1f19085e7016297a30613e4963e68c72d6e17"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-D_AU-Q4_k_m.gguf",
+   "size": 14658012992,
+   "sha256": "a534fde2005365bd37c592a41c7a90ba0858801bb9d133277929ae10d75247ed"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-D_AU-Q4_k_s.gguf",
+   "size": 13791364928,
+   "sha256": "56c17d7ef35dbb74b198e666b5e073244ed2d1e3372682689ef30a2969287626"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-D_AU-Q5_k_s.gguf",
+   "size": 16675579712,
+   "sha256": "48636f7042f8f0a3b5868977c51a2c4a811ab4cb1e5157328cce2fc5298387b9"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-D_AU-Q6_k.gguf",
+   "size": 19880314688,
+   "sha256": "a3eae79e6976fd1766651aabb5e7bfa57ef50808b0ff37a1dd4d34d1a17c074a"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-D_AU-Q8_0.gguf",
+   "size": 25666357056,
+   "sha256": "92e5c02a6dd1eb8cd34cbba450e06358bfa790dee42139cebd9950ef595b19b8"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-D_AU-max-IQ4_XS.gguf",
+   "size": 13912213312,
+   "sha256": "da14a1c4370425ee1b6fa440c7a3016dd0001a8034a64e0ca584573c132522c4"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-D_AU-max-cpu-IQ4_XS.gguf",
+   "size": 13387925312,
+   "sha256": "ec8696210b538abd9b104d5b22dd4ea29bb5a8f660dea4fa03fdd153dc58d0f2"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-D_AU-q5_k_m.gguf",
+   "size": 17183614784,
+   "sha256": "0fe63a01d71ad26834dab9efaad9afafc6c7a5c90bafc584ded31fdaff86139c"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-max-D_AU-Q2_k.gguf",
+   "size": 9740977984,
+   "sha256": "fd00dbfc6f589adafb17a5107309cb4cbd1f4cc7f634519fa6e41c206893f172"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-max-D_AU-Q6_k.gguf",
+   "size": 20650362688,
+   "sha256": "fbb3855e67f253e06478e9729ee149e737d9643dc0b3d741b4df1e8f3973e60a"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-max-D_AU-Q8_0.gguf",
+   "size": 26436405056,
+   "sha256": "677c56725ad72903acc0d4706cefd2e6c08823f597a614f1f33bf2288d24be4f"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-max-cpu-D_AU-Q2_k.gguf",
+   "size": 9216689984,
+   "sha256": "0d81c4f7afa97a7676aa05109c927a6f5755f6122855803dfa18350f1dfe8f45"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-max-cpu-D_AU-Q6_k.gguf",
+   "size": 20126074688,
+   "sha256": "8398dc90bbf87aae701d10bce388388dd2de6ae99571cbe8c5f6edf72393e8f2"
+  },
+  {
+   "path": "M-MOE-4X7B-Dark-MultiVerse-UC-E32-24B-max-cpu-D_AU-Q8_0.gguf",
+   "size": 25912117056,
+   "sha256": "0da5b84b317bd7b26a797934a042ab185d601400b9226e6053874ee5f1489efa"
+  },
+  {
+   "path": "README.md",
+   "size": 55864,
+   "git_oid": "09a3836da6aa3140d608020cf4dad76eb97a7820"
+  },
+  {
+   "path": "dark-mv-32.jpg",
+   "size": 117751,
+   "git_oid": "0830dabc0fa7724f9550bf2278ed5498ef991027"
+  }
+ ]
+}

@@ -1,0 +1,110 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "OVHaiLLM/Olala-v1.0-mini-7A1B",
+ "revision": "b40f8165ee2254c18601220e19842600c6d91794",
+ "captured": "2026-11-25T05:13:04+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1836,
+   "git_oid": "5acbbdcd17c2baa7af83f6c579d83f0746b9e5db"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11358,
+   "git_oid": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+  },
+  {
+   "path": "NOTICE",
+   "size": 359,
+   "git_oid": "f6ccf843556c927eb6a3841a75c16aa70dbafb6b"
+  },
+  {
+   "path": "Olala-v1.0-mini.pdf",
+   "size": 2851386,
+   "sha256": "3505e7bfef2622c5ec6d7666aa1d4038ba971a5bbf6395e12dec6afa8cda37b6"
+  },
+  {
+   "path": "Public-Summary-of-Training-Content.pdf",
+   "size": 197075,
+   "sha256": "87b11c74ff352d7bcf49fdc49935e267f4b3abb0ea5acd9d5e12746ee5e2938e"
+  },
+  {
+   "path": "README.md",
+   "size": 95081,
+   "git_oid": "bc62401e42b8a4e21ec7a389cc8834f9a18f9e78"
+  },
+  {
+   "path": "assets/olala-architecture.png",
+   "size": 640729,
+   "sha256": "37ef26dc3ba668f8a3d813d182e1eb58b3c08ad3a4ed0da9fe5b59ab6afc861b"
+  },
+  {
+   "path": "assets/olala-gguf-size-speed.png",
+   "size": 115862,
+   "sha256": "f2c8ae50455a254a24f6cb46b7abc36cc6eaaf4596a59d3e5cc265afb5fecee9"
+  },
+  {
+   "path": "assets/olala-mlx-speed.png",
+   "size": 96511,
+   "git_oid": "36bacbb7e49937ad559d27c1a0fda6ee09492b86"
+  },
+  {
+   "path": "assets/olala-posttraining-recipe.png",
+   "size": 80954,
+   "git_oid": "89058bd44021b0e608e93eb548ec0bf8c368b164"
+  },
+  {
+   "path": "assets/olala-pretraining-recipe.png",
+   "size": 84797,
+   "git_oid": "d8575926e081a1d074c4e1a1629a70e876ac85e9"
+  },
+  {
+   "path": "assets/ovhai-llm-logo.svg",
+   "size": 4668,
+   "git_oid": "4403e2c321ec13de284fe83ab8eeaa5d69d71461"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 8201,
+   "git_oid": "a6e82ab3e358af5f286ef6278194769f2b6c6fb5"
+  },
+  {
+   "path": "config.json",
+   "size": 3832,
+   "git_oid": "26255e2e20d58e08616aafd86f2ced7fd60b1346"
+  },
+  {
+   "path": "configuration_olala.py",
+   "size": 13626,
+   "git_oid": "72d459b83032b576ce92af0f861b758aaf3fea13"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 231,
+   "git_oid": "017e17138b03c92fc2b8b5934647f68fc903ce9b"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 13579677592,
+   "sha256": "99a208e1b45a4677ac1ce2eeaeb45150aa3c28aac173df3d22dc7985e9356442"
+  },
+  {
+   "path": "modeling_olala.py",
+   "size": 114122,
+   "git_oid": "32ec457d67dcb35a5445117d766edd6e7d07a0cc"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 11421883,
+   "sha256": "286ead4e29f85215a29ffc035c2529c635ed2dc390d101c8738ab7bcf8f984b5"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 710,
+   "git_oid": "1247ab473e7314226974dad22eb001c5a04d869f"
+  }
+ ]
+}

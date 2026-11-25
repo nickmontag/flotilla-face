@@ -1,0 +1,180 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Mungert/UI-TARS-1.5-7B-GGUF",
+ "revision": "c355401ad7af0c469fe829edd3a5abd0530e35e2",
+ "captured": "2026-11-25T05:09:39+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 4409,
+   "git_oid": "8ad83af89f02bab1c065d226ab569885511364b3"
+  },
+  {
+   "path": "README.md",
+   "size": 21667,
+   "git_oid": "d7c058e135e35a4b9442ff9f8c68db88c8fd9977"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-bf16.gguf",
+   "size": 15237853248,
+   "sha256": "877fb054d506379440c4036b4006d47d09d2f1c2478f1d1698db12b4028a8a82"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-bf16.mmproj",
+   "size": 1354162880,
+   "sha256": "95aa5f601d1278c4e9cf45aa8a14eaf5fc1af9a45256deda78369b7543e68253"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-bf16_q8_0.gguf",
+   "size": 9120395328,
+   "sha256": "bcf96462c27540892de68b88c3f4d29ef97433a950d3ba0b2b6ee3e9b64d2a5e"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-f16.mmproj",
+   "size": 1354162880,
+   "sha256": "be731d52f37a5a8e132bc28ab74e621946dfb61b35127cebbb4a0d03ca3ab809"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-f16_q8_0.gguf",
+   "size": 11287998528,
+   "sha256": "0d4975d9cac001bce0b65add5c31f04341042f6235e496e76c379efe28fc1295"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-f32.mmproj",
+   "size": 2703221440,
+   "sha256": "134bf814fa38d05f25aa987faafa6ef843a9d51466905354dc521d852f50ebf7"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-iq2_m.gguf",
+   "size": 3039121792,
+   "sha256": "e227dc4e0d37a2ce7e8beebf894919417d7f0de25001b0e9dbfac131dabb124e"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-iq2_s.gguf",
+   "size": 2912964992,
+   "sha256": "d5127a0f50e7b43ddb7a173bc3e9e7869ca2f1d06873017923e99a30a525c9a2"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-iq2_xs.gguf",
+   "size": 2839335296,
+   "sha256": "ccfee932f7d5f673cbfa75587dd791e34f27fbe7564d7c50ee7c8ffde7a38638"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-iq2_xxs.gguf",
+   "size": 2650902912,
+   "sha256": "a6679471465229d295d2b44734a6910f378b69ff84ba337b79835aacc43667bb"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-iq3_m.gguf",
+   "size": 3603386752,
+   "sha256": "1b51daa0551b9563827cec64af448d2c347fdd74a59573e793aed19fe8315d24"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-iq3_s.gguf",
+   "size": 3565855104,
+   "sha256": "896b4c6d18168c941fe2335e263c4b47fa154c0e738d69eee842b2aa2640ef86"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-iq3_xs.gguf",
+   "size": 3412918656,
+   "sha256": "2451ea6674deea5397279d8efcf96b5a616a2a663ccb543c7fef3e8f25bff780"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-iq3_xxs.gguf",
+   "size": 3272655232,
+   "sha256": "cb186f497b061560093203f7de00520366e78a7ff4adb418ad8f7cdd6d5b6e7c"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-iq4_nl.gguf",
+   "size": 4437813632,
+   "sha256": "002fbccd085f47b768b260d638ac6f209b3f64966358a26020c0997359e7e4f5"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-iq4_xs.gguf",
+   "size": 4218472832,
+   "sha256": "29891261234f61b362fbad8209f6e2bd17cb613d3de50b48b03285efffd1271d"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q2_k_m.gguf",
+   "size": 3259494784,
+   "sha256": "d5c12da9be85f4245c7e6eb0779c19565289b379666e1908b287cd29c4c5e392"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q2_k_s.gguf",
+   "size": 2934325632,
+   "sha256": "35330db6ed69b6cdea04af2304fa8c5fc339a8a1fa374cc49202b7860e0afddf"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q3_k_m.gguf",
+   "size": 3996852608,
+   "sha256": "2b1e0f52ee70e244b01697eb42faf12c24ef975cfe91d3cade371dad6533f2b7"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q3_k_s.gguf",
+   "size": 3610812800,
+   "sha256": "3c8fb3bbc556ac7b17bbc5508b2af46a3e8c062fce953377ff1afa2552751323"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q4_0.gguf",
+   "size": 4290883968,
+   "sha256": "bb99e1164546c80a199b4e4ed5c74e6df4e0c861cc887b3f69b12c3cbb6fd1e2"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q4_1.gguf",
+   "size": 4766839168,
+   "sha256": "b936cccba95a3ac45056f843ca9eef01f97058fa9b660b9d1d9b91375511401d"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q4_k_m.gguf",
+   "size": 4777648512,
+   "sha256": "b65488bf94d3f0525cf609c8bc5d03fa4800589546189bdfdc2f6cea0356e7f8"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q4_k_s.gguf",
+   "size": 4634059136,
+   "sha256": "ac7c90a808722b75cd97f8247457d3c262d813382c5ba19d11d7d68f3c7370db"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q5_0.gguf",
+   "size": 5242794368,
+   "sha256": "a33ffe02f7575559276e31313a48f4fb865e03ee008f2e7c940176b3fd83d0a6"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q5_1.gguf",
+   "size": 5718749568,
+   "sha256": "789283f75ae6fecac3e962f089788f9b0de66862464fcaff972ce63501265a12"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q5_k_m.gguf",
+   "size": 5527449984,
+   "sha256": "59493556694d922b4a933d849fee9bfc4e046e4fb2ffebb13ce3ceb519a8fcf9"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q5_k_s.gguf",
+   "size": 5453361536,
+   "sha256": "820639bc9a99dae4fff516a740edef5cfefe2bf41e4d5ea7eacb776f2fa407d5"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q6_k_m.gguf",
+   "size": 6254199168,
+   "sha256": "8bc65c12f660c9a1612dc37e380307ab08ba761e7677bb5cefa12e31a2ebcfe1"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q8_0.gguf",
+   "size": 8098525248,
+   "sha256": "deb8562197bd7afa758f193ac9af8fb4b1bae903edc714dc0f06c5053c2b5415"
+  },
+  {
+   "path": "UI-TARS-1.5-7B-q8_0.mmproj",
+   "size": 853119680,
+   "sha256": "27dde5528b1476e9aa44a7213408b389dd4c4ce4222aba8d1db9f105fb67e4de"
+  },
+  {
+   "path": "UI-TARS-1.5-7B.imatrix",
+   "size": 4536712,
+   "sha256": "8f922fdcb5e9035ea18e9f233bca659a561c5221fbfc706be3fa827a85633c6d"
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "BoldingBuilds/NVIDIA-Nemotron-3.5-Bolt-74B-A9B-Abliterated-24GB-GGUF",
+ "revision": "b6360e7379899484c800116f6bcf85448fc4925b",
+ "captured": "2026-11-25T05:08:47+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1696,
+   "git_oid": "e816c0703fcbce6f5dcda2c544c078dc06ee53c5"
+  },
+  {
+   "path": "NVIDIA-Nemotron-3.5-Bolt-74B-A9B-Abliterated-24GB.gguf",
+   "size": 22018326528,
+   "sha256": "666250fc4f8c07bfbdde5e80785cc69fd1c208f12ccdf8d988d472e3ee24ddcc"
+  },
+  {
+   "path": "README.md",
+   "size": 19319,
+   "git_oid": "4335b79b733d69b1583176273ec274f15cd43d47"
+  },
+  {
+   "path": "mmproj-NVIDIA-Nemotron-3.5-Bolt-74B-A9B-24GB.gguf",
+   "size": 1733692736,
+   "sha256": "0ee891eadc7bf0cae6289b249c74eb1ef420534351f6ef8b64d49f0ca6a926b0"
+  }
+ ]
+}

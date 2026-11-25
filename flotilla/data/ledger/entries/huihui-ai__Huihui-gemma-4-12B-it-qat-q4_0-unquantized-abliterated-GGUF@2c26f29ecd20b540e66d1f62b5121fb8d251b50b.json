@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "huihui-ai/Huihui-gemma-4-12B-it-qat-q4_0-unquantized-abliterated-GGUF",
+ "revision": "2c26f29ecd20b540e66d1f62b5121fb8d251b50b",
+ "captured": "2026-11-25T05:08:29+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1841,
+   "git_oid": "35fb681752e1310584a561687dd7b44eee45977e"
+  },
+  {
+   "path": "Huihui-gemma-4-12B-it-qat-q4_0-unquantized-abliterated-Q4_K.gguf",
+   "size": 7381382240,
+   "sha256": "8cfe39c96b966b2bc99d908315404914e9128fb35e134ca36f1a199507d6da6b"
+  },
+  {
+   "path": "Huihui-gemma-4-12B-it-qat-q4_0-unquantized-abliterated-bf16.gguf",
+   "size": 23832065120,
+   "sha256": "dc273aa74ac7cfe4c8dae308ace58ad706fd73e1bc28e4d65377ae5c0ce24f0c"
+  },
+  {
+   "path": "README.md",
+   "size": 3621,
+   "git_oid": "f68079d93d2490ed0fc38f14ba41be7cd650c057"
+  },
+  {
+   "path": "mmproj-model-bf16.gguf",
+   "size": 175115776,
+   "sha256": "bd94de2c9e403f851cc3841ffd45c478c3530072dfb006476534d18825e0bc84"
+  },
+  {
+   "path": "mtp-ggml-model-bf16.gguf",
+   "size": 861537920,
+   "sha256": "c24069c9ea03da35c65cdf1d03d9f1dc3c69f962362bee02d79b51a0f4de2261"
+  }
+ ]
+}

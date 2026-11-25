@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bartowski/Qwen2.5-Coder-1.5B-Instruct-abliterated-GGUF",
+ "revision": "823ab8183896816dec7d29899310b556e655ad73",
+ "captured": "2026-11-25T05:08:43+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3709,
+   "git_oid": "9688e84f6acfec6b6386c29842fc052c5a3fcdb6"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-IQ2_M.gguf",
+   "size": 701332960,
+   "sha256": "ff3eeb97756a6c173aff59478017a4e23da6c757424aef3f40b6fe8be7d46738"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-IQ3_M.gguf",
+   "size": 876942304,
+   "sha256": "0b47fd670654ce755f3af4cbad04f52acc4bf842b2c321baddec5652c9cbb629"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-IQ3_XS.gguf",
+   "size": 831977440,
+   "sha256": "7cb0c9512962657bcb1c6265393ea925699b52e49ee8296abfceb7ead0844be3"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-IQ4_XS.gguf",
+   "size": 1019711968,
+   "sha256": "18112952269dd83b2b04a20895de66e475c2cac4831ddbe75341b3182fffee39"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q2_K.gguf",
+   "size": 752881120,
+   "sha256": "9a7b865ad68e2cce58b5bed9c6fc65096c0a88b1eceb5a12f55005ffc75c2d1f"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q2_K_L.gguf",
+   "size": 980785120,
+   "sha256": "fdf40566806b55fb2c662da43f1735c0f53d2365f9e131d1509e3b7ab5457947"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q3_K_L.gguf",
+   "size": 980441056,
+   "sha256": "64b7a71c96b80526e5d88ffcc3ab9f0f94f8a24f4e138f09bfcfcb449a7c5f80"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q3_K_M.gguf",
+   "size": 924456928,
+   "sha256": "1e7d20fc77b8e22e43f11d86246a4858ce97d65fe54bbd80b53814adf6497cac"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q3_K_S.gguf",
+   "size": 861222880,
+   "sha256": "2388c887e5b183b1740d5d5a12a8d46e96e16cc456945b2c22e4c7e773f3990b"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q3_K_XL.gguf",
+   "size": 1184643040,
+   "sha256": "2a257d732e978495f6de517717d4dde7a8e55b1c53b572fc8b9212e9fe3a3c46"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q4_0.gguf",
+   "size": 1068808672,
+   "sha256": "2ed14a569301b5eb82bacaf710c84539f94916d30dec9cd73d1f8294a2c10982"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q4_0_4_4.gguf",
+   "size": 1066228192,
+   "sha256": "25523476a159e73c61e5eab9f492c149b2a4db54f89fdb80d0719a11bfe5b6f3"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q4_0_4_8.gguf",
+   "size": 1066228192,
+   "sha256": "22d55e6d7dcc860c228f830db0c57d20a2d4e2e92e45c285186f4b04ff3d283b"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q4_0_8_8.gguf",
+   "size": 1066228192,
+   "sha256": "ce2aea3d4712b81d69e96db3d34ceffdde4a7410b405aa2a234dbf1ace0fc427"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q4_K_L.gguf",
+   "size": 1290528736,
+   "sha256": "108902ab59d8988d6efa27b06eb0675dcbf52b8209c7b49332172e2f5c003535"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q4_K_M.gguf",
+   "size": 1117321696,
+   "sha256": "389b8172028c874b79a11358d258222dbce272b56ab3512ccc743893a25e06b4"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q4_K_S.gguf",
+   "size": 1071585760,
+   "sha256": "5593d73b1f6664bd54bac17a7340c571c27adbecb51200eedaf9c9f269e53e2d"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q5_K_L.gguf",
+   "size": 1429530592,
+   "sha256": "6044e7fdbde4e016f691ccc9f5108bc2b1223ec841f0eac8edbe0d6637c9c429"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q5_K_M.gguf",
+   "size": 1285495264,
+   "sha256": "12a8ae418ab50c59cd1b5bdbc1d8ab7a30c6239de8e1f622e97d932bc3fc7f04"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q5_K_S.gguf",
+   "size": 1259174368,
+   "sha256": "3c69d6f744b26a13b212822a752999229f5514adaf8c77879329399dc332bfbb"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q6_K.gguf",
+   "size": 1464179680,
+   "sha256": "36062301cb5ff47837113c616cf7f9983c84434031b44c284d5d125760bda153"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q6_K_L.gguf",
+   "size": 1577220064,
+   "sha256": "9f584bcf5e0ccdef12063bd4138d7f809d40c20afd6231ab41ae064b63ceb414"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-Q8_0.gguf",
+   "size": 1894533088,
+   "sha256": "15492089c47f1c36f3a548c067ba20264e377d54dd559292bfaed39eb33bf0d4"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated-f16.gguf",
+   "size": 3560416928,
+   "sha256": "52c1f3b872adee66fe4ae97e0fb85167912287135d6548791c311937ebd57456"
+  },
+  {
+   "path": "Qwen2.5-Coder-1.5B-Instruct-abliterated.imatrix",
+   "size": 2042214,
+   "sha256": "a79302b507a93fa7b118c6a87995cdee21ff3aad3774619c07a27dc020845acf"
+  },
+  {
+   "path": "README.md",
+   "size": 11860,
+   "git_oid": "17eba35e3b3ed7f8a73fba72029fe4621be89d98"
+  }
+ ]
+}

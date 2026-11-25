@@ -1,0 +1,140 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated-i1-GGUF",
+ "revision": "6d8957771b28bdbfb41d7370d651e0315b3104d0",
+ "captured": "2026-11-25T05:08:54+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 4025,
+   "git_oid": "db4bb7c1dadf2027f351968c4c241d3688fcc077"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-IQ1_M.gguf",
+   "size": 5750500704,
+   "sha256": "6eea011fb8bf1f29e5f2c1c4c2af8f6f5710728f2933991d6f55cd58e0e78cf1"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-IQ1_S.gguf",
+   "size": 5273726304,
+   "sha256": "0044b0d507e7a1740eb18a8699633dd473b6f33c17f6ca2edfa144f1344c7b34"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-IQ2_M.gguf",
+   "size": 8114056544,
+   "sha256": "6b68fa37d799df989a8c51c362942b3c4c94d04e2a23ec50775ee0ce2a9cdf08"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-IQ2_S.gguf",
+   "size": 7478357344,
+   "sha256": "0950089a1e480064515b9b034e45ea10d829eeca7680a67bf7371991c979e000"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-IQ2_XS.gguf",
+   "size": 7207038304,
+   "sha256": "50adce24e76222ac1d83c1b284f4fd01ff5437b61223786502cababa9a3d6433"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-IQ2_XXS.gguf",
+   "size": 6545124704,
+   "sha256": "13e1dfa1e05dbf9ad1ca39628c2011be0a5d3e3ef9f44724909d9bc298c7fc01"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-IQ3_M.gguf",
+   "size": 10650955104,
+   "sha256": "c4608a02fc55ea6cfe7bf191eba9e36c0761b477cfeefa918c09622caedabb15"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-IQ3_S.gguf",
+   "size": 10428132704,
+   "sha256": "84ea036080251fbf4a872ccb13b993558f2e735595bfd62469a6df2cd241286c"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-IQ3_XS.gguf",
+   "size": 9907121504,
+   "sha256": "f686a2c207dad825168115f2e5ef52ae882811a6a237d562041a8940ed00cdc9"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-IQ3_XXS.gguf",
+   "size": 9280597344,
+   "sha256": "986ef82e7193555484f892136b7d3636e08414e608625f8a4da51156fd45f3dc"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-IQ4_XS.gguf",
+   "size": 12758920544,
+   "sha256": "b92d565199eceb4f582ea349c4af40808c9f9690bf9139c1c6651c5a45fb16f1"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-Q2_K.gguf",
+   "size": 8890330464,
+   "sha256": "04bf50012cf976e5a44bf436c2e60930fa3fd1f6b7ccf26dc70bc8ca27e30d98"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-Q2_K_S.gguf",
+   "size": 8320167264,
+   "sha256": "11d3eec96f59491215ba69330ae8add01160f371b51ad54ee1ab796de1e067d9"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-Q3_K_L.gguf",
+   "size": 12400766304,
+   "sha256": "f088e162dfa7386d6bdc597fcf0ce50b446ee4ef2037cf35ead6ce17c79d1ee3"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-Q3_K_M.gguf",
+   "size": 11474087264,
+   "sha256": "403333a38bd1f64d5f101b4d3b3c459234979e14a9e05bba4e20bd3007c6fa9b"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-Q3_K_S.gguf",
+   "size": 10400279904,
+   "sha256": "c5ca0329242af2ee56dcb13352c7634ac2df5c5b4a034c6c5514d2d535011a8d"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-Q4_0.gguf",
+   "size": 13494234464,
+   "sha256": "6648e2e95a953c6a4e353ca5b347f540fee99c442188d340ea5cbe9c00e245ab"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-Q4_1.gguf",
+   "size": 14873111904,
+   "sha256": "68802d25b131007a9732a157c15d446a16502a8b9f8592cec3256e64bb775a0a"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-Q4_K_M.gguf",
+   "size": 14333914464,
+   "sha256": "bb769b5a32fc6a430c9453d5e35d80b1ae76e892e958311930f66f215685cae9"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-Q4_K_S.gguf",
+   "size": 13549284704,
+   "sha256": "6818981183b7f8cd6a225ee29e36ff33307f664d81afcd33b0716d5c082cda2a"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-Q5_K_M.gguf",
+   "size": 16763989344,
+   "sha256": "108e7fce860e27f0c7250fafcf5f0982c2bf0bd747748323e2371838f306ca05"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-Q5_K_S.gguf",
+   "size": 16304418144,
+   "sha256": "6322375ba66c8603c0b7fdb4d07464d8ce7a4459556ad62015a2d0115069a311"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.i1-Q6_K.gguf",
+   "size": 19345943904,
+   "sha256": "b49c1d22746fbaf8528b7047f4fd33d84d62d39fc8d164d4cb8208f1fee62557"
+  },
+  {
+   "path": "Huihui-Devstral-Small-2-24B-Instruct-2512-abliterated.imatrix.gguf",
+   "size": 10037312,
+   "sha256": "4c9a318250f2d80e270588960d390da054daa8eea5137ca0ddd0243af63bfef2"
+  },
+  {
+   "path": "README.md",
+   "size": 7786,
+   "git_oid": "8df1e3befa43cefedbb5086e208b4038fdd85df9"
+  }
+ ]
+}

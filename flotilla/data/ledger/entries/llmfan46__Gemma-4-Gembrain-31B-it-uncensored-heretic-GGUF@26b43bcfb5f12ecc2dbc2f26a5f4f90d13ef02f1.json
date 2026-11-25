@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llmfan46/Gemma-4-Gembrain-31B-it-uncensored-heretic-GGUF",
+ "revision": "26b43bcfb5f12ecc2dbc2f26a5f4f90d13ef02f1",
+ "captured": "2026-11-25T05:08:56+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2428,
+   "git_oid": "e7501670eaa1c94bde34d0f1dc184c85503f39b9"
+  },
+  {
+   "path": "Gemma-4-Gembrain-31B-it-uncensored-heretic-BF16.gguf",
+   "size": 61413188128,
+   "sha256": "3ef47b126590f57a6e16b31d3e4498719774fcf3a184c0ad7ed8576ae812b4f6"
+  },
+  {
+   "path": "Gemma-4-Gembrain-31B-it-uncensored-heretic-Q3_K_L.gguf",
+   "size": 16628269600,
+   "sha256": "6062c58ceb5d0d2b3a9cd6028b0cd69d5de0dceb8fb9797c7dc0d0b4b60e9275"
+  },
+  {
+   "path": "Gemma-4-Gembrain-31B-it-uncensored-heretic-Q3_K_M.gguf",
+   "size": 15287108128,
+   "sha256": "2b42a624fa87e87af31d0c612c4740c0b79dd510e5bb2e1034a578e8a478dc19"
+  },
+  {
+   "path": "Gemma-4-Gembrain-31B-it-uncensored-heretic-Q4_K_M.gguf",
+   "size": 18687062560,
+   "sha256": "b29aca28051d81f9353b9949ae04c37a45c67b4828b7450c1662a5241ae0fe4e"
+  },
+  {
+   "path": "Gemma-4-Gembrain-31B-it-uncensored-heretic-Q4_K_S.gguf",
+   "size": 17763164704,
+   "sha256": "7f2e2395ed8118a475261dff7c2daa0bc65dcf1ce44cc43d162950f6d576d7e4"
+  },
+  {
+   "path": "Gemma-4-Gembrain-31B-it-uncensored-heretic-Q5_K_M.gguf",
+   "size": 21845570080,
+   "sha256": "2f812822147d9a6ef6e8b2b0b6b82277d97dbc34c4d9734c06e31d62ec47c913"
+  },
+  {
+   "path": "Gemma-4-Gembrain-31B-it-uncensored-heretic-Q5_K_S.gguf",
+   "size": 21311840800,
+   "sha256": "2c7bea8277af053829d6da8ae7833c60eed323bbfcdf6b183259dbf93bc132be"
+  },
+  {
+   "path": "Gemma-4-Gembrain-31B-it-uncensored-heretic-Q6_K.gguf",
+   "size": 25201484320,
+   "sha256": "a1c3f426674b1701011fbb5df7beccfd575843a42bc45a226d02859bbc183707"
+  },
+  {
+   "path": "Gemma-4-Gembrain-31B-it-uncensored-heretic-Q8_0.gguf",
+   "size": 32635675168,
+   "sha256": "4d9bf3b6de2f39001ad067b2dfc8a11c61d63770450d8dda053f3355ca28ca66"
+  },
+  {
+   "path": "Gemma-4-Gembrain-31B-it-uncensored-heretic-mmproj-BF16.gguf",
+   "size": 1200725984,
+   "sha256": "ce56d35dbc66e26a2f5eba8b8a7f1a7eb372e54f5668df2b077fe2d9ea2bb233"
+  },
+  {
+   "path": "README.md",
+   "size": 21254,
+   "git_oid": "22c48fdbe2a160f096ab88ef0e6838291a9b1ec9"
+  }
+ ]
+}

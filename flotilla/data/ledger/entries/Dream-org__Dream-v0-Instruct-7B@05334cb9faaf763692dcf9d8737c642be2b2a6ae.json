@@ -1,0 +1,100 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Dream-org/Dream-v0-Instruct-7B",
+ "revision": "05334cb9faaf763692dcf9d8737c642be2b2a6ae",
+ "captured": "2026-11-25T05:13:06+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 408,
+   "git_oid": "e4c36385a8e27491d502ae2f6b4bba29c78c76a8"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 656,
+   "git_oid": "a3c908dc9df134c726061ae540546e5ef7db055d"
+  },
+  {
+   "path": "config.json",
+   "size": 927,
+   "git_oid": "23b4959a1efed046572621c2d183c3438cc0b6a4"
+  },
+  {
+   "path": "configuration_dream.py",
+   "size": 3197,
+   "git_oid": "96d1598e69f108469c292fa6a86fb143be07d70c"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 326,
+   "git_oid": "bb81a7907d49c65d3697eebc813ef2c41fd03a79"
+  },
+  {
+   "path": "generation_utils.py",
+   "size": 22332,
+   "git_oid": "643334142c2cbeb4ec5f0ac644303a986366aac5"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671853,
+   "git_oid": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+  },
+  {
+   "path": "model-00001-of-00004.safetensors",
+   "size": 4877660776,
+   "sha256": "3014d84950f2f3afcce622508b6625e9cd911b9c340f4206e35e6a3177aec993"
+  },
+  {
+   "path": "model-00002-of-00004.safetensors",
+   "size": 4932751008,
+   "sha256": "78fc44a7eae29c3d13bba010ca12584f4220798d41c9e617579a33c47222aa57"
+  },
+  {
+   "path": "model-00003-of-00004.safetensors",
+   "size": 4330865200,
+   "sha256": "eac5afaf9a0e0b4a23c7ac1dbe5f538ccdf9fac5c0db7919fd9625a92c378e48"
+  },
+  {
+   "path": "model-00004-of-00004.safetensors",
+   "size": 1089994880,
+   "sha256": "398da65f1f599ca8d594a9d7a077a3b7c4eb0ddfdff8e7e004c3d259712b3cb7"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 27752,
+   "git_oid": "6ca5084b88f1a95fef37f1b94c6e87ff69422bb7"
+  },
+  {
+   "path": "modeling_dream.py",
+   "size": 36763,
+   "git_oid": "45ce4736df4764510c625710b5db7586506d24e0"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 661,
+   "git_oid": "f1a63e029f3c7863a8c2eba29b3f48e3eda1aab8"
+  },
+  {
+   "path": "tokenization_dream.py",
+   "size": 14028,
+   "git_oid": "cca444f900c5f5d2909c65a49771dfbd32267e5c"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 7486,
+   "git_oid": "0354ebfbf540d2f770b6b24fda583294f513f962"
+  },
+  {
+   "path": "vocab.json",
+   "size": 3383407,
+   "git_oid": "6bce3a0a3866c4791a74d83d78f6824c3af64ec3"
+  }
+ ]
+}

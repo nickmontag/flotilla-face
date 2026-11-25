@@ -1,0 +1,35 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Noobito45/Qwen3.8-9B-heretic-uncensored-NVFP4-GGUF",
+ "revision": "6a9d3ae466e566cd3319d0cbae3e1243279b62e3",
+ "captured": "2026-11-25T05:08:43+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1894,
+   "git_oid": "9be7d15d4703a632557e1cd276da6fe56ab2516c"
+  },
+  {
+   "path": "Qwen3.8-9B-distill-heretic_nvfp4_q4_k_m.gguf",
+   "size": 5178305056,
+   "sha256": "c609376c4cc8b3ca42bc9d0dbed193ce4ae00f83914559a65bf395dfd5c48777"
+  },
+  {
+   "path": "Qwen3.8-9B-distill-heretic_nvfp4_q8_0.gguf",
+   "size": 6071429664,
+   "sha256": "74ae68a66a450ef65412c8253c00ad25dcaa9d74403507a5b2a27650d6405ed7"
+  },
+  {
+   "path": "README.md",
+   "size": 5686,
+   "git_oid": "3755bcbefd423dc6bd612d63ca3b7af703c22442"
+  },
+  {
+   "path": "mmproj-BF16.gguf",
+   "size": 921705024,
+   "sha256": "853698ce7aa6c7ba732478bad280240969ddf7b0fcbf93900046f63903a83383"
+  }
+ ]
+}

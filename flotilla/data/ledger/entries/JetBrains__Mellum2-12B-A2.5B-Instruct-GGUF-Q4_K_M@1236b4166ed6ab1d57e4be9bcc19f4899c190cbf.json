@@ -1,0 +1,25 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "JetBrains/Mellum2-12B-A2.5B-Instruct-GGUF-Q4_K_M",
+ "revision": "1236b4166ed6ab1d57e4be9bcc19f4899c190cbf",
+ "captured": "2026-11-25T05:09:39+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1594,
+   "git_oid": "c3c54c198495f4f40287014965725be7cf46fdc9"
+  },
+  {
+   "path": "Mellum2-12B-A2.5B-Instruct-Q4_K_M.gguf",
+   "size": 8071293600,
+   "sha256": "b04281c27de5d968d577f310d982273b1b13bdbd8117b3ecffffeebfe222f0a7"
+  },
+  {
+   "path": "README.md",
+   "size": 3773,
+   "git_oid": "2f3c7b364b30b5f565332cba1b54c3fd50066524"
+  }
+ ]
+}

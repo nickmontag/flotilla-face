@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "huihui-ai/Huihui-Qwen3-1.7B-abliterated-v2",
+ "revision": "4462327af009cd482a6b308b67ec9b3a6eeb006a",
+ "captured": "2026-11-25T05:08:42+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 11586,
+   "git_oid": "ca3bfcb11a897eda8085efeb99aea1d4c07d8164"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 735,
+   "git_oid": "6f359db5332581e047a7a804174c7f6d8435081c"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 4200,
+   "git_oid": "0f9e3230512986d465b068efb22d7646910aa172"
+  },
+  {
+   "path": "config.json",
+   "size": 757,
+   "git_oid": "222a29442a03142ccc4c63c304cc1c711a7aa5e5"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 227,
+   "git_oid": "a38edb1bd4a863dc848658556ac69adfb12f4acb"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671853,
+   "git_oid": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 3441185608,
+   "sha256": "6f9415d0807356f60a3a75d476b4b9d743acb3a6ae2e455450bf83c38b45e221"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 644,
+   "git_oid": "3a7840311c8c90df33c823cdbb06626f920c509e"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 11422654,
+   "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 5643,
+   "git_oid": "993ecf95c284d12b6904a255479d37d9c98090c7"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

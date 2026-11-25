@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "MaziyarPanahi/Yi-1.5-6B-Chat-GGUF",
+ "revision": "5eeb4c393e2a235fd5dce7f6007dd5ea96577592",
+ "captured": "2026-11-25T05:13:06+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2082,
+   "git_oid": "f00b6c37ac039582bff8f3446603cff8da81755b"
+  },
+  {
+   "path": "README.md",
+   "size": 3077,
+   "git_oid": "bfb2d8d49cd8c57fc31457b1d379070d9cfbad95"
+  },
+  {
+   "path": "Yi-1.5-6B-Chat.Q2_K.gguf",
+   "size": 2337066880,
+   "sha256": "b06cd22229726943567698f001d4aeceb3f03cae69aae66e3c59176b870f698c"
+  },
+  {
+   "path": "Yi-1.5-6B-Chat.Q3_K_L.gguf",
+   "size": 3236892544,
+   "sha256": "a9265a8789ff3cc2e30969b3a3bf2d2020c97cded50ea628bd9a506ee89c6659"
+  },
+  {
+   "path": "Yi-1.5-6B-Chat.Q3_K_M.gguf",
+   "size": 2992836480,
+   "sha256": "17e27684338d0e2aa75944e6e84d6cf9ea2ad869e4d0f44c673c32dbc73fe406"
+  },
+  {
+   "path": "Yi-1.5-6B-Chat.Q3_K_S.gguf",
+   "size": 2709196672,
+   "sha256": "fc80e3066077a8b98a87defb0399df80cf73063e640724fc3a7cf249caddb93d"
+  },
+  {
+   "path": "Yi-1.5-6B-Chat.Q4_K_M.gguf",
+   "size": 3673968512,
+   "sha256": "7a0f853dbd8d38bad71ada1933fd067f45f928b2cd978aba1dfd7d5dec2953db"
+  },
+  {
+   "path": "Yi-1.5-6B-Chat.Q4_K_S.gguf",
+   "size": 3502919552,
+   "sha256": "cf32054a0027fc8bec8a671c276a0294b106e87113463b7268a65677294f8a82"
+  },
+  {
+   "path": "Yi-1.5-6B-Chat.Q5_K_M.gguf",
+   "size": 4304424832,
+   "sha256": "7ee1af9e1242b79f668465c78bf42f5b66607f4fdab4fe4a3f57cae9fc5a57b6"
+  },
+  {
+   "path": "Yi-1.5-6B-Chat.Q5_K_S.gguf",
+   "size": 4204154752,
+   "sha256": "294cea6bf32dbeda840afbd67c4bd299039b5e339fbc20b5bf88098b750f7b91"
+  },
+  {
+   "path": "Yi-1.5-6B-Chat.Q6_K.gguf",
+   "size": 4974284672,
+   "sha256": "fb0672b7bc855280059d0ddeef83b3c43e1e791e67ff34122f03d1d9d43e3442"
+  },
+  {
+   "path": "config.json",
+   "size": 31,
+   "git_oid": "9f0f76f8d1de0ed9b8adf494540f149aaef5f07c"
+  }
+ ]
+}

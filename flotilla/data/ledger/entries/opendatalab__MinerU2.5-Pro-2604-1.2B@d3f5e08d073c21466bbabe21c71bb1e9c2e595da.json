@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "opendatalab/MinerU2.5-Pro-2604-1.2B",
+ "revision": "d3f5e08d073c21466bbabe21c71bb1e9c2e595da",
+ "captured": "2026-11-25T05:13:17+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 13091,
+   "git_oid": "e8d03d414f68abe00462969b9398b1cc9681fa2f"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 800,
+   "git_oid": "d9604a3ba04db43dc4aa59d1429d2bc7744a7ffb"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 1017,
+   "git_oid": "6c226632394ae7474b0d4b13e15793eac2e21ee9"
+  },
+  {
+   "path": "config.json",
+   "size": 2840,
+   "git_oid": "c6bf7cfa93d56adb832bef501f1e32aae541f20a"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 215,
+   "git_oid": "41c338e08f07fe0929fcd3f911300fb66185a2e8"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671853,
+   "git_oid": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 2312126640,
+   "sha256": "f2650d91aaa619534980445034f62cde27fc3fa0430aaf5c3302b91179cad0c5"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 365,
+   "git_oid": "c0d32ce1a593d2929ec8e598ce539c2163031e79"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 919,
+   "git_oid": "3446fd17813474e7b8350844f7bf422b51b28f40"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 11423550,
+   "sha256": "dceac5fc54a795ee7570d17902b47bd05412dc2afa62bdf325c3f97fcb5b87fe"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 6596,
+   "git_oid": "0bedcd9f2b28e6e57d783dd088c69289753e17f5"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

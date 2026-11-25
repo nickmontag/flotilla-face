@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Llama-3.1-128k-Dark-Planet-Uncensored-8B-GGUF",
+ "revision": "47528fd5c94c791c0ac34b89d4f9a3ec1f69321b",
+ "captured": "2026-11-25T05:09:02+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2544,
+   "git_oid": "4a8515ad044183729ee5872a894d5ad59b175eee"
+  },
+  {
+   "path": "Llama-3.1-128k-Dark-Planet-Uncensored-8B-IQ4_XS.gguf",
+   "size": 4484363392,
+   "sha256": "46848fd22ef1d6788a829d596517f323cb5f1aa2eeda5e8b2dcb8ba7166682a8"
+  },
+  {
+   "path": "Llama-3.1-128k-Dark-Planet-Uncensored-8B-Q2_k.gguf",
+   "size": 3179132032,
+   "sha256": "77e6af9eccbe7ef9e7cc98a908663db280c2a242458d694872c7b0e5a5caebdb"
+  },
+  {
+   "path": "Llama-3.1-128k-Dark-Planet-Uncensored-8B-Q3_k_l.gguf",
+   "size": 4321956992,
+   "sha256": "ff1b9b0899e1d0735d48d362b315e072208ec42a40f400b4ea323d0ebeabd710"
+  },
+  {
+   "path": "Llama-3.1-128k-Dark-Planet-Uncensored-8B-Q3_k_m.gguf",
+   "size": 4018918528,
+   "sha256": "37d46adfe5b2606f96fea78c143e676c2a2a2a0f8be9056ad7a2ec0fbf8896ce"
+  },
+  {
+   "path": "Llama-3.1-128k-Dark-Planet-Uncensored-8B-Q3_k_s.gguf",
+   "size": 3664499840,
+   "sha256": "647f707c58b4e632143ddfb6a68ffa5aec89ca43c554bfb3712263521b7be423"
+  },
+  {
+   "path": "Llama-3.1-128k-Dark-Planet-Uncensored-8B-Q4_k_m.gguf",
+   "size": 4920734848,
+   "sha256": "cda7e0d065abf314a12da9ee2903f8f4d655749a896598f7d0700c1825d7cb60"
+  },
+  {
+   "path": "Llama-3.1-128k-Dark-Planet-Uncensored-8B-Q4_k_s.gguf",
+   "size": 4692669568,
+   "sha256": "ac3d89325db603fc6fdf0cfad568b0ddb0912345d852df2eacba56542eb64d75"
+  },
+  {
+   "path": "Llama-3.1-128k-Dark-Planet-Uncensored-8B-Q5_k_s.gguf",
+   "size": 5599294592,
+   "sha256": "2203b458d4f79d143cc509146025b5e6b83864d137c1e8658de0363ac7429f6d"
+  },
+  {
+   "path": "Llama-3.1-128k-Dark-Planet-Uncensored-8B-Q6_k.gguf",
+   "size": 6596007040,
+   "sha256": "eadf5929f8b57d23af0b547366eef1fece6f8d1a3ab6d6fa4669d9a8948b153c"
+  },
+  {
+   "path": "Llama-3.1-128k-Dark-Planet-Uncensored-8B-Q8_0.gguf",
+   "size": 8540771456,
+   "sha256": "e39ffd73f637288815737683cdc10c9366f87b105d206476853eda41d77ae630"
+  },
+  {
+   "path": "Llama-3.1-128k-Dark-Planet-Uncensored-8B-q5_k_m.gguf",
+   "size": 5732988032,
+   "sha256": "4b26dd8c084359953b193e70c4a8ef7c8d7e7c3aef9883b94d83a897bb27bab5"
+  },
+  {
+   "path": "README.md",
+   "size": 52047,
+   "git_oid": "0047329f3474a329b1c9c5dcef03ea4253977934"
+  },
+  {
+   "path": "dark-planet.jpg",
+   "size": 206380,
+   "sha256": "5b7a649f9aa33ee5eba8b53d1ce446f6c0f7fd65d58dbdbfa1d1bfa9aaed7723"
+  }
+ ]
+}

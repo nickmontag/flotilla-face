@@ -1,0 +1,110 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "microsoft/Phi-4-mini-reasoning",
+ "revision": "0e3b1e2d02ee478a3743abe3f629e9c0cb722e0a",
+ "captured": "2026-11-25T05:13:03+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1631,
+   "git_oid": "e61ddf2a28a2c62e0baf58de81557576375655aa"
+  },
+  {
+   "path": "CODE_OF_CONDUCT.md",
+   "size": 444,
+   "git_oid": "f9ba8cf65f3e3104dd061c178066ec8247811f33"
+  },
+  {
+   "path": "LICENSE",
+   "size": 1084,
+   "git_oid": "8ab7b4964d147858b89544e8ca33203237161edc"
+  },
+  {
+   "path": "NOTICE.md",
+   "size": 1809,
+   "git_oid": "56ff7dcadd87eb0bec57dbba00f005b6622c2809"
+  },
+  {
+   "path": "Phi-4-Mini-Reasoning.pdf",
+   "size": 654894,
+   "sha256": "f4a8d862e83d76d77e7a2d17ecb6edef792c0efdc61a1b4085bc44f7a748e6f5"
+  },
+  {
+   "path": "README.md",
+   "size": 18241,
+   "git_oid": "c980f80a09c3b2a3acd6a0696bb84e07abd2ae2d"
+  },
+  {
+   "path": "SECURITY.md",
+   "size": 2656,
+   "git_oid": "b3c89efc852e22f71eabf5dfbc6ac62493425eb6"
+  },
+  {
+   "path": "SUPPORT.md",
+   "size": 1244,
+   "git_oid": "291d4d43733f4c15a81ff598ec1c99fd6c18f64c"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 249,
+   "git_oid": "af52cde61cc39aca58f7b7f04116b317116e75dd"
+  },
+  {
+   "path": "config.json",
+   "size": 2557,
+   "git_oid": "4bcc7eadfe79fe2e41f26b5fb5f06c9a330bdef4"
+  },
+  {
+   "path": "data_summary_card.md",
+   "size": 4320,
+   "git_oid": "b7d5601b9656769ee0e6552a77158697b00180b0"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 190,
+   "git_oid": "a1562c3d6b956dcd04131264c8ea6b8c14b57532"
+  },
+  {
+   "path": "merges.txt",
+   "size": 2418348,
+   "git_oid": "dcecc4524288b351bbd0da8028e74e9b5bcdb9b5"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 4903637712,
+   "sha256": "a0c24f128e33afb9e406915229af56171e0a2353bc78c1ea1b5260a36b3e6707"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 2768428504,
+   "sha256": "b4bfcc826b3c637333c6bd24b0dfe38fffd45eff7f4718df454366e875a12415"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 16273,
+   "git_oid": "d87cc3650f8e8dec46fc6871826ef30b941d0c94"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 587,
+   "git_oid": "156262f7d61a27706bdcad9d117c579e88e2fa27"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 15524194,
+   "sha256": "f08ed885956f70d877a4d9078ec9e3119d8b68a8d579003e230be18cad66911c"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 3077,
+   "git_oid": "d85b0903a1f838152673a48906193aca61aaf853"
+  },
+  {
+   "path": "vocab.json",
+   "size": 3910310,
+   "git_oid": "ea953a43348cdb3776cb7fd9ea02e3784febde34"
+  }
+ ]
+}

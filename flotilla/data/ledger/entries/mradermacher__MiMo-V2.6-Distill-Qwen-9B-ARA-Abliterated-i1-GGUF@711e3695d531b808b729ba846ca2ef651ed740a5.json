@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated-i1-GGUF",
+ "revision": "711e3695d531b808b729ba846ca2ef651ed740a5",
+ "captured": "2026-11-25T05:08:40+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3830,
+   "git_oid": "aa5a5dffc5a1ec123be23d2c31c5e952792b6800"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-IQ1_M.gguf",
+   "size": 2877266560,
+   "sha256": "a07b49bf4ab20d1773320cbcdb9d03c479b2ef8887cdd51e18e2d1f80b99c5ac"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-IQ1_S.gguf",
+   "size": 2742639232,
+   "sha256": "bfb4dc1d5d9038b902be9ab85dabee69894d28dec84b17ef97130d42a0eca16c"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-IQ2_M.gguf",
+   "size": 3607468672,
+   "sha256": "e7be1ba607e2a8acadaa966304cbab279f1417a9d7a9648ebcdc25356f9d4a53"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-IQ2_S.gguf",
+   "size": 3427965568,
+   "sha256": "baa65d45adac0f6d06117bb48e270d5e26b7949b9e692a16a1fbcbbcc99ef41d"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-IQ2_XS.gguf",
+   "size": 3285342848,
+   "sha256": "ccf06689de5eedc1465407daa2bf0505627d3b386a8dccc927523ba22aa83ce9"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-IQ2_XXS.gguf",
+   "size": 3101645440,
+   "sha256": "f600e16d33fb4c0baff9712effd8c56e0032dbcdb5a51f7dc6406677b50cde5d"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-IQ3_M.gguf",
+   "size": 4415380096,
+   "sha256": "0a8df50c56a8e81093c0591724d2aa78b2ecf5b51a056371bfce79ce3c2ffb0e"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-IQ3_S.gguf",
+   "size": 4370815616,
+   "sha256": "d9376bf3b3fe9ad1ae90fb46378d0d5f13f69eb879adf189e18d0ec704889369"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-IQ3_XS.gguf",
+   "size": 4243413632,
+   "sha256": "c8a26dad5084bcc1b8b5f07c178334be24193d85b8b8a628c3b198a8cae6ad5a"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-IQ3_XXS.gguf",
+   "size": 3938163328,
+   "sha256": "487d29ee21b08f6742322ab559e7820663f126cc8c6c5e255045f87a6addb658"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-IQ4_NL.gguf",
+   "size": 5418211968,
+   "sha256": "2c5a9c6344dd27740a264b74b2b3f891af3e8ce4ede671cb9551fbabb29fb88e"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-IQ4_XS.gguf",
+   "size": 5196438144,
+   "sha256": "737207b5c50ba4fa7fa066c61901d06ee5c1112b9a87445395f78a15159dcd18"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-Q2_K.gguf",
+   "size": 3827260032,
+   "sha256": "34f82822601078f5d1b260f931be00ace612a5fca3c6943d1bf4ebc62c7fa7d3"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-Q2_K_S.gguf",
+   "size": 3697236608,
+   "sha256": "862bda75ebf3891354ce3292eee9c304c18e73adb0d5d158fbbfcec699140671"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-Q3_K_L.gguf",
+   "size": 4925512320,
+   "sha256": "d95cd4b1853f04b23862e20d6adc44c1a75d8f9be9c9927c17033b804a390699"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-Q3_K_M.gguf",
+   "size": 4623522432,
+   "sha256": "c896f3e9e59527c03cdcb9d9eba8c37608f1f952cafcba8b42836b2fe38315a3"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-Q3_K_S.gguf",
+   "size": 4259404416,
+   "sha256": "777abc0345f6bab96c4f61a3e5e8fbca052090b03a02168573c857e4e22a8dc8"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-Q4_0.gguf",
+   "size": 5325937280,
+   "sha256": "a5b44c2a020e0d2694df57c84ddd91703ff13b4f80e08dcbacc5418be6f47921"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-Q4_1.gguf",
+   "size": 5809330816,
+   "sha256": "a6733040329842332b2a8cecf3cf501192da5603ef1a08ebbf60451ab4656ad3"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-Q4_K_M.gguf",
+   "size": 5629106816,
+   "sha256": "9e67951ca557287e296e66737f481037dceef679129fe2b9c68d5ef365e028f2"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-Q4_K_S.gguf",
+   "size": 5351627392,
+   "sha256": "e2cbd7cec99a8524ccd451c78e304a1c9e5c67c9deac23fa3128c0212c105113"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-Q5_K_M.gguf",
+   "size": 6467967616,
+   "sha256": "27f6303d4e2c50cc908e0f315d951fc9aa8c6948f30533da9c3f7d9a10f7833a"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-Q5_K_S.gguf",
+   "size": 6305307264,
+   "sha256": "d758509093481688c48b52c4a85baac0514a2017ffee840949c1cdfb4869cc81"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.i1-Q6_K.gguf",
+   "size": 7359257216,
+   "sha256": "2da78fa666e0c21609593b9c8bb6df5cb947f4647e3adcf7045ff0c6e13b3647"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-ARA-Abliterated.imatrix.gguf",
+   "size": 10307808,
+   "sha256": "945377b24b658f8d01c3bd883c78a6eec2187e38f69b52eb18ebea7bea073e40"
+  },
+  {
+   "path": "README.md",
+   "size": 7712,
+   "git_oid": "3aa1ac0969b232c472b23cf37c57a34b0cc275e7"
+  }
+ ]
+}

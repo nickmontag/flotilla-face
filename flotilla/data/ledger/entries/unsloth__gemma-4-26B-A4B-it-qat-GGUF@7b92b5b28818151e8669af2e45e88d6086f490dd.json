@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "unsloth/gemma-4-26B-A4B-it-qat-GGUF",
+ "revision": "7b92b5b28818151e8669af2e45e88d6086f490dd",
+ "captured": "2026-11-25T05:09:31+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2684,
+   "git_oid": "d30631a28f53642ca3d52037e22f12a6e8b2af39"
+  },
+  {
+   "path": "MTP/README.md",
+   "size": 2585,
+   "git_oid": "c99bff25a0fc697d8501ebfcce8ad5c212f3788b"
+  },
+  {
+   "path": "MTP/mtp-gemma-4-26B-A4B-it-BF16.gguf",
+   "size": 855247360,
+   "sha256": "bd72ab245b7c0fef227e495d914c8a23c12a04012af2778fe3260e0f354e762f"
+  },
+  {
+   "path": "MTP/mtp-gemma-4-26B-A4B-it-F16.gguf",
+   "size": 855247360,
+   "sha256": "dc12fb3252c0d63cf95787ae86f070669b800dd0fdf299ef02cfb388fbfde311"
+  },
+  {
+   "path": "MTP/mtp-gemma-4-26B-A4B-it-Q4_0.gguf",
+   "size": 251939328,
+   "sha256": "7272d97595f0d4c74bd7b623492b7dbdaafd8b7c72f329a8270ba4eca68f768a"
+  },
+  {
+   "path": "MTP/mtp-gemma-4-26B-A4B-it-Q8_0.gguf",
+   "size": 461785600,
+   "sha256": "75f58e20c32281d1adc086c0569d53f147e8d81a7b8493cf4a73a028415f67af"
+  },
+  {
+   "path": "README.md",
+   "size": 30935,
+   "git_oid": "80b0b9c6cdc603121d2e278d68c731a600583194"
+  },
+  {
+   "path": "config.json",
+   "size": 3861,
+   "git_oid": "4e3ad9a7516e1e2453915a09b81cc1d8f1920631"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-UD-Q4_K_XL.gguf",
+   "size": 14249047104,
+   "sha256": "a7c5bc715f5ff8e99a3e8901ce7d2b42b402c669bf24f7c5250747633d0f5891"
+  },
+  {
+   "path": "mmproj-BF16.gguf",
+   "size": 1194828256,
+   "sha256": "7b06953ccdbe8cf363f47841a7afaacd2b1c2ff9a8d6b426fdec7521a6878744"
+  },
+  {
+   "path": "mmproj-F16.gguf",
+   "size": 1193058784,
+   "sha256": "d00f211a7d4f7fb19bd9b75d8e9342eccffb5920b08fd9562167560fdfcc5dd1"
+  },
+  {
+   "path": "mmproj-F32.gguf",
+   "size": 2291200480,
+   "sha256": "ef269e294502d6ee3722cbf129681b2586c2e6ceb79d0507963c92146e058cd4"
+  },
+  {
+   "path": "mtp-gemma-4-26B-A4B-it.gguf",
+   "size": 251939328,
+   "sha256": "7272d97595f0d4c74bd7b623492b7dbdaafd8b7c72f329a8270ba4eca68f768a"
+  }
+ ]
+}

@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "AnkitAI/Parable-Granite-4.1-8B-Claude-Fable-5-GGUF",
+ "revision": "4765dbfbfa456722b52ec0d48259f977a2dc31eb",
+ "captured": "2026-11-25T05:09:37+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2022,
+   "git_oid": "913fe813d41d6c8b58a1f8d6c711b4a6d158efbf"
+  },
+  {
+   "path": "Parable-Granite-4.1-8B-Claude-Fable-5-GGUF-F16.gguf",
+   "size": 16765334208,
+   "sha256": "de22409c58700aeabb3906be614e6e16a1ff3a6fc88834a5e23d1caef133f86c"
+  },
+  {
+   "path": "Parable-Granite-4.1-8B-Claude-Fable-5-GGUF-Q4_K_M.gguf",
+   "size": 5116703424,
+   "sha256": "57e464ae3d35253d4351639757dc35e71bab8324d12d49a5870695ce73dc19cf"
+  },
+  {
+   "path": "Parable-Granite-4.1-8B-Claude-Fable-5-GGUF-Q5_K_M.gguf",
+   "size": 5971292864,
+   "sha256": "45d84465ec33c92ad549126f67abfe81eac16e70d6f204ecf778d702dbae9c31"
+  },
+  {
+   "path": "Parable-Granite-4.1-8B-Claude-Fable-5-GGUF-Q6_K.gguf",
+   "size": 6879294144,
+   "sha256": "b81d0df2d3a24814c74a98ff1bb572d5008869d9544ab8a12cbcdabb9c0bf8ad"
+  },
+  {
+   "path": "Parable-Granite-4.1-8B-Claude-Fable-5-GGUF-Q8_0.gguf",
+   "size": 8908878528,
+   "sha256": "a981cd15f4d270997cd97e0935c7c02dd14ec6742ffe0dc967aec6bff9560ca7"
+  },
+  {
+   "path": "README.md",
+   "size": 9921,
+   "git_oid": "3ae4fbc6cdb2421df2a12e41ab32ebe8629963f0"
+  },
+  {
+   "path": "banner.svg",
+   "size": 738054,
+   "git_oid": "7fa1cb3408142267b7b1bb7bce57114d7e677349"
+  }
+ ]
+}

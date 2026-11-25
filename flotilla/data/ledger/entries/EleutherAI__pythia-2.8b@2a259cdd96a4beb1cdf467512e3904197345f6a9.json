@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "EleutherAI/pythia-2.8b",
+ "revision": "2a259cdd96a4beb1cdf467512e3904197345f6a9",
+ "captured": "2026-11-25T05:13:09+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1477,
+   "git_oid": "c7d9f3332a950355d5a77d85000f05e6f45435ea"
+  },
+  {
+   "path": "README.md",
+   "size": 13593,
+   "git_oid": "3c0c6f5a7cad87f8d947f8470885501a4f40374b"
+  },
+  {
+   "path": "config.json",
+   "size": 571,
+   "git_oid": "490234a04b8fc9587db08c7dbc7d73f99152f697"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 5684693096,
+   "sha256": "ab496f1c3fd79e3c749a9d5414136a2c8e4224f94eecb261970315cdb0f813fe"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 5684793945,
+   "sha256": "36f0f93d1f5d44ca9c48a602c0788001a36ec10db9d1b84a40b81799d724c4f6"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 99,
+   "git_oid": "0204ed10c186a4c7c68f55dff8f26087a45898d6"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 2113710,
+   "git_oid": "f74dfbfab8f97770a87769c739fb080c21c8bacc"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 396,
+   "git_oid": "f1860edb10f80bcaf7b023fce47c68a23b724c23"
+  }
+ ]
+}

@@ -1,0 +1,45 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bartowski/kldzj_gpt-oss-120b-heretic-v2-GGUF",
+ "revision": "052a858e93be93ec15bf51275421dd9ade27381f",
+ "captured": "2026-11-25T05:08:24+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2122,
+   "git_oid": "9fb1df4532b67bea3de889eac142d1f50de9177c"
+  },
+  {
+   "path": "README.md",
+   "size": 9065,
+   "git_oid": "32ea2c164d90d365b1d84ea6b9300909b445ad92"
+  },
+  {
+   "path": "kldzj_gpt-oss-120b-heretic-v2-MXFP4_MOE/kldzj_gpt-oss-120b-heretic-v2-MXFP4_MOE-00001-of-00002.gguf",
+   "size": 39815567712,
+   "sha256": "f04dc7f69cf248b6a8d082b621002a93914330aa2e747b8bfde5c8db57e8d3bd"
+  },
+  {
+   "path": "kldzj_gpt-oss-120b-heretic-v2-MXFP4_MOE/kldzj_gpt-oss-120b-heretic-v2-MXFP4_MOE-00002-of-00002.gguf",
+   "size": 23571779104,
+   "sha256": "08ff2a257f42118382353f69b765a6301f8a02b5db3cf99e28458f332145ef1c"
+  },
+  {
+   "path": "kldzj_gpt-oss-120b-heretic-v2-bf16/kldzj_gpt-oss-120b-heretic-v2-bf16-00001-of-00002.gguf",
+   "size": 39494329760,
+   "sha256": "0fc77e172467e2b434a7ee738a0a1267300777c0a4a447cd01a714b14474ae31"
+  },
+  {
+   "path": "kldzj_gpt-oss-120b-heretic-v2-bf16/kldzj_gpt-oss-120b-heretic-v2-bf16-00002-of-00002.gguf",
+   "size": 25874687168,
+   "sha256": "cc1a356dff03f9868f687d9943880bdb5b5944b4a5241acffbe69a14485ab369"
+  },
+  {
+   "path": "kldzj_gpt-oss-120b-heretic-v2-imatrix.gguf",
+   "size": 161600480,
+   "sha256": "334aed135e333848d6fd3a26a6cea9c19fcd4ccbe7bb678324778c2c7ba78a46"
+  }
+ ]
+}

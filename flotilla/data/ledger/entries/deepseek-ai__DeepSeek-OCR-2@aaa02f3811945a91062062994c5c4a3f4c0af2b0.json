@@ -1,0 +1,90 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "deepseek-ai/DeepSeek-OCR-2",
+ "revision": "aaa02f3811945a91062062994c5c4a3f4c0af2b0",
+ "captured": "2026-11-25T05:09:36+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1571,
+   "git_oid": "44fdba96bd2787ebd5cd27283a090512722d3144"
+  },
+  {
+   "path": "LICENSE.txt",
+   "size": 11342,
+   "git_oid": "78a3bb92155448004aca4c07b09613808f9585df"
+  },
+  {
+   "path": "README.md",
+   "size": 4143,
+   "git_oid": "175cf52ef29da8fea09f3eff3e9946deeb1c1f49"
+  },
+  {
+   "path": "assets/fig1.png",
+   "size": 140796,
+   "sha256": "bfa3301b397df240c5eba7206c7865cae3d9aaf6674a6c8a68904a9c98bcbc77"
+  },
+  {
+   "path": "config.json",
+   "size": 2588,
+   "git_oid": "bf67e90876829f88e146c9873e2537ba77f2d203"
+  },
+  {
+   "path": "configuration_deepseek_v2.py",
+   "size": 10646,
+   "git_oid": "a8622c20101ed06940eb7fb6164babbc499bc524"
+  },
+  {
+   "path": "conversation.py",
+   "size": 9253,
+   "git_oid": "65c295e81cd804080ec238b31d1922f33e1f9405"
+  },
+  {
+   "path": "deepencoderv2.py",
+   "size": 36299,
+   "git_oid": "ef3635fe6d6c9b6a5a97da2acd05ad058c8d8056"
+  },
+  {
+   "path": "model-00001-of-000001.safetensors",
+   "size": 6778573880,
+   "sha256": "d8ff67a424ba6f4dd077885eb9d6a05d2537e76fe5491f0e2a9b712f8c8870fa"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 247401,
+   "git_oid": "7d80f3c53327ff3fead4558299cd8786c00e34dd"
+  },
+  {
+   "path": "modeling_deepseekocr2.py",
+   "size": 39226,
+   "git_oid": "9c69562aa4d454017379d7a0335d37ba618b054c"
+  },
+  {
+   "path": "modeling_deepseekv2.py",
+   "size": 82224,
+   "git_oid": "ff008470d58b98d3f8304ecfb6ee1bd04c877739"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 460,
+   "git_oid": "9153af2ad5e59ad9cf24fed29cf286fcf10d389a"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 801,
+   "git_oid": "d59d312be868edc63b195e19e256c730dba685ad"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 9979544,
+   "git_oid": "c93a1c4d2ecf31bb5a9ec39eb73dfbf915aaf77e"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 165938,
+   "git_oid": "ba9d4175d69cde58ad9f68a76a4758df091eaffa"
+  }
+ ]
+}

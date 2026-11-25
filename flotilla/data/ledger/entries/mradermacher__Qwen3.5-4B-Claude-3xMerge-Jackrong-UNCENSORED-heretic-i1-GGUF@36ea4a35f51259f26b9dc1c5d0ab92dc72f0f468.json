@@ -1,0 +1,100 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic-i1-GGUF",
+ "revision": "36ea4a35f51259f26b9dc1c5d0ab92dc72f0f468",
+ "captured": "2026-11-25T05:08:49+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3187,
+   "git_oid": "136f5f0fd130a4935a2d9a5ea0b13d595a987d0c"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-IQ3_M.gguf",
+   "size": 2216794944,
+   "sha256": "63771cc3e3fd307d7d80152727c6faef4fcd4429f53c1f3e32668c8496f4b004"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-IQ3_S.gguf",
+   "size": 2191727424,
+   "sha256": "3d1142559a665d294a411cc70afadf2a40bd13caaf5e91dc10c8a8736eb4c2f2"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-IQ4_NL.gguf",
+   "size": 2677646144,
+   "sha256": "9d9144d27378d7b3d6ebdcb5cd4083b3aa1b6dfd8405b26f292987b1a349a294"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-IQ4_XS.gguf",
+   "size": 2578809664,
+   "sha256": "53d2a4d2c36ecb530878ceaeb99913adbed591aba0afc3590a5e6746a13faec3"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-Q2_K.gguf",
+   "size": 1959166784,
+   "sha256": "f7674c9df4a7abdc327cd15260c080c37d4b963f7c673e427b83f847193ae164"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-Q3_K_L.gguf",
+   "size": 2482645824,
+   "sha256": "c4cb44bef7b4d6e0a3cec9957f7b429262ff0885c1e32c35dde1ca68d38dc9a8"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-Q3_K_M.gguf",
+   "size": 2318805824,
+   "sha256": "02b7d4d6e19422853ecc9344392da034dceb30ffd05af4f83a9ffd7c12261c65"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-Q3_K_S.gguf",
+   "size": 2121747264,
+   "sha256": "a1a6a2f7d80b3dd8a9bddc7374c63a78c116becc94f11124b2a171083f463979"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-Q4_0.gguf",
+   "size": 2617680704,
+   "sha256": "eba3d3aea106459541e308f383ee0509c5b5b7918fc71edc4cea2b9b95e3cdc5"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-Q4_1.gguf",
+   "size": 2842387264,
+   "sha256": "2ff0019832548a0428e17514dfdf9d1c980092866735d5ca989059cbbbbaa1cc"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-Q4_K_M.gguf",
+   "size": 2783445824,
+   "sha256": "fbcfdccc91c5ac1a3809c79601a6cdd72a3a9a80a7baa3931cf69c18cde946af"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-Q4_K_S.gguf",
+   "size": 2631770944,
+   "sha256": "ed74b832f28125df9448070ae7a6b2586beae599a68be05c3763d849dfa5f9a4"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-Q5_K_M.gguf",
+   "size": 3161424704,
+   "sha256": "f055d0fac202cafdbd6ef4d24f217ec27f1ae91f4c27386fb09535d78d544f8a"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-Q5_K_S.gguf",
+   "size": 3072992064,
+   "sha256": "03b5e9a5a218ecd817dafa3d9a618cd6dda7ba3c2aa868e0a65f9416b8d3bd94"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.i1-Q6_K.gguf",
+   "size": 3563027264,
+   "sha256": "6853b0db067bb862a7d436a7282d926e0d11b1de042df3b8dca27574057bb802"
+  },
+  {
+   "path": "Qwen3.5-4B-Claude-3xMerge-Jackrong-UNCENSORED-heretic.imatrix.gguf",
+   "size": 7260384,
+   "sha256": "fc2c84ad1809484dae9540dde8e4b099b6ad0b17be6b24f7ade66c890a4ae232"
+  },
+  {
+   "path": "README.md",
+   "size": 6560,
+   "git_oid": "ac805a743b934827ba0e2cae9e82f30ed8860cd1"
+  }
+ ]
+}

@@ -493,6 +493,14 @@ apart, until a port comes back. Each try takes everything sharing gluetun's netw
 seconds. If gluetun's control server has an auth `config.toml`, the role holding Flotilla's key needs
 `"PUT /v1/vpn/status"` in its `routes`.
 
+**Another torrent client on the same machine** is fine. If another program already holds Flotilla's port
+(6881 unless `listen_port` says otherwise), Flotilla listens on the next free one and says so in its
+log, in `flotilla status` and on the dashboard's Port line. The exception is the port your VPN forwards:
+only one program can listen on it, so if another client holds it, peers can't connect in to Flotilla.
+The dashboard's VPN badge then says "forwarded port taken". Give the other client a different port.
+The two don't share files or bandwidth limits: a model both seed takes its space twice, and each
+client only throttles itself.
+
 With no port forwarded, Flotilla makes up for it. It notices that no peer has connected in for three
 days (`flotilla status` and the dashboard count peers that connected in and peers it dialed), then
 dials more peers, faster, asks trackers for new peers every 15 minutes instead of every half hour, and

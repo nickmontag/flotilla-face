@@ -1463,6 +1463,12 @@ def cmd_status(args) -> int:
     up = doc.get("upload_month", {})
     print(f"node {doc['node']}  port {doc['listen_port']}  {'PAUSED  ' if doc.get('paused') else ''}"
           f"status {age:.0f}s old  uploaded this month {human(up.get('bytes', 0))}")
+    port = doc.get("port") or {}
+    if port.get("forwarded_taken"):
+        print(f"TAKEN  port {port['wanted']}, the one the VPN forwards, is held by another program here (another "
+              f"torrent client?): listening on {port['port']}, so peers can't connect in through the VPN")
+    elif port.get("moved"):
+        print(f"moved  port {port['wanted']} is held by another program here: listening on {port['port']} instead")
     fwd, reach = doc.get("vpn_port"), doc.get("reach") or {}
     if fwd and fwd.get("port"):
         print(f"inbound: {fwd['source']} forwards port {fwd['port']}: peers can connect in")

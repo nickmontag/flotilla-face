@@ -101,6 +101,10 @@ flotilla plan            # what this node would seed, with no downloading
 flotilla dashboard --url # the dashboard's address
 ```
 
+If another torrent client already holds Flotilla's port, `flotilla status` shows a `moved` line (fine:
+it listens on the next free port) or a `TAKEN` line (the VPN's forwarded port is held by the other
+client, so peers can't connect in: tell the person, and give the other client a different port).
+
 The dashboard address includes an access key: give it to the person, not to anyone else. Downloads
 start within a few minutes; filling the space takes hours to days.
 

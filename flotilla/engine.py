@@ -424,6 +424,10 @@ class Engine:
         # The port the VPN forwards to this node (vpnport.py), and the one it listens on for it.
         self.vpn_forward: Forward | None = None
         self.listening_on = cfg.listen_port
+        # The port asked for (listening_on) and the one libtorrent got: if another program (another
+        # torrent client, say) holds the one asked for, libtorrent takes the next free one (it tries ten,
+        # then lets the system pick). port_view() says so; _port_noted keeps the log to one line.
+        self._port_noted: tuple[int, int] | None = None
         self.perfile = PerFile(self)
         self.index = MagnetIndex(self)
         self.last_plan: Plan | None = None
@@ -1424,6 +1428,8 @@ class Engine:
                 tmp = self.resume_dir / f"{ih}.tmp"
                 tmp.write_bytes(lt.write_resume_data_buf(a.params))
                 os.replace(tmp, self.resume_dir / f"{ih}.fastresume")
+            elif isinstance(a, lt.listen_succeeded_alert):
+                self._note_port()
             elif isinstance(a, (lt.torrent_error_alert, lt.file_error_alert, lt.listen_failed_alert)):
                 self.log(f"libtorrent: {a.message()}")
 
@@ -1471,6 +1477,7 @@ class Engine:
             doc = {
                 "at": datetime.now(timezone.utc).isoformat(), "node": self.state.node_id[:8],
                 "paused": self.ses.is_paused(), "disk_paused": self.disk_paused, "listen_port": self.ses.listen_port(),
+                "port": self.port_view(),
                 "feed": {"version": self.feed.version, "source": self.feed.source, "signer": self.feed.signer,
                          "local": self.feed.local_source,
                          "expires": self.feed.expires.isoformat() if self.feed.version else None} if self.feed else None,
@@ -2173,6 +2180,29 @@ class Engine:
             view["lost"] = {"port": mem["port"], "since": mem["lost"], "recover": bool(self.cfg.vpn_port_recover),
                             "tries": mem.get("tries", 0), "last_try": mem.get("last_try") if mem.get("tries") else None}
         return view
+
+    def port_view(self) -> dict:
+        """The port libtorrent listens on, the one Flotilla asked for, and whether the VPN's forwarded
+        port is the one in use (if not, peers can't connect in through the VPN)."""
+        actual = self.ses.listen_port()
+        fw = self.vpn_forward
+        return {"port": actual, "wanted": self.listening_on, "moved": bool(actual) and actual != self.listening_on,
+                "forwarded_taken": bool(fw and fw.port and actual and actual != fw.listen)}
+
+    def _note_port(self) -> None:
+        """Say once when the port asked for was taken and libtorrent listens on another."""
+        view = self.port_view()
+        key = (view["wanted"], view["port"])
+        if key == self._port_noted or not view["port"]:
+            return
+        self._port_noted = key
+        if view["forwarded_taken"]:
+            self.log(f"port {view['wanted']}, the one the VPN forwards, is taken by another program on this machine "
+                     f"(another torrent client?): listening on {view['port']} instead, so peers can't connect in "
+                     f"through the VPN. Give the other program a different port, or stop it.")
+        elif view["moved"]:
+            self.log(f"port {view['wanted']} is taken by another program on this machine (another torrent client?): "
+                     f"listening on {view['port']} instead. Set listen_port to keep a port of your own.")
 
     def _listen_on(self, fw: Forward) -> None:
         """Listen on the forwarded port (and tell trackers the public one, when the VPN maps it to

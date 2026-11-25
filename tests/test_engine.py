@@ -715,3 +715,43 @@ def test_swapped_out_files_cool_off_for_a_while(monkeypatch):
     later = time.time() + E.REPICK_AFTER + 60
     monkeypatch.setattr(E.time, "time", lambda: later)
     assert E.Engine._cooling(fake) == frozenset()
+
+
+def test_a_taken_port_moves_and_is_said_once(tmp_path):
+    import socket
+    import time as _time
+
+    from flotilla.vpnport import Forward
+
+    busy = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    busy.bind(("127.0.0.1", 0))
+    busy.listen()
+    taken = busy.getsockname()[1]
+    udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    udp.bind(("127.0.0.1", taken))
+    cfg = Config()
+    cfg.folder, cfg.listen_port = tmp_path / "seeds", taken
+    logs = []
+    eng = Engine(cfg, State(tmp_path / "state"), log=logs.append, listen_host="127.0.0.1", dht=False)
+    try:
+        deadline = _time.time() + 5
+        while _time.time() < deadline and not eng.port_view()["moved"]:
+            eng._handle_alerts(eng.ses.pop_alerts())
+            _time.sleep(0.1)
+        view = eng.port_view()
+        assert view["wanted"] == taken and view["moved"] and view["port"] not in (0, taken)
+        eng._handle_alerts(eng.ses.pop_alerts())
+        eng._note_port()
+        said = [m for m in logs if "is taken by another program" in m]
+        assert len(said) == 1 and f"port {taken}" in said[0]
+        # the VPN's forwarded port being the one taken is a warning of its own: peers can't connect in
+        eng.vpn_forward = Forward(port=taken, listen=taken, source="gluetun")
+        assert eng.port_view()["forwarded_taken"]
+        eng._port_noted = None
+        eng._note_port()
+        assert "the one the VPN forwards" in logs[-1]
+        assert eng.status_doc()["port"]["wanted"] == taken          # what the dashboard and `status` read
+    finally:
+        eng.shutdown()
+        busy.close()
+        udp.close()

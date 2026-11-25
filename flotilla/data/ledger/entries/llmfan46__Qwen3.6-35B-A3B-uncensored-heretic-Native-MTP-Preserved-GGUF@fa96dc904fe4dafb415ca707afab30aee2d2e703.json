@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llmfan46/Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-GGUF",
+ "revision": "fa96dc904fe4dafb415ca707afab30aee2d2e703",
+ "captured": "2026-11-25T05:08:17+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2627,
+   "git_oid": "0c5f6a7571f6940191b83bd32c099436741762af"
+  },
+  {
+   "path": "Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-BF16.gguf",
+   "size": 71066998240,
+   "sha256": "fff7a9fa0ffe5b47a547b0303a6c76c19832a9e395e6d50509e706e6d53dba5f"
+  },
+  {
+   "path": "Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-Q3_K_L.gguf",
+   "size": 18652886176,
+   "sha256": "6bddab4c45de8718e4c30fed6d8ab9f71f68ff4509cf7683e578d312a5822d4b"
+  },
+  {
+   "path": "Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-Q3_K_M.gguf",
+   "size": 17267455136,
+   "sha256": "7ea3bec5b190a340847b1c98a5b80a8e1a51b11cee0bedfe140caffcaa11b2ab"
+  },
+  {
+   "path": "Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-Q4_K_M.gguf",
+   "size": 21780313248,
+   "sha256": "fc89d92377b27fe0f80eb683a5105d0921234c24f7c1d70ecc2356ddf994d781"
+  },
+  {
+   "path": "Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-Q4_K_S.gguf",
+   "size": 20433712288,
+   "sha256": "44ee825ebc26640e81a751ea9333701dc21166eb4e96e2e0dc59ffff93860182"
+  },
+  {
+   "path": "Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-Q5_K_M.gguf",
+   "size": 25382433952,
+   "sha256": "b1da95143b8a5b954d87780f33289ef3551eb9c7127e76f9122696c9ec97d193"
+  },
+  {
+   "path": "Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-Q5_K_S.gguf",
+   "size": 24598656160,
+   "sha256": "137ea38c8d8761443dce77dd63ced173d6c18c1b3c88a6e836957c266191531a"
+  },
+  {
+   "path": "Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-Q6_K.gguf",
+   "size": 29270635680,
+   "sha256": "256b4705bf2d56e06b09f77bba76a3a3c4f795faae6f2465b35076a712388a50"
+  },
+  {
+   "path": "Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-Q8_0.gguf",
+   "size": 37802153120,
+   "sha256": "1ff6bf984ddfaa13a4d15b51f6edf73ea49fda76566448559299b93de511614d"
+  },
+  {
+   "path": "Qwen3.6-35B-A3B-uncensored-heretic-Native-MTP-Preserved-mmproj-BF16.gguf",
+   "size": 902822112,
+   "sha256": "d6050bb82a0187e1b0655f1c5daef60c9479273fbd7402ff25d3137df2e071ce"
+  },
+  {
+   "path": "README.md",
+   "size": 76873,
+   "git_oid": "6aa67285469fe65aa0543399ffaf2597dbb9d5ee"
+  }
+ ]
+}

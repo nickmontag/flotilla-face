@@ -1,0 +1,105 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "echarlaix/tiny-mpt-random-remote-code",
+ "revision": "85e64794e74a6fb2e71e7055c7e0188ccdd32905",
+ "captured": "2026-11-25T05:09:36+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 28,
+   "git_oid": "154df8298fab5ecf322016157858e08cd1bccbe1"
+  },
+  {
+   "path": "adapt_tokenizer.py",
+   "size": 1752,
+   "git_oid": "e640c157e8f5581953c518df0611a423225ef598"
+  },
+  {
+   "path": "attention.py",
+   "size": 17692,
+   "git_oid": "e5c758afa34c534a251fe6d164eb81a6f3a3230b"
+  },
+  {
+   "path": "blocks.py",
+   "size": 2551,
+   "git_oid": "537e7f9190713bd73332aeb80702efa39320ca60"
+  },
+  {
+   "path": "config.json",
+   "size": 1304,
+   "git_oid": "fbf5e10e09f40ca41e42f0dc9effb2ef2d4d435b"
+  },
+  {
+   "path": "configuration_mpt.py",
+   "size": 9198,
+   "git_oid": "e9eb6fc59b50654ddbe19ed56ad8c0abd1b8efef"
+  },
+  {
+   "path": "custom_embedding.py",
+   "size": 305,
+   "git_oid": "ab357952c397f47898863e8405c4958bb8de82fd"
+  },
+  {
+   "path": "flash_attn_triton.py",
+   "size": 28182,
+   "git_oid": "c0a42186d982283add95b63d99fc118e845bcf9d"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 112,
+   "git_oid": "569e9aebff115243c59f63432a222602b2626cd6"
+  },
+  {
+   "path": "hf_prefixlm_converter.py",
+   "size": 10487,
+   "git_oid": "0c086a4ddf8ac983e59196b799bdc7a16338da6b"
+  },
+  {
+   "path": "meta_init_context.py",
+   "size": 3639,
+   "git_oid": "6cba6fff0fe21fe222c7ab38eae44a9784c0be9c"
+  },
+  {
+   "path": "modeling_mpt.py",
+   "size": 19277,
+   "git_oid": "953fbc1c0c3f25c1dc79ba27164a5ea587cdbcc4"
+  },
+  {
+   "path": "norm.py",
+   "size": 2563,
+   "git_oid": "067b6140fae546e5cb49cb2b1e4e6af660ced60d"
+  },
+  {
+   "path": "param_init_fns.py",
+   "size": 12558,
+   "git_oid": "418b83ca2363288046f4b48b1d706c5607341fb5"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 26612488,
+   "sha256": "df387a8fdf93e049cfef1ffba50ac49867206ccb659ef8d2851fd1509ab1fd81"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 99,
+   "git_oid": "0204ed10c186a4c7c68f55dff8f26087a45898d6"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 2113738,
+   "git_oid": "08015a39463145a657e88a093aad79df9b2a76bf"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 237,
+   "git_oid": "af28df4f9190240e1c3fb77a27b6f3d9bdd41c2d"
+  }
+ ]
+}

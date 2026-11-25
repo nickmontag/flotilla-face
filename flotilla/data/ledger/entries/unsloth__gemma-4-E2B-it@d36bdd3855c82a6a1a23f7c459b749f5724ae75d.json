@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "unsloth/gemma-4-E2B-it",
+ "revision": "d36bdd3855c82a6a1a23f7c459b749f5724ae75d",
+ "captured": "2026-11-25T05:09:18+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 27904,
+   "git_oid": "926a140ad10598716625547e2d49c72872bb407e"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 18810,
+   "git_oid": "fd8315193f1d8ae3b8baf4d948cb23cac455db28"
+  },
+  {
+   "path": "config.json",
+   "size": 5036,
+   "git_oid": "05d9665787b1f20b73717a19594c98bd5be9d487"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 208,
+   "git_oid": "e605bb4523b1462ea9d9a3810b9e3ecf7ab7b1f6"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 10246621918,
+   "sha256": "2db5482b20d746879bb3ef79b5203e9075a2e2b98f54ec7c2f281c1477ddc550"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1689,
+   "git_oid": "5465974d23e1eca2c46c2809b26c997946ce0d90"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 32169626,
+   "sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 21937,
+   "git_oid": "344cc13b1e79e1ed65bbdc0a5ffc228e232f073e"
+  }
+ ]
+}

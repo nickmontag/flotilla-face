@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "AEON-7/Qwen3.8-27B-AEON-ULTIMATE-UNCENSORED-BF16",
+ "revision": "9199a8a657f7dee829bbc2ff9b98385b2684fd17",
+ "captured": "2026-11-25T05:08:18+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1633,
+   "git_oid": "b7f8be2d0166a11b7e5567229962d05eba367b4c"
+  },
+  {
+   "path": "README.md",
+   "size": 17746,
+   "git_oid": "2228c667938b1fe59686961bb380b22dd392f1ea"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 8952,
+   "git_oid": "c0c686f9c38d70d179fb7b5f5aa7530bc913dda3"
+  },
+  {
+   "path": "config.json",
+   "size": 3688,
+   "git_oid": "c80c348437052c587efc1368436655ecd660a93d"
+  },
+  {
+   "path": "early-access-cartridge.png",
+   "size": 1771148,
+   "sha256": "924903c8b26826c63b6bdd06503535217664a3398327f28c66da079a68ef7c0a"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 214,
+   "git_oid": "3f25ead4807169e3a6c0c4e791e0f4405e81b5c8"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 49825162976,
+   "sha256": "ef4e62cf72bdc67c035b27c2137be02abd044b589b297603cdbd10a317e83e43"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 4888445168,
+   "sha256": "8e8b6be67157a8aa5018ed3593fcb668f77bdf055e60f5ea6c504c0a00887917"
+  },
+  {
+   "path": "model-00003-of-00003.safetensors",
+   "size": 849400392,
+   "sha256": "1d8268aa85ace093a561e3e7b63b9d390dac1cd55a90cd55b5ec509c3c9da9fe"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 112251,
+   "git_oid": "1725e328c226926d6f65b28ad60db1b82201486a"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989492,
+   "sha256": "6f32ce20dc35f57a7f9ad1eac03525bd7d30f9df8cea6507e958279cc3657706"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 10364,
+   "git_oid": "61091473883e045cf278865eb5d1c646adb01b00"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  }
+ ]
+}

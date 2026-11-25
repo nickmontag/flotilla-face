@@ -1,0 +1,140 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Arete-27B-Unlocked-Uncensored-Heretic-i1-GGUF",
+ "revision": "727a36769fe72b0640d51c0f1f33858edad95375",
+ "captured": "2026-11-25T05:08:54+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3641,
+   "git_oid": "e0a7af2648b18d827d65e2b0f976abe48fccfb53"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-IQ1_M.gguf",
+   "size": 7631085696,
+   "sha256": "b91dbbce988fd1bc3b6655a2a7dabc4c9c68380d10e99e7bb19d4d3b5d80c314"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-IQ1_S.gguf",
+   "size": 7149826176,
+   "sha256": "c5e43c5f389f62c39e228776fcb6cf600a29f889dc7b644215abcae61db78ff0"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-IQ2_M.gguf",
+   "size": 10004594816,
+   "sha256": "55170d92b49ed62dc1fef3390f7502f19236c63deff320fa3bb03ea014f3b26e"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-IQ2_S.gguf",
+   "size": 9362915456,
+   "sha256": "0a054009126edd4679be3634234b9168b9fc6585c12137b58e65ac3a016017ab"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-IQ2_XS.gguf",
+   "size": 9090592896,
+   "sha256": "aaf37c3f1e42b525906b79b880e573808d303baa2dc5d48033c4b72af4d40435"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-IQ2_XXS.gguf",
+   "size": 8433184896,
+   "sha256": "7a679cdefff60cf54ce4424e578ce9c678d3501ed8ce1cb33da5650f1f52c191"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-IQ3_M.gguf",
+   "size": 12580876416,
+   "sha256": "39b5854660e086088928a6fae9ead459a3bc42aab7b80b6199194fd2aa8855ad"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-IQ3_S.gguf",
+   "size": 12419330176,
+   "sha256": "12b6b03c1c23951de701ac6117baa3d8a42df8e56623f684f780e7d0cdd34c56"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-IQ3_XS.gguf",
+   "size": 11967131776,
+   "sha256": "e4fb6982458adebafe6588e4483549753290f5cc68649288c1a05d650f1de94a"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-IQ3_XXS.gguf",
+   "size": 11186372736,
+   "sha256": "98f7ed5e3c796680f766a8c1112a3b8ef4d17065176d52a741b155b687698177"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-IQ4_XS.gguf",
+   "size": 15082508416,
+   "sha256": "1ed03b1ec2390f49ba0fcd6b4079333a96832f0ac91ba1926d5e7490136fe373"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-Q2_K.gguf",
+   "size": 10711666816,
+   "sha256": "142f4b1e93e37a6d70a038848ecd642681687535ce8ee02b55e6a3406c8c2867"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-Q2_K_S.gguf",
+   "size": 10248327296,
+   "sha256": "7de5ff5ff68e106b1ccb04ce6a9907689f990a1fd5d14aa7bf17fd5e9dc554c5"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-Q3_K_L.gguf",
+   "size": 14344777856,
+   "sha256": "c969863d6705661cb68578767f9d5dc16adc9f3fa75d91c0652a1d4f3fed55df"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-Q3_K_M.gguf",
+   "size": 13301444736,
+   "sha256": "bc8696c4732c09d4fce1061bf2ea4317570919418d5d11f9bc0eb631e7c9097d"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-Q3_K_S.gguf",
+   "size": 12073955456,
+   "sha256": "8d0a236b219bc2514f88ca0f04736882f16f42c6d449949c993bd85805d5e4ba"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-Q4_0.gguf",
+   "size": 15521435776,
+   "sha256": "99d506853f647bfe93f2d71f1f1219af811727bcf204d1edefa5533abb81af7f"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-Q4_1.gguf",
+   "size": 17078243456,
+   "sha256": "3f9ca4ac9bce0e7d6f3b19068994aded9ecddbf948e1295ce3b21c17445546b1"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-Q4_K_M.gguf",
+   "size": 16547401856,
+   "sha256": "2e42ae82ad3d68b7518ddc59994ed42dd3b376d7a1cde77199918e2cc62f5a55"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-Q4_K_S.gguf",
+   "size": 15586316416,
+   "sha256": "43e1730b93022327c6f6c8732c2ba18ca1fe3bdf02368712a1956c61daefd66c"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-Q5_K_M.gguf",
+   "size": 19231101056,
+   "sha256": "8950c14d6c43091761db8cb49af5020891ab2091e549ea443b4eb1dbbf840e4c"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-Q5_K_S.gguf",
+   "size": 18679615616,
+   "sha256": "91b532f61432168cd9c5e3e27b191b70267f2bc2c2e1ef4952cdae29946941e8"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.i1-Q6_K.gguf",
+   "size": 22082531456,
+   "sha256": "b97524204e6ccc16d6d074bf0dcaae7c532b3289915762f12296eab8f69bde48"
+  },
+  {
+   "path": "Arete-27B-Unlocked-Uncensored-Heretic.imatrix.gguf",
+   "size": 27300160,
+   "sha256": "06c30fd418e6d4c42bf1931b659dd59d91b35faca0a54dc4c464a694574c6ae4"
+  },
+  {
+   "path": "README.md",
+   "size": 7258,
+   "git_oid": "5485fcfd0bd555715053d4ef9b167e7c32aaf2f0"
+  }
+ ]
+}

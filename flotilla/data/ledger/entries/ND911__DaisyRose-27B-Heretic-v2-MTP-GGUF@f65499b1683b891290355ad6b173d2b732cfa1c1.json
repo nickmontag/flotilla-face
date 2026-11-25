@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "ND911/DaisyRose-27B-Heretic-v2-MTP-GGUF",
+ "revision": "f65499b1683b891290355ad6b173d2b732cfa1c1",
+ "captured": "2026-11-25T05:08:55+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2054,
+   "git_oid": "e056ae57550e5726b7fa50da9fb0c7ed6be7f232"
+  },
+  {
+   "path": "DaisyRose-27B-Heretic-v2-MTP-IQ4_NL.gguf",
+   "size": 16230306080,
+   "sha256": "881e3749469bb5c6bd300b005ff2249a11c26cd3df4acd88373d6e20d8a49921"
+  },
+  {
+   "path": "DaisyRose-27B-Heretic-v2-MTP-IQ4_XS.gguf",
+   "size": 15544963360,
+   "sha256": "a1c4d116439fb3f9fec7be780668101774200deadc76a61cc323c41879c86cd0"
+  },
+  {
+   "path": "DaisyRose-27B-Heretic-v2-MTP-Q4_K_M.gguf",
+   "size": 17005350944,
+   "sha256": "937af8b37ea3346dffd524795bd66d583cb4b09e2d563e32d3cee2122c3dc857"
+  },
+  {
+   "path": "DaisyRose-27B-Heretic-v2-MTP-Q5_K_M.gguf",
+   "size": 19635965984,
+   "sha256": "193803bf6b2d1dd0386bbdc329e3a4f5a59228ea89e0a93e92e86baaa624cc4c"
+  },
+  {
+   "path": "DaisyRose-27B-Heretic-v2-MTP-Q6_K.gguf",
+   "size": 22430994464,
+   "sha256": "7e94f58eb927470485b23aae1322e90dbd46e69c3787ff1d922bec40c530daf5"
+  },
+  {
+   "path": "DaisyRose-27B-Heretic-v2-MTP-Q8_0.gguf",
+   "size": 29047078944,
+   "sha256": "8cf84f08411b25d551d472b5fbe8fec6e4783d85d8804cc6d7ed95c06fb188e8"
+  },
+  {
+   "path": "README.md",
+   "size": 11664,
+   "git_oid": "4fa95b5024707e7a9e3f7162070dda306a587b90"
+  },
+  {
+   "path": "config.json",
+   "size": 3741,
+   "git_oid": "b6a8d200bcd281a06ab9c0f895e7f7969e5d3cee"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 214,
+   "git_oid": "a4b665ddaaf111e5edaf22339733008ee747943d"
+  },
+  {
+   "path": "mmproj-DaisyRose-27B-Heretic-v2-f16.gguf",
+   "size": 931145760,
+   "sha256": "02b26e0e0e3f1b09be342f21cff7461f571ce491a2ce514a5e7c9880fc1cee2e"
+  },
+  {
+   "path": "run-daisyrose-heretic.bat",
+   "size": 3613,
+   "git_oid": "9f47324aabd16c0f4a9ee7722c1e20a359f48e3a"
+  }
+ ]
+}

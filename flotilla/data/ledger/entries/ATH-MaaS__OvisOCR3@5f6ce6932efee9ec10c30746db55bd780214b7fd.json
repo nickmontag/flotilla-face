@@ -1,0 +1,185 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "ATH-MaaS/OvisOCR3",
+ "revision": "5f6ce6932efee9ec10c30746db55bd780214b7fd",
+ "captured": "2026-11-25T05:09:24+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1612,
+   "git_oid": "d1c269383c6c89397ef49b96c15fd06e6915960b"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11544,
+   "git_oid": "f938136e3adacfd92be087f6e113b5d6d97f678f"
+  },
+  {
+   "path": "README.md",
+   "size": 26990,
+   "git_oid": "ec43ab54b3517cea7dd44a98ae95d61ae767e120"
+  },
+  {
+   "path": "assets/crosspage_recursive.png",
+   "size": 158873,
+   "sha256": "1a5beede5c098bfdcb091790c3d5ec36c0e2ce50827eb0ae9b92325d60db1afe"
+  },
+  {
+   "path": "assets/mathjax.js",
+   "size": 2275113,
+   "git_oid": "b3388d20a8d2773b001eebd3211ef1a337335d67"
+  },
+  {
+   "path": "assets/ovisocr3_performance_overview.png",
+   "size": 886146,
+   "sha256": "dc3715147ca9591d7b235f81847a8bbe70c3947e4d0b82f75d198cc747464ecd"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7755,
+   "git_oid": "0ef09f214eaa6d9bca297988afc1454b5827b2c7"
+  },
+  {
+   "path": "config.json",
+   "size": 2908,
+   "git_oid": "1a7c9746b1d0d102bb59bfeb4dcf2069d6ce799e"
+  },
+  {
+   "path": "document_crosspage.py",
+   "size": 70672,
+   "git_oid": "7598af2007b32d71a8d7824885254f4c55cea3c8"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 147,
+   "git_oid": "ee48912a6865fa1fbd4c1886b318d6193283bedf"
+  },
+  {
+   "path": "merges.txt",
+   "size": 3353259,
+   "git_oid": "a494e019ca1502219fd0128658b979e5f05ae8e8"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 1706030528,
+   "sha256": "aa2311c6b22b07cf3afe9aac6e8bcb02a2b19dd8671b2a91d0b144071577e600"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "prompts/chart_parsing.txt",
+   "size": 853,
+   "git_oid": "cface78c8dc350801e810ce25b0d8b40d1e67512"
+  },
+  {
+   "path": "prompts/crosspage_table.txt",
+   "size": 614,
+   "git_oid": "f0200fb5e3990f7a0ce15d68ddd98a0b2c56b629"
+  },
+  {
+   "path": "prompts/document_layout.txt",
+   "size": 615,
+   "git_oid": "00aceb9f64fa6672010b55a87b383974000c14cf"
+  },
+  {
+   "path": "prompts/document_markdown.txt",
+   "size": 512,
+   "git_oid": "96ab0d3161576c3393d53e2991956eebae2fa61c"
+  },
+  {
+   "path": "prompts/document_structured.txt",
+   "size": 1110,
+   "git_oid": "573ab264b0034c1a4e15a113ef800b3be1a01025"
+  },
+  {
+   "path": "prompts/figure_captioning.txt",
+   "size": 1298,
+   "git_oid": "9c27905c569dda4d03338d0477e6284a813d4d44"
+  },
+  {
+   "path": "prompts/formula_recognition.txt",
+   "size": 898,
+   "git_oid": "d141a9281e1e7add8660ece2a375f17e7938c4db"
+  },
+  {
+   "path": "prompts/image_classification.txt",
+   "size": 263,
+   "git_oid": "03695fd47e8b9e40dba3020e8a2fe995b4cd21c3"
+  },
+  {
+   "path": "prompts/kie_fields.txt",
+   "size": 243,
+   "git_oid": "cf0a7eed6625e8bde17940267be185f47461c7ac"
+  },
+  {
+   "path": "prompts/kie_open.txt",
+   "size": 200,
+   "git_oid": "4f10e0c51334cc369ebca7f1086ab75fc41b4071"
+  },
+  {
+   "path": "prompts/kie_schema.txt",
+   "size": 177,
+   "git_oid": "88113bb6ba256d3f2ba6f2ea541dbe3f0b30fbf2"
+  },
+  {
+   "path": "prompts/plain_ocr.txt",
+   "size": 419,
+   "git_oid": "ac0cf5ae6fc6fcdd98804795e49525badc6012bb"
+  },
+  {
+   "path": "prompts/position_aware_vqa.txt",
+   "size": 530,
+   "git_oid": "01f5950e8e60042f246ae58f4cbd70c3fbf7ff1a"
+  },
+  {
+   "path": "prompts/reference_grounding.txt",
+   "size": 1333,
+   "git_oid": "2f3b4c1006c91a366ce6a9f3fc2799b7e238050d"
+  },
+  {
+   "path": "prompts/region_ocr.txt",
+   "size": 625,
+   "git_oid": "c4eb36ee5df32e4eabff9412e3be332af7bba1da"
+  },
+  {
+   "path": "prompts/text_translation.txt",
+   "size": 628,
+   "git_oid": "9bfeff3871ed3b77fd8acda8278398a09e27f4f5"
+  },
+  {
+   "path": "prompts/visual_question_answering.txt",
+   "size": 82,
+   "git_oid": "115d1b482e144a80c428819ea95905e6390de0be"
+  },
+  {
+   "path": "prompts/word_spotting.txt",
+   "size": 1007,
+   "git_oid": "dadc7e6ff50a196483205dd14e36395a7bf25f2f"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 12807982,
+   "sha256": "5f9e4d4901a92b997e463c1f46055088b6cca5ca61a6522d1b9f64c4bb81cb42"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 16709,
+   "git_oid": "fae3ce993e07c092ad024dde45e592379fde91bb"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  },
+  {
+   "path": "vocab.json",
+   "size": 6722759,
+   "git_oid": "0aa0ce0658d60ac4a5d609f4eadb0e8e43514176"
+  }
+ ]
+}

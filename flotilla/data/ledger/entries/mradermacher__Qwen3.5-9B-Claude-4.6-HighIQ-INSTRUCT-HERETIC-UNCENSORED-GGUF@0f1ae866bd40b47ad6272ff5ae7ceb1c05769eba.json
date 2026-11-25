@@ -1,0 +1,90 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED-GGUF",
+ "revision": "0f1ae866bd40b47ad6272ff5ae7ceb1c05769eba",
+ "captured": "2026-11-25T05:08:34+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2989,
+   "git_oid": "f9d78a494bf0407e6eea236dddab15cafffddbd6"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.IQ4_XS.gguf",
+   "size": 5102069792,
+   "sha256": "bd40ff123ff94cea5432352366c79b6a747d28d98f27c1d4363d834f06d1d644"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.Q2_K.gguf",
+   "size": 3638519840,
+   "sha256": "7466819a75cf399e6edfc9e0e92c38c67e10e35a0f17f8221e80d00caab3bbac"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.Q3_K_L.gguf",
+   "size": 4824852512,
+   "sha256": "1297d380251457b2b1e8b40eb56822c300c8f49ec69407974476180349f54d0e"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.Q3_K_M.gguf",
+   "size": 4616185888,
+   "sha256": "a336f4af76d187d503c50ba21e178e3c526094e04f1c1dee9fd9010183eaa94e"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.Q3_K_S.gguf",
+   "size": 4259407904,
+   "sha256": "2bcb0d08639d33bd2851846519f1101ab9a459e05501e7c9d738d805c911f3bd"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.Q4_K_M.gguf",
+   "size": 5627045920,
+   "sha256": "505ca9436855c997aff09f6ab4325301324bc522d2e3aafa8be8f313114ae44c"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.Q4_K_S.gguf",
+   "size": 5340620832,
+   "sha256": "4e548510cb0682229d8b005e52ced93f84713ee4e1c5b0c28e5edb05be51558a"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.Q5_K_M.gguf",
+   "size": 6522005536,
+   "sha256": "b154bff323d72444c06f52080f479863aae017f6eb74ea27f1be052523e25d51"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.Q5_K_S.gguf",
+   "size": 6305310752,
+   "sha256": "c14fe355092b09ba5c3e2c5f2c8012376b36e15c835f1ecb80d35d79f35904ef"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.Q6_K.gguf",
+   "size": 7359260704,
+   "sha256": "c02f30862cf09e5a78396ba7dfd2c51132be44a2b6402a99321bf4b8d626238e"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.Q8_0.gguf",
+   "size": 9527502880,
+   "sha256": "b07fe45b6d6249165a0e4b2f72f232bb98ee4812d9bae7aa3f0048bd54cb7f5e"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.f16.gguf",
+   "size": 17920698400,
+   "sha256": "ce04c9fc72f1f88fa3278e840ada36a021315e9b6892d02ee6f4430af727b6b9"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.mmproj-Q8_0.gguf",
+   "size": 624230368,
+   "sha256": "bd9248b981181a93bac6867540d2c75596f406f1dec8b7de94da751bf3c927a9"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-HighIQ-INSTRUCT-HERETIC-UNCENSORED.mmproj-f16.gguf",
+   "size": 918166624,
+   "sha256": "f3283e424760e19481e639c982240978bd35c50fb78c27c4010073c8f3d9b97a"
+  },
+  {
+   "path": "README.md",
+   "size": 5730,
+   "git_oid": "1dd5df11f60590c91656fbed330ee1d0716ddbb6"
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "huihui-ai/Huihui-Laguna-S-2.1-abliterated-GGUF",
+ "revision": "e7e8b1dc3df8036c2f9f20f622b4202160d004bc",
+ "captured": "2026-11-25T05:08:50+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1661,
+   "git_oid": "f80a55c9919a329868c9f4e8616f8ae4c3028c8b"
+  },
+  {
+   "path": "Laguna-S-2.1-abliterated-Q3_K.gguf",
+   "size": 53168140384,
+   "sha256": "3968c87db3ec00c1280e58e2dd63fc4179a3d7c68495b30e68970397ec6fe350"
+  },
+  {
+   "path": "Laguna-S-2.1-abliterated-Q4_K.gguf",
+   "size": 68248760416,
+   "sha256": "ebb5b5b6944d4de59fe96c320bc4ed443ca6fac461e9ad4e1f119fb568a32541"
+  },
+  {
+   "path": "README.md",
+   "size": 4497,
+   "git_oid": "7ebc45376e57ea97b078465d682182894d517e23"
+  }
+ ]
+}

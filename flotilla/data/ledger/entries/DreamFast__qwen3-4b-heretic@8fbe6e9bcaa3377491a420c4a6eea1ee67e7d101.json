@@ -1,0 +1,190 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DreamFast/qwen3-4b-heretic",
+ "revision": "8fbe6e9bcaa3377491a420c4a6eea1ee67e7d101",
+ "captured": "2026-11-25T05:08:55+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2748,
+   "git_oid": "e45684752654bc1be31fe88de3204162c97f79e5"
+  },
+  {
+   "path": "README.md",
+   "size": 6247,
+   "git_oid": "427b68eba9d9954dec7611bffeff5efc6d8c85ea"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 707,
+   "git_oid": "b54f9135e44c1e81047e8d05cb027af8bc039eed"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 4168,
+   "git_oid": "01be9b307daa2d425f7c168c9fb145a286e0afb4"
+  },
+  {
+   "path": "comfyui/qwen3-4b-heretic.safetensors",
+   "size": 8044982048,
+   "sha256": "ba5b1932f3bad65ad32e7ccbf1a3d83f61c6fc86f53191726f640bcc3466eefb"
+  },
+  {
+   "path": "comfyui/qwen3-4b-heretic_fp8_e4m3fn.safetensors",
+   "size": 4411666704,
+   "sha256": "f4ce8b26dcb710a73d3e81fd4bdb10daf8d063496b23655de4aa2e435b5f2d18"
+  },
+  {
+   "path": "comfyui/qwen3-4b-heretic_int4.safetensors",
+   "size": 2599542680,
+   "sha256": "a12514762b677b05b1103f63dd8808b6ce2455e85ee1a0ad91373a4b1f9b290e"
+  },
+  {
+   "path": "comfyui/qwen3-4b-heretic_int8.safetensors",
+   "size": 4416215240,
+   "sha256": "2aac7216371c8586ff9679c3293bdfc74e6222fb1c25bed9bd7241ed7bacd635"
+  },
+  {
+   "path": "comfyui/qwen3-4b-heretic_mxfp8.safetensors",
+   "size": 4525327516,
+   "sha256": "46521aa841a49400bb94edc017ce6b5323a6a8b4d106dde68cb1309b67196bb5"
+  },
+  {
+   "path": "comfyui/qwen3-4b-heretic_nvfp4.safetensors",
+   "size": 2822236628,
+   "sha256": "67d1577c52ea78089e254167aac5cc59b13c65e0e636013f658b56212bfe06f9"
+  },
+  {
+   "path": "config.json",
+   "size": 1536,
+   "git_oid": "1eeafae9466c2e6902a5f2b439b4575648ef00d6"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 214,
+   "git_oid": "be89f8af8cb53cdfeaa15cc2c340fe0ce5b01378"
+  },
+  {
+   "path": "gguf/gemma-3-12b-it-heretic-v2-Q3_K_M.gguf",
+   "size": 6008817856,
+   "sha256": "71510a84117f8fea23cf1fac75fb4e8c1fbd972703414ead5a5b3444f9352817"
+  },
+  {
+   "path": "gguf/gemma-3-12b-it-heretic-v2-Q4_K_M.gguf",
+   "size": 7300778176,
+   "sha256": "28a51c6344d11d3a86c10d412ede3effb3be3287a8f31f338cfb0b63ec45b5c8"
+  },
+  {
+   "path": "gguf/gemma-3-12b-it-heretic-v2-Q4_K_S.gguf",
+   "size": 6935333056,
+   "sha256": "deebeb94aa8b5a2f577b0bbcb093304764fa7572e7d9fbbb5bb57d2be9291612"
+  },
+  {
+   "path": "gguf/gemma-3-12b-it-heretic-v2-Q5_K_M.gguf",
+   "size": 8445036736,
+   "sha256": "356671c77cd08331cc1c400ec8a32b09945dcda1cd2c992bcb6554123f3479cb"
+  },
+  {
+   "path": "gguf/gemma-3-12b-it-heretic-v2-Q5_K_S.gguf",
+   "size": 8231962816,
+   "sha256": "82fb79a7b6a573e481b77c245ce4e1d573fbbf4f106233c02a471bd241ab97dc"
+  },
+  {
+   "path": "gguf/gemma-3-12b-it-heretic-v2-Q6_K.gguf",
+   "size": 9660811456,
+   "sha256": "ab137e4508166b748691dc69f5230da0e9a063dbd10f9052086cd3b864c27dbb"
+  },
+  {
+   "path": "gguf/gemma-3-12b-it-heretic-v2-Q8_0.gguf",
+   "size": 12510212416,
+   "sha256": "fa99f3146e5a7e16de7a28f4f60dc34b66de9e5280b0a131e8830d1f9fb40882"
+  },
+  {
+   "path": "gguf/gemma-3-12b-it-heretic-v2-f16.gguf",
+   "size": 23540151616,
+   "sha256": "4d364e5cdaa053cb9e0d491f37bb484b77d687ac00cf5fb0f99a52089675ab8f"
+  },
+  {
+   "path": "gguf/qwen3-4b-heretic-Q3_K_M.gguf",
+   "size": 2075617696,
+   "sha256": "db1f1bef137188976b35902ede28a314fa1ae96694556f8fe131b0dfffe77d4b"
+  },
+  {
+   "path": "gguf/qwen3-4b-heretic-Q4_K_M.gguf",
+   "size": 2497280416,
+   "sha256": "2ff4f196c281a522674eb1fa2416afab8688f23b37acea1aa65db58cf46f7e17"
+  },
+  {
+   "path": "gguf/qwen3-4b-heretic-Q4_K_S.gguf",
+   "size": 2383309216,
+   "sha256": "048c06c09d79877d9c489618ba85fa04f88eca0b9a0502f63ea59986f7912729"
+  },
+  {
+   "path": "gguf/qwen3-4b-heretic-Q5_K_M.gguf",
+   "size": 2889513376,
+   "sha256": "b50848dd9edb28500e510d1860bb41e29cc30dbcf2bdacf453b4c0d5a0cb8285"
+  },
+  {
+   "path": "gguf/qwen3-4b-heretic-Q5_K_S.gguf",
+   "size": 2823711136,
+   "sha256": "0aba12e996ec44f1e83701c126663c119e91e4e7f39d1a4590c56b7dc476bf41"
+  },
+  {
+   "path": "gguf/qwen3-4b-heretic-Q6_K.gguf",
+   "size": 3306260896,
+   "sha256": "6b9336cc022227e4e432377e262ca27a3242d980a73072ececaf6c26b5394746"
+  },
+  {
+   "path": "gguf/qwen3-4b-heretic-Q8_0.gguf",
+   "size": 4280404896,
+   "sha256": "3e1a54a3b24c76ddb4f431a7d55ae13b4dd7f483027315272b45f9587f226315"
+  },
+  {
+   "path": "gguf/qwen3-4b-heretic-f16.gguf",
+   "size": 8051284896,
+   "sha256": "89c464f719e2746175b789027a49c723342e2b43a20028bc23f25022bd88c086"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671853,
+   "git_oid": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 4967215360,
+   "sha256": "b4ea454a12d3ee06928ba1528848cfd34b3c4a141e3cae36a797ffb3cfd5a1d4"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 3077766632,
+   "sha256": "66c9eb0804b5ff78812a9271b5d5e7ab9befcde529b23bd96b9bdd67fb41b406"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 32855,
+   "git_oid": "b65d8063815c8679d85bb919337b36fae8de75cf"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 613,
+   "git_oid": "ac23c0aaa2434523c494330aeb79c58395378103"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 11422821,
+   "sha256": "67cc0080ffd7555f723f423c27cfef314e1ad9d335c8b79f465c5faba1ed478b"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 5404,
+   "git_oid": "ddaf69808214a44fdd26d3785b66c1367c78277a"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

@@ -1,0 +1,95 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "janhq/Jan-v3.5-4B-gguf",
+ "revision": "2b0fcab0066198e78f7c004a0815179fbce13985",
+ "captured": "2026-11-25T05:09:27+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2401,
+   "git_oid": "03d1c54057bd67556ffdca7816c5f3937ec186ff"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q3_K_L.gguf",
+   "size": 2406913376,
+   "sha256": "a375cc57736fd34929171d74fd1d59bd10ece9c1cf97ed5da7c4994c594d288b"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q3_K_M.gguf",
+   "size": 2242745696,
+   "sha256": "05d49b2922b84aa091472093c7eac8702aff3fde17860f73aeb3a3d2e7067e4b"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q3_K_S.gguf",
+   "size": 2054124896,
+   "sha256": "3b5f96c82b6deec4c0ff269ee6e7f96f05ccd8570c29faabf8b4dc83b13266e7"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q4_0.gguf",
+   "size": 2588332896,
+   "sha256": "15c0ed0c15b54b2a963a7ac1092a99eeb67013fadfd29b6096870961611ff944"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q4_1.gguf",
+   "size": 2839724896,
+   "sha256": "e536408d618b2167695969e527a374bb57aaf9172abaab7b78d1a7b2da437117"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q4_K_M.gguf",
+   "size": 2716066656,
+   "sha256": "2f5305d93100ad9105eeb47c45ef1af99ba6d568c734fc267b0628b3be41c07a"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q4_K_S.gguf",
+   "size": 2602095456,
+   "sha256": "810223222bdd4fa35bb0d723db2c2c7d3e41251951bdff463b96f7cdb11112f2"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q4_K_XL.gguf",
+   "size": 2999182176,
+   "sha256": "767e50ac328b244395a0ef14dab7bd11c33d79612fdb87ad93e6f5aa2a85490d"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q5_0.gguf",
+   "size": 3091116896,
+   "sha256": "682a51b84e3a3bae549be065b7f54380426f5c97cda5786dafb1bc9fca68bf49"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q5_1.gguf",
+   "size": 3342508896,
+   "sha256": "84c0208a594ae98bb73be0224fb9f3ba347b9a2df9548370f53ece7195476fa4"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q5_K_M.gguf",
+   "size": 3156919136,
+   "sha256": "1a680191324cfd2168cb1fd2b39377fa5a4158203f1af36001954287227a62f5"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q5_K_S.gguf",
+   "size": 3091116896,
+   "sha256": "2a8a19bb9027c10c5d1986dc957b07cf4448326fa285699a69cb17b845e29144"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q6_K.gguf",
+   "size": 3625324896,
+   "sha256": "e1e48db0df96f7040522212b80852ea040caae04b879270700e7e26fa36ba423"
+  },
+  {
+   "path": "Jan-v3.5-4B-Q8_0.gguf",
+   "size": 4693669216,
+   "sha256": "67444b2ac4954003bb7013ffaf3dbaa72c28d8188de980ace3be840ebe0950bf"
+  },
+  {
+   "path": "Jan-v3.5-4B.gguf",
+   "size": 8829195616,
+   "sha256": "ef5c48742429b2053753fcc04b5d5e6d933a8cca059eb05224f44edfecfe6c2d"
+  },
+  {
+   "path": "README.md",
+   "size": 4483,
+   "git_oid": "be28b9bf1b6e83ab006d28aeafa62369648776ed"
+  }
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "prism-ml/Bonsai-8B-gguf",
+ "revision": "48516770dd04643643e9f9019a2a349cf26c5dbd",
+ "captured": "2026-11-25T05:13:06+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".eval_results/gsm8k.yaml",
+   "size": 150,
+   "git_oid": "47c0f0a704b702313c206187116e969e8251fd97"
+  },
+  {
+   "path": ".gitattributes",
+   "size": 1833,
+   "git_oid": "1e220b7ad3150d65a9568b24ad78992108771aaa"
+  },
+  {
+   "path": "Bonsai-8B-Q1_0.gguf",
+   "size": 1158654496,
+   "sha256": "284a335aa3fb2ced3b1b01fcb40b08aa783e3b70832767f0dd2e3fdfa134bd54"
+  },
+  {
+   "path": "Bonsai-8B.gguf",
+   "size": 1158654496,
+   "sha256": "284a335aa3fb2ced3b1b01fcb40b08aa783e3b70832767f0dd2e3fdfa134bd54"
+  },
+  {
+   "path": "LICENSE",
+   "size": 10174,
+   "git_oid": "66a27ec5ff940d3a9652d2948746ebac4c9d0188"
+  },
+  {
+   "path": "NOTICE.txt",
+   "size": 412,
+   "git_oid": "bd212b6d0d17df528e2adf9dee3d2b57daab0c7a"
+  },
+  {
+   "path": "README.md",
+   "size": 11676,
+   "git_oid": "55b76589cc498805098d392528de9556696d7d45"
+  },
+  {
+   "path": "assets/bonsai-logo.svg",
+   "size": 515,
+   "git_oid": "6e2df3a48b38d3eb980db8772cfd942f8b97a328"
+  },
+  {
+   "path": "assets/energy_8B.png",
+   "size": 72438,
+   "git_oid": "46d0d025f086e24698f756e8b457fbe7a88d6a93"
+  },
+  {
+   "path": "assets/frontier.png",
+   "size": 106645,
+   "sha256": "2bcd6744b00403f436fb2c6ab9b0412c19fa7bcef5c33b8439b401dc0e0d2275"
+  },
+  {
+   "path": "assets/frontier.svg",
+   "size": 10448,
+   "git_oid": "867a5958715e039f49801fd23f64a246140b377f"
+  },
+  {
+   "path": "assets/intel_density_8B.png",
+   "size": 103275,
+   "sha256": "432f88f6e412768935a887cac72f71f4e6959c92a079b07e484a910a43f84ff7"
+  },
+  {
+   "path": "assets/speeds_8B.png",
+   "size": 89003,
+   "git_oid": "fb616780809c584516fa4f886723ee1ec5177c70"
+  }
+ ]
+}

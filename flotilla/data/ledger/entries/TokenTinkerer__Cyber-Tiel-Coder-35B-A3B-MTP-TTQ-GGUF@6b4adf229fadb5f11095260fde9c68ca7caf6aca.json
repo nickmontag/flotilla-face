@@ -1,0 +1,100 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "TokenTinkerer/Cyber-Tiel-Coder-35B-A3B-MTP-TTQ-GGUF",
+ "revision": "6b4adf229fadb5f11095260fde9c68ca7caf6aca",
+ "captured": "2026-11-25T05:09:17+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2552,
+   "git_oid": "eac882b50900b068e633df7b7c6e7c6c458bfdf6"
+  },
+  {
+   "path": "CORPUS.txt",
+   "size": 1350,
+   "git_oid": "b576e531bd8c755d748e29057e84e04e8ff3b4fa"
+  },
+  {
+   "path": "Cyber-Tiel-Coder-35B-A3B-MTP-TTQ-3.34bpw-IQ3_XXS.gguf",
+   "size": 14841190688,
+   "sha256": "51acbfed01a2f8e39325751fb3b7f1af89e494858742f6cf3c4788c5ff7e096b"
+  },
+  {
+   "path": "Cyber-Tiel-Coder-35B-A3B-MTP-TTQ-3.51bpw-IQ3_XS.gguf",
+   "size": 15596165408,
+   "sha256": "2f05d8651d074981d58b8425a2d7e661a49b7353c5cc30c136759f8c1f50e1e2"
+  },
+  {
+   "path": "Cyber-Tiel-Coder-35B-A3B-MTP-TTQ-3.67bpw-Q3_K_S.gguf",
+   "size": 16320665888,
+   "sha256": "5c93a99f65674841f1eec7ceb9210374ecb8c1bd72c89bc72e7d9975ef017a64"
+  },
+  {
+   "path": "Cyber-Tiel-Coder-35B-A3B-MTP-TTQ-3.92bpw-Q3_K_M.gguf",
+   "size": 17411184928,
+   "sha256": "4cbc2f2d11b42c23dfc59df57690650a6326548149bb39003d5fd77dc80a2789"
+  },
+  {
+   "path": "Cyber-Tiel-Coder-35B-A3B-MTP-TTQ-4.17bpw-IQ4_XS.gguf",
+   "size": 18532178208,
+   "sha256": "1d300e9b33663b90370766ec5592dad47d708d1c01bbf7781ffd1a33aa3bf671"
+  },
+  {
+   "path": "Cyber-Tiel-Coder-35B-A3B-MTP-TTQ-4.49bpw-IQ4_NL.gguf",
+   "size": 19930931488,
+   "sha256": "dbfff2782204725e6696e53d951caad57234d82ca7f75cda7bd335ef5ed4747b"
+  },
+  {
+   "path": "Cyber-Tiel-Coder-35B-A3B-MTP-TTQ-4.87bpw-Q4_K_M.gguf",
+   "size": 21608653088,
+   "sha256": "70ae6452d89df9cb1c16dbd79d54dd77d87c8cd9b199c437d114973c98e56174"
+  },
+  {
+   "path": "Cyber-Tiel-Coder-35B-A3B-MTP-TTQ-5.54bpw-Q5_K_S.gguf",
+   "size": 24592212256,
+   "sha256": "8a6332ef085eaaaecaaaf366170a2260a87ea67b0444ceebb5486b25842eae63"
+  },
+  {
+   "path": "Cyber-Tiel-Coder-35B-A3B-MTP-TTQ-6.00bpw-Q5_K_M.gguf",
+   "size": 26639032608,
+   "sha256": "c767eeed28d5aa4672da343f03295699b0b1fc9aa6d00cd85f54f699da64095f"
+  },
+  {
+   "path": "Cyber-Tiel-Coder-35B-A3B-MTP-TTQ-6.64bpw-Q6_K.gguf",
+   "size": 29491159328,
+   "sha256": "f2d379a310ebc5c4b7fe7415e6fec656423ecbf2102e95a12a99914c008d5820"
+  },
+  {
+   "path": "LADDER.md",
+   "size": 9711,
+   "git_oid": "364a794fdf323fdc396e90d2b77fa35374d933ec"
+  },
+  {
+   "path": "README.md",
+   "size": 20838,
+   "git_oid": "41dbdd4dc7e603a20378bffdae0da929c082084d"
+  },
+  {
+   "path": "assets/size-matched-deltas.png",
+   "size": 366276,
+   "sha256": "4e51bff5c849c1909e4a59a6daf26bccb7d82a00f1ec432e6bc9ac0c238d8bad"
+  },
+  {
+   "path": "assets/weight-bytes-at-equal-quality.png",
+   "size": 267630,
+   "sha256": "87cec6ad19afe7b4860f8d0e15d73a3ff1172869e506136401f94a48309dc0f0"
+  },
+  {
+   "path": "results-combined.csv",
+   "size": 1379,
+   "git_oid": "25360042024f05d724f15e223d2937b183e9d167"
+  },
+  {
+   "path": "results-upstream.csv",
+   "size": 747,
+   "git_oid": "f0004a21ff9dc7bfb5d1cd25d2dc567e771e5f31"
+  }
+ ]
+}

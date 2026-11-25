@@ -1,0 +1,95 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Llama-3.2-4X3B-MOE-Hell-California-Uncensored-10B-GGUF",
+ "revision": "69883f0cb1fb043441bafbd2417bc2318b7be1ec",
+ "captured": "2026-11-25T05:09:07+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2807,
+   "git_oid": "342f4e4f7bc8855898a1259bea2752c32667b89e"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-IQ4_XS.gguf",
+   "size": 5456063488,
+   "sha256": "fe8af2426ccf91b90fee152108b6a09c726ecbd040486371c49392ac4b947f06"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-Q2_k.gguf",
+   "size": 3790191616,
+   "sha256": "1fe1293b2d18c7b26dca12595424893842c6bf74b405f702880425ebc242c99f"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-Q3_k_l.gguf",
+   "size": 5256008704,
+   "sha256": "e4a5725e42daeab5795e3b18544cd131a724b0709fb3c538c64869cd5ecc1e48"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-Q3_k_m.gguf",
+   "size": 4873016320,
+   "sha256": "98ddfcfb0e76ecb23e6a2c3475bc0872e7bcb437abde999f5560cbd817e34b76"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-Q3_k_s.gguf",
+   "size": 4438512640,
+   "sha256": "457864909bbddf118ed76c574f3cce7d5eb24e22ac3310b6a5449a471b952f3f"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-Q4_0_4_4.gguf",
+   "size": 5707451392,
+   "sha256": "90ba556ddc1db63865d8181c742e26650a3c14990b31c819aa484842af1bad35"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-Q4_0_4_8.gguf",
+   "size": 5707451392,
+   "sha256": "2d7c433d0c7cbe8b9bd661572a05b48319f6d81bdfc101acb0f32b49a6635e7f"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-Q4_0_8_8.gguf",
+   "size": 5707451392,
+   "sha256": "93ba743a3451d13c6b46c9f15c4a4244370f24d4873cd75d98af3f087f697578"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-Q4_k_m.gguf",
+   "size": 6082137088,
+   "sha256": "819ca50d65c2be09afac057757dd31e2e3219fe45771964823fac441b200d4ae"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-Q4_k_s.gguf",
+   "size": 5746772992,
+   "sha256": "b6fabb8e45e177011bfeb73fc56c8ffdeefd7b51fbe3dab5cd4f7d60acb63422"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-Q5_k_s.gguf",
+   "size": 6901746688,
+   "sha256": "bbb6804e1814cfc1f3b3ff791456beccfb73b55ebc7b35d0a38e596df11debae"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-Q6_k.gguf",
+   "size": 8170685440,
+   "sha256": "41869f50f631a874c9554e9770ef17782d50643a374c2650c55f2b7e6d1086d3"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-Q8_0.gguf",
+   "size": 10580055040,
+   "sha256": "385a0cd37e1c178b0a30747b6b64c15334a66418233cb5b4a6c162392a10635b"
+  },
+  {
+   "path": "Llama-3.2-4X3B-MOE-Hell-California-10B-D_AU-q5_k_m.gguf",
+   "size": 7094766592,
+   "sha256": "a16447422eeabb6d346eccf40e2164d79759acc5a7dddd2ce0d6150ce344a16a"
+  },
+  {
+   "path": "README.md",
+   "size": 76195,
+   "git_oid": "1555b582f692e8ab77f11d964697d8947c5723f9"
+  },
+  {
+   "path": "moe-hell.jpg",
+   "size": 261840,
+   "git_oid": "df90fce57c63c49c03d22cce386dba3ad5ed5231"
+  }
+ ]
+}

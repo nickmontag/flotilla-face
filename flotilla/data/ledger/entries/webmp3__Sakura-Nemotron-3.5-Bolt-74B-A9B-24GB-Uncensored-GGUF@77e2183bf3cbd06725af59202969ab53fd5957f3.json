@@ -1,0 +1,45 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "webmp3/Sakura-Nemotron-3.5-Bolt-74B-A9B-24GB-Uncensored-GGUF",
+ "revision": "77e2183bf3cbd06725af59202969ab53fd5957f3",
+ "captured": "2026-11-25T05:09:06+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1711,
+   "git_oid": "8187e591b1b90721bd159e9091e58b916e53efd0"
+  },
+  {
+   "path": "LICENSE",
+   "size": 2648,
+   "git_oid": "8a49828bf40a4857e1ce7d866a24e5747b38e181"
+  },
+  {
+   "path": "NOTICE",
+   "size": 729,
+   "git_oid": "c429c4df6db238780f56d1d746a079ebc958e988"
+  },
+  {
+   "path": "README.md",
+   "size": 5256,
+   "git_oid": "f4fa2ac922563a2158dda856ce8159ed58068609"
+  },
+  {
+   "path": "README_zh.md",
+   "size": 3276,
+   "git_oid": "ff87eace8974e4827d0ee987ed9850056d1b570d"
+  },
+  {
+   "path": "Sakura-Nemotron-3.5-Bolt-74B-A9B-24GB-Uncensored-edited-Q8_0.gguf",
+   "size": 23398187008,
+   "sha256": "774e4a6216df8ef077b8c5a7baf74243257b8764607b5d8400f7ca0929b3cd6f"
+  },
+  {
+   "path": "Sakura-Nemotron-3.5-Bolt-74B-A9B-24GB-Uncensored.gguf",
+   "size": 25765347328,
+   "sha256": "f22522ce7e0753ea6e1387d15ac088c171e53b15b39906494bd81126cc1cff32"
+  }
+ ]
+}

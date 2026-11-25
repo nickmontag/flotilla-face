@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "incoai/Qwen3.6-35B-A3B-DFlash2",
+ "revision": "51ef7b6923ad6c14cb1bb41c37a9041446496ab6",
+ "captured": "2026-11-25T05:09:39+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1653,
+   "git_oid": "43f3f0a7734f7c68f80c9f94c6576ad2b0eeab08"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11343,
+   "git_oid": "1d5180a42f1c3383ba7c7bd0a50f0837ef0168df"
+  },
+  {
+   "path": "README.md",
+   "size": 5173,
+   "git_oid": "f9f741bc901a6ffcb2261ab6625ab55e5471162a"
+  },
+  {
+   "path": "assets/dflash2-figure.png",
+   "size": 286889,
+   "sha256": "6d8dcc9a9472bddb644c881fe83050b5343d09bf5ffb0912e5598e55fe671e99"
+  },
+  {
+   "path": "config.json",
+   "size": 1291,
+   "git_oid": "8608b21225ca5368677b627f61eb2441c572e875"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 1052513456,
+   "sha256": "d1f16c0ff85afbe6166fabfae998af3ec16fa11da87da4391b5e0e0a7c796a4d"
+  }
+ ]
+}

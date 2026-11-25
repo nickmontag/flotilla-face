@@ -1,0 +1,90 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "MaziyarPanahi/WizardLM-2-7B-GGUF",
+ "revision": "491e4644eb4874621cb7d00153a20e0bf7358fb8",
+ "captured": "2026-11-25T05:13:05+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2317,
+   "git_oid": "43a2f780cdd333828b86844c521ee4b52bd7522f"
+  },
+  {
+   "path": "README.md",
+   "size": 15909,
+   "git_oid": "56175ecaf07006dea3c9a2e4b7c48bcebb5ba62c"
+  },
+  {
+   "path": "WizardLM-2-7B.IQ3_XS.gguf",
+   "size": 3018815200,
+   "sha256": "8931cc8ac904b5997186a97b27e39e0c05c3eadbe4695d4bd22de3a25dc26b10"
+  },
+  {
+   "path": "WizardLM-2-7B.IQ4_XS.gguf",
+   "size": 3944388320,
+   "sha256": "b311835f435d7a19abfdb57fb97ba9ccd83a6c364ac1c09c4a56b2e07a18b60c"
+  },
+  {
+   "path": "WizardLM-2-7B.Q2_K.gguf",
+   "size": 2719241952,
+   "sha256": "de51231d46383062627ad9a1306d3330fc963816e14f1b4e6bffb97a680aa991"
+  },
+  {
+   "path": "WizardLM-2-7B.Q3_K_L.gguf",
+   "size": 3822024416,
+   "sha256": "7df9667960171b7c536f6cdf0036290768c16d13f77651b9c13738cf09807a4c"
+  },
+  {
+   "path": "WizardLM-2-7B.Q3_K_M.gguf",
+   "size": 3518985952,
+   "sha256": "5d241e85ca5b1f3aefd4422ec3b9942a69845b6d43b7c8dd503e9b2c7c25559f"
+  },
+  {
+   "path": "WizardLM-2-7B.Q3_K_S.gguf",
+   "size": 3164567264,
+   "sha256": "b6b8053ff08a058240fcd43a2144fb826a222e6c9749473bbf85cd2efa00bfb0"
+  },
+  {
+   "path": "WizardLM-2-7B.Q4_K_M.gguf",
+   "size": 4368439008,
+   "sha256": "613212417701a26fd43f565c5c424a2284d65b1fddb872b53a99ef8add796f64"
+  },
+  {
+   "path": "WizardLM-2-7B.Q4_K_S.gguf",
+   "size": 4140373728,
+   "sha256": "a6e586246db3c1e77d432d22575ee5aa1c10cc2c9978ff743c5ece2bc478409f"
+  },
+  {
+   "path": "WizardLM-2-7B.Q5_K_M.gguf",
+   "size": 5131409120,
+   "sha256": "7105aca8f91781c5e629464a8672b77f12386609a5ff140cbfa778a77cf64bae"
+  },
+  {
+   "path": "WizardLM-2-7B.Q5_K_S.gguf",
+   "size": 4997715680,
+   "sha256": "c398de438dc1d22d533e742028463087d4c64b5fbfc7f8071b908a84a3ece2f2"
+  },
+  {
+   "path": "WizardLM-2-7B.Q6_K.gguf",
+   "size": 5942064864,
+   "sha256": "e1d503915e26177692ba77d3f25e7be00b18cfb4c13461569e3c0a8aec56b3e9"
+  },
+  {
+   "path": "WizardLM-2-7B.Q8_0.gguf",
+   "size": 7695857376,
+   "sha256": "dd3b1edc0f58119d477da40768f1c996f1bb0ab31f3cbee92de5cd85f531c008"
+  },
+  {
+   "path": "WizardLM-2-7B.fp16.gguf",
+   "size": 14484731552,
+   "sha256": "d5002d76cc6ace689183bc03adc9b472f7309faf140c27121e5032bd009abe8a"
+  },
+  {
+   "path": "config.json",
+   "size": 31,
+   "git_oid": "9f0f76f8d1de0ed9b8adf494540f149aaef5f07c"
+  }
+ ]
+}

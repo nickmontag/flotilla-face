@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "microsoft/DialoGPT-small",
+ "revision": "49c537161a457d5256512f9d2d38a87d81ae0f0e",
+ "captured": "2026-11-25T05:13:09+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 445,
+   "git_oid": "602b71f15d40ed68c5f96330e3f3175a76a32126"
+  },
+  {
+   "path": "README.md",
+   "size": 3071,
+   "git_oid": "3725bf618e7d34ff32cc72e1690334211ddb8343"
+  },
+  {
+   "path": "config.json",
+   "size": 641,
+   "git_oid": "c24f7a7deaa4032f3f2b139489a803139f936c0b"
+  },
+  {
+   "path": "flax_model.msgpack",
+   "size": 497764120,
+   "sha256": "3e6bb6354fa5f466f8bb7a84c2f7d3f1c3e357609cb906be4d6280378f805194"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 124,
+   "git_oid": "057e43033439e068b325f32af95dde9efc9552ae"
+  },
+  {
+   "path": "generation_config_for_conversational.json",
+   "size": 146,
+   "git_oid": "7398ce6109de2838c2cf0e85cf4c5cc6da152753"
+  },
+  {
+   "path": "merges.txt",
+   "size": 456318,
+   "git_oid": "226b0752cac7789c48f0cb3ec53eda48b7be36cc"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 351256598,
+   "sha256": "ea50e39b0e9368b9110cc5ab48012ddbc7bd90f2b17410aed643a7404acac567"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 351265583,
+   "sha256": "e6e2be6d12f77bf925a89f2381c6c685f4739752289039d590622d37d48a153d"
+  },
+  {
+   "path": "tf_model.h5",
+   "size": 497933648,
+   "sha256": "86fa1f394a285e12ac73160d5814a43b3e40732e25ed7ef1bcfe65064a0a74d2"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 614,
+   "git_oid": "42319b5e84e92687356f5361cd83c2773675c35a"
+  },
+  {
+   "path": "vocab.json",
+   "size": 1042301,
+   "git_oid": "1f1d9aaca301414e7f6c9396df506798ff4eb9a6"
+  }
+ ]
+}

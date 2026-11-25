@@ -1,0 +1,130 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "saidutta69/MiMo-V2.6-Distill-Qwen-9B-heretic",
+ "revision": "38e79d42c4995ca25b4b397872f0bbb4cd652175",
+ "captured": "2026-11-25T05:08:38+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1973,
+   "git_oid": "d3d06a8a6f716451d5d0f3a6320f6f0205924bea"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-heretic-F16.gguf",
+   "size": 17920693120,
+   "sha256": "e86bc203e51e9ba532b5c9c8097284d01d72a2f0aca26e173fc7b316aa233046"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-heretic-Q4_K_M.gguf",
+   "size": 5629105024,
+   "sha256": "c5cbf4f4f817e9e60b7dc92d3775590cfb6cb3da3b8c13ca4cd1bbe4532260a7"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-heretic-Q5_K_M.gguf",
+   "size": 6467965824,
+   "sha256": "1ccfffb7d8d06313aeff6883d1a51488dff13e7ae4a4209895fe6ff9afbd6fcc"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-heretic-Q6_K.gguf",
+   "size": 7359255424,
+   "sha256": "d8de704944e885f63207a42e6428e5425702b1186da2c1d16dfdd92e8d7af3aa"
+  },
+  {
+   "path": "MiMo-V2.6-Distill-Qwen-9B-heretic-Q8_0.gguf",
+   "size": 9527497600,
+   "sha256": "349649326c29d319ac90323496ed232984403f3c3189b3e5b5729ff7cdb561bb"
+  },
+  {
+   "path": "README.md",
+   "size": 8882,
+   "git_oid": "7dbc21b2bf418812dcb176319bc7524b8f565d13"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 3916,
+   "git_oid": "c6a37693fc7d9b48122182931a59f436e21b577a"
+  },
+  {
+   "path": "config.json",
+   "size": 2920,
+   "git_oid": "c6a6b38e4af4ad42ea3f344a86a14abb50956221"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 162,
+   "git_oid": "06b76d77601123532a8f5c587136fb0ccf8f54bb"
+  },
+  {
+   "path": "model-00001-of-00004.safetensors",
+   "size": 4942706120,
+   "sha256": "2f20b6541e7fcea69d5b31fbbf458b21861c39be251cef8316eea98f852e6732"
+  },
+  {
+   "path": "model-00002-of-00004.safetensors",
+   "size": 4987757928,
+   "sha256": "aa06a8c6a30b322545bcf2dad7483f010da95cf53eec04ec9d355aecb09458a5"
+  },
+  {
+   "path": "model-00003-of-00004.safetensors",
+   "size": 4954810240,
+   "sha256": "0cf91335244ad1bfe4a6089ca46dbf9e064215c30b6b5186be34b24de2a6a419"
+  },
+  {
+   "path": "model-00004-of-00004.safetensors",
+   "size": 3934446832,
+   "sha256": "41873cfd3257ec0e6a406c38ee72c624d4f9220d137887a0c21b2e12487e7024"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 69253,
+   "git_oid": "778b7bbb7ebec3f1e100b1059b1c6d54bd00e3c1"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1220,
+   "git_oid": "43c4343ec493f200e452f87a7c6649ecdfcce1ac"
+  },
+  {
+   "path": "reproduce/README.md",
+   "size": 4044,
+   "git_oid": "b1d198eb09dfb0c80ba1bf0d802df4e2abb9f98c"
+  },
+  {
+   "path": "reproduce/SHA256SUMS",
+   "size": 396,
+   "git_oid": "343d04ebee7b85fbfbbef27e26870e288c779ba2"
+  },
+  {
+   "path": "reproduce/XiaomiMiMo--MiMo-V2--6-Distill-Qwen-9B.jsonl",
+   "size": 944858,
+   "git_oid": "9db38d1cfc61c3624fcaa54b3841725d5ec17075"
+  },
+  {
+   "path": "reproduce/config.toml",
+   "size": 1969,
+   "git_oid": "93749b8640cb86ef5006c5ae83379ddc528cc554"
+  },
+  {
+   "path": "reproduce/reproduce.json",
+   "size": 9411,
+   "git_oid": "1307ae4f75c4479ebc8b4c869012f8d62878cb90"
+  },
+  {
+   "path": "reproduce/requirements.txt",
+   "size": 1960,
+   "git_oid": "ff0697dbfafc9532133f0c1f76e175244475d2a0"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989339,
+   "sha256": "a5cd9732badce41de57e6efce8302930ded1c1188c5f81feb2bd6c24c4a1941f"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1191,
+   "git_oid": "c0b21765f0ebe0cd3fb423ff914b1697ed6e35ae"
+  }
+ ]
+}

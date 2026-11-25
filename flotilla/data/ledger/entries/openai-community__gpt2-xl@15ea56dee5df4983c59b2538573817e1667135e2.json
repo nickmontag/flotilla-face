@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "openai-community/gpt2-xl",
+ "revision": "15ea56dee5df4983c59b2538573817e1667135e2",
+ "captured": "2026-11-25T05:13:04+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 445,
+   "git_oid": "602b71f15d40ed68c5f96330e3f3175a76a32126"
+  },
+  {
+   "path": "README.md",
+   "size": 11973,
+   "git_oid": "34f1cc31333e001c3047539dd604123dafd37346"
+  },
+  {
+   "path": "config.json",
+   "size": 689,
+   "git_oid": "932bdee9f4b3878f7f285187564b46f256243aff"
+  },
+  {
+   "path": "flax_model.msgpack",
+   "size": 6230463910,
+   "sha256": "fbc167e52fa30c56fbed46e8b45c25893c4afb165ef666864abc0e70d5c117a4"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 124,
+   "git_oid": "057e43033439e068b325f32af95dde9efc9552ae"
+  },
+  {
+   "path": "generation_config_for_text_generation.json",
+   "size": 165,
+   "git_oid": "c791c4d01fc484a57262ee57c878dd5b35863fe7"
+  },
+  {
+   "path": "merges.txt",
+   "size": 456318,
+   "git_oid": "226b0752cac7789c48f0cb3ec53eda48b7be36cc"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 6431829964,
+   "sha256": "0f8b28eb05a8075f48b61b6f35332978c74fc7763fa9fb4051a1c30511736a6a"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 6431878936,
+   "sha256": "cd2a29e31040ef64d9362cb96801969c9f67b9e0bdbd6e00b9dda57cdbe17435"
+  },
+  {
+   "path": "rust_model.ot",
+   "size": 6753580552,
+   "sha256": "7b92a55d852494754e2856681833ee0ff05580ee32c1d8d60a1177bbf1f4703a"
+  },
+  {
+   "path": "tf_model.h5",
+   "size": 6231102792,
+   "sha256": "47d4a280f9274f015e8dd1e7e2e1066415fc1f37030ec30d00615973e750e578"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 1355256,
+   "git_oid": "4b988bccc9dc5adacd403c00b4704976196548f8"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 26,
+   "git_oid": "be4d21d94f3b4687e5a54d84bf6ab46ed0f8defd"
+  },
+  {
+   "path": "vocab.json",
+   "size": 1042301,
+   "git_oid": "1f1d9aaca301414e7f6c9396df506798ff4eb9a6"
+  }
+ ]
+}

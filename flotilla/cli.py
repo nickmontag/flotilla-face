@@ -66,10 +66,137 @@ def parse_gb(raw: str) -> float:
 SETUP_STEPS = 8
 
 
+def vm_caution(kind: str) -> str:
+    """What to know before seeding from a virtual machine's or container's own address."""
+    return (f"This is {kind}. A VPN running on the computer that hosts it doesn't protect it: Flotilla can't "
+            f"see that VPN, and if it drops, this machine's traffic leaves through the real connection. Seeding "
+            f"from this machine's own address is fine if a router or firewall sends its traffic through a VPN "
+            f"and blocks it when the VPN is down, or if it's a rented server or seedbox whose address is the "
+            f"provider's (and the provider allows torrents). Otherwise connect a VPN inside this machine (or run "
+            f"gluetun in it) and run `flotilla init` again.")
+
+
+NOT_STARTED = 3   # `init --yes` exit code: settings saved, but nothing may start (see _init_scripted)
+
+
+def _init_scripted(args, path: Path, cfg: Config, docker: bool) -> int:
+    """`flotilla init --yes`: setup without questions, for scripts and agents installing for someone.
+
+    Every answer comes from a flag, else the current setting, else the same default the questions
+    offer. Two things are never assumed: seeding from this connection's own public IP address needs
+    --seed-from-home-ip, and a VPN container (gluetun) needs the interactive setup or README's
+    docker commands. Exit codes: 0 saved and ready to start (`flotilla service install`), 3 saved
+    but not to be started (no VPN to pin to, and no --seed-from-home-ip), 2 bad flags."""
+    from .access import ACCESS_CHOICES
+    from .netinfo import internet_route
+
+    def fail(msg: str) -> int:
+        print(f"flotilla init: {msg}", file=sys.stderr)
+        return 2
+
+    folder = cfg.folder if docker or not args.folder else Path(args.folder).expanduser()
+    created = not folder.exists()
+    try:
+        folder.mkdir(parents=True, exist_ok=True)
+    except OSError as e:
+        return fail(f"can't use {folder} for seeded files: {e}")
+    if created and not docker and sys.platform == "darwin":
+        _exclude_from_time_machine(folder)
+    du = shutil.disk_usage(folder)
+    reserve = args.reserve_gb if args.reserve_gb is not None else cfg.reserve_gb
+    budget = args.budget_gb if args.budget_gb is not None else (
+        cfg.budget_gb if path.exists() else max(10.0, round((du.free / GB - reserve) * 0.5)))
+    if budget <= 0 or reserve < 0:
+        return fail("--budget-gb must be positive and --reserve-gb not negative")
+    for name, v in (("--upload-share", args.upload_share), ("--download-share", args.download_share)):
+        if v is not None and not 0.1 <= v <= 1:
+            return fail(f"{name} must be from 0.1 to 1")
+    if args.focus and args.focus not in FOCUS_CHOICES:
+        return fail(f"--focus must be one of: {', '.join(FOCUS_CHOICES)}")
+    if args.reorient and args.reorient not in REORIENT_CHOICES:
+        return fail(f"--reorient must be one of: {', '.join(REORIENT_CHOICES)}")
+    if args.dashboard and args.dashboard not in ACCESS_CHOICES:
+        return fail(f"--dashboard must be one of: {', '.join(ACCESS_CHOICES)}")
+
+    # The network: pin to a VPN unless told not to; never seed from the home IP unless told to.
+    vpn = (args.vpn or "auto").strip()
+    route = internet_route()
+    bind, why = "", ""
+    if docker:
+        bind = cfg.bind_interface      # inside a VPN container's network every connection uses its VPN
+    elif vpn == "auto":
+        if route and route.looks_like_vpn:
+            bind, why = route.bind_value, f"the VPN carrying this machine's traffic ({route.iface})"
+        else:
+            split = _split_vpns(route)
+            if split:
+                bind, why = split[0].bind_value, f"a connected VPN ({split[0].iface})"
+            elif cfg.bind_interface:
+                bind, why = cfg.bind_interface, "the VPN setup pinned to before"
+    elif vpn != "none":
+        bind, why = vpn, "the interface or address given"
+    home_ip_ok = bool(bind) or docker or args.seed_from_home_ip
+    if not bind and not docker:
+        from .netinfo import virtualization
+
+        if kind := virtualization():
+            print(f"flotilla init: {vm_caution(kind)}", file=sys.stderr)
+    if not bind and not docker and vpn == "auto" and _vpn_containers():
+        print("flotilla init: a VPN container (such as gluetun) is running here. Setup can't move into it "
+              "without questions: run `flotilla init` interactively, or use the docker commands in the README "
+              "(Behind gluetun).", file=sys.stderr)
+
+    cfg.folder, cfg.budget_gb, cfg.reserve_gb = folder, budget, reserve
+    if args.upload_mbps is not None:
+        cfg.upload_mbps = args.upload_mbps
+    if args.download_mbps is not None:
+        cfg.download_mbps = args.download_mbps
+    if args.upload_share is not None:
+        cfg.upload_share = args.upload_share
+    if args.download_share is not None:
+        cfg.download_share = args.download_share
+    if args.monthly_upload_cap_gb is not None:
+        cfg.monthly_upload_cap_gb = max(0.0, args.monthly_upload_cap_gb)
+    cfg.focus = args.focus or cfg.focus
+    cfg.reorient = args.reorient or cfg.reorient
+    if args.churn_gb is not None:
+        cfg.churn_gb = max(0.0, args.churn_gb)
+    cfg.bind_interface = bind
+    cfg.port_forwarding = False if bind else bool(args.router_port)
+    if args.hf_fallback is not None:
+        cfg.hf_fallback = args.hf_fallback
+    if args.hf_gb_per_day is not None:
+        cfg.hf_gb_per_day = max(0.0, args.hf_gb_per_day)
+    if args.dashboard and not docker:
+        cfg.dashboard_access = args.dashboard
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(render_config(cfg))
+    _setup_result("here" if home_ip_ok else "not-started")
+
+    print(f"Saved {_host_path(path, docker)}")
+    print(f"  space     {budget:g} GB in {_host_path(folder, docker)}, keeping {reserve:g} GB free "
+          f"(the drive has {du.free / GB:,.0f} GB free)")
+    print(f"  network   " + (f"pinned to {bind}, {why}: offline whenever it's down" if bind
+                             else "inside the VPN container's network" if docker
+                             else "this connection's own public IP address" if home_ip_ok
+                             else "no VPN found: not started"))
+    print(f"  bandwidth {cfg.upload_mbps:g} Mbit/s up x {cfg.upload_share:.0%}, {cfg.download_mbps:g} down"
+          + (f", {cfg.monthly_upload_cap_gb:g} GB a month" if cfg.monthly_upload_cap_gb else ""))
+    print(f"  seeding   {cfg.focus} first; reorient {cfg.reorient}; dashboard {cfg.dashboard_access}")
+    if not home_ip_ok:
+        print("Not started: no VPN to pin to, and seeding from this connection's own public IP address wasn't "
+              "allowed (--seed-from-home-ip). Connect a VPN and run this again.")
+        return NOT_STARTED
+    print("Ready: `flotilla service install` starts it now and at every login.")
+    return 0
+
+
 def cmd_init(args) -> int:
     path = Path(args.config)
     cfg = load_config(path) if path.exists() else Config()
     docker = _in_setup_container()
+    if getattr(args, "yes", False):
+        return _init_scripted(args, path, cfg, docker)
     ui.title(f"Flotilla {__version__} setup", f"writes {_host_path(path, docker)}")
     ui.note("Seeding shares files with strangers: peers in each swarm can see your IP address, and seeding "
             "uses disk space and upload bandwidth. Press Enter to keep a default. You can change any of this "
@@ -181,6 +308,10 @@ def cmd_init(args) -> int:
                 "address" + (" whenever the VPN is down" if route and route.looks_like_vpn else "")
                 + ". At home that's your household's address, listed as seeding these models. Your settings "
                 "are saved either way; with no, Flotilla doesn't start until you start it.")
+        from .netinfo import virtualization
+
+        if kind := virtualization():
+            ui.caution(vm_caution(kind))
         home_ip_ok = _yes("Seed from this connection's public IP address", False)
         if not home_ip_ok:
             ui.info("Flotilla won't start now. To seed through a VPN, connect it and run `flotilla init` again")
@@ -249,7 +380,7 @@ def cmd_init(args) -> int:
     fill = duration(budget * GB / cfg.download_bps)
     ui.table([
         ("Space", f"{budget:g} GB in {_host_path(folder, docker)}, keeping {reserve:g} GB free"),
-        ("Upload", f"{up:g} Mbit/s × {cfg.upload_share:.0%}, up to {cfg.max_torrents} swarms at once"
+        ("Upload", f"{up:g} Mbit/s × {cfg.upload_share:.0%}, up to {cfg.max_models:,} models at once"
                    + (f", {cap:g} GB a month" if cap else "")),
         ("Filling", f"about {fill} at {down:g} Mbit/s × {cfg.download_share:.0%} (rare models take longer)"),
         ("Seeding", {"at-risk": "at-risk first: the copies most likely to be lost",
@@ -1351,6 +1482,12 @@ def cmd_status(args) -> int:
     up = doc.get("upload_month", {})
     print(f"node {doc['node']}  port {doc['listen_port']}  {'PAUSED  ' if doc.get('paused') else ''}"
           f"status {age:.0f}s old  uploaded this month {human(up.get('bytes', 0))}")
+    port = doc.get("port") or {}
+    if port.get("forwarded_taken"):
+        print(f"TAKEN  port {port['wanted']}, the one the VPN forwards, is held by another program here (another "
+              f"torrent client?): listening on {port['port']}, so peers can't connect in through the VPN")
+    elif port.get("moved"):
+        print(f"moved  port {port['wanted']} is held by another program here: listening on {port['port']} instead")
     fwd, reach = doc.get("vpn_port"), doc.get("reach") or {}
     if fwd and fwd.get("port"):
         print(f"inbound: {fwd['source']} forwards port {fwd['port']}: peers can connect in")
@@ -1761,7 +1898,7 @@ def cmd_editor(args) -> int:
         return _ledger_capture(args)
     if args.action == "stamp":
         return _ledger_stamp(args)
-    if args.action in ("sync-worth-rescuing", "sync-fallback"):
+    if args.action in ("sync-worth-rescuing", "sync-fallback", "sync-catalog"):
         return _editor_sync(args)
     if args.action == "template":
         now = datetime.now(timezone.utc).replace(microsecond=0)
@@ -1779,7 +1916,7 @@ def cmd_editor(args) -> int:
 
 
 def _editor_sync(args) -> int:
-    """sync-worth-rescuing / sync-fallback: update the list's automatically chosen entries."""
+    """sync-worth-rescuing / sync-fallback / sync-catalog: update the list's automatically chosen entries."""
     import tempfile
 
     from .config import Config
@@ -1799,12 +1936,28 @@ def _editor_sync(args) -> int:
             page = parse_page(html.decode("utf-8", "replace"))
             print(f"{PAGE_URL}: {len(page)} models")
             summary = sync(doc, page, pf, hf, licenses)
+        elif args.action == "sync-catalog":
+            from . import catalog
+            from .config import STATE_DIR
+
+            shards = Path(args.index).expanduser() if args.index else STATE_DIR / "index" / "files" / "magnet-index" / "shards"
+            if not shards.is_dir():
+                raise ValueError(f"no magnet index at {shards}: point --index at a build's shards folder (a node "
+                                 f"keeps one at <state>/index/files/magnet-index/shards)")
+            listed = catalog.read_index(shards)
+            print(f"{shards}: Pirate Face lists {len(listed)} models")
+            groups = catalog.group_hits(catalog.gather_hits(hf, listed, limit=min(1000, args.search_limit * 5)))
+            print(f"{len(groups)} of Hugging Face's most downloaded models are on Pirate Face "
+                  f"(quantisations grouped with their source)")
+            summary = catalog.sync(doc, groups, pf, hf, licenses, max_entries=args.max or catalog.MAX_ENTRIES,
+                                   per_base=args.per_base or catalog.PER_BASE)
         else:
             from . import fallback
 
-            groups = fallback.group_hits(fallback.gather_hits(hf))
+            groups = fallback.group_hits(fallback.gather_hits(hf, limit=args.search_limit))
             print(f"{len(groups)} refusal-removed builds on Hugging Face (quantisations grouped with their source)")
-            summary = fallback.sync(doc, groups, pf, hf, licenses, max_entries=args.max)
+            summary = fallback.sync(doc, groups, pf, hf, licenses, max_entries=args.max or fallback.MAX_ENTRIES,
+                                    per_base=args.per_base or fallback.PER_BASE, spare_after=args.spare_after)
         mismatches = license_mismatches(doc, hf)
     for k in ("added", "updated", "removed", "kept", "skipped"):
         for line in summary[k]:
@@ -1868,6 +2021,7 @@ def record_new_models(feed, index_path: Path, hf=None, pf=None, repo: str | None
     as soon as a model joins the list."""
     import tempfile
 
+    from .fallback import patient
     from .ledger import add_entry, capture, ledger_key, read_index_doc
     from .netsafe import DEFAULT_ALLOWED_HOSTS, FetchError, UnsafeURL
     from .sources import HuggingFace, PirateFace
@@ -1888,7 +2042,7 @@ def record_new_models(feed, index_path: Path, hf=None, pf=None, repo: str | None
                 known += 1
                 continue
             try:
-                doc, note = capture(m.repo, m.revision, hf, pf)
+                doc, note = patient(capture, m.repo, m.revision, hf, pf)   # hundreds of lookups: wait out 429s
             except (FetchError, UnsafeURL) as e:
                 print(f"  FAILED {m.repo}@{m.revision[:12]}: {e}")
                 failed += 1
@@ -2061,7 +2215,32 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--version", action="version", version=__version__)
     sub = ap.add_subparsers(dest="cmd", required=True)
 
-    sub.add_parser("init", help="interactive setup: disk, bandwidth, licenses")
+    p = sub.add_parser("init", help="interactive setup: disk, bandwidth, licenses (--yes: no questions)")
+    p.add_argument("--yes", action="store_true",
+                   help="no questions: take every answer from these flags, the current settings or the defaults. "
+                        "Exits 0 if ready to start, 3 if saved but not to be started (no VPN, and no "
+                        "--seed-from-home-ip). See AGENTS.md")
+    p.add_argument("--folder", help="--yes: folder for seeded files")
+    p.add_argument("--budget-gb", type=float, help="--yes: most disk to use (default: half the drive's free space)")
+    p.add_argument("--reserve-gb", type=float, help="--yes: always leave this much free on the drive")
+    p.add_argument("--upload-mbps", type=float, help="--yes: this line's upload speed")
+    p.add_argument("--download-mbps", type=float, help="--yes: this line's download speed")
+    p.add_argument("--upload-share", type=float, help="--yes: share of upload for the swarm, 0.1-1")
+    p.add_argument("--download-share", type=float, help="--yes: share of download while filling, 0.1-1")
+    p.add_argument("--monthly-upload-cap-gb", type=float, help="--yes: monthly upload cap, 0 for none")
+    p.add_argument("--focus", help="--yes: at-risk, balanced or in-demand")
+    p.add_argument("--reorient", help="--yes: daily, weekly, monthly or never")
+    p.add_argument("--churn-gb", type=float, help="--yes: most to swap at each reorientation")
+    p.add_argument("--vpn", help="--yes: auto (pin to the VPN found, the default), none, or an interface or "
+                                 "address to pin to")
+    p.add_argument("--seed-from-home-ip", action="store_true",
+                   help="--yes: with no VPN to pin to, seed from this connection's own public IP address. "
+                        "Peers see it. Only with the person's explicit agreement")
+    p.add_argument("--router-port", action="store_true", help="--yes: open a port on the router (UPnP), when not pinned")
+    p.add_argument("--hf-fallback", action=argparse.BooleanOptionalAction, default=None,
+                   help="--yes: fetch pieces no peer has from Hugging Face")
+    p.add_argument("--hf-gb-per-day", type=float, help="--yes: most to fetch from Hugging Face a day, 0 for no limit")
+    p.add_argument("--dashboard", help="--yes: who can reach the dashboard: local, lan, tailnet or public")
     p = sub.add_parser("plan", help="show what this node would seed (no downloading)")
     p.add_argument("--probe", action="store_true", help="briefly join candidate swarms for real per-file counts")
     p.add_argument("--json", action="store_true")
@@ -2129,10 +2308,12 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--init-local", action="store_true", help="create your own my-priorities.json to edit")
     p = sub.add_parser("editor", help="tools for feed editors")
     p.add_argument("action", choices=["keygen", "sign", "check", "template", "sync-worth-rescuing",
-                                      "sync-fallback", "ledger-capture", "stamp", "release"],
+                                      "sync-fallback", "sync-catalog", "ledger-capture", "stamp", "release"],
                    help="sync-worth-rescuing: update FILE from Pirate Face's Worth Rescuing page; "
                         "sync-fallback: update FILE's fallback entries (popular refusal-removed models "
                         "on Hugging Face that Pirate Face has torrents for); "
+                        "sync-catalog: update FILE's catalog entries (Hugging Face's most downloaded models "
+                        "that Pirate Face's magnet index lists, for spare space once the rest is covered); "
                         "ledger-capture: record hashes for FILE's pinned models in the hash ledger; "
                         "stamp: OpenTimestamps proofs for new ledger entries; "
                         "release: check, sign and publish the draft release CI built for a tag")
@@ -2141,7 +2322,18 @@ def main(argv: list[str] | None = None) -> int:
                                            "release tag like v0.2.0 (release)")
     p.add_argument("--dry-run", action="store_true",
                    help="sync-*/ledger-capture: show changes, write nothing; release: sign but don't publish")
-    p.add_argument("--max", type=int, default=40, help="sync-fallback: most fallback entries (default 40)")
+    p.add_argument("--max", type=int, help="sync-fallback: most fallback entries (default 40); "
+                                          "sync-catalog: most catalog entries (default 100)")
+    p.add_argument("--per-base", type=int,
+                   help="sync-fallback / sync-catalog: most entries of one base model (default 2 / 1)")
+    p.add_argument("--search-limit", type=int, default=200,
+                   help="sync-fallback: Hugging Face results read per search term (default 200, at most 1000; "
+                        "sync-catalog reads 5x this per pipeline, at most 1000)")
+    p.add_argument("--spare-after", type=int,
+                   help="sync-fallback: mark entries ranked past this many spare (looked at only once the rest of "
+                        "the list has its copies)")
+    p.add_argument("--index", help="sync-catalog: a magnet index build's shards folder "
+                                   "(default: this machine's node copy)")
     p.add_argument("--ledger", help="ledger-capture/stamp: the ledger index.json (default: next to the feed)")
     p.add_argument("--repo", help="ledger-capture: only this model")
     p.add_argument("--upgrade", action="store_true", help="stamp: complete proofs stamped a few hours ago")

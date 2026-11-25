@@ -1,0 +1,125 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Qwen3.5-9B-The-Defiant-Fable-Uncensored-Heretic-NEO-IMATRIX-MAX-MTP",
+ "revision": "60b8234bfe68666c2768b71ebf9a6cfea2bd2853",
+ "captured": "2026-11-25T05:08:13+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1678,
+   "git_oid": "0b9ca105ba958e5eb1e1ffca8e5523bbfa45b7aa"
+  },
+  {
+   "path": "README.md",
+   "size": 148306,
+   "git_oid": "429d10d71f146a01d8511626bffb5b455e9042ba"
+  },
+  {
+   "path": "backup/chat_template.jinja",
+   "size": 7756,
+   "git_oid": "a585dec894e63da457d9440ec6aa7caa16d20860"
+  },
+  {
+   "path": "backup/config.json",
+   "size": 2932,
+   "git_oid": "3222bd84de41b9f64bd7178b5cf3e1e74fee02c9"
+  },
+  {
+   "path": "backup/generation_config.json",
+   "size": 141,
+   "git_oid": "33c12b1946af632b34d173a1a1c39197faf2c89b"
+  },
+  {
+   "path": "backup/tokenizer.json",
+   "size": 19989343,
+   "sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4"
+  },
+  {
+   "path": "backup/tokenizer_config.json",
+   "size": 15210,
+   "git_oid": "42659baad00d61be27498932500767168836fde8"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7756,
+   "git_oid": "a585dec894e63da457d9440ec6aa7caa16d20860"
+  },
+  {
+   "path": "config.json",
+   "size": 2932,
+   "git_oid": "3222bd84de41b9f64bd7178b5cf3e1e74fee02c9"
+  },
+  {
+   "path": "defiant-fable-9b.png",
+   "size": 69177,
+   "git_oid": "9b2138dd66cb369c78d80ddd2008d63a6f834b7c"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 141,
+   "git_oid": "33c12b1946af632b34d173a1a1c39197faf2c89b"
+  },
+  {
+   "path": "model-00001-of-00004.safetensors",
+   "size": 4942706128,
+   "sha256": "9c8d053d013fdc681f4aac84f18be2ae48e7ced9a4b5e7395dbf6975c509249e"
+  },
+  {
+   "path": "model-00002-of-00004.safetensors",
+   "size": 4987758072,
+   "sha256": "c166dda141e2bc36ed79a02cb7c4c93ae8a21e187d7aa4dbd92feade78dbeaf0"
+  },
+  {
+   "path": "model-00003-of-00004.safetensors",
+   "size": 4954219624,
+   "sha256": "7140d0d130eaf3a98fc9105e2aba5c8bebadf16f34f4396492d66c1db5924c6e"
+  },
+  {
+   "path": "model-00004-of-00004.safetensors",
+   "size": 4354511264,
+   "sha256": "abff669313bf942926582ded3c27de0a5a9a4da42e257e0543d6d5eb9768fc3b"
+  },
+  {
+   "path": "model-mtp-restored.safetensors",
+   "size": 67108960,
+   "sha256": "244e0ecaa9599825163f1787480228ed4be81ea52ac52b70af161a0750f7013f"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 71170,
+   "git_oid": "56af35683dad813d07b10f2fdaaf773ed94ff283"
+  },
+  {
+   "path": "neo-dodge.gif",
+   "size": 4215681,
+   "sha256": "8db15045bab38ea9a00615ce1404dd9a7bc8c569001cdf2f6d2d2f2a5b05c61f"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989343,
+   "sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 15210,
+   "git_oid": "42659baad00d61be27498932500767168836fde8"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  },
+  {
+   "path": "vocab.json",
+   "size": 6722759,
+   "git_oid": "0aa0ce0658d60ac4a5d609f4eadb0e8e43514176"
+  }
+ ]
+}

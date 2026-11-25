@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "CoreWolf/Huihui-DeepSeek-V4-Flash-0731-abliterated-GGUF",
+ "revision": "ca9c9ac6d0c11ff348ecdc3848f1987e6800bce9",
+ "captured": "2026-11-25T05:08:47+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1944,
+   "git_oid": "212b096080619473403321059f457cae8bf0e71c"
+  },
+  {
+   "path": "DeepSeek-V4-Flash-Q3_K-0731.gguf",
+   "size": 127841067936,
+   "sha256": "3266c8d91dcb14c76d48096038a7018c7d867a68144f6152ff42d5b34a0b19b4"
+  },
+  {
+   "path": "README.md",
+   "size": 4606,
+   "git_oid": "2f16d4ad5fd07cc046913aabf333b11353a46f94"
+  },
+  {
+   "path": "dspark-abliterated/README.md",
+   "size": 4975,
+   "git_oid": "a8fde3387884fcd8a84b8269a2df05dca2dce4b2"
+  },
+  {
+   "path": "dspark-abliterated/dspark-DeepSeek-V4-Flash-0731-BF16.gguf",
+   "size": 11314832480,
+   "sha256": "a08c6c65727622bcec535e3a9b86cfe68632eac459ae4f7b176338b79977229a"
+  },
+  {
+   "path": "dspark-abliterated/dspark-DeepSeek-V4-Flash-0731-Q8_0.gguf",
+   "size": 10896057440,
+   "sha256": "6575853d1c3736c160101bc7cd117c8edd39ca847cfdf2273d9a344108edfaf8"
+  },
+  {
+   "path": "dspark/README.md",
+   "size": 4963,
+   "git_oid": "b7cb6ae50d771588bf2fe7b8ba6a5042a9a845e3"
+  },
+  {
+   "path": "dspark/dspark-DeepSeek-V4-Flash-0731-BF16.gguf",
+   "size": 11314832480,
+   "sha256": "df7a182b1f62acee6e9e33f11a03876db8031d9d147419309a448d0e776f82d8"
+  },
+  {
+   "path": "dspark/dspark-DeepSeek-V4-Flash-0731-Q8_0.gguf",
+   "size": 10896057440,
+   "sha256": "2c7ac54b0b64a99df1f139a9f1371a00198265e1d6a614b77597d20a655a4249"
+  }
+ ]
+}

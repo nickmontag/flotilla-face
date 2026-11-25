@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Ornith1.0-9B-3MPER0RR-abliterated-GGUF",
+ "revision": "da33f075994ddc0169d2b31b7dfec86280fb2728",
+ "captured": "2026-11-25T05:08:53+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2494,
+   "git_oid": "732745327482b26bc73cb5f85288898032a7f2b8"
+  },
+  {
+   "path": "Ornith1.0-9B-3MPER0RR-abliterated.IQ4_XS.gguf",
+   "size": 5227898208,
+   "sha256": "c1c188bff98153c020cdc5b5ce1870f114e5a1ebd8f1308758fb2efc084c42a2"
+  },
+  {
+   "path": "Ornith1.0-9B-3MPER0RR-abliterated.Q2_K.gguf",
+   "size": 3827262816,
+   "sha256": "53ed6f2c3f968f5afa5804906de35391dbdc2df82ab0f37df38e9e28c51b709b"
+  },
+  {
+   "path": "Ornith1.0-9B-3MPER0RR-abliterated.Q3_K_L.gguf",
+   "size": 4925515104,
+   "sha256": "88889d940af3dd51b06471ae1a58c844b00a0cee32552b49add43d111df70400"
+  },
+  {
+   "path": "Ornith1.0-9B-3MPER0RR-abliterated.Q3_K_M.gguf",
+   "size": 4623525216,
+   "sha256": "a853228eb4baa09dc9c2e75d8a361af0d832cf8775f35514e787398ccf99aa1a"
+  },
+  {
+   "path": "Ornith1.0-9B-3MPER0RR-abliterated.Q3_K_S.gguf",
+   "size": 4259407200,
+   "sha256": "26e5b4a9d9601eda83a1746b83b60c1788b5e3e40dd3e3df594bf175ac5af637"
+  },
+  {
+   "path": "Ornith1.0-9B-3MPER0RR-abliterated.Q4_K_M.gguf",
+   "size": 5629109600,
+   "sha256": "0cc539daad6d3b9836ae834c11f54b4e67002b69d7f664f303d697d77a19ee79"
+  },
+  {
+   "path": "Ornith1.0-9B-3MPER0RR-abliterated.Q4_K_S.gguf",
+   "size": 5351630176,
+   "sha256": "f7eb1dc1ac0b088e910b92734d0fb193ff7b7fb202abb6473143d927bb70cd08"
+  },
+  {
+   "path": "Ornith1.0-9B-3MPER0RR-abliterated.Q5_K_M.gguf",
+   "size": 6467970400,
+   "sha256": "4e9eb6683a3761a127ef05b0844bdb62652494a06875c39434cad5960d438ca7"
+  },
+  {
+   "path": "Ornith1.0-9B-3MPER0RR-abliterated.Q5_K_S.gguf",
+   "size": 6305310048,
+   "sha256": "a0907cf4f71c71c32ac7a148ed2e346e00ad6ca135473c4cc9d36326b633965a"
+  },
+  {
+   "path": "Ornith1.0-9B-3MPER0RR-abliterated.Q6_K.gguf",
+   "size": 7359260000,
+   "sha256": "be9e69d16f6dd579e6774f58140af23e252dd27c5721fbb297a2e71a04345364"
+  },
+  {
+   "path": "Ornith1.0-9B-3MPER0RR-abliterated.Q8_0.gguf",
+   "size": 9527502176,
+   "sha256": "861d338b1b445fc2033e8d173850f529f011a346b2704b1e33ce44f6b2c4fbf6"
+  },
+  {
+   "path": "Ornith1.0-9B-3MPER0RR-abliterated.f16.gguf",
+   "size": 17920697696,
+   "sha256": "cb4c53f3b908fa78ccb2337ca34fdb3ece890464049eb80aae81fecab1bfab8a"
+  },
+  {
+   "path": "README.md",
+   "size": 4012,
+   "git_oid": "aa2ebd21873a8d396d57c6d6e432b1dd9571c607"
+  }
+ ]
+}

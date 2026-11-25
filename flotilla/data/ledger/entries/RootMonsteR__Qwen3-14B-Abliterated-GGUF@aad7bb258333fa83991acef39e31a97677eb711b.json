@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "RootMonsteR/Qwen3-14B-Abliterated-GGUF",
+ "revision": "aad7bb258333fa83991acef39e31a97677eb711b",
+ "captured": "2026-11-25T05:08:44+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2006,
+   "git_oid": "731bb2844ab98cdbd4ffc534e23a09d20a3c42b9"
+  },
+  {
+   "path": "Modelfile",
+   "size": 514,
+   "git_oid": "552a886102b8fab3ffd74fa35e5bab23a900f5dc"
+  },
+  {
+   "path": "README.md",
+   "size": 9024,
+   "git_oid": "f673b55668c3028e109936d0c78e22cfeec8cd53"
+  },
+  {
+   "path": "SHA256SUMS",
+   "size": 200,
+   "git_oid": "549b63ad48972cf23d3e3530c1fb9ce91bf3924d"
+  },
+  {
+   "path": "assets/03-agentic-loop.png",
+   "size": 126279,
+   "sha256": "e36b68584f749d442d434ed351b6a37472857f10619ffe72f67ece5157bbc011"
+  },
+  {
+   "path": "assets/04-format-decision.png",
+   "size": 174633,
+   "sha256": "854e4262b9edbc641a945731a88eff712efdbc7f16f4b7cb2437486fc9ffbfe8"
+  },
+  {
+   "path": "assets/banner.png",
+   "size": 169512,
+   "sha256": "6a96507d186ffaf474d71348cd5a73750ab267252a72d85e7c7bf72bd7eb9116"
+  },
+  {
+   "path": "assets/formats-strip.png",
+   "size": 32077,
+   "git_oid": "b6b05f6d27a128396c6638e78481f9e77c44dccb"
+  },
+  {
+   "path": "qwen3-14b-abliterated-Q4_K_M.gguf",
+   "size": 9001753792,
+   "sha256": "c74b5bcfcf7d4c9386075cde43fd7a4580c602b46b90ad01d7fc58b696748bbb"
+  },
+  {
+   "path": "qwen3-14b-abliterated-Q5_K_M.gguf",
+   "size": 10514570432,
+   "sha256": "dd502f4f28ec24c24d014ebc67caf39c7f2fae5e537eb818bdb54a25fe7b3703"
+  }
+ ]
+}

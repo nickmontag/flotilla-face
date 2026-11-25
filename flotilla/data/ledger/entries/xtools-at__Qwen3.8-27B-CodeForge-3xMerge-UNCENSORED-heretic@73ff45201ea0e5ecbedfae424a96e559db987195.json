@@ -1,0 +1,165 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "xtools-at/Qwen3.8-27B-CodeForge-3xMerge-UNCENSORED-heretic",
+ "revision": "73ff45201ea0e5ecbedfae424a96e559db987195",
+ "captured": "2026-11-25T05:08:39+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1627,
+   "git_oid": "fdb814e255db93c3cae763b3c7c333fbf0f26df5"
+  },
+  {
+   "path": "README.md",
+   "size": 9386,
+   "git_oid": "abe165094044825200ff566ebf19da740ee355f4"
+  },
+  {
+   "path": "banner-codeforge.jpg",
+   "size": 106160,
+   "sha256": "3edc0c82e1a5687ad364c14d6a3dd8cc9dc91797b0dc5fcdd6819de6e42092ec"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 8952,
+   "git_oid": "c0c686f9c38d70d179fb7b5f5aa7530bc913dda3"
+  },
+  {
+   "path": "config.json",
+   "size": 3743,
+   "git_oid": "f46f2cf75c11be6128a67fff68a87c40c634ed15"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 214,
+   "git_oid": "93123909826d8e8cc7c16ce3f0783b525349e000"
+  },
+  {
+   "path": "model-00001-of-00012.safetensors",
+   "size": 2542796928,
+   "sha256": "54d83c1d36631de231876217a8e0c2483eccee8746369a482b79442bdfc5d958"
+  },
+  {
+   "path": "model-00002-of-00012.safetensors",
+   "size": 4842451920,
+   "sha256": "8f93570495eac55770f9547fed59d267001f6e7e163bedfe044e7aee0213ee71"
+  },
+  {
+   "path": "model-00003-of-00012.safetensors",
+   "size": 4965227944,
+   "sha256": "0d90f401f91da01a9c27d889833b696c477c05883e211acc79ba13d0a51c8564"
+  },
+  {
+   "path": "model-00004-of-00012.safetensors",
+   "size": 4912819264,
+   "sha256": "197dfbf66fd66275ffe56d7301d218133b09b4d21803df8e5ae19c4fdbdf6d5c"
+  },
+  {
+   "path": "model-00005-of-00012.safetensors",
+   "size": 4986198544,
+   "sha256": "e223d50206bdc2c91259b7f145ebfeac385e44e31398eff7942fc329e03a99c5"
+  },
+  {
+   "path": "model-00006-of-00012.safetensors",
+   "size": 4912819320,
+   "sha256": "3ee9020e90b7825c1c58bfef2d6367db458f6c7914411c7f40d04101adb98fb0"
+  },
+  {
+   "path": "model-00007-of-00012.safetensors",
+   "size": 4932703272,
+   "sha256": "5e5a0aedf3a7c4bbce364e1caeceac16fabd2840c4c2deb45a34fec78203dc84"
+  },
+  {
+   "path": "model-00008-of-00012.safetensors",
+   "size": 4966314576,
+   "sha256": "b74eec2d8a7bc3da41719b4bd04a1679da846e41413e20d078242dc40e780ecc"
+  },
+  {
+   "path": "model-00009-of-00012.safetensors",
+   "size": 4964162248,
+   "sha256": "819d74fb743611926d03e18de603315581c6e8188bcb0bda3bfb47276f7dd6c0"
+  },
+  {
+   "path": "model-00010-of-00012.safetensors",
+   "size": 4933789824,
+   "sha256": "f68d1b19fc2bf65a697eb2b4e13fc1d17d8fdd03068974c182ceb067d2e6325e"
+  },
+  {
+   "path": "model-00011-of-00012.safetensors",
+   "size": 4965228032,
+   "sha256": "17c14b2367ea573ed23d70b141673059603bde4154fd8aaea04863cce6106570"
+  },
+  {
+   "path": "model-00012-of-00012.safetensors",
+   "size": 2789094896,
+   "sha256": "5e4d08e6341dbd5a1f6eb31c0ab0c291dfbc8e25feff4f0c42e0623972c3dbdd"
+  },
+  {
+   "path": "model-mtp.safetensors",
+   "size": 849400552,
+   "sha256": "c2ae503a705bb7cf8a807ce39524d0498a3965e62b24753ef802c4fb82adad92"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 112085,
+   "git_oid": "86f172f6573e6c26b17f23e036f508d8e287ebdd"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1220,
+   "git_oid": "43c4343ec493f200e452f87a7c6649ecdfcce1ac"
+  },
+  {
+   "path": "reproduce/README.md",
+   "size": 3347,
+   "git_oid": "f66445f1a10d9799d0c195696f4a8fd713863d27"
+  },
+  {
+   "path": "reproduce/SHA256SUMS.txt",
+   "size": 1188,
+   "git_oid": "fd914f05b326da37717f03271e35b372e5e878d6"
+  },
+  {
+   "path": "reproduce/config.toml",
+   "size": 942,
+   "git_oid": "ccb818c654fe7001aea4f881a7a7cc6269b06fcd"
+  },
+  {
+   "path": "reproduce/reproduce.json",
+   "size": 8504,
+   "git_oid": "e01457a15d94d11039ad684fd0b925cd884821b7"
+  },
+  {
+   "path": "reproduce/requirements.txt",
+   "size": 1945,
+   "git_oid": "9017147030d0089315c30d19c7a1aac2a4cae9a9"
+  },
+  {
+   "path": "reproduce/xtools-at--Qwen3--8-27B-CodeForge-3xMerge.jsonl",
+   "size": 168824,
+   "git_oid": "60b20c91a8798cc95588005e659ff27bed1683b5"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989339,
+   "sha256": "a5cd9732badce41de57e6efce8302930ded1c1188c5f81feb2bd6c24c4a1941f"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1191,
+   "git_oid": "c0b21765f0ebe0cd3fb423ff914b1697ed6e35ae"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  }
+ ]
+}

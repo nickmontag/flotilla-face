@@ -1,0 +1,140 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/flint-roleplay-antislop-heretic-i1-GGUF",
+ "revision": "b3ffa72c113dd1e173726f5e730c8dd73cc0993a",
+ "captured": "2026-11-25T05:08:47+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3497,
+   "git_oid": "53f810278dc4136920501c9ad4c7b1c599e19bd7"
+  },
+  {
+   "path": "README.md",
+   "size": 6765,
+   "git_oid": "34babc818c03eb434666d1e42639dd2a74430d14"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-IQ1_M.gguf",
+   "size": 9075919008,
+   "sha256": "8455a057d23df6370d7389bb4cc4efb328e69b53c97a3765f8fb5e9924a98eb9"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-IQ1_S.gguf",
+   "size": 8182556832,
+   "sha256": "5938b93019a49e541b49ed99eb42e065a7665ada4730066345b0bfa57e20bd10"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-IQ2_M.gguf",
+   "size": 13106540704,
+   "sha256": "2a74df6acbacfaa9efe3e529a26fef2b3b5b0ec9c59d65af5e16ac90fb22f106"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-IQ2_S.gguf",
+   "size": 11915391136,
+   "sha256": "085966b861cc6d181775a2fda1b22c06356371dc2b6908d01ead2f0ebb74939d"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-IQ2_XS.gguf",
+   "size": 11768850592,
+   "sha256": "e486ebb7558563b67167820dc5de49539f96ee03818678dd0636174f6aa90f53"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-IQ2_XXS.gguf",
+   "size": 10564855968,
+   "sha256": "c90c1d5ba7df3a1acd083a5cc8d34088d554ef61b782285606362d74d7c6930c"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-IQ3_M.gguf",
+   "size": 17518057632,
+   "sha256": "3ba32d5f815d29ec6f97bb441223aa40848edecaf8430aee0cec7f9c17496202"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-IQ3_S.gguf",
+   "size": 17316403360,
+   "sha256": "8930f0e18a946a59ac831fcc687c82fe48e80bb299f8969e66087507c371e1ac"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-IQ3_XS.gguf",
+   "size": 16381679776,
+   "sha256": "6f3f77345230f17309740a39553c6e88b1d662d7e8719d7c9f19a14fe69c31f3"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-IQ3_XXS.gguf",
+   "size": 15433396384,
+   "sha256": "8851b4d1a033e00d9b856ebc5411dca7cec48ea80e67ef5fac44a64890ca9362"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-IQ4_XS.gguf",
+   "size": 21324546208,
+   "sha256": "621eff9df1562a3f1d6bc794b3c26cfbbb635660e7e3a5c37a96ce1fcd497cdd"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-Q2_K.gguf",
+   "size": 14650355872,
+   "sha256": "cadc91654c82f19078b17ce3f1334471deb80b1feaafa8229ae35ed9d0586327"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-Q2_K_S.gguf",
+   "size": 13574205600,
+   "sha256": "90bbecdc98ae202e447edaa729c1e42f597820de29b96b8a48cb8beecca27800"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-Q3_K_L.gguf",
+   "size": 20713380000,
+   "sha256": "799e5a646f723c510743dd5db04bc7156e2a53095e924494094557d6f7197e5a"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-Q3_K_M.gguf",
+   "size": 19100276896,
+   "sha256": "bf171bf1812592294ec28e5549f4f9257ee4b20e97f35429f90ed2b78e419e36"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-Q3_K_S.gguf",
+   "size": 17309579424,
+   "sha256": "5e8dcb8c3b02c888cc77a41b967df749840fbe665cf589a11e1b40134047dac0"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-Q4_0.gguf",
+   "size": 22618628256,
+   "sha256": "708c1e5869857256226d0ef0f130c3f9e93c77007330c93d3498eb820c70fc65"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-Q4_1.gguf",
+   "size": 25015230624,
+   "sha256": "c838c0bf010839a5632ccb50d9aae056743299b6be3c9e566368f1f086588b02"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-Q4_K_M.gguf",
+   "size": 24166842528,
+   "sha256": "6c492411a12ffd41058f34b50f53daae7f815a1a9adda7a18a62079fee8430bc"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-Q4_K_S.gguf",
+   "size": 22688358560,
+   "sha256": "6b12abb3563e7892113aefe0995bb96315d04da42af11f21f9f3711d3575b926"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-Q5_K_M.gguf",
+   "size": 28314255520,
+   "sha256": "2059aec25224e17781a08e57e15247290b1b9a8afe090be3643efc59d16aa8f7"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-Q5_K_S.gguf",
+   "size": 27481039008,
+   "sha256": "409befd3a80d8fdd2e092727106d2a5472019269332b5a77bb33a3729cca8e84"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.i1-Q6_K.gguf",
+   "size": 32720881824,
+   "sha256": "6f8b53d106740649e41e22b0e7153543976c5fdb2f748f3c9c379bfe403c57ff"
+  },
+  {
+   "path": "flint-roleplay-antislop-heretic.imatrix.gguf",
+   "size": 450750176,
+   "sha256": "006c4800662b261fc1c8e8485e39a4a79074daf41ff6bd39a361ef41ed075c82"
+  }
+ ]
+}

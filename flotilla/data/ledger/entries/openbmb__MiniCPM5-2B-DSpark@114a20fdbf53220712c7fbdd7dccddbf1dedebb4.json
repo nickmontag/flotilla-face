@@ -1,0 +1,30 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "openbmb/MiniCPM5-2B-DSpark",
+ "revision": "114a20fdbf53220712c7fbdd7dccddbf1dedebb4",
+ "captured": "2026-11-25T05:09:30+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 4089,
+   "git_oid": "f0c775b7a75c1b6b4322f13edf75ceb0363683a2"
+  },
+  {
+   "path": "config.json",
+   "size": 1414,
+   "git_oid": "5f2d826e2d137bc3e77a4b0263a9ce7942cd1018"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 647558522,
+   "sha256": "ae9ff4a8c944e2f88f266cc9452f6b8908a6d2bfce57cd4cf12cfb5cb979bc97"
+  }
+ ]
+}

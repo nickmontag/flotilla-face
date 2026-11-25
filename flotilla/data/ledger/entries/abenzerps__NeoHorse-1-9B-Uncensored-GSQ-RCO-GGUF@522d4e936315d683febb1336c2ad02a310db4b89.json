@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "abenzerps/NeoHorse-1-9B-Uncensored-GSQ-RCO-GGUF",
+ "revision": "522d4e936315d683febb1336c2ad02a310db4b89",
+ "captured": "2026-11-25T05:08:59+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1868,
+   "git_oid": "5d7efe73229f1f517edeafc4570f10b0416456c7"
+  },
+  {
+   "path": "NeoHorse-1-9B-GSQ-RCO-IQ2_XS.gguf",
+   "size": 3133711328,
+   "sha256": "410469495c1cde3360c17beaaae9c23418eb79ce68390d72b9e40ab91defc203"
+  },
+  {
+   "path": "NeoHorse-1-9B-GSQ-RCO-IQ3_M.gguf",
+   "size": 4196934624,
+   "sha256": "14de1941603a3762ae6172884e5b3f793fbd73a746f6fccc86b11dfb802eda7a"
+  },
+  {
+   "path": "NeoHorse-1-9B-GSQ-RCO-IQ3_S.gguf",
+   "size": 3916964832,
+   "sha256": "6c69cd715af9617d274737cb843a09506fc084228065280163f5262ac8500899"
+  },
+  {
+   "path": "NeoHorse-1-9B-GSQ-RCO-IQ3_XXS.gguf",
+   "size": 3357287392,
+   "sha256": "9694cbabf031bc5aa18a23da20b70700cfa3d2bbf7d746a07af486cd79775802"
+  },
+  {
+   "path": "NeoHorse-1-9B-GSQ-RCO-IQ4_XS.gguf",
+   "size": 4756349920,
+   "sha256": "d465fb8b661122ed0309a27c467c6b866bfc9306737cef537e03a424e7eeeaff"
+  },
+  {
+   "path": "README.md",
+   "size": 2746,
+   "git_oid": "333f0c2d088fff85e648e2fd15f492a8fecb3d65"
+  },
+  {
+   "path": "SHA256SUMS.txt",
+   "size": 499,
+   "git_oid": "1a8d99d9e58b68ab74e4e735d6eaeb110c94bb76"
+  }
+ ]
+}

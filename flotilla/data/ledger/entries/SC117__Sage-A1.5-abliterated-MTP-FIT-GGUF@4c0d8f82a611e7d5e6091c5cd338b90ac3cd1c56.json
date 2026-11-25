@@ -1,0 +1,105 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "SC117/Sage-A1.5-abliterated-MTP-FIT-GGUF",
+ "revision": "4c0d8f82a611e7d5e6091c5cd338b90ac3cd1c56",
+ "captured": "2026-11-25T05:08:40+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2220,
+   "git_oid": "11b3c0dbbbe05828c331c18db10560c81bc5df95"
+  },
+  {
+   "path": "README.md",
+   "size": 31285,
+   "git_oid": "7953967004a3e3057379e03928ce6cd9a8cb2a8c"
+  },
+  {
+   "path": "README.zh-CN.md",
+   "size": 30692,
+   "git_oid": "8199674cecf1b1fa25759ea96dff09379255086c"
+  },
+  {
+   "path": "SHA256SUMS.txt",
+   "size": 949,
+   "git_oid": "e8a4986807b5d09f5dcc25de772380081eb775bd"
+  },
+  {
+   "path": "Sage-A1.5-abliterated-MTP-BF16-imatrix.gguf",
+   "size": 393972256,
+   "sha256": "746d03755673be2cac965930d3ccae396e59c5ac66349d183d5d49cb6690eb9f"
+  },
+  {
+   "path": "Sage-A1.5-abliterated-MTP-BF16.gguf",
+   "size": 71066995232,
+   "sha256": "afbd044fee468db1f6e0e3ca58a56d5e7d716500a7057c527313d62aa41a8c03"
+  },
+  {
+   "path": "Sage-A1.5-abliterated-MTP-FIT-balanced-13.17GiB-IQ3_S.gguf",
+   "size": 14139028000,
+   "sha256": "6557938b2c9bb04c2b0ea1a6c182b021833dbd104656f044e5ea089897c1a178"
+  },
+  {
+   "path": "Sage-A1.5-abliterated-MTP-FIT-compact-11.40GiB-IQ3_XXS.gguf",
+   "size": 12241527328,
+   "sha256": "c219e1d8cce6dc73785075c0270630cf7504700912aea814905c5935e47ed9a2"
+  },
+  {
+   "path": "Sage-A1.5-abliterated-MTP-FIT-mini-11.11GiB-IQ2_M.gguf",
+   "size": 11932934688,
+   "sha256": "c1cf148dce7127b40918a2bcaa98d489143447a8b5bcc9dc0a7f41ce7a85957a"
+  },
+  {
+   "path": "Sage-A1.5-abliterated-MTP-FIT-quality-16.06GiB-IQ4_XS.gguf",
+   "size": 17243875872,
+   "sha256": "5dbbeb9a81fcd647f3a72f873a1aa6ba7aa0c9dccc060d0f05f8b29b921c7d6a"
+  },
+  {
+   "path": "Sage-A1.5-abliterated-MTP-FIT-reference-23.61GiB-Q5_K_M.gguf",
+   "size": 25347533344,
+   "sha256": "10cbd3383978d7c03bc77478cd969f8e14dbb65e3ca04bbee02d0949ee8e2405"
+  },
+  {
+   "path": "mmproj-Sage-A1.5-abliterated-bf16.gguf",
+   "size": 902821824,
+   "sha256": "f2295e948aa36b50493c751afc37a4f72f7512d965b00fa6406b91f6e7733470"
+  },
+  {
+   "path": "recipes/fit-balanced-plan.json",
+   "size": 1592,
+   "git_oid": "ec8309c5a41279a42b527a427fda84b3d8690923"
+  },
+  {
+   "path": "recipes/fit-balanced-tensor-types.txt",
+   "size": 8024,
+   "git_oid": "b763252359dc46bb1eb4500d74b8616f9c815520"
+  },
+  {
+   "path": "recipes/fit-compact-plan.json",
+   "size": 1621,
+   "git_oid": "bb3d5790178206047cc8cc6dcd66dc571ded4640"
+  },
+  {
+   "path": "recipes/fit-compact-tensor-types.txt",
+   "size": 10239,
+   "git_oid": "d70b9118b08bc85265b45d997b95b61287adef8e"
+  },
+  {
+   "path": "recipes/fit-quality-plan.json",
+   "size": 1615,
+   "git_oid": "72556c38de0f6608af67d6274c369702957d5b30"
+  },
+  {
+   "path": "recipes/fit-quality-tensor-types.txt",
+   "size": 8626,
+   "git_oid": "0ef3edf4d9cab4017cb7443463a82fd74e1b4de6"
+  },
+  {
+   "path": "results/measurements.json",
+   "size": 4917,
+   "git_oid": "6f7f3f84e0fe4a17bee1df6dc6b8e7a1a0d79eb4"
+  }
+ ]
+}

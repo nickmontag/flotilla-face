@@ -134,6 +134,10 @@ network instead (see [Behind gluetun](#behind-gluetun-docker)).
 
 Then it offers to run Flotilla in the background, starting at every login. That's it.
 
+**Setting it up for someone else, or as an agent?** [AGENTS.md](AGENTS.md) has the procedure: what to
+ask them first, what to check, and `flotilla init --yes` with flags, which sets up without questions
+and never seeds from the home IP address unless told to.
+
 **Without a VPN, peers see your home IP address.** Every peer in every swarm Flotilla joins sees the
 address it seeds from. If setup finds no VPN to pin Flotilla to, it asks whether to seed from your
 connection's own address, and the answer defaults to no: your settings are saved, but nothing starts
@@ -232,6 +236,19 @@ brought back. Set `keep_magnet_index = false` under `[pirateface]` to turn this 
 6. **It reorients on your schedule** (see below): it swaps the lowest-priority pieces you hold for the
    ones the swarm needs most.
 
+Step 4 in one picture: a file's value per GB comes from how much its model matters, how close it is to
+being lost, and how many people want it.
+
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="docs/what-to-carry-dark.svg">
+    <img src="docs/what-to-carry.svg" alt="What makes a piece worth carrying: editors score capability, cyber skill and takedown risk into a priority; the swarm probe measures copies, whether the target is reached and whether Hugging Face still has the model (need), and downloaders, seeders and upload speed (demand). Value per GB is priority × (need + demand), weighted by your focus." width="680">
+  </picture>
+</p>
+
+Copies count for a lot. A model the list scores 0.93 is worth 0.23 per GB once three others hold it,
+less than an official release scored 0.25 that nobody holds yet (both still on Hugging Face).
+
 The maths is in [DESIGN.md](DESIGN.md).
 
 ### What to seed first
@@ -281,6 +298,27 @@ would go out, what would come in, and when. **Reorient now**, there too, does on
 Both are in the dashboard's settings, asked by `flotilla init`, and stored under `[reorient]` in your
 config.
 `flotilla plan` prints the swap the next reorientation would make.
+
+### When the whole list has its copies
+
+Once everything on the list has its target number of copies, more space would only add a 20th or
+40th copy of the same models. Then Flotilla turns to the rest of Pirate Face's catalog, tens of
+thousands of models, most with no seeder at all:
+
+- Your node already keeps Pirate Face's magnet index, which lists every model, so it reads the catalog
+  without asking anyone.
+- Once a day it takes its own slice of the catalog (740 models, chosen by a hash of its id and the
+  week, so other nodes take other slices and every slice moves each week) and asks Pirate Face's
+  tracker how many seeders each has: 10 small requests.
+- It looks up only the 20 least seeded, checks them like any other model, and carries them at the
+  lowest priority, aiming for 2 copies each.
+
+It pauses by itself whenever some of the list is short of copies again. Turn it off with
+`catalog_sweep = false` under `[policy]`; `sweep_candidates` sets how many it looks at.
+
+Most of the catalog is models under 1 GB, so a node may end up carrying hundreds of them. That's
+fine: a model nobody is downloading costs only a tracker announce now and then. A node carries up to
+1000 models by default; set `max_models` under `[network]` to keep fewer swarms open.
 
 ### When no peer has a piece
 
@@ -455,6 +493,14 @@ apart, until a port comes back. Each try takes everything sharing gluetun's netw
 seconds. If gluetun's control server has an auth `config.toml`, the role holding Flotilla's key needs
 `"PUT /v1/vpn/status"` in its `routes`.
 
+**Another torrent client on the same machine** is fine. If another program already holds Flotilla's port
+(6881 unless `listen_port` says otherwise), Flotilla listens on the next free one and says so in its
+log, in `flotilla status` and on the dashboard's Port line. The exception is the port your VPN forwards:
+only one program can listen on it, so if another client holds it, peers can't connect in to Flotilla.
+The dashboard's VPN badge then says "forwarded port taken". Give the other client a different port.
+The two don't share files or bandwidth limits: a model both seed takes its space twice, and each
+client only throttles itself.
+
 With no port forwarded, Flotilla makes up for it. It notices that no peer has connected in for three
 days (`flotilla status` and the dashboard count peers that connected in and peers it dialed), then
 dials more peers, faster, asks trackers for new peers every 15 minutes instead of every half hour, and
@@ -463,6 +509,29 @@ leechers it can't reach on its own. Two nodes that both lack a forwarded port ca
 (hole punching over uTP), though not every VPN allows it. Nodes that peers *can* reach also lean
 harder toward the pieces with at most one other copy, so the last copies end up where everyone can
 reach them.
+
+### On a server, VM or seedbox
+
+A home server, a Proxmox VM or LXC container, or a rented seedbox is a good place to run Flotilla: it's
+always on and has a disk of its own. On Linux, `flotilla service install --linger` keeps it running
+with nobody logged in. The one rule is that the VPN has to fail closed somewhere the seeding traffic
+can't get around:
+
+- **A VPN inside the machine** (a WireGuard client, or gluetun): `flotilla init` pins to it.
+- **A router or firewall** (OPNsense, pfSense) that routes this machine through a VPN and blocks it when
+  the VPN is down. Flotilla can't see that VPN, so setup says none was found; seeding from the machine's
+  own address is fine here.
+- **A rented seedbox or server**: its address is the provider's, not your home's. Check the provider
+  allows torrents (seedbox hosts do; many cheap VPS providers forward copyright notices or forbid it).
+
+What doesn't protect it: a VPN app on the computer that hosts the VM (or on Windows, under WSL), with
+nothing at the network level. The VM can't see that VPN, and when it drops, the VM's traffic leaves
+through your home connection. `flotilla init` notices when it runs in a VM or container and says so
+before asking about seeding from the machine's own address.
+
+For an LXC container, use Debian or Ubuntu (not Alpine), and pass `/dev/net/tun` through for a VPN
+inside it. Give a VM real space: a pre-allocated disk image, a passed-through disk or a ZFS dataset.
+Flotilla measures the guest's free space, so a thin image can run the host out of room first.
 
 ### Behind gluetun (Docker)
 
@@ -689,7 +758,12 @@ Bitcoin transaction has since confirmed. Then commit everything it changed: the 
 Per model you can set:
 
 - `scores` (0–100 per axis);
-- `target_replicas`;
+- `target_replicas`, its minimum target: how many full copies the swarm should hold. Set it from
+  the model's takedown risk with the rule below;
+- `spare`: `true` to have nodes look at the model only once nearly everything else on the list has
+  its copies (or while they hold it). Every
+  model on the list costs each node a Pirate Face lookup at every refresh, so models meant only for
+  a big fleet's spare space shouldn't cost anything until then;
 - a `boost` for emergencies;
 - a `note`;
 - `revision` / `infohash` pins;
@@ -698,6 +772,30 @@ Per model you can set:
   `unknown`), `data` (`public` or `undisclosed`, for fine-tunes) and `repack_of`.
 
 Put a repo or infohash in `deny` to make every node drop it, for example to honour a takedown.
+
+**Minimum targets.** A model loses its last copy not when one seeder leaves (Flotilla copies it again
+within a day) but when a takedown wave removes many seeders at once: a crackdown in one country, a VPN
+provider blocking torrents, a run of legal notices. So a model's minimum target is the fewest full
+copies for at least one to survive such a wave 99% of the time, assuming the wave removes a share of
+its seeders that grows steeply with its takedown risk: 70% × (risk/100)^1.5. Never fewer than 2.
+
+| Takedown risk | Share a wave removes | Minimum target |
+| --- | --- | --- |
+| 20 | 6% | 2 |
+| 30–40 | 12–18% | 3 |
+| 52–58 | 26–31% | 4 |
+| 68 | 39% | 5 |
+| 72–75 | 43–45% | 6 |
+| 80 | 50% | 7 |
+| 84 | 54% | 8 |
+| 88–90 | 58–60% | 9 |
+| 92 | 62% | 10 |
+| 95 | 65% | 11 |
+
+`flotilla/feed.py` (`target_for_risk`) holds the rule; the sync tools use it, and a test checks the
+published list follows it. The 99% and the 70% are judgment calls, one line each to change. Copies past
+7 wait until nearly every model on the list has 2, so no model on the list is down to its last copy
+while another gets its eighth.
 
 **Follow Pirate Face's Worth Rescuing page.** Pirate Face keeps a page of models worth preserving: a
 historic shortlist and the top open models on Artificial Analysis's Intelligence Index. To bring the
@@ -733,7 +831,28 @@ when Pirate Face has it), keeps at most two per base model and at most 40 in all
 must be allowed by default, and so must the base model's when a build relabels it. Entries are marked
 `"via": "huggingface/refusal-removed"` and rank at a priority of about 0.2-0.3, below every
 hand-picked model, so nodes turn to them once the hand-picked models have a couple of copies each.
-DESIGN.md explains the ranking.
+DESIGN.md explains the ranking. For a bigger fleet, raise the caps: `--max` (entries), `--per-base`
+(builds of one base model, default 2) and `--search-limit` (Hugging Face results per search term,
+default 200, at most 1000). `--spare-after N` marks every entry past the top N `spare` (see below), so
+a long fallback list costs nodes nothing until the rest is covered.
+
+**Widen the list for a big fleet.** Once everything on the list has its target number of copies, more
+space would only add a 20th or 40th copy of the same models. To add Hugging Face's most downloaded
+language and vision-language models that Pirate Face's magnet index lists:
+
+```bash
+flotilla editor sync-catalog flotilla/data/priorities.json --index <shards folder> --dry-run
+flotilla editor sync-catalog flotilla/data/priorities.json --index <shards folder>
+flotilla editor sign flotilla/data/priorities.json
+```
+
+`--index` is a magnet index build's `shards` folder; a node keeps one at
+`<state>/index/files/magnet-index/shards`, the default on a machine that runs one. Refusal-removed
+builds are left to the fallback list. It keeps one model per base (`--per-base`) and at most 100 in all
+(`--max`), checked like the fallback list. Entries are marked `"via": "pirateface/catalog"`, have a
+target of 2 copies, rank at 0.16-0.19 (above Pirate Face's unranked new torrents, below everything
+else on the list) and are `spare`: nodes don't look at them until the rest of the list has its copies.
+Then each gets a couple of copies before any gets a third.
 
 Installs fetch updates to this file from GitHub between releases and check the signature, so pushing a
 newly signed version updates everyone. If the fetch fails, they use the copy they shipped with. That

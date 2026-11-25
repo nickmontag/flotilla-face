@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "stepfun-ai/GOT-OCR-2.0-hf",
+ "revision": "d3017ef2c2c1395888c8d635c5e0508bcb0ac78d",
+ "captured": "2026-11-25T05:09:36+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 12077,
+   "git_oid": "9457e42d30888fd77e65b02e3b972d197418d076"
+  },
+  {
+   "path": "config.json",
+   "size": 608,
+   "git_oid": "7ef8853e38fd8f079d1c3fdb876811aafc889db4"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 74,
+   "git_oid": "ad351c881ba0f8894f365a3585560e9e27c237a3"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 1121114488,
+   "sha256": "6175ac7868a4e75735f5d59f78c465081ad3427eb4f312d072a0f1d16b333ba4"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 439,
+   "git_oid": "e8a43aa873e54e03b1d24ab2dd9fb7a7ae5963a8"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 213,
+   "git_oid": "83d5f7dc41b50e3755784ddf2a748d5d07eac7da"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 18702549,
+   "sha256": "36b382a3c48c9a143c30139dac6c8230ddfb0b46a3dc43082af6052abe99d9de"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 39228,
+   "git_oid": "646ebbd36ef2eb39a0b3ffbe279b6e3d8b88b9a7"
+  }
+ ]
+}

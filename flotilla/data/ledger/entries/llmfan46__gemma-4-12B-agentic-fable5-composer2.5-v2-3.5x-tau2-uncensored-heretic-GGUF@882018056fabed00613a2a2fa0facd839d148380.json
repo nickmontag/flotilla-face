@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llmfan46/gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-uncensored-heretic-GGUF",
+ "revision": "882018056fabed00613a2a2fa0facd839d148380",
+ "captured": "2026-11-25T05:09:00+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2349,
+   "git_oid": "6f088800855edc52df67660491b2d6159c1349eb"
+  },
+  {
+   "path": "README.md",
+   "size": 20453,
+   "git_oid": "cff363fc85360f8683250ac59dabe3ebd564b333"
+  },
+  {
+   "path": "gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-uncensored-heretic-F16.gguf",
+   "size": 23832068352,
+   "sha256": "c30fb608c7f78b7a34abdb317bde75ca0534862653be9a290d4d39146088c7cb"
+  },
+  {
+   "path": "gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-uncensored-heretic-Q4_K_M.gguf",
+   "size": 7381385472,
+   "sha256": "bbfa20ca0ed7886f38c0a446d03bfbecc86fb18c8928989d19643aa560cc69f3"
+  },
+  {
+   "path": "gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-uncensored-heretic-Q5_K_M.gguf",
+   "size": 8547270912,
+   "sha256": "527f0cb81a8fbc0f8bfd6d713bc494aea5fe2df7d3bd0609736a717e2cc4a4f1"
+  },
+  {
+   "path": "gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-uncensored-heretic-Q5_K_S.gguf",
+   "size": 8338374912,
+   "sha256": "cf02a9d46b9b26f27106f2593711996f9ddab1e71399af5298304ff88f6ec04c"
+  },
+  {
+   "path": "gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-uncensored-heretic-Q6_K.gguf",
+   "size": 9786024192,
+   "sha256": "d1d1b944d6cacd6d29e2aeceeb5bf4151d0ed4b4415255cce4acab37f03dea24"
+  },
+  {
+   "path": "gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-uncensored-heretic-Q8_0.gguf",
+   "size": 12669649152,
+   "sha256": "1f12fa14222bd91a73cf7c6f9df07f2cf67553ff6cb24d76ba87272834c27e46"
+  },
+  {
+   "path": "gemma-4-12B-agentic-fable5-composer2.5-v2-3.5x-tau2-uncensored-heretic-mmproj-F16.gguf",
+   "size": 122031264,
+   "sha256": "970133505c1d44be54bebaf7e88d15827eaaadfa990a0ec6672c573398b80d08"
+  }
+ ]
+}

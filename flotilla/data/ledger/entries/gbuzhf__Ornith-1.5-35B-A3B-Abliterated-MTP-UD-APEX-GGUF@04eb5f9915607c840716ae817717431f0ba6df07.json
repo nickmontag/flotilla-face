@@ -1,0 +1,225 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "gbuzhf/Ornith-1.5-35B-A3B-Abliterated-MTP-UD-APEX-GGUF",
+ "revision": "04eb5f9915607c840716ae817717431f0ba6df07",
+ "captured": "2026-11-25T05:08:39+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 4431,
+   "git_oid": "c6e3c4b204c0327c4d147fdc4bc8e9100ddcabb4"
+  },
+  {
+   "path": "Graph-Results-Charts.png",
+   "size": 421593,
+   "sha256": "68389cb2d68afb55d7f76423aa72516481fec1853e7016b6fb9cebb398086790"
+  },
+  {
+   "path": "MANIFEST-MTPv2.txt",
+   "size": 1237,
+   "git_oid": "2cb4c287b3ac56b4b50037c9ad2ae31ef341f012"
+  },
+  {
+   "path": "MEASUREMENTS-ICE-rebuild.md",
+   "size": 6364,
+   "git_oid": "d6f869f0ff3eacc217d8596c35bb242a91129bb3"
+  },
+  {
+   "path": "MTPv1/KLD_RESULTS.txt",
+   "size": 25903,
+   "git_oid": "3ddf29c210aaf4ed155fd50436d85bc3d61c04de"
+  },
+  {
+   "path": "MTPv1/MANIFEST.txt",
+   "size": 1098,
+   "git_oid": "d073434da370d527938854c5cd2e0ffb6362775a"
+  },
+  {
+   "path": "MTPv1/Ornith-1.5-35B-A3B-Abliterated-MTP-19G-ICE.gguf",
+   "size": 18822547104,
+   "sha256": "cb52afd780809be3d9d91bea77fe42ae8483a511681e88b92928810614835706"
+  },
+  {
+   "path": "MTPv1/Ornith-1.5-35B-A3B-Abliterated-MTP-21G-ICE.gguf",
+   "size": 20848395936,
+   "sha256": "0abd3d1d06e87e11592286964edc25ec156f09c39d32f3d9aa766e4c7cfd2dcb"
+  },
+  {
+   "path": "MTPv1/Ornith-1.5-35B-A3B-Abliterated-MTP-23G-ICE.gguf",
+   "size": 22836496032,
+   "sha256": "e06ef326af2017f06f4f6cde0161e5159a671daef98160f7bec4203b9b71c36b"
+  },
+  {
+   "path": "MTPv1/Ornith-1.5-35B-A3B-Abliterated-MTP-25G-ICE.gguf",
+   "size": 24849761952,
+   "sha256": "8e8a11ad2226b428184f897c9a93434dab442d44d71d1216064051ce24bed7a8"
+  },
+  {
+   "path": "MTPv1/Ornith-1.5-35B-A3B-Abliterated-MTP-APEX-I-Compact-v2D-lite.gguf",
+   "size": 17566434976,
+   "sha256": "71118667c2209cf0c378814611b9fabad9733a60546b93a89a5858f9d5bf2472"
+  },
+  {
+   "path": "MTPv1/Ornith-1.5-35B-A3B-Abliterated-MTP-APEX-I-Mini-v2D-lite.gguf",
+   "size": 14374134432,
+   "sha256": "1a8a35bbf1811b989b5dbd5e0df866e9c1fc2a90d9d3ae04cf2ba8533161c149"
+  },
+  {
+   "path": "MTPv1/Ornith-1.5-35B-A3B-Abliterated-MTP-UD-IQ4_XS.gguf",
+   "size": 18684044960,
+   "sha256": "0f971a1fa312fd561cb55e37634608472b5f93c46eed71d541c182bb56875aac"
+  },
+  {
+   "path": "MTPv1/Ornith-1.5-35B-A3B-Abliterated-MTP-UD-Q5_K_S.gguf",
+   "size": 25841059488,
+   "sha256": "f9c2793b8996c0b077ba6318b068493d0e06ff68cfe9bbdc6531716823c9d535"
+  },
+  {
+   "path": "MTPv1/Ornith-1.5-35B-A3B-Abliterated-MTP-UD-Q6_K.gguf",
+   "size": 30207329952,
+   "sha256": "03c33fe7dea56f0f3db29f5844a1bdd77637cad10737f183a17331b46dc9774d"
+  },
+  {
+   "path": "MTPv1/gate_spec_bench.json",
+   "size": 2056,
+   "git_oid": "4b88951d273b756ca9f4fe2eced64878d2bc918b"
+  },
+  {
+   "path": "MTPv1/sha256sums.txt",
+   "size": 1059,
+   "git_oid": "2e48a89a7f3e2b98e6f7b301d3be28892d100b04"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-MTPv2-19G-ICE.gguf",
+   "size": 18822547136,
+   "sha256": "6e07bdc20abdaf932f52f83e73e0a30bf5a9ed4f8e3baa4230a0a07367f5b991"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-MTPv2-21G-ICE.gguf",
+   "size": 20848395968,
+   "sha256": "421659e69912db240e245d95baf6d1650978287e577483ab2251c0def1a3c4ae"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-MTPv2-23G-ICE.gguf",
+   "size": 22836496064,
+   "sha256": "15a53f580bb85b0ca110010d6c9ac9aa71c95272c90ea63a48f9378feb5d678a"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-MTPv2-25G-ICE.gguf",
+   "size": 24849761984,
+   "sha256": "2c6a1137da2d7d31e2b0d71bd404bd068156b2846d89ebe2049e7113359b7f00"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-MTPv2-APEX-I-Compact-v2D-lite.gguf",
+   "size": 17566434976,
+   "sha256": "625ce839176c914555701629133b352d7fe021efc27153d0f2bb32438ef4d497"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-MTPv2-APEX-I-Mini-v2D-lite.gguf",
+   "size": 14374134432,
+   "sha256": "ebc4394e22acbd267ad74788463b4ca25c1afee17efbfd2989a09a7811e93e18"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-MTPv2-UD-IQ4_XS.gguf",
+   "size": 18684044960,
+   "sha256": "f5f5868619860b310b70c73e39aceb0e30a226b97f0331971b804e9bc0683323"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-MTPv2-UD-Q5_K_S.gguf",
+   "size": 25841059488,
+   "sha256": "b2b6fdad5c8814381a920846f75779daa2fc16cf5bb4dbc7b6ef10c340e67ecd"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-MTPv2-UD-Q6_K.gguf",
+   "size": 30207329952,
+   "sha256": "4a5c9d9f78a20407fecefbcb4072b3c2cbb8a9cc81db7f5c4f1b29e20cab73d7"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-ShisaMTP-19G-ICE.gguf",
+   "size": 18822547136,
+   "sha256": "6428a31014e826186c11b6f2e1b7752669976e653267f81c0e18ba58069e4d23"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-ShisaMTP-21G-ICE.gguf",
+   "size": 20848395968,
+   "sha256": "cd0157db8c33aa8365c836264e7b69661e676c8fad834e8faec62c70131d68d3"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-ShisaMTP-23G-ICE.gguf",
+   "size": 22836496064,
+   "sha256": "ea4a354b5c90d2ce63d28aa9f5b852c53cfbe1f438055c069c4bee74aba0cedd"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-ShisaMTP-25G-ICE.gguf",
+   "size": 24849761984,
+   "sha256": "a6f76d2e88a804dc306f9b0dbce9a607bf759443d4bba304de08d4efbfe26fb0"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-TIEL_Calibrated-MTPv2-19G-ICE.gguf",
+   "size": 18822568352,
+   "sha256": "cfe8b5bef2ced116fa7b9f662472d0f97793ea6d37e245f61c1a5c1e537ae424"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-TIEL_Calibrated-MTPv2-21G-ICE.gguf",
+   "size": 20848417184,
+   "sha256": "b6a4b033cd6bdb7a0e423f38b46bc0880fd177e888b26a99a1c96b721a3c9b4c"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-TIEL_Calibrated-MTPv2-23G-ICE.gguf",
+   "size": 22836517280,
+   "sha256": "f12e9a8775e6ab7d55aed035f9207405cdfdfaf37712ab065b915bcdf866d443"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-Abliterated-TIEL_Calibrated-MTPv2-25G-ICE.gguf",
+   "size": 24849783200,
+   "sha256": "99327754d5619eb9dece164f4619cadf4731e14b47e42598c310916f3b992251"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-calibration-v6.txt",
+   "size": 1231503,
+   "git_oid": "ca482e713b55bc8608acc2c7a4fe5fc95a9faf29"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-imatrix.gguf",
+   "size": 192223936,
+   "sha256": "8d5b16938373b678b68c3081ef3f6985b789df9b25c18af130909658a47c0228"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-jzinno_DFlash2-BF16.gguf",
+   "size": 1063708288,
+   "sha256": "e2713e376ac5e5f1ec06a9d0a57351bb603a3130a84e385c072ffd8dbe307af0"
+  },
+  {
+   "path": "Ornith-1.5-35B-A3B-jzinno_DFlash2-Q8_0.gguf",
+   "size": 570467968,
+   "sha256": "5380dacc54be9baab968a007955db94a56beed14bf1e423fdfe113aa13a5c160"
+  },
+  {
+   "path": "README.md",
+   "size": 15238,
+   "git_oid": "eb17bb0b633c635221307778d1157e9c9b0686ce"
+  },
+  {
+   "path": "mtp-Ornith-1.5-35B-A3B-Abliterated-MTPv2-BF16.gguf",
+   "size": 3735545728,
+   "sha256": "c891ef3320afbfcfdc6b8db6fdbe95f01dead2159a2938dd42efa10434be673a"
+  },
+  {
+   "path": "mtp-Ornith-1.5-35B-A3B-Abliterated-MTPv2-Q4_K_M.gguf",
+   "size": 1260898432,
+   "sha256": "95f713c9613a4dfda9a4ec939f518e6057b2a86167e566d75fbd9607bf79c5fb"
+  },
+  {
+   "path": "mtp-Ornith-1.5-35B-A3B-Abliterated-MTPv2-Q8_0.gguf",
+   "size": 1990649984,
+   "sha256": "7d58b16ecab1a30884f76f1372680405a52a30547d94fb6b61cef802a7311ab6"
+  },
+  {
+   "path": "sha256sums-MTPv2.txt",
+   "size": 1086,
+   "git_oid": "7a0702553cea2f9e80adf041424cf50dfb2082f6"
+  }
+ ]
+}

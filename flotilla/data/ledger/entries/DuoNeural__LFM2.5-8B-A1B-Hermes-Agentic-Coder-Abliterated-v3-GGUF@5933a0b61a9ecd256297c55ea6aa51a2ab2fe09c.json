@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DuoNeural/LFM2.5-8B-A1B-Hermes-Agentic-Coder-Abliterated-v3-GGUF",
+ "revision": "5933a0b61a9ecd256297c55ea6aa51a2ab2fe09c",
+ "captured": "2026-11-25T05:08:47+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2376,
+   "git_oid": "e7e33d853aa9454d3039d603f5017b35550d4615"
+  },
+  {
+   "path": "LFM2.5-8B-A1B-Hermes-Abliterated-v3-G-TAP-v3-IQ2_M.gguf",
+   "size": 2843272000,
+   "sha256": "4f4fc847f566d98946a125633c78d385721341aa2ffa7d5327d7ca189c0f0ecb"
+  },
+  {
+   "path": "LFM2.5-8B-A1B-Hermes-Abliterated-v3-G-TAP-v3-IQ2_XXS.gguf",
+   "size": 2322424640,
+   "sha256": "1f5f7f5f1f741a20bdb9e062237146add71a761bcc293f08fe040cdf91a9b939"
+  },
+  {
+   "path": "LFM2.5-8B-A1B-Hermes-Abliterated-v3-G-TAP-v3-IQ3_XXS.gguf",
+   "size": 3334906688,
+   "sha256": "a10bd4889e62888bbd50ebf8ef1dafce133097346bd94f108fa8db2beb680ffd"
+  },
+  {
+   "path": "LFM2.5-8B-A1B-Hermes-Abliterated-v3-G-TAP-v3-Q4_K_M.gguf",
+   "size": 5155562304,
+   "sha256": "47e70f1723b8fb7552f0c3916f86e7c8150bd5b6c5eca2299b3dc3d95cd98e5b"
+  },
+  {
+   "path": "LFM2.5-8B-A1B-Hermes-Agentic-Coder-Abliterated-v3-BF16.gguf",
+   "size": 16947257216,
+   "sha256": "8c511c78a39f497d46ee503a0f5ba17d6cb6ca4cb78052a7e64152ccb9af13e5"
+  },
+  {
+   "path": "LFM2.5-8B-A1B-Hermes-Agentic-Coder-Abliterated-v3-Q4_K_M.gguf",
+   "size": 5155561344,
+   "sha256": "0ebaab57396b51e81cd7c201f3090bca8b853eed41c9e2f09aad79c97a8e782d"
+  },
+  {
+   "path": "LFM2.5-8B-A1B-Hermes-Agentic-Coder-Abliterated-v3-Q5_K_M.gguf",
+   "size": 6030335872,
+   "sha256": "c111905a98535543ec63e1fa5b5cb8a2bf68c90c1413aabd9b29dbad61483563"
+  },
+  {
+   "path": "LFM2.5-8B-A1B-Hermes-Agentic-Coder-Abliterated-v3-Q6_K.gguf",
+   "size": 6959783808,
+   "sha256": "7ec505713692e45f1c2232085bedfb01c80894449a4c446ea67b3f07d70d46ec"
+  },
+  {
+   "path": "LFM2.5-8B-A1B-Hermes-Agentic-Coder-Abliterated-v3-Q8_0.gguf",
+   "size": 9010192256,
+   "sha256": "80364c27ac91258b450475103318472bbe4ce66877d0bb950c392d02f11bcfb1"
+  },
+  {
+   "path": "README.md",
+   "size": 3567,
+   "git_oid": "380fd0ffcd8164c5f28a2077bbe879c109955419"
+  }
+ ]
+}

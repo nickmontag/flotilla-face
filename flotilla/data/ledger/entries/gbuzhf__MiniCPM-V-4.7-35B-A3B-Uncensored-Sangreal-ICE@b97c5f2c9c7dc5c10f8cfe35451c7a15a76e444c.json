@@ -1,0 +1,275 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "gbuzhf/MiniCPM-V-4.7-35B-A3B-Uncensored-Sangreal-ICE",
+ "revision": "b97c5f2c9c7dc5c10f8cfe35451c7a15a76e444c",
+ "captured": "2026-11-25T05:08:54+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 4490,
+   "git_oid": "090ed05023e3bb0f6720f463cd62fd8a090f6fa8"
+  },
+  {
+   "path": "BF16/MiniCPM-V-4.7-35B-A3B-Uncensored-BF16-00001-of-00002.gguf",
+   "size": 44866777152,
+   "sha256": "b82fc991c2656d065dc5357d379a23a2e79c9696471962e9be1bdf0953efcba3"
+  },
+  {
+   "path": "BF16/MiniCPM-V-4.7-35B-A3B-Uncensored-BF16-00002-of-00002.gguf",
+   "size": 24508414208,
+   "sha256": "86525e24f1f9668cf5f2867b9bdefa069c474d2f4356f84e98d1912cd17ef17b"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-Uncensored-Q8_0.gguf",
+   "size": 36902369088,
+   "sha256": "e1e2b777cced80f1b830ebe1c0ee6bc849f8724e3039803c14e82744ea18e822"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-Uncensored-Sangreal-12G-ICEv2.gguf",
+   "size": 11896420704,
+   "sha256": "e7c4c17995716b2c9967a3d4707af7c61387431e66b79073dda036b095ded668"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-Uncensored-Sangreal-15G-ICEv2.gguf",
+   "size": 14513666400,
+   "sha256": "0f276dc0f05fac69d9bbb056e0f6057ad820adc8682d5d25071b44a0deaeb492"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-Uncensored-Sangreal-19G-ICEv2.gguf",
+   "size": 18470992224,
+   "sha256": "e3bceae66ee131d7dd2a83e1d0a3d54c6e49e0e2c6ae67903e1a9b81e2c66264"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-Uncensored-Sangreal-23G-ICEv2.gguf",
+   "size": 22516398432,
+   "sha256": "c2afa57d9ff42b30d642aebf0421b44cb984fe660a0c54c42044cde04e97cd97"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-Uncensored-Sangreal-25G-ICEv2.gguf",
+   "size": 24529664352,
+   "sha256": "ba1f4af5af73de6620ebd26b11b3880fc56ca64adeeff163629cf8568cd16554"
+  },
+  {
+   "path": "README.md",
+   "size": 19916,
+   "git_oid": "7f823a2dabe8d8516e7dcf95f9777c92e7660e01"
+  },
+  {
+   "path": "UD2/MiniCPM-V-4.7-35B-A3B-Uncensored-Sangreal-UD-IQ3_XXS.gguf",
+   "size": 13210559008,
+   "sha256": "54cdd4e2ab4a43177577483a51d9bdd2be54b4923b1b7aaf916ff0f98eec7b2c"
+  },
+  {
+   "path": "UD2/MiniCPM-V-4.7-35B-A3B-Uncensored-Sangreal-UD-IQ4_XS.gguf",
+   "size": 17729826080,
+   "sha256": "e60d066b39e1606705df839f7bff6254f3cfda81b175db6d9a33e483418af1f3"
+  },
+  {
+   "path": "UD2/MiniCPM-V-4.7-35B-A3B-Uncensored-Sangreal-UD-Q2_K_XL.gguf",
+   "size": 12290172960,
+   "sha256": "d47aab169327725b618f90fc4e4a303fa197df5dc3ea2e76a1a8c519818ae331"
+  },
+  {
+   "path": "UD2/MiniCPM-V-4.7-35B-A3B-Uncensored-Sangreal-UD-Q4_K_XL.gguf",
+   "size": 22359685152,
+   "sha256": "824dc0c34c72f88556cc8bc0a9f56496d4471aef9bcef14dd62db2ad59409c6a"
+  },
+  {
+   "path": "UD2/MiniCPM-V-4.7-35B-A3B-Uncensored-Sangreal-UD-Q5_K_XL.gguf",
+   "size": 26591737888,
+   "sha256": "afcc17ecc7f6ffe7f8f8b1504e9ce663a9f33786d0321f49402b9d64043dd5f1"
+  },
+  {
+   "path": "assets/code16k_kld_vs_size.svg",
+   "size": 6677,
+   "git_oid": "bbfc1e9a0270fa3802ac09d4562689519e0e8183"
+  },
+  {
+   "path": "chat_template_sharp-v22.5.0-arrow4.0-minicpm.jinja",
+   "size": 91836,
+   "git_oid": "abfd8c222a06f1d41c8084369a2e96fbd511e0b8"
+  },
+  {
+   "path": "measurements/2026-10-14/base_code.log",
+   "size": 1401,
+   "git_oid": "6619aa8f9103db674ca55630b0b782f461f15fd8"
+  },
+  {
+   "path": "measurements/2026-10-14/base_code16k.log",
+   "size": 790,
+   "git_oid": "32d76cc4b6213c82f8d0513073bf9603e7c4c218"
+  },
+  {
+   "path": "measurements/2026-10-14/base_wiki.log",
+   "size": 1401,
+   "git_oid": "42f180ad8ac54e215381403a4451291df9b8928c"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-12G_code.txt",
+   "size": 10077,
+   "git_oid": "8f8cec788fe10543ecb4be76ffb6e59ec7dbf462"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-12G_code16k.txt",
+   "size": 2742,
+   "git_oid": "1e4f12d64fc4e99ec5071cca3fba9bea6819b9fb"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-12G_wiki.txt",
+   "size": 10077,
+   "git_oid": "eb759769aca1205a3ccd5d448f75683f20ae2b7f"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-15G_code.txt",
+   "size": 10076,
+   "git_oid": "ce1d8033908c9d2db4e802de0bac7302c1bc3227"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-15G_code16k.txt",
+   "size": 2741,
+   "git_oid": "bb7eebb545d23104964dfdd819a858886494975e"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-15G_wiki.txt",
+   "size": 10077,
+   "git_oid": "aa8dbcf0c6dcea3aa2f8cc2c616b0e5b5d429030"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-19G_code.txt",
+   "size": 10076,
+   "git_oid": "fc75cafc70a477d3c6481ad855b8588073d476ad"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-19G_code16k.txt",
+   "size": 2741,
+   "git_oid": "8dfd47d9cdba2cd5562e2f0075a4dcda6a1dc1d2"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-19G_wiki.txt",
+   "size": 10076,
+   "git_oid": "3629cb2b9272894b91e4adc98a43e870352dda36"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-23G_code.txt",
+   "size": 10075,
+   "git_oid": "e76c5844e0b4b6dadf01ef841c105d5c0387def4"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-23G_code16k.txt",
+   "size": 2740,
+   "git_oid": "705f33111e37b601ac2318674dd123d65afd04ae"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-23G_wiki.txt",
+   "size": 10076,
+   "git_oid": "9b8b5f4f165493d1157f5a5d4fe1ceefdb75cd7e"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-25G_code.txt",
+   "size": 10075,
+   "git_oid": "35fabd32d66837b3781bd50590555a92797a15a7"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-25G_code16k.txt",
+   "size": 2740,
+   "git_oid": "adbf2aea8afe1aef0d662d6c82dc033a13ed422b"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ice2-25G_wiki.txt",
+   "size": 10075,
+   "git_oid": "a0f779b0f9f0875fcbf088547aa6ca56a79b4918"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-IQ3_XXS_code.txt",
+   "size": 10077,
+   "git_oid": "40700affd28e82134c227cf0be71a7f2aea11365"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-IQ3_XXS_code16k.txt",
+   "size": 2741,
+   "git_oid": "4132ad067ef08c0bfb526cb93503096469f69729"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-IQ3_XXS_wiki.txt",
+   "size": 10077,
+   "git_oid": "9cea89c1857ede829794cc87be04d6fb1946702f"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-IQ4_XS_code.txt",
+   "size": 10076,
+   "git_oid": "42a31c7e9bb144eb44bdffd25f46257e4875d088"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-IQ4_XS_code16k.txt",
+   "size": 2741,
+   "git_oid": "4c3ced8a1af8b533d8b775e5b0a6b5d19a3f27b5"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-IQ4_XS_wiki.txt",
+   "size": 10076,
+   "git_oid": "0c11f7109d3b23c65c1026e19eb5ea7d06937379"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-Q2_K_XL_code.txt",
+   "size": 10077,
+   "git_oid": "eda6b46f4043d777dbddb68cc35bdf7e5dcbe286"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-Q2_K_XL_code16k.txt",
+   "size": 2742,
+   "git_oid": "0236f2fd3ec2e89aab2c1b169f42ffc4a30ec4d2"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-Q2_K_XL_wiki.txt",
+   "size": 10077,
+   "git_oid": "ae6dbc8c94a4179cb1d94cf9f5fa41d24b9c3aa6"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-Q4_K_XL_code.txt",
+   "size": 10075,
+   "git_oid": "a8af3be5f7a870fa079dc12d044003a1a5e01a30"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-Q4_K_XL_code16k.txt",
+   "size": 2740,
+   "git_oid": "b47eb953ef3f1708cdc2fbbeabba61598ada2c73"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-Q4_K_XL_wiki.txt",
+   "size": 10076,
+   "git_oid": "83b6a3191f294e164ddd45bdc28ea7aab73ebf4e"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-Q5_K_XL_code.txt",
+   "size": 10075,
+   "git_oid": "77e1c5ebf656e7afcdd201b28f8fee94e1026e93"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-Q5_K_XL_code16k.txt",
+   "size": 2740,
+   "git_oid": "b81d457108808f89901116882a700c333425c3bf"
+  },
+  {
+   "path": "measurements/2026-10-14/kld_ud-Q5_K_XL_wiki.txt",
+   "size": 10075,
+   "git_oid": "3abad1b206b90e5c383ed489b1c56d2b1c4b97c2"
+  },
+  {
+   "path": "mmproj-MiniCPM-V-4.7-35B-A3B-F16-4x.gguf",
+   "size": 910491648,
+   "sha256": "30f4daac0f61c2ca28d68b5f901c0501cb7a269a1357a9e380d2c376c6ed6518"
+  },
+  {
+   "path": "mmproj-MiniCPM-V-4.7-35B-A3B-F16.gguf",
+   "size": 1119575840,
+   "sha256": "bff3b688e14c300eca273092c37c50a0ddfcc2054e079af1a0480edeed5d20f1"
+  },
+  {
+   "path": "mmproj-MiniCPM-V-4.7-35B-A3B-Q8_0.gguf",
+   "size": 733005184,
+   "sha256": "7c837b42a485cccbe58e5715c82a5b0b10d3722a81c3ba1cff6904e609ca6a8f"
+  }
+ ]
+}

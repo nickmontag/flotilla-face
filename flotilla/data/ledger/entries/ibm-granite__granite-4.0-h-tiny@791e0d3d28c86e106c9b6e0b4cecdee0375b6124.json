@@ -1,0 +1,85 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "ibm-granite/granite-4.0-h-tiny",
+ "revision": "791e0d3d28c86e106c9b6e0b4cecdee0375b6124",
+ "captured": "2026-11-25T05:13:14+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 34467,
+   "git_oid": "afd2a759ed61c5d3ea5c89a84f344484b18e73a5"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 6418,
+   "git_oid": "82e3ebf57b6de47c0c4e722dde0e33915f73bfe8"
+  },
+  {
+   "path": "config.json",
+   "size": 1796,
+   "git_oid": "8c88003f7058ba98f4fd51912870b701e622e512"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 147,
+   "git_oid": "2eed7ca2d26ec1a753b8800e0bae20c824e8b015"
+  },
+  {
+   "path": "merges.txt",
+   "size": 916646,
+   "git_oid": "354558edcdbd64ca7abd407b8be3d5d09d39d781"
+  },
+  {
+   "path": "model-00001-of-00003.safetensors",
+   "size": 4924822608,
+   "sha256": "d79109218e59c850b26146a40d5c2dd7084ac8e569e53a59e2dcb78a16529f73"
+  },
+  {
+   "path": "model-00002-of-00003.safetensors",
+   "size": 4879018632,
+   "sha256": "f15b2625114d52bbe658050732687683a3596e14fab4a817d3147549ac609ef3"
+  },
+  {
+   "path": "model-00003-of-00003.safetensors",
+   "size": 4074301016,
+   "sha256": "825bf48c51808ce93042dc9ff65e6b8b76131fac76b8bda4183cff32abf39c83"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 48924,
+   "git_oid": "f7926ed90bd16db563554b4ae0f2b84da40f33c3"
+  },
+  {
+   "path": "model.sig",
+   "size": 10740,
+   "git_oid": "b667dc6a1d5c41dd22d6d5fb9a4366f5861684fd"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 579,
+   "git_oid": "3f67e7c50d57b16925f4f15469a774e7bf439047"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7153421,
+   "git_oid": "d7e1714703eb97dcef3435aa50eb1de1cf241d62"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 17659,
+   "git_oid": "7a6b382740c0c6587ae8af40aeb4b40f8fb8c431"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2014114,
+   "git_oid": "8db038edfaa23127de4dbf4aee931fbba92183cb"
+  }
+ ]
+}

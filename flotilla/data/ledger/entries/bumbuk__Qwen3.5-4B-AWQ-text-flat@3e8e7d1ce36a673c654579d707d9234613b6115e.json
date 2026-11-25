@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bumbuk/Qwen3.5-4B-AWQ-text-flat",
+ "revision": "3e8e7d1ce36a673c654579d707d9234613b6115e",
+ "captured": "2026-11-25T05:09:37+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1767,
+   "git_oid": "470eabbf0cafb8b8d56f02b35d4a1ea3a90e9b0b"
+  },
+  {
+   "path": "README.md",
+   "size": 3866,
+   "git_oid": "097883108b3de70bbd6536d9d70a15ef62654454"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7756,
+   "git_oid": "a585dec894e63da457d9440ec6aa7caa16d20860"
+  },
+  {
+   "path": "config.json",
+   "size": 4819,
+   "git_oid": "6a6ff9f9a8fe1ca23175f1a09eae6acf9eb02755"
+  },
+  {
+   "path": "evaluation_results.png",
+   "size": 220432,
+   "sha256": "f9e0b74bd2514c0d95abad951b0e0ef66d28de3ce86a9c2b57f51b45f19c75ff"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 116,
+   "git_oid": "030fe4b21d416d493b9fde6eadc296cc5b06f429"
+  },
+  {
+   "path": "memory_benchmark.png",
+   "size": 442001,
+   "sha256": "b3b09d12fe2b05b27960080ef59025045d4189914fad96138f521e30121e3161"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 3127716724,
+   "sha256": "eba510cb89972fa6325fe58d5bc44dfd29cd608af8883816a5586c10ef72f320"
+  },
+  {
+   "path": "recipe.yaml",
+   "size": 1051,
+   "git_oid": "15935b128c59b3dfa73482c4e9c2d150e143a01e"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989325,
+   "sha256": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1125,
+   "git_oid": "ed1f99f3d50eecc9850623be644bd1131686cbe1"
+  }
+ ]
+}

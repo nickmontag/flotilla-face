@@ -1,0 +1,30 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "weareapexcreators/Gemma4-12B-Uncensored-LocalAI",
+ "revision": "1a357c9a10809fe21f817f334c54e4ffdc24f043",
+ "captured": "2026-11-25T05:08:38+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1664,
+   "git_oid": "59245461a5b8acd74076d8495cb4c2499cc5f52a"
+  },
+  {
+   "path": "Gemma4-12B-Uncensored-Q4_K_M.gguf",
+   "size": 7381381760,
+   "sha256": "59656d7494d6376ca97e9e20b64ea2e16cd97f12ec6d47bfccba91cb785b5134"
+  },
+  {
+   "path": "README.md",
+   "size": 28,
+   "git_oid": "154df8298fab5ecf322016157858e08cd1bccbe1"
+  },
+  {
+   "path": "mmproj-Gemma4-12B-Uncensored-BF16.gguf",
+   "size": 175115264,
+   "sha256": "b59e815479b7e5f0665bd29e6784c104a368092bcbc63120148c606f9276ab8e"
+  }
+ ]
+}

@@ -1,0 +1,105 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "distilbert/distilgpt2",
+ "revision": "2290a62682d06624634c1f46a6ad5be0f47f38aa",
+ "captured": "2026-11-25T05:09:15+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 491,
+   "git_oid": "662a8067395937dc00ed68a58b8241f216c7dd22"
+  },
+  {
+   "path": "64.tflite",
+   "size": 325310836,
+   "sha256": "7df15c10bc1a025f321ea6da7c1a16a443093737ad61a48c3586c5e40c50eb10"
+  },
+  {
+   "path": "README.md",
+   "size": 10992,
+   "git_oid": "86f7c9ae4422de194e6b6104b0acc9c8b9d2cd0a"
+  },
+  {
+   "path": "config.json",
+   "size": 762,
+   "git_oid": "fed02aafb76b46aa5da200966f9e42262e758023"
+  },
+  {
+   "path": "coreml/text-generation/float32_model.mlpackage/Data/com.apple.CoreML/model.mlmodel",
+   "size": 1240147,
+   "sha256": "d19fa891e34f314c61a5d7262a61ae187664b5ef5e8113a9b32962c792676d2f"
+  },
+  {
+   "path": "coreml/text-generation/float32_model.mlpackage/Data/com.apple.CoreML/weights/weight.bin",
+   "size": 484212356,
+   "sha256": "bb5eff8ff72219ddda6f919aa8623afa6cb2a96e732bf2e604c93e1e14b8df00"
+  },
+  {
+   "path": "coreml/text-generation/float32_model.mlpackage/Manifest.json",
+   "size": 617,
+   "git_oid": "1736aded3af566b70fd7e971c55f9100ffa4356e"
+  },
+  {
+   "path": "coreml_model.mlmodel",
+   "size": 482254328,
+   "sha256": "6c0ee43d6d4be21bc3cef1f44035fefaa96962fd05be39570ea268e4a5ce11bc"
+  },
+  {
+   "path": "flax_model.msgpack",
+   "size": 327652826,
+   "sha256": "b3b7fcf75195b7c4d8a73bf26f8b1344f2186bdcd3715f04e0c04ae76d5931be"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 124,
+   "git_oid": "057e43033439e068b325f32af95dde9efc9552ae"
+  },
+  {
+   "path": "generation_config_for_text_generation.json",
+   "size": 165,
+   "git_oid": "c791c4d01fc484a57262ee57c878dd5b35863fe7"
+  },
+  {
+   "path": "merges.txt",
+   "size": 456318,
+   "git_oid": "226b0752cac7789c48f0cb3ec53eda48b7be36cc"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 352824413,
+   "sha256": "e1ff18884359fe8beb795a5f414feb85a6ce3d929ad019c0d958c039d2b94a1b"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 352833716,
+   "sha256": "ecbb4e22dd2b9dcc43b2622e1b87ebb9361fb31e496b98ea01a38785c1dbaa01"
+  },
+  {
+   "path": "rust_model.ot",
+   "size": 507225049,
+   "sha256": "5bf6e122f504e97feec8978d500d6cdb572606ad80e6daf388b96e0de7f2ddba"
+  },
+  {
+   "path": "tf_model.h5",
+   "size": 327744160,
+   "sha256": "2a1186d966d5e57054fddc1eb6377cb9b08aea866d07059f4a3e6eec5535b879"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 1355256,
+   "git_oid": "4b988bccc9dc5adacd403c00b4704976196548f8"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 26,
+   "git_oid": "be4d21d94f3b4687e5a54d84bf6ab46ed0f8defd"
+  },
+  {
+   "path": "vocab.json",
+   "size": 1042301,
+   "git_oid": "1f1d9aaca301414e7f6c9396df506798ff4eb9a6"
+  }
+ ]
+}

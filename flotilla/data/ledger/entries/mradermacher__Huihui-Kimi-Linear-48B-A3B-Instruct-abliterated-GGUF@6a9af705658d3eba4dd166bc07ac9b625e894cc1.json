@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Huihui-Kimi-Linear-48B-A3B-Instruct-abliterated-GGUF",
+ "revision": "6a9af705658d3eba4dd166bc07ac9b625e894cc1",
+ "captured": "2026-11-25T05:08:58+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2569,
+   "git_oid": "09bec6dc242198921f7d1330acf0d435690f5e7c"
+  },
+  {
+   "path": "Huihui-Kimi-Linear-48B-A3B-Instruct-abliterated.IQ4_XS.gguf",
+   "size": 26463779552,
+   "sha256": "ed58dc729037d1518fba7664fe9fd53445382902bb37de6c02e873e0f45d004d"
+  },
+  {
+   "path": "Huihui-Kimi-Linear-48B-A3B-Instruct-abliterated.Q2_K.gguf",
+   "size": 18028533216,
+   "sha256": "289b6f34f564057928ebf2af8801e5cca4ffb366b2f10d79557b609e6ff1b74a"
+  },
+  {
+   "path": "Huihui-Kimi-Linear-48B-A3B-Instruct-abliterated.Q3_K_L.gguf",
+   "size": 25509790816,
+   "sha256": "be312c69d3459fb239e37b0ae5802f24566290760776dc551ea5c74dcf448e3f"
+  },
+  {
+   "path": "Huihui-Kimi-Linear-48B-A3B-Instruct-abliterated.Q3_K_M.gguf",
+   "size": 23486104672,
+   "sha256": "eb1bbdcf196cfe95268c16cf123d02403bbecdd97cab1ff98ccb1aee6d0bd9f0"
+  },
+  {
+   "path": "Huihui-Kimi-Linear-48B-A3B-Instruct-abliterated.Q3_K_S.gguf",
+   "size": 21325597792,
+   "sha256": "11081dc14596a9024b237bb7f698888ec39c89775591801d0ac70e74b4c281b3"
+  },
+  {
+   "path": "Huihui-Kimi-Linear-48B-A3B-Instruct-abliterated.Q4_K_M.gguf",
+   "size": 29702759648,
+   "sha256": "7979830636f01fb9c7d76a51eb889de960edf5acabd36978bea4a55afa8ecf66"
+  },
+  {
+   "path": "Huihui-Kimi-Linear-48B-A3B-Instruct-abliterated.Q4_K_S.gguf",
+   "size": 27956051168,
+   "sha256": "c9b868a8e240ebf849b1042c9b86ed16c0da3131eb6f7213ede0e2b28e6254e5"
+  },
+  {
+   "path": "Huihui-Kimi-Linear-48B-A3B-Instruct-abliterated.Q5_K_M.gguf",
+   "size": 34867653856,
+   "sha256": "e39ef333c8ac8e8a24381bac054d72e1a9f9df2aa5576c4761c9d41aca7399d0"
+  },
+  {
+   "path": "Huihui-Kimi-Linear-48B-A3B-Instruct-abliterated.Q5_K_S.gguf",
+   "size": 33885947104,
+   "sha256": "b7ae1735000a12562ad09ee22b166a67a43ae17cb61c4b4ad374c3c723d4990a"
+  },
+  {
+   "path": "Huihui-Kimi-Linear-48B-A3B-Instruct-abliterated.Q6_K.gguf",
+   "size": 40364127584,
+   "sha256": "3dc78bf2a07069bb71888e93d85c6f877a090be8fa9a0a4be43d74e345bb7337"
+  },
+  {
+   "path": "Huihui-Kimi-Linear-48B-A3B-Instruct-abliterated.Q8_0.gguf",
+   "size": 52248386784,
+   "sha256": "9a9552fcaf7aa8f259da15e61e73b88ba0953f5ef575298f28c221e957e8c2ad"
+  },
+  {
+   "path": "README.md",
+   "size": 4449,
+   "git_oid": "5a6afac3b17c8ceb1463c9fb6514d2424ae67140"
+  }
+ ]
+}

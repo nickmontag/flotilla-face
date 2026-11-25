@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "OS-Software/CyberStag-Security-26B-A4B-V1-Uncensored-Heretic-GGUF",
+ "revision": "fbf39f764aa76a61622e67063b2625d69922f569",
+ "captured": "2026-11-25T05:09:05+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2425,
+   "git_oid": "d48b6dcfc4ba22603bdb83dfb506445b5defa81f"
+  },
+  {
+   "path": "CyberStag-Security-26B-A4B-V1-Uncensored-Heretic-UD-IQ2_XXS.gguf",
+   "size": 9922473504,
+   "sha256": "37ceba138e7ea72941ecc690e980bb0a9e351be8889b5994e9f65bdca5c3eb3d"
+  },
+  {
+   "path": "CyberStag-Security-26B-A4B-V1-Uncensored-Heretic-UD-IQ3_S.gguf",
+   "size": 11289664032,
+   "sha256": "a8c3f311a9dfbd8dfca69bb2f2069984a8e00238308c4976f389ce8586bfc9c8"
+  },
+  {
+   "path": "CyberStag-Security-26B-A4B-V1-Uncensored-Heretic-UD-IQ4_XS.gguf",
+   "size": 13597170464,
+   "sha256": "4dd5fe2511b40ac53fa527b099f05216222d00b80c31cfdf6febd9148c6ef7cc"
+  },
+  {
+   "path": "CyberStag-Security-26B-A4B-V1-Uncensored-Heretic-UD-Q2_K_XL.gguf",
+   "size": 10546927136,
+   "sha256": "cfa508d5b707ceb7729f46a58b2aa1ae8b1f6dbed6a30e93fa7a9f30057031f7"
+  },
+  {
+   "path": "CyberStag-Security-26B-A4B-V1-Uncensored-Heretic-UD-Q3_K_XL.gguf",
+   "size": 12907272992,
+   "sha256": "12b88bdf9398423b1f83731bbfbbd32e993bc565a4701c57adf0a761cae73f4c"
+  },
+  {
+   "path": "CyberStag-Security-26B-A4B-V1-Uncensored-Heretic-UD-Q4_K_XL.gguf",
+   "size": 17010973472,
+   "sha256": "dca34e37b5b0ae11ad43787d1b91eb5739c6d560dfe6186219f51b9bd3c240ae"
+  },
+  {
+   "path": "CyberStag-Security-26B-A4B-V1-Uncensored-Heretic-UD-Q5_K_XL.gguf",
+   "size": 21217762080,
+   "sha256": "7cf993ce01c841aa7f332ae308532e76e9cea0abab3a893beb0e35d99033d6e7"
+  },
+  {
+   "path": "CyberStag-Security-26B-A4B-V1-Uncensored-Heretic-UD-Q6_K_XL.gguf",
+   "size": 23295384352,
+   "sha256": "9a300602c4c0d4182cfade6a1a69589fa88c7fb57e602233074e5543db8511ae"
+  },
+  {
+   "path": "CyberStag-Security-26B-A4B-V1-Uncensored-Heretic-UD-Q8_K_XL.gguf",
+   "size": 27636225824,
+   "sha256": "01e4f4da4e6356c26c9567789d9693847eb8f22cf7468dd27fbe6c749431a187"
+  },
+  {
+   "path": "README.md",
+   "size": 2728,
+   "git_oid": "28e610fdcdc954e109af7b1b56e3ff1dd2681fb6"
+  }
+ ]
+}

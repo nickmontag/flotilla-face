@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "huihui-ai/Huihui-Qwen3-4B-abliterated-v2",
+ "revision": "a494c65b10bf8fdc56c0ff11d36987c1d018f162",
+ "captured": "2026-11-25T05:08:39+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 11568,
+   "git_oid": "88af94804833890f47d3ebd34a42de4d6fb93710"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 735,
+   "git_oid": "6f359db5332581e047a7a804174c7f6d8435081c"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 4200,
+   "git_oid": "0f9e3230512986d465b068efb22d7646910aa172"
+  },
+  {
+   "path": "config.json",
+   "size": 757,
+   "git_oid": "b86215f5d408e7e7000ea0ccfb2182c53a4fc95c"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 227,
+   "git_oid": "a38edb1bd4a863dc848658556ac69adfb12f4acb"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671853,
+   "git_oid": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 4967215360,
+   "sha256": "f8c08aeacdb8b7f70579f579a4fb5fa4103739f8ccb1f6ab5340f16f264e2f6e"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 3077766632,
+   "sha256": "f82e4b9cc452e8340b31a82ab90efcf411f9507cc0751a6e7beeaf81ed017a18"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 33224,
+   "git_oid": "407b9255679edb6cbcee2efed02160a60fe73fee"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 644,
+   "git_oid": "3a7840311c8c90df33c823cdbb06626f920c509e"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 11422654,
+   "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 5643,
+   "git_oid": "993ecf95c284d12b6904a255479d37d9c98090c7"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

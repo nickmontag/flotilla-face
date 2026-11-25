@@ -1,0 +1,155 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bartowski/mistralai_Ministral-3-3B-Instruct-2512-GGUF",
+ "revision": "0a9035302dea19872c96076896304552890a73c2",
+ "captured": "2026-11-25T05:13:16+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3866,
+   "git_oid": "0a7d064bbe60811d2f6d7684d7ed70b84d257fed"
+  },
+  {
+   "path": "README.md",
+   "size": 15121,
+   "git_oid": "b5e3f903493eda84be1e09246d87f497b66706dc"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-IQ2_M.gguf",
+   "size": 1319565280,
+   "sha256": "0366aab25eb49f49adb5e74e503c5d2dd8fb425102d83ba11e3dfcca3011c5fd"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-IQ3_M.gguf",
+   "size": 1704744928,
+   "sha256": "5c6da4ea0534edc461c6126e85b5f7e2e1fff75923086e9be95998ca55f2fb98"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-IQ3_XS.gguf",
+   "size": 1580414944,
+   "sha256": "3c39e775ec2430b65ffc75f438c23fd630451fddf1f920b8df104dd0f6f472a6"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-IQ3_XXS.gguf",
+   "size": 1448294368,
+   "sha256": "1ce1f3078a6c7ade08547069c28ab41514ae5a7e0722d6769899c4bd3eb14f03"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-IQ4_NL.gguf",
+   "size": 2051291104,
+   "sha256": "f53f6c605ebd13aa8beb8e4bafe92d129d26e316b9287315e19ca35a92102ec8"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-IQ4_XS.gguf",
+   "size": 1959278560,
+   "sha256": "0b5576e556c54bccdf253d5019a5a4d7a7fb755fe50c052c6f59c7d06e03b7e4"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q2_K.gguf",
+   "size": 1458960352,
+   "sha256": "3509c1d2bd097f1178e9ab0e46032c21834dcb0eeef57e4b34dc772dae0ed7d3"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q2_K_L.gguf",
+   "size": 1556477920,
+   "sha256": "4664e5e462f0bbb568eb353fe572466b7c4caeaeed615991efea038f76699382"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q3_K_L.gguf",
+   "size": 1934358496,
+   "sha256": "437240a38e59189650c24c4fcb3f5508fa1b218297d64c7d6ba20816b6205664"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q3_K_M.gguf",
+   "size": 1795553248,
+   "sha256": "da25c9b127b69d5aa2a2cafefaf4f4d691264646814e4f1bfad0ca2b71f02f08"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q3_K_S.gguf",
+   "size": 1639151584,
+   "sha256": "6cb2dcfd53b64d0f0a7d9bcfb87c65459d0d751668ce038416588a1274c9c140"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q3_K_XL.gguf",
+   "size": 2031876064,
+   "sha256": "0d54d51120feb6973dd9917fac418265bcb7056dab00b16d65ffdb968fb8fdd7"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q4_0.gguf",
+   "size": 2046375904,
+   "sha256": "c2993f4b86ddcae94031b2e384169889ceecd51b148ceda30c0f826fcce721c8"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q4_1.gguf",
+   "size": 2230204384,
+   "sha256": "2d005210436d23938e6326b5f123566113c5c036c0bcbd734497ca6ebc1cfae1"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q4_K_L.gguf",
+   "size": 2244016096,
+   "sha256": "c850ea942ebf6748fcb8f248be875b08b3ec63666e1eb84b4f056be577dc6996"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q4_K_M.gguf",
+   "size": 2146498528,
+   "sha256": "fec9d28c7f8dab7c6857d54b56c8264cce57d6f6d9003bd4110f6457f071c65a"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q4_K_S.gguf",
+   "size": 2053257184,
+   "sha256": "6c7d0f27a10393a28945d75d5c9081dfb84578cdad9835945061d18f37d9f290"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q5_K_L.gguf",
+   "size": 2571171808,
+   "sha256": "9a3bd1f6123f09e1c199a84fc39255871b069f861f271e3a589d7b42a8e323d2"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q5_K_M.gguf",
+   "size": 2473654240,
+   "sha256": "bab7737388cfbc3835cff2552638f199cc758153396ba3706d639d717348dbee"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q5_K_S.gguf",
+   "size": 2419341280,
+   "sha256": "81e1aa8b75f683dc4ff4ec660ccccddd6ee61e33dbb96dce7b28dec246a59386"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q6_K.gguf",
+   "size": 2821257184,
+   "sha256": "4cf67784fc2ca4034888d19bd2794181374d6d947863af7194ed36a91f5b0230"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q6_K_L.gguf",
+   "size": 2918774752,
+   "sha256": "6571058d99ab1818d10c02fc70df4b62946fc7a044d92ce118b0730b57fb75be"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-Q8_0.gguf",
+   "size": 3651680224,
+   "sha256": "28d3ed224a1dc2995f3ca2a2414dbbbeddf17a5796efe7d3bfa588ddc81d9957"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-bf16.gguf",
+   "size": 6866220736,
+   "sha256": "45e5f1979ac304940d0f7a3dbb5640c491dcc8e8f85a0149359af83942b5f04e"
+  },
+  {
+   "path": "mistralai_Ministral-3-3B-Instruct-2512-imatrix.gguf",
+   "size": 3009920,
+   "sha256": "b63b3b0dd5775c8312942bc8bc039a59bacc3358996177c444f845a6b1cf539f"
+  },
+  {
+   "path": "mmproj-mistralai_Ministral-3-3B-Instruct-2512-bf16.gguf",
+   "size": 849889920,
+   "sha256": "d1444897ea0111ae4c8dcb25ddde177868a76f023fc798d46032e014faa1fefe"
+  },
+  {
+   "path": "mmproj-mistralai_Ministral-3-3B-Instruct-2512-f16.gguf",
+   "size": 840297088,
+   "sha256": "3a9ac557c043fb501029638546724c2d338893b4a113854ab17188254052c000"
+  }
+ ]
+}

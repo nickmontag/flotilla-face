@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "weareapexcreators/Qwen3.5-4B-Uncensored-LocalAI",
+ "revision": "41526321743e0dc0e618764cd5802de6abdb8d9c",
+ "captured": "2026-11-25T05:08:36+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".DS_Store",
+   "size": 6148,
+   "git_oid": "5008ddfcf53c02e82d7eee2e57c38e5672ef89f6"
+  },
+  {
+   "path": ".gitattributes",
+   "size": 1732,
+   "git_oid": "92b54977d12a12f91a2a2b6bbedd16eea3faa77f"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored-Q4_K_M.gguf",
+   "size": 2707513696,
+   "sha256": "79e28ecacf84e75b6056cf4059636d435aa9eb67795780f7b7dbc7d32a962741"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored-Q6_K.gguf",
+   "size": 3464055136,
+   "sha256": "ba93c21300854075ab42655bc30dca82c7c6c958f511d1ec9ea2b3e750b4b75f"
+  },
+  {
+   "path": "README.md",
+   "size": 28,
+   "git_oid": "154df8298fab5ecf322016157858e08cd1bccbe1"
+  },
+  {
+   "path": "mmproj-Qwen3.5-4B-Uncensored-BF16.gguf",
+   "size": 675568768,
+   "sha256": "a1e32e86ea99aa7a56f3dcfe7e63c1d0be9439d31fd07087099f15bc0fda0f22"
+  }
+ ]
+}

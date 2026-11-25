@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3-0.6B-Heretic-GGUF",
+ "revision": "a3ee964577aef423b95d165c8265ce1ca0595b17",
+ "captured": "2026-11-25T05:08:28+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2314,
+   "git_oid": "17568992096353ff1a626d10f584d5413f593c1c"
+  },
+  {
+   "path": "Qwen3-0.6B-Heretic.IQ4_XS.gguf",
+   "size": 369278432,
+   "sha256": "cbb5c5c57a7cfb3ed6c114977192b636d8287895a6d4d811c5564ffde0ef6cc3"
+  },
+  {
+   "path": "Qwen3-0.6B-Heretic.Q2_K.gguf",
+   "size": 296238560,
+   "sha256": "ae0eb5ec30c257bca8691d918b2f7489a44e29158632944fe9d46d75659e7e52"
+  },
+  {
+   "path": "Qwen3-0.6B-Heretic.Q3_K_L.gguf",
+   "size": 368492000,
+   "sha256": "6884dbeabac8a15a54388aa386f1fd937ca3beb7499fab76c27b37f15ea83cf5"
+  },
+  {
+   "path": "Qwen3-0.6B-Heretic.Q3_K_M.gguf",
+   "size": 347127264,
+   "sha256": "67ff4ecf16bbf53b730dca17f8de2431ef864be9af032cd6c787a63c62ad8cf7"
+  },
+  {
+   "path": "Qwen3-0.6B-Heretic.Q3_K_S.gguf",
+   "size": 323075552,
+   "sha256": "9d0195487ef3072c65d29212587acda3cf47d57732c13be1d7890f6a77a02690"
+  },
+  {
+   "path": "Qwen3-0.6B-Heretic.Q4_K_M.gguf",
+   "size": 396705248,
+   "sha256": "788fbe2f0c8aec61305c2bd689a9c16afedb64c8d739de600571929230fe06a7"
+  },
+  {
+   "path": "Qwen3-0.6B-Heretic.Q4_K_S.gguf",
+   "size": 383270368,
+   "sha256": "bee86f6147e445a5819e057d6cc7e273c9ea2f2ae3bc033bf7f725b95a289f6b"
+  },
+  {
+   "path": "Qwen3-0.6B-Heretic.Q5_K_M.gguf",
+   "size": 444415456,
+   "sha256": "7a164e2e696d0031f76a594860dabc6888f751f1c2ace1ddff65cc72fcadf728"
+  },
+  {
+   "path": "Qwen3-0.6B-Heretic.Q5_K_S.gguf",
+   "size": 436616672,
+   "sha256": "845290711b4133b3c8af4e1d3aa86ed4109e0adef7f0bfdfaa819ed9686b7377"
+  },
+  {
+   "path": "Qwen3-0.6B-Heretic.Q6_K.gguf",
+   "size": 495107552,
+   "sha256": "15352a0e199d9e915e036e06994222e11c60d4f6a8db8ec8b41115a89c445e2e"
+  },
+  {
+   "path": "Qwen3-0.6B-Heretic.Q8_0.gguf",
+   "size": 639447520,
+   "sha256": "d0bfa13c05af77e1d7139aa70661da9d786a9dc2ec3416ae99155023a3ae89ab"
+  },
+  {
+   "path": "Qwen3-0.6B-Heretic.f16.gguf",
+   "size": 1198182880,
+   "sha256": "56efa85b8e4a67eeee9546acef9ad6e64b82afc18df1b2aa059b9decada115bf"
+  },
+  {
+   "path": "README.md",
+   "size": 3728,
+   "git_oid": "d9c4a9be68ce21feb36be6a270235126089ca4a6"
+  }
+ ]
+}

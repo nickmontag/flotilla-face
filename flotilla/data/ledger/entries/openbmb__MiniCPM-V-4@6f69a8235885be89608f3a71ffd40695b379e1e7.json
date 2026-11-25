@@ -1,0 +1,105 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "openbmb/MiniCPM-V-4",
+ "revision": "6f69a8235885be89608f3a71ffd40695b379e1e7",
+ "captured": "2026-11-25T05:13:16+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 19808,
+   "git_oid": "d6f54149f7808a1b52b119439b55c3013ad5a9d4"
+  },
+  {
+   "path": "config.json",
+   "size": 5057,
+   "git_oid": "be2bdfedbbe7b66bea9e91ce1963d2bc78bf600f"
+  },
+  {
+   "path": "configuration_minicpm.py",
+   "size": 4238,
+   "git_oid": "2d4752b4efe85786f137340dc5912bbf9d8ffe26"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 153,
+   "git_oid": "fb6a92ca912734f18bce7582e63792f456fc3343"
+  },
+  {
+   "path": "image_processing_minicpmv.py",
+   "size": 16600,
+   "git_oid": "67ff552fbd59b6142f0969dfe00e19edfb1127bf"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 4966445072,
+   "sha256": "c1636a5c21c7fedb3f6f0ff3f3a4e35103e6208c1144f320a0c5a92c22a16af6"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 3152707944,
+   "sha256": "cd6ee63b0a3ae1ad24790f954cca3448392cd3a0d9d2d208cb2b14e0da53d32e"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 62812,
+   "git_oid": "c57dec39f67009792c1cdfd39452184d809b0e6c"
+  },
+  {
+   "path": "modeling_minicpmv.py",
+   "size": 17268,
+   "git_oid": "945f913cc89e91ed78179251908c0f492dfbb1ae"
+  },
+  {
+   "path": "modeling_navit_siglip.py",
+   "size": 41835,
+   "git_oid": "6fe732cf0d5884613003c00bccea0c5ae64a1905"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 714,
+   "git_oid": "951fd9164475e0c264b68745132c3bc53919a976"
+  },
+  {
+   "path": "processing_minicpmv.py",
+   "size": 9920,
+   "git_oid": "8d89205da5513f0a49bc3d8e2b38d7fc9ebddf68"
+  },
+  {
+   "path": "resampler.py",
+   "size": 34709,
+   "git_oid": "cdec5f777789a190e5ba6a6727f24e13ba1129cb"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 1632,
+   "git_oid": "8619dda6f3eb6d60d0a1bb274820054e46f41699"
+  },
+  {
+   "path": "tokenization_minicpmv_fast.py",
+   "size": 1647,
+   "git_oid": "b863f1b9b6ffc6c071dc8516957dcfb491ca88e5"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 3691593,
+   "git_oid": "a79a8753aa25a89b615f521361b356f63188e48b"
+  },
+  {
+   "path": "tokenizer.model",
+   "size": 1181048,
+   "sha256": "63099373ce6901674187ba3d7233c5970a253e8e0874056823bf0d3abc8d96a1"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 2883,
+   "git_oid": "1e84284c9f7d2b760ef1d0c4a4975e8c78f7d21a"
+  }
+ ]
+}

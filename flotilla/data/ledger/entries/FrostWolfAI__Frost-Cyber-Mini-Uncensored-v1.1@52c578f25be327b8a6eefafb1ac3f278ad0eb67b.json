@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "FrostWolfAI/Frost-Cyber-Mini-Uncensored-v1.1",
+ "revision": "52c578f25be327b8a6eefafb1ac3f278ad0eb67b",
+ "captured": "2026-11-25T05:08:23+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1571,
+   "git_oid": "5763e6c9b8b3e78db437ce92592057107f8290a8"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11338,
+   "git_oid": "b7456707c547e5df6a88ee0255ad9c422ac52f9b"
+  },
+  {
+   "path": "README.md",
+   "size": 9961,
+   "git_oid": "04a5050de828d0675dd3012092ba025e4e0d7427"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 4941,
+   "git_oid": "ca75248996d546688cfcec5de3f5c6a0f0f6c193"
+  },
+  {
+   "path": "config.json",
+   "size": 2180,
+   "git_oid": "6aec73fa7717820f9ca2c582a93a43655d65527a"
+  },
+  {
+   "path": "configuration_spark.py",
+   "size": 4329,
+   "git_oid": "cca611a0302679df685ca442d21c2756884aa47e"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 281,
+   "git_oid": "d47d113162317c2d4338dd7f0727663b6aa9fb57"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 8224192576,
+   "sha256": "b22b06afb6a35913c7d9f8dd1bd63440d9f38b841fee84d7a3d0ee3f4dae686e"
+  },
+  {
+   "path": "modeling_spark.py",
+   "size": 20507,
+   "git_oid": "a0b8ef0c195de0d419b7c43ef554b8b3f9b24815"
+  },
+  {
+   "path": "social-card.jpg",
+   "size": 139455,
+   "sha256": "efac72f7d97020f0168d3521a431245e00002f709bb722ed01d51df8776a318b"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 10115951,
+   "git_oid": "f3ae6d33723e51b334a2046e1410e70904503779"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 511,
+   "git_oid": "e49353c1563d88f94b908d230f1e6e6e0e9cc8cb"
+  }
+ ]
+}

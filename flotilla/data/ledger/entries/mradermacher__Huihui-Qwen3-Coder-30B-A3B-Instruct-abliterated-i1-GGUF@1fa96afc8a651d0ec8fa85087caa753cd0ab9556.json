@@ -1,0 +1,140 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated-i1-GGUF",
+ "revision": "1fa96afc8a651d0ec8fa85087caa753cd0ab9556",
+ "captured": "2026-11-25T05:08:19+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3881,
+   "git_oid": "cec4fc01f874e7a4c09b9c4a2d2d873e2ddf0581"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-IQ1_M.gguf",
+   "size": 7078295040,
+   "sha256": "6687c9b31ef6fa5071020c0bd98e11edd0bd174a469bcd8fa1e45fc61d1ba20d"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-IQ1_S.gguf",
+   "size": 6416512512,
+   "sha256": "126a1ae10d275696d7482f90807236b4dee953429b03af53fe25f6d868c467c5"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-IQ2_M.gguf",
+   "size": 10169511424,
+   "sha256": "bb4dba6600e664e2534b1d04f22876cf2d0de5376602c474fab9f2c3936c791c"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-IQ2_S.gguf",
+   "size": 9287134720,
+   "sha256": "a12b80b5a67673f7c959bc1d8392bcaa77c9fc9631ae338dab5992bc2dbc20bf"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-IQ2_XS.gguf",
+   "size": 9076225536,
+   "sha256": "29560e407f57538193dd391d41e5d291820e3dbafa7caa954a284a5870ee4920"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-IQ2_XXS.gguf",
+   "size": 8181265920,
+   "sha256": "918625c793f19038366ad0dffaf215b2529553a6dbc2b644eb4d416e6f06922d"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-IQ3_M.gguf",
+   "size": 13513065984,
+   "sha256": "e8b5f2add9ef9114be40e08cdd444e3867b6b19efb95a72d33ad8738fff6fac7"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-IQ3_S.gguf",
+   "size": 13299156480,
+   "sha256": "d08b31d52d3a7b2cafe4a80647530b32d647a20d9abec29372cef8106336d443"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-IQ3_XS.gguf",
+   "size": 12598445568,
+   "sha256": "23ae77b38476257dd3a1a449c67469839b105f298bd8be982a607a7547f54b4c"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-IQ3_XXS.gguf",
+   "size": 11849330176,
+   "sha256": "4613c7c75888a6a24d9aa8caa54f004598c2bfcb8c784c2d333f52e5101c1b3a"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-IQ4_XS.gguf",
+   "size": 16368352768,
+   "sha256": "dfa0d8252d734fe3ff11c1237cb3ff5eb5773bc11df54d782f65c8f33d383a00"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q2_K.gguf",
+   "size": 11258613248,
+   "sha256": "030560ef2b6d05bffd6110a1354494ffc7ec83c3c8e5c2acd0e06bc5ca38cbea"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q2_K_S.gguf",
+   "size": 10519367168,
+   "sha256": "5d108ced2bd9f2211ff0268315c969bbce6bc028bc4efe49155e04c64e56a0c2"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q3_K_L.gguf",
+   "size": 15900673536,
+   "sha256": "8ecce725cb502ab9012bc732e61803f1f19790a2ee8ead101ded12da8a95cd11"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q3_K_M.gguf",
+   "size": 14711850496,
+   "sha256": "00e4bd529eb749e8eb3397fb9b20d3fedcc63ac82fbed238c7c7ef22c23facd7"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q3_K_S.gguf",
+   "size": 13292471808,
+   "sha256": "2b0e685b3af461a9df46f727cde87d2e4b8e677fb8ce8c75081b0a8a8cee81e0"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q4_0.gguf",
+   "size": 17379991040,
+   "sha256": "aaa43d969d24e11576f83bbddf741be1e5c91fa0286b9d2676dec3fec7fc5906"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q4_1.gguf",
+   "size": 19192503808,
+   "sha256": "2e809e7eb71bd1a3eade5255d6c7ecd5bd9084f7c6e5e5aaf10c920df1c85a5d"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q4_K_M.gguf",
+   "size": 18556689920,
+   "sha256": "bf6c1462967444b5be32b103b793d93b9174c7b589300f9f279c390c7fb59036"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q4_K_S.gguf",
+   "size": 17456012800,
+   "sha256": "3602ace56b7b6531b190c5d9a2c4ad70bef8557050a6f3349145af38eaf49690"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q5_K_M.gguf",
+   "size": 21725584896,
+   "sha256": "1ebc1d7463cf2c57ecf6dff01a86b7f449592ff082878126e571298dc8c6e837"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q5_K_S.gguf",
+   "size": 21080514048,
+   "sha256": "db6a942715f999771eeb0f03714ed87099946e05a48cfad9c1f7ca0902a8eedd"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.i1-Q6_K.gguf",
+   "size": 25092535808,
+   "sha256": "72aafefc45be8afad7503211fe0de4c2bc9c6258dd92fa97ecbfe5a7c7cf8e32"
+  },
+  {
+   "path": "Huihui-Qwen3-Coder-30B-A3B-Instruct-abliterated.imatrix.gguf",
+   "size": 122029312,
+   "sha256": "e25658001fb1c2b294c1b7fb2a22b7acea54cac9ff73edf05b87f86428796489"
+  },
+  {
+   "path": "README.md",
+   "size": 7549,
+   "git_oid": "ed380f66964cf16a8a6182c439d3ea369460d114"
+  }
+ ]
+}

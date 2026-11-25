@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "HauhauCS/Qwen3.5-27B-Uncensored-HauhauCS-Aggressive",
+ "revision": "ba23816347e0f24d82efbd2397278ff32743b75c",
+ "captured": "2026-11-25T05:08:29+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2425,
+   "git_oid": "056caabf0fa953eb496c389bf66824e0da463775"
+  },
+  {
+   "path": "Qwen3.5-27B-Uncensored-HauhauCS-Aggressive-BF16.gguf",
+   "size": 53808280672,
+   "sha256": "4987cf92b1497b3fb874a4d3906d481f8be4b663cf52e47b13b98e8d16d5da8d"
+  },
+  {
+   "path": "Qwen3.5-27B-Uncensored-HauhauCS-Aggressive-IQ2_M.gguf",
+   "size": 9395107168,
+   "sha256": "fadfbc35978b646579f181f243b2b321217bd7d2753d458ba4146a40faeb0ccb"
+  },
+  {
+   "path": "Qwen3.5-27B-Uncensored-HauhauCS-Aggressive-IQ3_M.gguf",
+   "size": 12580873568,
+   "sha256": "3839efef03b1c86c691052fffb91864a8e2e7341b6778b22bd1dbe3ce4726072"
+  },
+  {
+   "path": "Qwen3.5-27B-Uncensored-HauhauCS-Aggressive-IQ4_XS.gguf",
+   "size": 14689289568,
+   "sha256": "0be1088719b911940ed5b453d1938226f40cca634ff27fa2be70221fb97a604e"
+  },
+  {
+   "path": "Qwen3.5-27B-Uncensored-HauhauCS-Aggressive-Q3_K_M.gguf",
+   "size": 13289645152,
+   "sha256": "d15bba8aab7452c4ed7ea8aba6f135dd69de279bec4c2b22af82949394d9dd2a"
+  },
+  {
+   "path": "Qwen3.5-27B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf",
+   "size": 16540271712,
+   "sha256": "ffec017c7ecba924fbaa8a6576df8c74d949eacb2c264113842ddb4176bbcae1"
+  },
+  {
+   "path": "Qwen3.5-27B-Uncensored-HauhauCS-Aggressive-Q5_K_M.gguf",
+   "size": 19399607392,
+   "sha256": "5234579ef245008671dc304b95458d8655bfcf42716396290ea8810bc12f6974"
+  },
+  {
+   "path": "Qwen3.5-27B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf",
+   "size": 22082528352,
+   "sha256": "9fc4e4768045cb187a86f42b19f3d74754406680c3688502020556a8f3b70c4b"
+  },
+  {
+   "path": "Qwen3.5-27B-Uncensored-HauhauCS-Aggressive-Q8_0.gguf",
+   "size": 28595762272,
+   "sha256": "78ae0800c6062b0a2fbfb3649233fd152aaf0890d3cd871965795de0119e8dd5"
+  },
+  {
+   "path": "README.md",
+   "size": 3522,
+   "git_oid": "10300d4e9d9d69ec118bf91fc828df4946ca0288"
+  },
+  {
+   "path": "mmproj-Qwen3.5-27B-Uncensored-HauhauCS-Aggressive-f16.gguf",
+   "size": 927606912,
+   "sha256": "fcd4e139e023ad357934a72e1d743d476bd0a48e5d21a1ab6215e5a792207f90"
+  }
+ ]
+}

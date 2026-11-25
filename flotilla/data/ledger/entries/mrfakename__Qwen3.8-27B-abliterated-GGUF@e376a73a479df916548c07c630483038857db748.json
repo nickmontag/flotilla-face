@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mrfakename/Qwen3.8-27B-abliterated-GGUF",
+ "revision": "e376a73a479df916548c07c630483038857db748",
+ "captured": "2026-11-25T05:09:06+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2179,
+   "git_oid": "0e1e8c0f499317dedc9ae575dcf04a09c0a1cfd9"
+  },
+  {
+   "path": "Qwen3.8-27B-abliterated-Q8_0.gguf",
+   "size": 29047086048,
+   "sha256": "74693a135b9aebf2fc1b14d13459a2a46194508553679ba0dd89bcfbdb88ca2f"
+  },
+  {
+   "path": "Qwen3.8-27B-abliterated-UD-Q2_K_XL.gguf",
+   "size": 9948666784,
+   "sha256": "7ce7a7f7fb7ddfcfcbf3c04038fedc3d826820b59d4aa3890c4b1f76d83c7aa8"
+  },
+  {
+   "path": "Qwen3.8-27B-abliterated-UD-Q3_K_XL.gguf",
+   "size": 13146393504,
+   "sha256": "054619d40b3c6715778d2e55a5a12d47c3991e15b9dd45d684b3876ff3686e9e"
+  },
+  {
+   "path": "Qwen3.8-27B-abliterated-UD-Q4_K_XL.gguf",
+   "size": 17659407264,
+   "sha256": "119a18c38496f6a8e6c0559ec772762fac7ab9e5f3d071d2a973a3265f177299"
+  },
+  {
+   "path": "Qwen3.8-27B-abliterated-UD-Q5_K_XL.gguf",
+   "size": 20976962464,
+   "sha256": "e2da87b8116f27c3c20f77a7fcc3085539f12bf6d477b39501ff947694d01340"
+  },
+  {
+   "path": "Qwen3.8-27B-abliterated-UD-Q6_K_XL.gguf",
+   "size": 25299061664,
+   "sha256": "dd15e7282c0d3a33ab4d3ec3a367f2e7ac896c511278fc6a0edb280bd9239134"
+  },
+  {
+   "path": "README.md",
+   "size": 4305,
+   "git_oid": "08de5edffa292d3ca0d57f0d21220df042488f34"
+  },
+  {
+   "path": "abliteration-edit.npz",
+   "size": 23596,
+   "sha256": "861d1aebe878415c470d8a3445107fd1edc16e4e8ee4aa37510746fb3437274d"
+  },
+  {
+   "path": "abliteration-lora.gguf",
+   "size": 6907840,
+   "sha256": "5bfef48bb1c1e47553c21f48a7192fd0d59085c30846c0c21e0ea30bcbfba299"
+  },
+  {
+   "path": "mmproj-BF16.gguf",
+   "size": 931146432,
+   "sha256": "83ee4f4f205fa514161778c41df1ea14144faa0f713510893b63c2395f5c2d53"
+  },
+  {
+   "path": "mmproj-F16.gguf",
+   "size": 927607488,
+   "sha256": "cbb841a9ee0636b2ec172f5bb8df2ea8dfeb01e90fe7c6126581d662a0b4e43e"
+  },
+  {
+   "path": "patch-stats.txt",
+   "size": 77297,
+   "git_oid": "6a0c015481f21aec2d0e205f58ba2bcc064ef6a0"
+  },
+  {
+   "path": "stats.png",
+   "size": 122537,
+   "sha256": "9020b9b790271b0ee2a4cd1b5094ac1c220806835793680fb7a70fcb8e7658b8"
+  }
+ ]
+}

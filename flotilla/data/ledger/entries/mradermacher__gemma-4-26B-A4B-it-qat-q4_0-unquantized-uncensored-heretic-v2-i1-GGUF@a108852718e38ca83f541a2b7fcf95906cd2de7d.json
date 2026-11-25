@@ -1,0 +1,125 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2-i1-GGUF",
+ "revision": "a108852718e38ca83f541a2b7fcf95906cd2de7d",
+ "captured": "2026-11-25T05:08:54+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3880,
+   "git_oid": "cf2d35df75e4c6ea00bc360149e05b834ec66a6c"
+  },
+  {
+   "path": "README.md",
+   "size": 7739,
+   "git_oid": "b96b0d8343aae5e82f73134a427ce27ea5cce448"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-IQ1_M.gguf",
+   "size": 8668659840,
+   "sha256": "d9acb6fc237c9d03acd7be7d64dd63e15c58971e29f75923dff75ac6eddc742a"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-IQ1_S.gguf",
+   "size": 8290273920,
+   "sha256": "7cddf149bbf26319fbdbc54098ff915202d1c21bd88a93154ec54afc12d33300"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-IQ2_M.gguf",
+   "size": 10377718400,
+   "sha256": "ba303baf178fbba100a44c4a27d0e00febc0d14d6de3ed900d03dd82585dc7ad"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-IQ2_S.gguf",
+   "size": 9873203840,
+   "sha256": "c4e10d70ad39edc24a9b8baba3d60bd021442a69f9427024e2ebfe99b8c991bd"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-IQ2_XS.gguf",
+   "size": 9816433280,
+   "sha256": "a10f5b560d97cbe243025c2c9e062cbd100d4518f1ec58d20698d0210067a76b"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-IQ2_XXS.gguf",
+   "size": 9299303040,
+   "sha256": "a1460fb90dd83f45bf8faf8b7a9591c1fd614bc17ea6344f15d89bac0d747d53"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-IQ3_M.gguf",
+   "size": 12392566400,
+   "sha256": "cf46008246ad7f4f790271857cd0a931189ed2471bd29a252c5aa10f050a3678"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-IQ3_S.gguf",
+   "size": 12222412416,
+   "sha256": "38e71d857abebf1040a00202d53796d8a82510d773d435253847248c761490fc"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-IQ3_XS.gguf",
+   "size": 11636070528,
+   "sha256": "be4b3c2fd4aa3b0254011ef7c3958135253c0d81ee01b9552b6f4198e2e8b7c0"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-IQ3_XXS.gguf",
+   "size": 11325696640,
+   "sha256": "a8c080b416f17bf82bda135cfc7bb33b6680f9945fa00426410640b685164f38"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-IQ4_XS.gguf",
+   "size": 13917728896,
+   "sha256": "8d75f253084e1d02d67e0f30676b55612e398db70a38b2218fe8e50604c02a53"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-Q2_K.gguf",
+   "size": 10582740096,
+   "sha256": "81727591467c17fa28d0521f528a21018eddbc0d48a1f7910dfdfd735cf3a2c2"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-Q2_K_S.gguf",
+   "size": 10624484480,
+   "sha256": "7a523fac4e1dbf432fd7b2b4aea6defa9930c60fa645753c24f3d6c2587fe7c5"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-Q3_K_L.gguf",
+   "size": 13824491136,
+   "sha256": "c3c798222ace0071c20e00d42cb319c9d2f39aa73f7cdc18afd724516660825e"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-Q3_K_M.gguf",
+   "size": 13286736512,
+   "sha256": "31dee704eafc36be30281461b8fbd13b6e1dfa132cc155238f3bdc6582e473aa"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-Q3_K_S.gguf",
+   "size": 12222412416,
+   "sha256": "48e45c6f0f14e199394e8d6428b8420b8cd762c7a0c05d0cae75498581de5214"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-Q4_0.gguf",
+   "size": 14488059008,
+   "sha256": "13625a5356e5a24b10ce916624eaaf659dc52fab594b4effdee22bbdce30a7de"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-Q4_1.gguf",
+   "size": 15969579136,
+   "sha256": "6c86a8991984cb45510fbf92ffcd4387588ad4055aeb8af74ed2a1605a9b3563"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-Q4_K_M.gguf",
+   "size": 16796018816,
+   "sha256": "287671ca849bd760db9368f7be46ca8096adad6de0df1417f220e2e9068c5e58"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.i1-Q4_K_S.gguf",
+   "size": 15464828032,
+   "sha256": "80d76d9fd95db33828fbb9aa81da46e742ad47df95af91b76755a000e44a1d39"
+  },
+  {
+   "path": "gemma-4-26B-A4B-it-qat-q4_0-unquantized-uncensored-heretic-v2.imatrix.gguf",
+   "size": 56941536,
+   "sha256": "86c9461d8754102b364873a4fbe91391ef49282b3807d45dc6a5569646bcaa9c"
+  }
+ ]
+}

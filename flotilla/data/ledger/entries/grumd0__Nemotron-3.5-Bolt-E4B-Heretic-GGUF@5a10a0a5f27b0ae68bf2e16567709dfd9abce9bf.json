@@ -1,0 +1,85 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "grumd0/Nemotron-3.5-Bolt-E4B-Heretic-GGUF",
+ "revision": "5a10a0a5f27b0ae68bf2e16567709dfd9abce9bf",
+ "captured": "2026-11-25T05:08:38+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 43,
+   "git_oid": "ae756a3f81604c017af692a9df74ad9050c06d37"
+  },
+  {
+   "path": "LICENSE",
+   "size": 2619,
+   "git_oid": "ec297ac5456384786644013ec196da33b916be97"
+  },
+  {
+   "path": "LICENSE-APACHE-2.0",
+   "size": 11348,
+   "git_oid": "fad1e726dadf2b71075477caf978c593596ac20b"
+  },
+  {
+   "path": "NOTICE",
+   "size": 1150,
+   "git_oid": "d52da6929bd07a99746da12963d6a7e055bd1752"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-BF16.gguf",
+   "size": 14942973440,
+   "sha256": "713697006160aa8b66e335b1445776b4d47e5264b59d60a8847c6d5a49b6d313"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-Q8_0.gguf",
+   "size": 7972728320,
+   "sha256": "ae4769e0ecd7dd185e317a0f16aaa28975b4e86f47c97c7f238bc04875e70458"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-UD-Q2_K_XL.gguf",
+   "size": 3724013344,
+   "sha256": "a8c0f1b057505fddfbd9f326b4a5a95ba2d5316b75260ab44ce515b51f7f328c"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-UD-Q3_K_XL.gguf",
+   "size": 4201043744,
+   "sha256": "b74a6bcb99da9b7bed0b75e1f26a8bbddc383a01bab294c9c4809fb0c5ca807f"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-UD-Q4_K_XL.gguf",
+   "size": 5029490464,
+   "sha256": "9d88432dee2d885fe3bb2a68cbf6e76543ddd29609fcfb066dd653b383c0f63a"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-UD-Q5_K_XL.gguf",
+   "size": 5801938720,
+   "sha256": "9033d0413c5f7947422803ad34963ec4d69e6a3570140d4bbb34e358e24fe076"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-UD-Q6_K_XL.gguf",
+   "size": 7227887392,
+   "sha256": "34cfc3b07a553917808f2374fc259e427f3b41149806b7ad62d305bbd08f8d58"
+  },
+  {
+   "path": "Nemotron-3.5-Bolt-E4B-Heretic-UD-Q8_K_XL.gguf",
+   "size": 8134438688,
+   "sha256": "b2ff606b56d0451934e692d6800495d30bd4ec70d2e6e6fbcfcfc31c507b5301"
+  },
+  {
+   "path": "README.md",
+   "size": 4614,
+   "git_oid": "5faee84e23d6abfd00502cab2ca8a2709d1c264c"
+  },
+  {
+   "path": "SHA256SUMS",
+   "size": 997,
+   "git_oid": "7c653766659cfdf71c54dddf02fe53c3c5834377"
+  },
+  {
+   "path": "mmproj-Nemotron-3.5-Bolt-E4B-Heretic-BF16.gguf",
+   "size": 991551840,
+   "sha256": "4f23c806574fc5b076f5a78a3b9eb946b20638395143ab14449877937da7c12b"
+  }
+ ]
+}

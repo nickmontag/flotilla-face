@@ -1,0 +1,90 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking-GGUF",
+ "revision": "baae4f3fa0aee5e4ce1714cd375acabcebd77c2a",
+ "captured": "2026-11-25T05:08:51+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2947,
+   "git_oid": "4928fcaf55f08bc1a6b8a22ac110ca727cea16ea"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.IQ4_XS.gguf",
+   "size": 4593299648,
+   "sha256": "6a89bbb2c1337b70f8b6646a3641578d8296c0b30bf98295b05aba5631a01b76"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.Q2_K.gguf",
+   "size": 3281735872,
+   "sha256": "5a2dd00764d6f94bb89d45b3855eccdca81ca2645dbf9c99198382c76edfa2a7"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.Q3_K_L.gguf",
+   "size": 4431397056,
+   "sha256": "0ae030842b1462e5f774cbdd5658da7a7048e8a43023b4a80f5d208b4efeed61"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.Q3_K_M.gguf",
+   "size": 4124164288,
+   "sha256": "adf7d6efbb36c5251afc543945cd26655ed0adb08eb39aed044a21b56fb466de"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.Q3_K_S.gguf",
+   "size": 3769614528,
+   "sha256": "f62a063320a64cf5dda99146317af72e8a0052f00ea606f55cb4bf120c58c701"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.Q4_K_M.gguf",
+   "size": 5027786944,
+   "sha256": "3007f0bcb1dee107b24b9e19681a1c9e05fbd5750ebcef773ce34fd11d662e61"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.Q4_K_S.gguf",
+   "size": 4802015424,
+   "sha256": "b9cbb54ab8963b1f4f77b5392b68d31110cdd69bc2811786cde56baec77b7622"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.Q5_K_M.gguf",
+   "size": 5851115712,
+   "sha256": "fa550b24f20cce9da82e13e610a5c64e70ba2b1caa77915f4151a98358d521a5"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.Q5_K_S.gguf",
+   "size": 5720764608,
+   "sha256": "e16f0834f9a0a4d1133373a76e9f49005e65e1fd4891e8cff43c848830b48a66"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.Q6_K.gguf",
+   "size": 6725902528,
+   "sha256": "1683d7d60426749d391bd31bdf393c9131d3230ea5739bf66c4cfe46c39a131b"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.Q8_0.gguf",
+   "size": 8709521600,
+   "sha256": "b1fc2605cae4de78bd644e5611c5b47310f1259c82c766d660df9c4f0329311c"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.f16.gguf",
+   "size": 16388047040,
+   "sha256": "55b7001f5141d0e035149bc1930b7d6da0ff1bcef98a8ee05c491f654aed6e0e"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.mmproj-Q8_0.gguf",
+   "size": 752291360,
+   "sha256": "0a6da539bb2b8f93189a3bcb6fbd3c721e6b917f808b9302e34f74e543822600"
+  },
+  {
+   "path": "Qwen3-VL-8B-GLM-4.7-Flash-Heretic-Uncensored-Thinking.mmproj-f16.gguf",
+   "size": 1159031456,
+   "sha256": "5426f1a95b93bce6487b00261e13366339b5bab5ff398d829330b1f12dabd67d"
+  },
+  {
+   "path": "README.md",
+   "size": 5824,
+   "git_oid": "85701bc56459c544f7be96c448f683db8fb09900"
+  }
+ ]
+}

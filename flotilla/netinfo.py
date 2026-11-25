@@ -206,3 +206,51 @@ def lan_address() -> str | None:
     route = internet_route()
     best = next((r for r in found if route and r.iface == route.iface), found[0] if found else None)
     return best.address if best else None
+
+
+# Hypervisor and container names as systemd-detect-virt prints them, in words people know.
+_VIRT_NAMES = {"kvm": "a KVM/QEMU virtual machine (Proxmox, UTM, libvirt)", "qemu": "a QEMU virtual machine",
+               "vmware": "a VMware virtual machine", "oracle": "a VirtualBox virtual machine",
+               "microsoft": "a Hyper-V virtual machine or WSL", "xen": "a Xen virtual machine",
+               "parallels": "a Parallels virtual machine", "apple": "a macOS virtual machine",
+               "lxc": "an LXC container (Proxmox, Incus)", "lxc-libvirt": "an LXC container",
+               "openvz": "an OpenVZ container", "systemd-nspawn": "a systemd-nspawn container",
+               "wsl": "WSL"}
+_DMI_HINTS = (("qemu", "kvm"), ("kvm", "kvm"), ("proxmox", "kvm"), ("vmware", "vmware"),
+              ("virtualbox", "oracle"), ("innotek", "oracle"), ("parallels", "parallels"), ("xen", "xen"),
+              ("microsoft corporation", "microsoft"), ("hyper-v", "microsoft"), ("bochs", "kvm"))
+
+
+def virtualization(run=None, read=None, platform: str | None = None) -> str:
+    """What this runs inside, in plain words: "a KVM/QEMU virtual machine (Proxmox, UTM, libvirt)",
+    "an LXC container (Proxmox, Incus)", "WSL", ... or "" on real hardware (or when it can't tell).
+    Docker isn't reported: setup handles a VPN container itself. Read-only and best effort."""
+    run = run or _run
+    platform = platform or sys.platform
+
+    def read_text(path: str) -> str:
+        if read:
+            return read(path)
+        try:
+            with open(path, encoding="utf-8", errors="replace") as f:
+                return f.read()
+        except OSError:
+            return ""
+
+    if platform == "darwin":
+        return _VIRT_NAMES["apple"] if run(["sysctl", "-n", "kern.hv_vmm_present"]).strip() == "1" else ""
+    if not platform.startswith("linux"):
+        return ""
+    if "microsoft" in read_text("/proc/version").lower():
+        return _VIRT_NAMES["wsl"]
+    kind = run(["systemd-detect-virt"]).strip().lower()
+    if kind and kind != "none":
+        return "" if kind in ("docker", "podman") else _VIRT_NAMES.get(kind, f"a virtual machine or container ({kind})")
+    environ = read_text("/proc/1/environ")
+    if "container=lxc" in environ:
+        return _VIRT_NAMES["lxc"]
+    dmi = " ".join(read_text(f"/sys/class/dmi/id/{f}") for f in ("sys_vendor", "product_name")).lower()
+    for hint, k in _DMI_HINTS:
+        if hint in dmi:
+            return _VIRT_NAMES[k]
+    return ""

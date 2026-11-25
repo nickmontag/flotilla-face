@@ -1,0 +1,140 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/MiniCPM-V-4.7-35B-A3B-abliterated-i1-GGUF",
+ "revision": "c1003a1061f7726dfaeed55b285ea36f57845dc5",
+ "captured": "2026-11-25T05:08:59+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3545,
+   "git_oid": "7415bf6451a2bd1e4912a1649eae05af3434a47b"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-IQ1_M.gguf",
+   "size": 8238839200,
+   "sha256": "99c67a1f02a6010048cb62ea3de61686ce96364a64edc880d387184c6c775e56"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-IQ1_S.gguf",
+   "size": 7483772320,
+   "sha256": "8219360c14d80b7a64ca9fcf3a5ca19d9ddc7c878560367eff34871add385618"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-IQ2_M.gguf",
+   "size": 11658829472,
+   "sha256": "d02a0f8e5a04c186c161c6aa6f49ba40dededc734ab891cebb3ed516a5131ab9"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-IQ2_S.gguf",
+   "size": 10652073632,
+   "sha256": "b6990f51eeadc8cccdb82244e37e5ec0201d24f30b514ae67822882f66da6674"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-IQ2_XS.gguf",
+   "size": 10506661280,
+   "sha256": "20749c38921ce179124d390a9bdfccaf8fbb214b850a5a895005e2214b5df17e"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-IQ2_XXS.gguf",
+   "size": 9497284000,
+   "sha256": "c4783e483e82c2e18ee2cd600942dec21e66efe34592802b0d507d1876cc6124"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-IQ3_M.gguf",
+   "size": 15440065440,
+   "sha256": "ecb13548008dbcc0c49d010eeaddbeb64d42716e220cf99b36d84d1b0fb24087"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-IQ3_S.gguf",
+   "size": 15249970080,
+   "sha256": "f1cf67da79683312c7d4e63cfcd8445d2ae6d837c1bb0ef33bad991604fe7cc4"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-IQ3_XS.gguf",
+   "size": 14483690400,
+   "sha256": "d11394a9764d85bb0b3e31bba75b6578fce4d25efa970a278f93d6806fdb7cc5"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-IQ3_XXS.gguf",
+   "size": 13623352992,
+   "sha256": "70b006fc079ece97f80b6fde4e4875cb188da07a6f94b2e928562570f018ab4f"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-IQ4_XS.gguf",
+   "size": 18728287392,
+   "sha256": "757f8f3185265ca5378d5e6ebae138bd5e0a7e077ad570609e35248523488b98"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-Q2_K.gguf",
+   "size": 12939176608,
+   "sha256": "76c7feebf5ccb2f69a79c8261bcde50109e0156e1ac8f7f1a9ec1517199b1c84"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-Q2_K_S.gguf",
+   "size": 12151679648,
+   "sha256": "65ac32c4890173af2d618dc29dfe0fffc80e7d753edead5802819fc8aa05b60c"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-Q3_K_L.gguf",
+   "size": 18114876320,
+   "sha256": "76ea175409f23c241e18ed0e80ad3e27177619fb3b82385536e6c3b0ccdf7915"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-Q3_K_M.gguf",
+   "size": 16764310432,
+   "sha256": "e8a8ca3721d6fe30d66bd5fc501cedd2c39568a7af96c5025f5201f4004f7212"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-Q3_K_S.gguf",
+   "size": 15181730720,
+   "sha256": "7f26315bc8e8ac6474228b528259ed68d659fa974786079448fee3ad42ca05ec"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-Q4_0.gguf",
+   "size": 19798765728,
+   "sha256": "a15d8625a6aaf5700abff1b4d4dcb91f9491b2b924bba108af098243fa26dc4c"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-Q4_1.gguf",
+   "size": 21847644320,
+   "sha256": "9b5e8667da1e1a5989fb8abe1645d7ffb503a71a51ff3e98442f2b7aa2ae780a"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-Q4_K_M.gguf",
+   "size": 21166256288,
+   "sha256": "e01b3454419f53edfca4d9a21ec211fda66a363cb3870b169dc6f6e5474b8118"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-Q4_K_S.gguf",
+   "size": 19889402016,
+   "sha256": "2d5c22302e79203bb7eb0393c0a033c17e155c9c1fd331421214a611a5167ce5"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-Q5_K_M.gguf",
+   "size": 24728584352,
+   "sha256": "db619c7000e9bc0f4251562952cadc2d6144870530d4387dbb9f07f0915d1774"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-Q5_K_S.gguf",
+   "size": 23980736672,
+   "sha256": "da27bb671ed4a700f6875f3815f46a0676cd87a9ae41d835f5d95e1f0b1aad85"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.i1-Q6_K.gguf",
+   "size": 28513557920,
+   "sha256": "a2770df3d943a2fdb8679faa719279b0da6594a60028a36ab2c9cebeef0c748a"
+  },
+  {
+   "path": "MiniCPM-V-4.7-35B-A3B-abliterated.imatrix.gguf",
+   "size": 384343104,
+   "sha256": "c8218f891ff60acab6fe625ff3d39cadeb16cf2c84ea2b5e18e3cd708924118b"
+  },
+  {
+   "path": "README.md",
+   "size": 6743,
+   "git_oid": "238229235490078be1b6377d8d5b0012849c79f8"
+  }
+ ]
+}

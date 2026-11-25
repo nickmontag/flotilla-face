@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "tuanlai001/Qwen3VL-4B-Instruct-Heretic",
+ "revision": "cfd284e8a4677bb81457c1d725fd53d6a12312c9",
+ "captured": "2026-11-25T05:09:01+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 578,
+   "git_oid": "f9bad55f932223156e765e23c0c08be3a56eadbc"
+  },
+  {
+   "path": "qwen3vl_4b_heretic_bf16.safetensors",
+   "size": 8875725476,
+   "sha256": "a3dfdaaef32f11889491d66ae79c1a190674b1774d61dfa53f639532a74bf46a"
+  },
+  {
+   "path": "qwen3vl_4b_heretic_fp8.safetensors",
+   "size": 5155000566,
+   "sha256": "3c2ad5fbe914d86aa31cd3bebb5f446e9f7c2ca06351fb5f973574aea5d906fc"
+  },
+  {
+   "path": "qwen3vl_4b_heretic_int8_convrot.safetensors",
+   "size": 5165092850,
+   "sha256": "f3b7b70dd3446519fd79e20400a60be48a873335aff695fc0ba6fd64d2b70d32"
+  },
+  {
+   "path": "qwen3vl_4b_heretic_mxfp8.safetensors",
+   "size": 5271293962,
+   "sha256": "7c303039d3113a6e76a4822cbd7388f9333f4f65920e4fc07fe35f6cbefce09a"
+  }
+ ]
+}

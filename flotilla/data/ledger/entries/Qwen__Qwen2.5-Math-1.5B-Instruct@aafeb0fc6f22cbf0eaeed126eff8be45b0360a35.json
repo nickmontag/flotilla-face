@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Qwen/Qwen2.5-Math-1.5B-Instruct",
+ "revision": "aafeb0fc6f22cbf0eaeed126eff8be45b0360a35",
+ "captured": "2026-11-25T05:09:34+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11344,
+   "git_oid": "cc375d92d7061b465042e9a1d507cb99598fb97a"
+  },
+  {
+   "path": "README.md",
+   "size": 4969,
+   "git_oid": "12396aa0544a148895e8dcac88998fa64c221de1"
+  },
+  {
+   "path": "config.json",
+   "size": 656,
+   "git_oid": "b587b103115ad5ac4fcb45e56564108d23711bee"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 160,
+   "git_oid": "89c962bc8bbadd4c2dee288c026486001ca6e785"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671839,
+   "git_oid": "20024bfe7c83998e9aeaf98a0cd6a2ce6306c2f0"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 3087467144,
+   "sha256": "08faf1e950173bb44c11d26df28c55da7237dc55c77dbc1cbae4a5d7584540d9"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7031645,
+   "git_oid": "443909a61d429dff23010e5bddd28ff530edda00"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 7315,
+   "git_oid": "2c722710e1e87b1affe215eef769b4f8fb2d5316"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

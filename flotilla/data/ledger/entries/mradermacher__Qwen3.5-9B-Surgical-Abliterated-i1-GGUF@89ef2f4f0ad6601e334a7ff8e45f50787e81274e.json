@@ -1,0 +1,100 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3.5-9B-Surgical-Abliterated-i1-GGUF",
+ "revision": "89ef2f4f0ad6601e334a7ff8e45f50787e81274e",
+ "captured": "2026-11-25T05:08:58+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2835,
+   "git_oid": "cc882d532744fff19200fd68dafbe5e71f932d71"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-IQ3_M.gguf",
+   "size": 4522783584,
+   "sha256": "b0fc07021e98602d52a14cc65cf756fd525c35d7791e5cd1d76d7c5790c8023a"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-IQ3_S.gguf",
+   "size": 4475990880,
+   "sha256": "62d3e4b564ac2fc3913d627c84568c66e1db2f9f8b3abaca6a28ae218d9a310c"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-IQ4_NL.gguf",
+   "size": 5555663712,
+   "sha256": "6a0dfe45322a3b91a02cddaf60f18dd52f1519a172d0b174f10640a3b075137b"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-IQ4_XS.gguf",
+   "size": 5326418784,
+   "sha256": "a355f1d1b8e90dff0d673e0c0c752458fafc3662207d11d3e51f99d4dd41ad84"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-Q2_K.gguf",
+   "size": 3914969952,
+   "sha256": "bacb13a49f552a0ea4d1f5837bf6a02c601482d177fe24936097ce176683c597"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-Q3_K_L.gguf",
+   "size": 5048513376,
+   "sha256": "6c63ef15c2e0bac1a97f644f5ecffc97aab15ad126d19580a081eecbb293c0d2"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-Q3_K_M.gguf",
+   "size": 4737610592,
+   "sha256": "a911c2276aae4068bfbb19649135799df39c9a380bf0200d36696de8d9912e37"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-Q3_K_S.gguf",
+   "size": 4364022624,
+   "sha256": "1fabf4cc05416a5137f97f6b6fe501ae362654ac053a1ac12a372f481b2ffce6"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-Q4_0.gguf",
+   "size": 5462864736,
+   "sha256": "a4ea469ed9ca2bae99064e59209d1ec58e62261462128e6230ea5f2369319cc5"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-Q4_1.gguf",
+   "size": 5961462624,
+   "sha256": "0d97bd5fb134a185ce6e2307517dd827684ecc4f9fd5f1175a9339bdc75a6c7c"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-Q4_K_M.gguf",
+   "size": 5780091744,
+   "sha256": "ac5a2afa5f67966d5fbe7f1d3a179723b3c6dbd457a2d3f4bed0f50e3f6664a3"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-Q4_K_S.gguf",
+   "size": 5488554848,
+   "sha256": "541b1f85d4492af1ae39a78c377b24e0ca21091ed4948bd06beb883c5c2c2f90"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-Q5_K_M.gguf",
+   "size": 6642545504,
+   "sha256": "47445f46e6dae9022f49f71a00d4f83953351c206ae3134ede3a92b3c86d2072"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-Q5_K_S.gguf",
+   "size": 6472643424,
+   "sha256": "362a8dc6d9f78d86d8e465b9c2d29158035ab9a15f2df9b0a95d1679075c175c"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.i1-Q6_K.gguf",
+   "size": 7558902624,
+   "sha256": "78be5969dc44f64c9aba80299f47d082899cc3f26efe9bbad23e13d609797886"
+  },
+  {
+   "path": "Qwen3.5-9B-Surgical-Abliterated.imatrix.gguf",
+   "size": 10307808,
+   "sha256": "3be0cb7f99d763ba5f94a5e8c7a2e2c51c9d79dc5bcfa25b25fdf6f2c6c89bb1"
+  },
+  {
+   "path": "README.md",
+   "size": 5423,
+   "git_oid": "4450fa70f05673186e403f9e1f6af4a5911fc8f5"
+  }
+ ]
+}

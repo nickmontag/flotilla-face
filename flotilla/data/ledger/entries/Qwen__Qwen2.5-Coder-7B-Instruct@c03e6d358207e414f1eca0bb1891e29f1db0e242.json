@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Qwen/Qwen2.5-Coder-7B-Instruct",
+ "revision": "c03e6d358207e414f1eca0bb1891e29f1db0e242",
+ "captured": "2026-11-25T05:09:12+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11343,
+   "git_oid": "6634c8cc3133b3848ec74b9f275acaaa1ea618ab"
+  },
+  {
+   "path": "README.md",
+   "size": 6392,
+   "git_oid": "f29baca4ff38a69df22ec441e22f7ac8dfac277b"
+  },
+  {
+   "path": "config.json",
+   "size": 663,
+   "git_oid": "1a2ea88621f4248fccfb575beaf64c1ea5d9587f"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 242,
+   "git_oid": "b7849b3dad857bc1e227afd6ca21d1e4cb3f8f82"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671839,
+   "git_oid": "20024bfe7c83998e9aeaf98a0cd6a2ce6306c2f0"
+  },
+  {
+   "path": "model-00001-of-00004.safetensors",
+   "size": 4877660776,
+   "sha256": "0b6f069918b07c064cbba8ae4f00f529aa9bbf84b7cdfcb7fc2694a40f6aa8ef"
+  },
+  {
+   "path": "model-00002-of-00004.safetensors",
+   "size": 4932751008,
+   "sha256": "c3d46733e7aa054ea7b063fbccd0a5a08446e7bd1814bef26936c5aa1331da62"
+  },
+  {
+   "path": "model-00003-of-00004.safetensors",
+   "size": 4330865200,
+   "sha256": "9fe45dacee087385b3d2d6dd27a7413a8a56d95f145772facc148fa86fc73446"
+  },
+  {
+   "path": "model-00004-of-00004.safetensors",
+   "size": 1089994880,
+   "sha256": "5aa6e5cbe642377fd441fb4e60e83cca96b2bcd9820e245b9ea06d94653f17f2"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 27752,
+   "git_oid": "6ca5084b88f1a95fef37f1b94c6e87ff69422bb7"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7031645,
+   "git_oid": "443909a61d429dff23010e5bddd28ff530edda00"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 7305,
+   "git_oid": "acee076f49bf3c0298e15de0909d1da7b392f0c3"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

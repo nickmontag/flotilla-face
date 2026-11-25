@@ -1,0 +1,30 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "jan1k/Qwen3.6-35B-A3B-Uncensored-Genesis-Hermes-MTP-NVFP4-GGUF",
+ "revision": "7434ed69d6446d0650eb41244dcf484338bbb21d",
+ "captured": "2026-11-25T05:09:02+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1696,
+   "git_oid": "17e803449bcdc35268fd9aa74690dd6c8dd8e81f"
+  },
+  {
+   "path": "Hermes3.6-35B-A3B-Uncensored-Genesis-MTP-NVFP4.gguf",
+   "size": 21950064064,
+   "sha256": "fa9ebb10ddfe7743a1dcad9602d2eaed7e64f729ac0d99339237871f3252eefe"
+  },
+  {
+   "path": "README.md",
+   "size": 3175,
+   "git_oid": "7787cf998d6b362170c70bdbf0ae3be8479aac7c"
+  },
+  {
+   "path": "mmproj-Hermes3.6-35B-A3B-Uncensored-Genesis-F16.gguf",
+   "size": 899283072,
+   "sha256": "ccab14fb79b1865b4014447f4aa559d28ec0780c429a0cf2b8e1d5d6cb785a60"
+  }
+ ]
+}

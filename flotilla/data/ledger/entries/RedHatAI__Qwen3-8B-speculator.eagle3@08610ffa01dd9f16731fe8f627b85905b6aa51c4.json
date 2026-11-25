@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "RedHatAI/Qwen3-8B-speculator.eagle3",
+ "revision": "08610ffa01dd9f16731fe8f627b85905b6aa51c4",
+ "captured": "2026-11-25T05:13:07+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 4308,
+   "git_oid": "511fde62b0f12eadc8fd808981c7eb2dd1de1a5c"
+  },
+  {
+   "path": "assets/Qwen3-8B-HumanEval.png",
+   "size": 40367,
+   "git_oid": "1d551b5a4a3c18a639335d903a70bcf073532320"
+  },
+  {
+   "path": "assets/Qwen3-8B-math_reasoning.png",
+   "size": 41611,
+   "git_oid": "685096a8423cb7a584c93795c98772d9253e56b8"
+  },
+  {
+   "path": "assets/Qwen3-8B-summarization.png",
+   "size": 41281,
+   "git_oid": "99e128640f9de859b7d2bc78cfbeff39caa5c7e0"
+  },
+  {
+   "path": "config.json",
+   "size": 1378,
+   "git_oid": "ecd166b3f8db3d9bf392b7d9f1e76f682ba712bf"
+  },
+  {
+   "path": "eagle3.py",
+   "size": 20427,
+   "git_oid": "17b369cbcc77148d768f8f2f0c12a1adb6107bb1"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 69,
+   "git_oid": "f11b93b374ad8b838f03b40ec44014164d3981bb"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 2044116968,
+   "sha256": "ca1fa9bba3eaa6a42848d6f7aede55ec0cc3a72e23381ee58afb8d594917a69a"
+  }
+ ]
+}

@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "ibm-granite/granite-3b-code-base-2k",
+ "revision": "b67f3dabc0b6d00ae477bd76732c7f3458a2caf3",
+ "captured": "2026-11-25T05:13:11+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 10767,
+   "git_oid": "7acce96c3dc519111815f452f42cd7a9a00b09e0"
+  },
+  {
+   "path": "config.json",
+   "size": 680,
+   "git_oid": "ddf62599d31a4b01933882024b1ef8e3d38773c2"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 137,
+   "git_oid": "d0bc91b4dfb3def72ae612b9785c790e8e89e766"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 4972021832,
+   "sha256": "7127432f1ffff5b25875ce4e287c9dfa458655ad1b6183a2d274c061bf9e4b1b"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 1993043568,
+   "sha256": "344a03bb26fe17bacac63b616c45397758aeb6dfb0f36b4495139dc4530b885b"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 41613,
+   "git_oid": "125b7d17df3e09bd8dcf85fc2d7d64b0dd7a3fe7"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 1020,
+   "git_oid": "7dec8d5885c2e56764c4416d6fa4e1baa024b139"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 2057423,
+   "git_oid": "e689835357cf8d71a9a540b28bd007c23a4d0351"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 4126,
+   "git_oid": "e72c686d55d39777040cda554da071a1df3c3f38"
+  }
+ ]
+}

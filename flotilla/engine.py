@@ -36,7 +36,7 @@ from pathlib import Path
 
 import libtorrent as lt
 
-from . import USER_AGENT, __version__, netsafe
+from . import USER_AGENT, __version__, netsafe, sweep
 from .candidates import Rejection, TorrentCand, gather
 from .config import (BUILTIN_EDITOR_KEYS, FOCUS_CHOICES, REORIENT_CHOICES, REORIENT_EVERY, Config, State, memory_budget,
                      own_memory)
@@ -52,7 +52,7 @@ from .perfile import PerFile
 from .vpnport import RESTART_ROUTE, Forward, GluetunAbsent, GluetunAuth, PortFinder, gluetun_restart_vpn
 from .hfauth import remove_token, save_secret
 from .pfaccount import Account, clean_key, key_path, kind_of
-from .planner import GB, Params, Plan, Unit, plan as make_plan, swappable
+from .planner import GB, Params, Plan, Unit, list_full, plan as make_plan, set_targets, swappable
 from .signing import PublicKey, SignatureError
 from .sources import HuggingFace, PirateFace, git_blob_sha1, sha256_file
 from .torrentmeta import parse_torrent
@@ -424,6 +424,10 @@ class Engine:
         # The port the VPN forwards to this node (vpnport.py), and the one it listens on for it.
         self.vpn_forward: Forward | None = None
         self.listening_on = cfg.listen_port
+        # The port asked for (listening_on) and the one libtorrent got: if another program (another
+        # torrent client, say) holds the one asked for, libtorrent takes the next free one (it tries ten,
+        # then lets the system pick). port_view() says so; _port_noted keeps the log to one line.
+        self._port_noted: tuple[int, int] | None = None
         self.perfile = PerFile(self)
         self.index = MagnetIndex(self)
         self.last_plan: Plan | None = None
@@ -547,8 +551,11 @@ class Engine:
             self.index.sync(pf)
         except (netsafe.FetchError, netsafe.UnsafeURL, ValueError) as e:
             self.log(f"magnet index: couldn't check for a new build ({e})")
+        picks = self._sweep_picks(held_repos)
+        swept = set(self.state.data.get("sweep", {}).get("picked", []))
         cands, rejected = gather(self.cfg, self.feed, pf, hf, held_repos, log=self.log, ledger=self.ledger,
-                                 index=self.index)
+                                 index=self.index, covered=bool(self.state.data.get("list_covered")),
+                                 sweep=picks, swept=swept)
         for c in cands:
             if c.index_build:
                 self.log(f"{c.repo}: Pirate Face can't be reached; listed from the magnet index (build "
@@ -559,6 +566,30 @@ class Engine:
         with self.lock:
             block, dropped = set(self.state.data["blocklist"]), set(self.state.data["dropped"])
         return [c for c in cands if c.infohash not in block and c.repo not in dropped], rejected
+
+    def _sweep_picks(self, held_repos: set[str]) -> list[str]:
+        """The catalog sweep's picks (sweep.py) while the whole list has its copies: scraped at most
+        daily, and kept in state.json in between."""
+        rec = self.state.data.setdefault("sweep", {})
+        if not (self.cfg.catalog_sweep and self.state.data.get("list_full") and self.index.enabled
+                and self.index.entries and self.cfg.sweep_candidates > 0):
+            return []
+        now = time.time()
+        if now - rec.get("at", 0) < sweep.EVERY and rec.get("week") == sweep.week_of(now):
+            return [p["repo"] for p in rec.get("picks", [])]
+        skip = {m.repo.lower() for m in (self.feed.models if self.feed else [])} | {r.lower() for r in held_repos}
+        try:
+            picks = sweep.pick(self.index.entries, self.state.node_id, now, self.cfg.sweep_candidates, skip)
+        except (OSError, ValueError) as e:
+            self.log(f"catalog sweep: couldn't ask the tracker for seeder counts ({e}); trying again next refresh")
+            return [p["repo"] for p in rec.get("picks", [])]
+        with self.lock:
+            rec.update(at=now, week=sweep.week_of(now), picks=picks)
+            rec["picked"] = (rec.get("picked", []) + [p["repo"] for p in picks if p["repo"] not in rec.get("picked", [])])[-2000:]
+        none = sum(1 for p in picks if p["seeders"] == 0)
+        self.log(f"catalog sweep: scraped {sweep.SLICE} of Pirate Face's {len(self.index.entries)} models; "
+                 f"looking at the {len(picks)} least seeded ({none} with no seeder)")
+        return [p["repo"] for p in picks]
 
     # ---------------------------------------------------------- planning
 
@@ -650,6 +681,24 @@ class Engine:
         result = probe(cands, self.cfg, self.cfg.folder / ".probe", seconds, self.fingerprint.encode(),
                        log=self.log, listen_host=self.listen_host, dht=self.dht, connect=self.connect)
         apply_probe(cands, result)
+        was_covered = bool(self.state.data.get("list_covered"))
+        # The spare entries were looked at only if the list was covered when they were gathered.
+        covered = set_targets(cands, spare_included=was_covered)
+        full = was_covered and covered and list_full(cands)
+        if full != bool(self.state.data.get("list_full")):
+            self.log("everything on the list has its target number of copies: spare space now goes to the "
+                     "least-seeded models in Pirate Face's catalog (the catalog sweep)" if full else
+                     "some of the list is short of copies again: the catalog sweep pauses")
+            with self.lock:
+                self.state.data["list_full"] = full
+        if covered != was_covered:
+            spare = sum(1 for m in (self.feed.models if self.feed else []) if m.spare)
+            self.log(f"the swarm now holds the target number of copies of nearly everything on the list: its "
+                     f"{spare} spare model(s) are looked at from the next refresh"
+                     if covered else "some of the list is short of copies again: its spare models are no "
+                                     "longer looked at")
+            with self.lock:
+                self.state.data["list_covered"] = covered
         with self.lock:
             for c in cands:
                 self.cand_info[c.infohash] = {
@@ -1379,6 +1428,8 @@ class Engine:
                 tmp = self.resume_dir / f"{ih}.tmp"
                 tmp.write_bytes(lt.write_resume_data_buf(a.params))
                 os.replace(tmp, self.resume_dir / f"{ih}.fastresume")
+            elif isinstance(a, lt.listen_succeeded_alert):
+                self._note_port()
             elif isinstance(a, (lt.torrent_error_alert, lt.file_error_alert, lt.listen_failed_alert)):
                 self.log(f"libtorrent: {a.message()}")
 
@@ -1426,6 +1477,7 @@ class Engine:
             doc = {
                 "at": datetime.now(timezone.utc).isoformat(), "node": self.state.node_id[:8],
                 "paused": self.ses.is_paused(), "disk_paused": self.disk_paused, "listen_port": self.ses.listen_port(),
+                "port": self.port_view(),
                 "feed": {"version": self.feed.version, "source": self.feed.source, "signer": self.feed.signer,
                          "local": self.feed.local_source,
                          "expires": self.feed.expires.isoformat() if self.feed.version else None} if self.feed else None,
@@ -2128,6 +2180,29 @@ class Engine:
             view["lost"] = {"port": mem["port"], "since": mem["lost"], "recover": bool(self.cfg.vpn_port_recover),
                             "tries": mem.get("tries", 0), "last_try": mem.get("last_try") if mem.get("tries") else None}
         return view
+
+    def port_view(self) -> dict:
+        """The port libtorrent listens on, the one Flotilla asked for, and whether the VPN's forwarded
+        port is the one in use (if not, peers can't connect in through the VPN)."""
+        actual = self.ses.listen_port()
+        fw = self.vpn_forward
+        return {"port": actual, "wanted": self.listening_on, "moved": bool(actual) and actual != self.listening_on,
+                "forwarded_taken": bool(fw and fw.port and actual and actual != fw.listen)}
+
+    def _note_port(self) -> None:
+        """Say once when the port asked for was taken and libtorrent listens on another."""
+        view = self.port_view()
+        key = (view["wanted"], view["port"])
+        if key == self._port_noted or not view["port"]:
+            return
+        self._port_noted = key
+        if view["forwarded_taken"]:
+            self.log(f"port {view['wanted']}, the one the VPN forwards, is taken by another program on this machine "
+                     f"(another torrent client?): listening on {view['port']} instead, so peers can't connect in "
+                     f"through the VPN. Give the other program a different port, or stop it.")
+        elif view["moved"]:
+            self.log(f"port {view['wanted']} is taken by another program on this machine (another torrent client?): "
+                     f"listening on {view['port']} instead. Set listen_port to keep a port of your own.")
 
     def _listen_on(self, fw: Forward) -> None:
         """Listen on the forwarded port (and tell trackers the public one, when the VPN maps it to

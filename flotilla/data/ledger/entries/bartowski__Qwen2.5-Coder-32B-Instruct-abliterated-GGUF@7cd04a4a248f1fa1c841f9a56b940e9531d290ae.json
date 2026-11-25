@@ -1,0 +1,160 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bartowski/Qwen2.5-Coder-32B-Instruct-abliterated-GGUF",
+ "revision": "7cd04a4a248f1fa1c841f9a56b940e9531d290ae",
+ "captured": "2026-11-25T05:08:33+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 4057,
+   "git_oid": "64c2bc7ca682cb43e638617394b2d15b6470b2ea"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-IQ2_M.gguf",
+   "size": 11264441440,
+   "sha256": "e642932f8ecb95cc4143a7054fa46819af59d05f6dfb39599e93b846ab96630d"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-IQ2_S.gguf",
+   "size": 10387569760,
+   "sha256": "c36129c843faec68154fd18bb5fdee2b70823dbf17085170f01afda985e1da86"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-IQ2_XS.gguf",
+   "size": 9957551200,
+   "sha256": "c2018ec26556f512ebb2f124f12aad002dbf35bf0c6f23d66125fbca209c5840"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-IQ3_M.gguf",
+   "size": 14810123360,
+   "sha256": "c39e98b481836f066c01922924d2cbba90449efa3f4f160d874e150ce7e139e0"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-IQ3_XS.gguf",
+   "size": 13705514080,
+   "sha256": "0b0967d04516f60ab572b21c32ebca0e7d54a94f5b3ba7a498764e1d52e02fbe"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-IQ4_XS.gguf",
+   "size": 17693154400,
+   "sha256": "0859ac53fe46f32e058eaa28e541c0c29aed9155f3dcaac8c2156e5b91384d8d"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q2_K.gguf",
+   "size": 12313099360,
+   "sha256": "97921eb2e9de9c7fac6d683e911706f2d47fea2a8824101de7bce01796e1bdda"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q2_K_L.gguf",
+   "size": 13073419360,
+   "sha256": "302b62c4d3161400202ce13e5499c944208197d7250c9fa059ab738801e4f0b1"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q3_K_L.gguf",
+   "size": 17247079520,
+   "sha256": "92393aaa2916c55f53c81e82622f3f7efca067089f1505ba8a86b5ac442f7dcd"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q3_K_M.gguf",
+   "size": 15935048800,
+   "sha256": "fc39bca9fd1019dc25162c2061ea2070f8e605f12adbb7b9427a84f9afdd5450"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q3_K_S.gguf",
+   "size": 14392331360,
+   "sha256": "30ecc831a87899d251d13ab0824dd47aa17c7ed6f44f433484f59324e1fa4f12"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q3_K_XL.gguf",
+   "size": 17928326240,
+   "sha256": "4e62229ec989295353f6c8f220cd810def8dfbf0cec6cbb87f72dec6ecec5b9b"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q4_0.gguf",
+   "size": 18711010400,
+   "sha256": "e0ecfa5c9aedc23c2c58ff436ed6d698c623c760a6cdbc672b803ca7a119223d"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q4_0_4_4.gguf",
+   "size": 18640231520,
+   "sha256": "8661260aefa85e4f1c09230733c3f1406d51722ab960ac04751b39ffe8b72feb"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q4_0_4_8.gguf",
+   "size": 18640231520,
+   "sha256": "f38d57f7daf7100545bbebc6c16399f8fb1eecddbf4acc9195220b17d5b6f6ef"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q4_0_8_8.gguf",
+   "size": 18640231520,
+   "sha256": "0cb24726949c16f9c14631037ad30293c12ff924cacc4a4113af5dfec371d794"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q4_K_L.gguf",
+   "size": 20429180000,
+   "sha256": "dee2e1a35f3d48742b29fa26aa4e12d079b10a2a773426ab132c3c8e9b9378fd"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q4_K_M.gguf",
+   "size": 19851336800,
+   "sha256": "54fd911daea5c940acd0f275fce19ce4f5bfd900ea03a7764ab33030f4d4122d"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q4_K_S.gguf",
+   "size": 18784410720,
+   "sha256": "b338b8c0a4eefac80182b194e7b7737d047153c4f053e4123237d8918d4e37b1"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q5_K_L.gguf",
+   "size": 23742680160,
+   "sha256": "d65f7d871319742715b4abda586bcc379dc4c7644cef9bf2341742a579d120e2"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q5_K_M.gguf",
+   "size": 23262157920,
+   "sha256": "3818dcbf7bb6a24561f87e404ab2d33ec904a32565229e976c919d1c9fd73db9"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q5_K_S.gguf",
+   "size": 22638255200,
+   "sha256": "7f36d3f01c7fc01cbcdb3b72b22f380bf9051cf3e9bda6b1c87a81274e34b335"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q6_K.gguf",
+   "size": 26886155360,
+   "sha256": "45bd59bb45ba522033803ad20d843a88c995131c75d063648f9a1f00f117736c"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q6_K_L.gguf",
+   "size": 27263274080,
+   "sha256": "e18303a40c114bfcb68f227e373f0e5144e74fe2555a5c433385e6d78c74eafb"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-Q8_0.gguf",
+   "size": 34820885280,
+   "sha256": "73cf5dc4cb5b47bc98251d614c7b40bf03e0a996cd1bfe7c6c13854fde6966cb"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-f16/Qwen2.5-Coder-32B-Instruct-abliterated-f16-00001-of-00002.gguf",
+   "size": 39880800320,
+   "sha256": "f1e616ef6452c0477a0267b7872206fbeafab7533829895f84a6b749f21d7ecc"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated-f16/Qwen2.5-Coder-32B-Instruct-abliterated-f16-00002-of-00002.gguf",
+   "size": 25655169952,
+   "sha256": "42f15f35ebf76c9bbc1381372e191d8f4c95cebe2c0d840be790b3b044eca55d"
+  },
+  {
+   "path": "Qwen2.5-Coder-32B-Instruct-abliterated.imatrix",
+   "size": 14957098,
+   "sha256": "af1822f7ce3437156355ddd98c3ed82e1bc8270da57a92ffe739eae488ed315c"
+  },
+  {
+   "path": "README.md",
+   "size": 12376,
+   "git_oid": "bc6b92ce43e0d55b67f5574a1e918f14c033c4ab"
+  }
+ ]
+}

@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS-i1-GGUF",
+ "revision": "1d3298f07ec5c9f5101eaea49f1e53bef995610b",
+ "captured": "2026-11-25T05:08:47+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 4205,
+   "git_oid": "359daa2a1f8ea485dcb7325dca372ac1ba7bc4cc"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-IQ1_M.gguf",
+   "size": 3372273024,
+   "sha256": "096ec6224953061b8dcc020f4cafd5de21dbcfddf1ba475750752be8f93e0526"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-IQ1_S.gguf",
+   "size": 3289759104,
+   "sha256": "ad953d86b656b2ee9babc51e73f79e68837f177af47c170e6142b3d2ef73e357"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-IQ2_M.gguf",
+   "size": 3787300224,
+   "sha256": "27988bb2865b1716d305dbcbf5969a1210a8b7132fdd7e57f7bea59c37dcf66d"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-IQ2_S.gguf",
+   "size": 3677281664,
+   "sha256": "108ea6f14610a230443728267afe462d4341256bfdd4d13753c28693057c5337"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-IQ2_XS.gguf",
+   "size": 3627842944,
+   "sha256": "2abc780a75b1333b81cceaf80f552ec33237dae52306e5fc673215e966c1f3ac"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-IQ2_XXS.gguf",
+   "size": 3509796224,
+   "sha256": "7190beccab089bb67282acae8d9800c7f263fd1ed0c5b686022753b64171ccab"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-IQ3_M.gguf",
+   "size": 4687363456,
+   "sha256": "2967de619e1c3e30b3a2bc3019489384e76255c14f63731a275c8f87b4699ef2"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-IQ3_S.gguf",
+   "size": 4635835776,
+   "sha256": "b5282a35cb69e9bd4d8890e2f0f44cffb57592be9f35ff93a03020fcd52ab380"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-IQ3_XS.gguf",
+   "size": 4545887616,
+   "sha256": "005fa51fa68285c23afd490d58f0ac3054434b1a21d2c6882b1500b0e1d54bed"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-IQ3_XXS.gguf",
+   "size": 3982843264,
+   "sha256": "a921580b0454401e82243c648aa213a252bd1464519f17f47bf6978851e42685"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-IQ4_NL.gguf",
+   "size": 5159529856,
+   "sha256": "b3ba9f5e7d3761be79a029db1ee0c60fc9421a09a52ba4be048505516adf5f7d"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-IQ4_XS.gguf",
+   "size": 5037387136,
+   "sha256": "dc8f04e3814891a7feb23b3a61477219e207706dccf26ce9a972f0a40b38fcb5"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-Q2_K.gguf",
+   "size": 4376784256,
+   "sha256": "3345030b86d5203f15c6e53b46e82b972230c6a0868e47affea83bcbb96ecc4b"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-Q2_K_S.gguf",
+   "size": 4269591936,
+   "sha256": "cf7ab6af45c645779aad88285a023bd5703f6ce7851457068998f99595d15845"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-Q3_K_L.gguf",
+   "size": 4990508416,
+   "sha256": "7c79990b255a95ec1e1e3a3d525108d78e9cd449601d6d95daca3aab50d1292e"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-Q3_K_M.gguf",
+   "size": 4823063936,
+   "sha256": "cc6a67dc3c3a71e53d56fc4f347550a3d73344bda34367c6f481e6caa1d2053c"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-Q3_K_S.gguf",
+   "size": 4630961536,
+   "sha256": "aa82806f1ec2be167e38747914c9d89182230f29ba5cc93d913050f5792f08ad"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-Q4_0.gguf",
+   "size": 5163134336,
+   "sha256": "0cfb19bb1e5a9c1e528ef8eea0d95d7a0955e6132107a60096633429d08fcaa5"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-Q4_1.gguf",
+   "size": 5401521536,
+   "sha256": "cff4db82f3a27aa5f27e1da62a9d671f7674303b157abfb973e01bca32687c5b"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-Q4_K_M.gguf",
+   "size": 5302275456,
+   "sha256": "a00847b12bf124019c022e495bb8d24648692b53932d7141067a13fe6881e884"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-Q4_K_S.gguf",
+   "size": 5171981696,
+   "sha256": "6879f44c68140ed04a9ac6481957082298b91c95d5cdfbf0d81be7606a25b11a"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-Q5_K_M.gguf",
+   "size": 5723999616,
+   "sha256": "484518fd6b98dfb6db855e7acf3a99348b416fed2c9b65268fc6522c72f3c97d"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-Q5_K_S.gguf",
+   "size": 5648100736,
+   "sha256": "51a01f79eaf9a22f93f6e72534209ebfb24b36269023fb6b93574645e1ac36fe"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.i1-Q6_K.gguf",
+   "size": 6172081536,
+   "sha256": "efa1619c8f170f122ec3a2a8b7069d5f239ba12471e7876301f61424943fbaeb"
+  },
+  {
+   "path": "Gemma-4-E4B-IT-ABLITERATED-UNCENSORED-PHILADELPHIA-CLASS.imatrix.gguf",
+   "size": 4429024,
+   "sha256": "9b4213f34f94db0b342c3b019ac62ef3b8dd9ae51e631142fdc34eb8b094f060"
+  },
+  {
+   "path": "README.md",
+   "size": 8495,
+   "git_oid": "26ef93d5512fe3c79c37c614bdc366ee3fc5f314"
+  }
+ ]
+}

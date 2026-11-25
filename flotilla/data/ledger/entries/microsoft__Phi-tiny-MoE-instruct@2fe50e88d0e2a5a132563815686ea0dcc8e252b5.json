@@ -1,0 +1,105 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "microsoft/Phi-tiny-MoE-instruct",
+ "revision": "2fe50e88d0e2a5a132563815686ea0dcc8e252b5",
+ "captured": "2026-11-25T05:13:15+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "CODE_OF_CONDUCT.md",
+   "size": 444,
+   "git_oid": "f9ba8cf65f3e3104dd061c178066ec8247811f33"
+  },
+  {
+   "path": "LICENSE",
+   "size": 1105,
+   "git_oid": "700edcc5f42c4816520bc554926ad7e0d9e613d7"
+  },
+  {
+   "path": "NOTICE.md",
+   "size": 1772,
+   "git_oid": "ee58e836b8cb628406447bae6b6b75a0fa553143"
+  },
+  {
+   "path": "README.md",
+   "size": 13174,
+   "git_oid": "704dcd9e333dcd9d2fb5ebd89a87af22da8f55dc"
+  },
+  {
+   "path": "SECURITY.md",
+   "size": 2656,
+   "git_oid": "b3c89efc852e22f71eabf5dfbc6ac62493425eb6"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 315,
+   "git_oid": "f818a19807fe0c9c4cda11b60a04c5118c7260fd"
+  },
+  {
+   "path": "config.json",
+   "size": 1069,
+   "git_oid": "d1559c13752758fd3eb7d764a2f70b6a08cdd550"
+  },
+  {
+   "path": "configuration_slimmoe.py",
+   "size": 12279,
+   "git_oid": "21c08301657cff7cc73c064b5394d072deb40575"
+  },
+  {
+   "path": "data_summary_card.md",
+   "size": 4348,
+   "git_oid": "75645b76a1200ef7cb0bfe05f79f74381a0a5612"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 177,
+   "git_oid": "ab0f0ffe13d2ad4b717194befaceca6a706e92f6"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 4998945744,
+   "sha256": "dcb4621a07a01e28cc2161d6a2a5ce3a15f343057722da2169e2c6907bfdb2ae"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 2511742008,
+   "sha256": "1bc35ff74f5dfc65ed0cb968ba4c707ffcdc30c84d799ff4dfe2e9525a38f12c"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 182552,
+   "git_oid": "524307a328eab3eb60e261f33f485d5cf810bf01"
+  },
+  {
+   "path": "modeling_slimmoe.py",
+   "size": 80615,
+   "git_oid": "e43dbc48b515c4ae6d119eb343d75d6c0556811d"
+  },
+  {
+   "path": "sample_finetune.py",
+   "size": 4936,
+   "git_oid": "d98ed37247c97f4a31ce793cc6e9cfc516a69cc4"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 569,
+   "git_oid": "50b4d340a6844ec4ac9e7c9b194cdd75b108aca1"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 1844436,
+   "git_oid": "2f4cf1e18cb543d31aedc307a6b5968a201569bc"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 3103,
+   "git_oid": "ec8c1f281f077e584c2742015a4515fb8ff66056"
+  }
+ ]
+}

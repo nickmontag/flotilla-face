@@ -1,0 +1,110 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "unsloth/Inkling-2-Mini-GGUF",
+ "revision": "09451beb90e10d4d7a31742a213351433bcb771e",
+ "captured": "2026-11-25T05:09:13+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3757,
+   "git_oid": "2df0dcd28dabc92775570ba6ff5d2052cd26465c"
+  },
+  {
+   "path": "Inkling-2-Mini-UD-IQ1_M.gguf",
+   "size": 8024441024,
+   "sha256": "544e0b2412ba2392272b0510b0c8f53a1ab872b73c2ba4f7488de0d5d61467d9"
+  },
+  {
+   "path": "Inkling-2-Mini-UD-IQ1_S.gguf",
+   "size": 7764291776,
+   "sha256": "c09c028b050c108624682baeb28ac6e0cdb936af021ac637c8c3609f923ea4b8"
+  },
+  {
+   "path": "Inkling-2-Mini-UD-IQ2_XXS.gguf",
+   "size": 8486236352,
+   "sha256": "4fe958f73a667d8082f911a4347e52bc34696a7816cf3d5b9f7c8a81d5c5ceaa"
+  },
+  {
+   "path": "Inkling-2-Mini-UD-IQ3_XXS.gguf",
+   "size": 11663309504,
+   "sha256": "bd7ef0865adf119b5183e45e741c629bafa649769b33b5ebf689bb4bcc4690d6"
+  },
+  {
+   "path": "Inkling-2-Mini-UD-IQ4_XS.gguf",
+   "size": 15733755232,
+   "sha256": "a861d21e7c6d7bc69d8cdcdfb9eb195fd37ef1cd2ab31499db61cd7d30d9b3a1"
+  },
+  {
+   "path": "Inkling-2-Mini-UD-Q2_K_XL.gguf",
+   "size": 9138715328,
+   "sha256": "20292e8142b69535ca88a5d04439d0fdeb4dc698d44c002dca706dcf92901441"
+  },
+  {
+   "path": "Inkling-2-Mini-UD-Q3_K_XL.gguf",
+   "size": 13631778016,
+   "sha256": "f72f396d1b479b14d76346df80baa449c8b1f399653bff38fa4764b359a40048"
+  },
+  {
+   "path": "Inkling-2-Mini-UD-Q4_K_M.gguf",
+   "size": 16610543328,
+   "sha256": "f90c5a4df44d335ac9f9eea2a15c31d6c5a377b1b3cd9ff7fc2cf123f3cdf7e1"
+  },
+  {
+   "path": "Inkling-2-Mini-UD-Q4_K_XL.gguf",
+   "size": 17629759456,
+   "sha256": "e62d463c135ffe283df8d94b279a96ca145ac128b52ce854478613045bf4de15"
+  },
+  {
+   "path": "Inkling-2-Mini-UD-Q8_K_XL.gguf",
+   "size": 22867451616,
+   "sha256": "dfb04bf37bee457f98800989dedf93ec442ede8636dbea9433992f1e527e9a41"
+  },
+  {
+   "path": "README.md",
+   "size": 56384,
+   "git_oid": "66e06fa48d02220f485b74505bac77a145b4e36b"
+  },
+  {
+   "path": "assets/size_vs_kld.png",
+   "size": 273844,
+   "sha256": "1deab167f405bcc5e34cb32851da9ab6c52a3247b7aa4d624bd54e4536a9ed2f"
+  },
+  {
+   "path": "assets/size_vs_top1.png",
+   "size": 275713,
+   "sha256": "871b503391e76559d36732a6cd55e437bcdc22c97e06a116ed76671406066c64"
+  },
+  {
+   "path": "dspark-Inkling-2-Mini-Q8_0.gguf",
+   "size": 402278560,
+   "sha256": "2ec78510da837e8fc3be54a14757a0c5fbd2d8d9e85a0d92853fafdf674f3773"
+  },
+  {
+   "path": "dspark/README.md",
+   "size": 3113,
+   "git_oid": "d9b8eae272f3759e1a076acc607bd9380e495006"
+  },
+  {
+   "path": "dspark/dspark-Inkling-2-Mini-BF16.gguf",
+   "size": 647792800,
+   "sha256": "b8985695c949a4e3270666b44b65959a8c3a599c6e599e0e3e5028f8c217f7b2"
+  },
+  {
+   "path": "mmproj-BF16.gguf",
+   "size": 641805760,
+   "sha256": "2c165c78790e78a3f45a2d1e9e931083e52ee69d45ff2a0dc9c281fdf1a666e7"
+  },
+  {
+   "path": "mmproj-F16.gguf",
+   "size": 639348160,
+   "sha256": "3bff75ffeb2d6e0371ba7bd42e30d26a7d98aea681fa44b03b5a20891cfa2c5f"
+  },
+  {
+   "path": "mmproj-F32.gguf",
+   "size": 1273048512,
+   "sha256": "fa6f2478812f33876e279b6fe8e9f00ea5ff4e9db40868c98c0a39277a439e25"
+  }
+ ]
+}

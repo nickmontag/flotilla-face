@@ -1,0 +1,125 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "saidutta69/DeepSeek-R1-Qwen3-8B-heretic",
+ "revision": "92b2f201e07c9dfdcf14cc8df41c9ec8f21044d9",
+ "captured": "2026-11-25T05:08:56+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1948,
+   "git_oid": "f77dd4d046e9c777c4498783aa7e61c2bb48d7c6"
+  },
+  {
+   "path": "DeepSeek-R1-Qwen3-8B-heretic-F16.gguf",
+   "size": 16388042752,
+   "sha256": "6dbb812c67cf50c329cceb6945645313ce04c02453b5daa73f529b4e4febc15f"
+  },
+  {
+   "path": "DeepSeek-R1-Qwen3-8B-heretic-Q4_K_M.gguf",
+   "size": 5027782656,
+   "sha256": "2af42fa614d0e495bef1da1c427e2a82010f9e5f922c71d63a3bcbcf7b3bbdf8"
+  },
+  {
+   "path": "DeepSeek-R1-Qwen3-8B-heretic-Q5_K_M.gguf",
+   "size": 5851111424,
+   "sha256": "12d62a8d06d536dd2117b6d2fc4bdbb7db327cb076822ae42918d7cad805180d"
+  },
+  {
+   "path": "DeepSeek-R1-Qwen3-8B-heretic-Q6_K.gguf",
+   "size": 6725898240,
+   "sha256": "7b0174c8050b27942c38fed53e0c50e5b2a6a769c4bbd10c8870cf91737bc625"
+  },
+  {
+   "path": "DeepSeek-R1-Qwen3-8B-heretic-Q8_0.gguf",
+   "size": 8709517312,
+   "sha256": "3de4d8aea07fdf2c82643b773a5e1e4dcb790ecb4913a1a0e43f581e09e50ca6"
+  },
+  {
+   "path": "README.md",
+   "size": 9476,
+   "git_oid": "08a72ac8685ec7e5a6a7bfc7fdca942a7b5cd942"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 3127,
+   "git_oid": "7641578becb325296855fbde0f59778cae094eee"
+  },
+  {
+   "path": "config.json",
+   "size": 1698,
+   "git_oid": "7d614d5550952217351f7509e83ff0311e2e708d"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 142,
+   "git_oid": "f84f7bee7d467c87b1043051cbee12e1c1e6fcaa"
+  },
+  {
+   "path": "model-00001-of-00004.safetensors",
+   "size": 4905356144,
+   "sha256": "864d6c50f16e36d44c3026726efa9f4ae167b7af21403374b806e05dbcd5298d"
+  },
+  {
+   "path": "model-00002-of-00004.safetensors",
+   "size": 4915960328,
+   "sha256": "c4b8d6cbf427b28cab5970a2e492af671f7cff08ce639e44898ff9f39a30325d"
+  },
+  {
+   "path": "model-00003-of-00004.safetensors",
+   "size": 4974672216,
+   "sha256": "ecc347ea148052fe8cf4cdf243e4a1a4c03f4cffe7f45f4fef72f24b6e081d45"
+  },
+  {
+   "path": "model-00004-of-00004.safetensors",
+   "size": 1585528088,
+   "sha256": "e6de77e0eb4d88c3c38b7de0d11db4fe2a4b2b46ecdeb05c5a4fbd44280d3749"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 32914,
+   "git_oid": "4153f499e2605dde56418247a0317649154f5c2f"
+  },
+  {
+   "path": "reproduce/README.md",
+   "size": 4049,
+   "git_oid": "33955acaf62d9dd609201f800a2e17608ec8ecdb"
+  },
+  {
+   "path": "reproduce/SHA256SUMS",
+   "size": 396,
+   "git_oid": "564926e5d5c9972017eeb0973149fb35e7b8ce05"
+  },
+  {
+   "path": "reproduce/config.toml",
+   "size": 1969,
+   "git_oid": "f1db1a6d5d16ba6ba9ffc68b02e60892d73666cd"
+  },
+  {
+   "path": "reproduce/deepseek-ai--DeepSeek-R1-0528-Qwen3-8B.jsonl",
+   "size": 931270,
+   "git_oid": "da3b5094a92b82e9c2e18c8eec16d1e8d9f6d16b"
+  },
+  {
+   "path": "reproduce/reproduce.json",
+   "size": 9411,
+   "git_oid": "3d2c4b395ce835c40421370bd310711c5668d665"
+  },
+  {
+   "path": "reproduce/requirements.txt",
+   "size": 1960,
+   "git_oid": "033a8c63a6ad2f9fee74d2d59e4846d430f79f34"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 11423126,
+   "sha256": "bc961a538de043da8be32faadc496a7ed127be26d8f33774efc59ffc53f6bde0"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 442,
+   "git_oid": "75b9f4c9b34e145d838b4949bf4b17a1de381acd"
+  }
+ ]
+}

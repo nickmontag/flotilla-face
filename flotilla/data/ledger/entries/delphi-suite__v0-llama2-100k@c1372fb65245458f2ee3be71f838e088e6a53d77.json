@@ -1,0 +1,45 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "delphi-suite/v0-llama2-100k",
+ "revision": "c1372fb65245458f2ee3be71f838e088e6a53d77",
+ "captured": "2026-11-25T05:13:11+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 21,
+   "git_oid": "32897cd3e640101ba184f8c4ccd896981de3804a"
+  },
+  {
+   "path": "config.json",
+   "size": 599,
+   "git_oid": "a93059f36046f1020ae01df42a29d29cbca26cdf"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 1205475,
+   "sha256": "6f27a678f682b45a9f0fc5d6d21d1720930b235dd3a49923a8d2614e491ca76d"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 414,
+   "git_oid": "451134b2ddc2e78555d1e857518c54b4bdc2e87d"
+  },
+  {
+   "path": "tokenizer.model",
+   "size": 64523,
+   "sha256": "ccbc89dfcf6415bf1a02ea032cad27641b91982a51f32495c01d9c0075bc7b65"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 932,
+   "git_oid": "bbba4ed0584707e706ed05e31c11c94412d29206"
+  }
+ ]
+}

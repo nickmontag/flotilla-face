@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "meta-models/Muse-Glimmer-30B-assistant",
+ "revision": "e8192f3a8f617f74be2ce220360c89ef4789f39f",
+ "captured": "2026-11-25T05:13:16+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11358,
+   "git_oid": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+  },
+  {
+   "path": "README.md",
+   "size": 17353,
+   "git_oid": "e419e9f79dba1ca7844aa853678604a0d2c07660"
+  },
+  {
+   "path": "USAGE_POLICY.md",
+   "size": 5230,
+   "git_oid": "1a9ed6cffc54585daf9cc904c07cb6e436a9444b"
+  },
+  {
+   "path": "config.json",
+   "size": 883,
+   "git_oid": "9f53b2bc254926fe8ca86b3e10fbc453c2dc3ec3"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 5111976608,
+   "sha256": "fd88d337eb84f8d0e6ba33a7684d7efa6722d4460ba4d6badca9699418392a84"
+  }
+ ]
+}

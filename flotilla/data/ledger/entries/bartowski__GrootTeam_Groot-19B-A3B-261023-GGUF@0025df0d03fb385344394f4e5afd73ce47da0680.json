@@ -1,0 +1,345 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bartowski/GrootTeam_Groot-19B-A3B-261023-GGUF",
+ "revision": "0025df0d03fb385344394f4e5afd73ce47da0680",
+ "captured": "2026-11-25T05:13:15+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3569,
+   "git_oid": "fe8bb253c54f05f95a1da44277463906e35abb73"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-IQ2_M.gguf",
+   "size": 7278307200,
+   "sha256": "d73d0584247bf789707355b5ec5b9ae39c83cc7c56aed42fd8e91241af5b1755"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-IQ2_S.gguf",
+   "size": 6710667136,
+   "sha256": "61236abd2a05750914583c85a25c876e450e7a17596500841367c9251d325242"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-IQ3_M.gguf",
+   "size": 10670393216,
+   "sha256": "336450e03c6af5ca718754a8f5e4d678f8fcb24991d43906bdc45e3473bcc8b0"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-IQ3_XS.gguf",
+   "size": 9042732928,
+   "sha256": "395adeaf51c4a3e99a344e3a6abbebebf1f4a73099c86bf786ef0123de4095c0"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-IQ3_XXS.gguf",
+   "size": 8845805440,
+   "sha256": "cf0441c90e511a7410755b1cc7196797531531c336eb2a2192e764e2837cc1c4"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-IQ4_NL.gguf",
+   "size": 12484339584,
+   "sha256": "fe64d2bd8a23240198152a614dbc1734cb4146a5030de180c24a31161a869356"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-IQ4_XS.gguf",
+   "size": 10939524992,
+   "sha256": "0d3615a017c880643656bb44b1b2696981a0604dbc47d049aa7a8e27447a9302"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q2_K.gguf",
+   "size": 7881901952,
+   "sha256": "db696ba2bb10c21fcbf67672a2eece50117bdfdc4bfa5bd23a26584720426d88"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q3_K_L.gguf",
+   "size": 10094397312,
+   "sha256": "07c173079c0a8f71e7ffac101adfff5b8e8887b3d78991aca1355fc436f5706a"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q3_K_M.gguf",
+   "size": 9616312192,
+   "sha256": "28536558c516c67ce0045d8f6b9a3aa60358e3b4d33bb79106b614c480d41fe9"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q3_K_S.gguf",
+   "size": 9018566528,
+   "sha256": "60ffbcb8e9398971ea3ebc5ece18bcd963b5545c412b43af652230fd8590978e"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q4_0.gguf",
+   "size": 11044120448,
+   "sha256": "fab69a1c5655ce08a13dc7fb0d9518881d99ed14d5eef86d6f9d789ecedbd2fa"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q4_1.gguf",
+   "size": 12111636352,
+   "sha256": "e03c814b1b7de69115388da14a35585a23bd00c1a5d55331f278aa461f32d205"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q4_K_L.gguf",
+   "size": 13347317632,
+   "sha256": "4118a3bd6e533edc84e3602cdcbb5c23a6e534bb408d90d0173d510bb631e0fe"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q4_K_M.gguf",
+   "size": 12484339584,
+   "sha256": "c941e12a231b40b8fb9f6ad7f6601878d72db39c2c62aefb185fbe5c7d0c2e29"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q4_K_S.gguf",
+   "size": 11534591872,
+   "sha256": "e0503d9815a889250d4f74d0a620b6bab05f76e2270c83cd0fb4f4d582c47075"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q5_K_M.gguf",
+   "size": 14719903616,
+   "sha256": "31a31651f73f5e80435b18da2c18cc28f818a0e106ed09b4f6332b9e180b75cc"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q5_K_S.gguf",
+   "size": 13758359424,
+   "sha256": "29a1ec6195a199e15192cd1e3957d2a102f4078506b18b79e953039cbdd45047"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q6_K.gguf",
+   "size": 16791324544,
+   "sha256": "f784a74600c6a2986006909330aed5eeb1b931893c84505077f2595ad8e861fc"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q6_K_L.gguf",
+   "size": 17603970944,
+   "sha256": "911e6ce705530f50702e72342f56d5b39b070035ab900a179640e14c48072e2f"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q6_K_S.gguf",
+   "size": 16102606720,
+   "sha256": "f3134ba5e29a067887d6091ab4d2e89299925c8f255b7d91c28816453b105be9"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-Q8_0.gguf",
+   "size": 20230129536,
+   "sha256": "7e414a5e4dbb5aa3074a69b36104b2c8cdc188432527956a6ed9c916906a1882"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-bf16.gguf",
+   "size": 38006441856,
+   "sha256": "69a7ba28a00721af42ad3073f9428fbe1b04fdce993f65b45fe6532bbb270c41"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-calibration-v6.txt",
+   "size": 1231503,
+   "git_oid": "ca482e713b55bc8608acc2c7a4fe5fc95a9faf29"
+  },
+  {
+   "path": "GrootTeam_Groot-19B-A3B-261023-imatrix.gguf",
+   "size": 195538048,
+   "sha256": "97b2add71f323296d8d07eadfd3d13758b162f0074adee0d89635004d7a2174d"
+  },
+  {
+   "path": "README.md",
+   "size": 20593,
+   "git_oid": "bee06fa01abc3ba4b51767d48c78c824500a80d8"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ2_M.layout.json",
+   "size": 9147,
+   "git_oid": "30a2d00ebebeba9d6ecae0b25c9060741d2d6aa1"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ2_M.tensor-types.txt",
+   "size": 15409,
+   "git_oid": "c9d868137a21b2447fbf507bb6ef946f88470f92"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ2_S.layout.json",
+   "size": 9121,
+   "git_oid": "9155f77ae2fbbdf66272237122ef32ca68f79e2a"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ2_S.tensor-types.txt",
+   "size": 15609,
+   "git_oid": "e0f1877390a251b1748c6a90e1294d3dbe608165"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ3_M.layout.json",
+   "size": 9006,
+   "git_oid": "f2f1648df96274b4c1705ad767dd412544ba7b0b"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ3_M.tensor-types.txt",
+   "size": 15328,
+   "git_oid": "6fc8a356f98d728a8327968293c2df8dddfa0ff4"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ3_XS.layout.json",
+   "size": 9040,
+   "git_oid": "a2b7df2e53d86bd58e01cc8d58b3fda39a182506"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ3_XS.tensor-types.txt",
+   "size": 15391,
+   "git_oid": "711e91a328daa6dbc726a80a9dcfa4ebd7f18fbc"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ3_XXS.layout.json",
+   "size": 9054,
+   "git_oid": "207f7ddf43a8a170d2d23b66212b0759f3057f5e"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ3_XXS.tensor-types.txt",
+   "size": 15584,
+   "git_oid": "f01e12868337a6c6c84dd151eb679f43b9250b25"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ4_NL.layout.json",
+   "size": 8963,
+   "git_oid": "54dd6bf3398d64f42d06082196db6895eae6e043"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ4_NL.tensor-types.txt",
+   "size": 15454,
+   "git_oid": "16c4ddeacc919a1d5f0d8870727e93344665adfc"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ4_XS.layout.json",
+   "size": 9051,
+   "git_oid": "72618245bfe1f04410f67a4315933dc447a3065c"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-IQ4_XS.tensor-types.txt",
+   "size": 15532,
+   "git_oid": "ace750ad211eb6485a5f668ba104d4a3af1604c3"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q2_K.layout.json",
+   "size": 9026,
+   "git_oid": "c49f20fdc7e2c47ef1fe0198b8268b4e8d01663a"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q2_K.tensor-types.txt",
+   "size": 15246,
+   "git_oid": "85eb91dfed181c04fb8c6ecb30a523197dc0b22a"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q3_K_L.layout.json",
+   "size": 9070,
+   "git_oid": "e7e51bccd408f5721bf7b6aa9ae9cf33df9b3acd"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q3_K_L.tensor-types.txt",
+   "size": 15246,
+   "git_oid": "b6fe61f25f5deb722dc045591b87b0a5986502fc"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q3_K_M.layout.json",
+   "size": 9034,
+   "git_oid": "f2183ba50c1ddd3d539c491d76c4689bde253471"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q3_K_M.tensor-types.txt",
+   "size": 15246,
+   "git_oid": "08027cd7331af24d0c1520177a86b6812d11622f"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q3_K_S.layout.json",
+   "size": 9015,
+   "git_oid": "5cf01b373dc7baa2860d656ec821abbdc9ce87f5"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q3_K_S.tensor-types.txt",
+   "size": 15246,
+   "git_oid": "a8c1f04ef1bedf119075711864531fcd4fdc40ff"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q4_K_L.layout.json",
+   "size": 8955,
+   "git_oid": "bd5248f2fa871067fbd67f474e42a5516b9a9e98"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q4_K_L.tensor-types.txt",
+   "size": 15246,
+   "git_oid": "c80e039dce10f39ec3c1ef0501bab9690f6cb7fc"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q4_K_M.layout.json",
+   "size": 8955,
+   "git_oid": "0ac797706169646584a7c35070a6e8b8102decb1"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q4_K_M.tensor-types.txt",
+   "size": 15246,
+   "git_oid": "ba750144dc8476f53823c1f6c5ce453b7fc11be7"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q4_K_S.layout.json",
+   "size": 8985,
+   "git_oid": "6c77696420142ef1de5c55da8917188111e2fb88"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q4_K_S.tensor-types.txt",
+   "size": 15246,
+   "git_oid": "ebf3ec9d6cd1a69badd700bfc76acef8b9a91170"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q5_K_M.layout.json",
+   "size": 8935,
+   "git_oid": "ccfb94438fee9b2016e771b76b101382109271fb"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q5_K_M.tensor-types.txt",
+   "size": 15246,
+   "git_oid": "cf345d9761099752fb372001db71f2331ce3e6a7"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q5_K_S.layout.json",
+   "size": 8900,
+   "git_oid": "c401520056881a48809f6889a7a9bd22457ed033"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q5_K_S.tensor-types.txt",
+   "size": 15246,
+   "git_oid": "d547a69397fa43331795f30fb09ee5bbeabcc557"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q6_K.layout.json",
+   "size": 8914,
+   "git_oid": "2338f8a486e977f43a8b78493d60596f3d9fe09e"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q6_K.tensor-types.txt",
+   "size": 15246,
+   "git_oid": "e7d9b8e248e78ecc6e6587adaab632eb6ed25e3b"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q6_K_L.layout.json",
+   "size": 8920,
+   "git_oid": "59fb67c0efcd04edb194fc6bb1e23f5b6de0de18"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q6_K_L.tensor-types.txt",
+   "size": 15246,
+   "git_oid": "1c5faab6fd7d8192a742d2b4bab9691e0b0c8eba"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q6_K_S.layout.json",
+   "size": 8882,
+   "git_oid": "dd5584fa5a72cf848682c64b51f4ac9b5ffec596"
+  },
+  {
+   "path": "layouts/GrootTeam_Groot-19B-A3B-261023-Q6_K_S.tensor-types.txt",
+   "size": 15246,
+   "git_oid": "6262fd56f4d492c53bd6262bb9e4ddcde9370465"
+  },
+  {
+   "path": "mmproj-GrootTeam_Groot-19B-A3B-261023-bf16.gguf",
+   "size": 902822208,
+   "sha256": "0140cef0473d63595a030c68b75b2c8d110bb623bb12ae5993c0cfdfb2d2b0a7"
+  },
+  {
+   "path": "mmproj-GrootTeam_Groot-19B-A3B-261023-f16.gguf",
+   "size": 899283264,
+   "sha256": "1d1d089d44419ae337fd7356f35b8c8c3f8ffde1eaac953e76a26c66fb821263"
+  }
+ ]
+}

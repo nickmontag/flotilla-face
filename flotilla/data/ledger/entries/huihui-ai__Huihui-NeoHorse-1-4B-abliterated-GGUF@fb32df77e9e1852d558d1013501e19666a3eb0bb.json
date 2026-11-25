@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "huihui-ai/Huihui-NeoHorse-1-4B-abliterated-GGUF",
+ "revision": "fb32df77e9e1852d558d1013501e19666a3eb0bb",
+ "captured": "2026-11-25T05:08:57+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1971,
+   "git_oid": "cbf254d52946d6bb13a7c9c37801c458f6cdb370"
+  },
+  {
+   "path": "Huihui-NeoHorse-1-4B-abliterated-Q3_K.gguf",
+   "size": 2318806464,
+   "sha256": "8d368e7363ffc43674d8785d46e28438bdb5a5a065613853e6b9245e53330bfd"
+  },
+  {
+   "path": "Huihui-NeoHorse-1-4B-abliterated-Q4_K.gguf",
+   "size": 2783446464,
+   "sha256": "0900451ccd4f0a65bf0e8d3f2c224eff02ae9c961cb064de8b87e8a2118af3c2"
+  },
+  {
+   "path": "Huihui-NeoHorse-1-4B-abliterated-Q5_K.gguf",
+   "size": 3161425344,
+   "sha256": "cc4a3cc480fe0e0142333244aaa3f2c0d4feda6c78d296976e8513d02aabbbcd"
+  },
+  {
+   "path": "Huihui-NeoHorse-1-4B-abliterated-f16.gguf",
+   "size": 8665619904,
+   "sha256": "823c7a154d46509df8f3883135e6e8b74f16f387cbed9c21c8e51d9c6e6affce"
+  },
+  {
+   "path": "Huihui-NeoHorse-1-4B-abliterated-q8_0.gguf",
+   "size": 4610579904,
+   "sha256": "6c161a41f9074c6e6e3199e0cb305433f3b54172174c6140a43c2adca17c6907"
+  },
+  {
+   "path": "README.md",
+   "size": 2686,
+   "git_oid": "023357cc40f7c6161f197ceb55ceef88374067d4"
+  },
+  {
+   "path": "mmproj-model-f16.gguf",
+   "size": 672423072,
+   "sha256": "eea21873c95bf81e876d92c77aea7acd7956a70fe9ca38e16d02e5132a056004"
+  }
+ ]
+}

@@ -1,0 +1,100 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "OpenGVLab/InternVL3_5-2B-HF",
+ "revision": "3f301ffcf3dcbb47893afae6650ea3e78d96fb6d",
+ "captured": "2026-11-25T05:13:18+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1685,
+   "git_oid": "624dc6a4029a1aaa8025a31e7041cc8dd6390433"
+  },
+  {
+   "path": "README.md",
+   "size": 43006,
+   "git_oid": "11634cbe6aded57fb0282abd89bc519ec43f9ce3"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 913,
+   "git_oid": "3ecaee9890f76c964b4bf550a85293b874b71b87"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 481,
+   "git_oid": "0b19f45e0cd40b10374f24065639b0c2eee18a22"
+  },
+  {
+   "path": "config.json",
+   "size": 2807,
+   "git_oid": "d93c633fe29faff78f998290ff5bc40f454f6dc1"
+  },
+  {
+   "path": "examples/image1.jpg",
+   "size": 78073,
+   "git_oid": "fd9891ef7e00774157a9dcd726b2ea9fa0c5ecff"
+  },
+  {
+   "path": "examples/image2.jpg",
+   "size": 125656,
+   "sha256": "08487494b8dc08d44bc36491adf3ab89ff30d13a3122da86f3cd67cad89eeee8"
+  },
+  {
+   "path": "examples/red-panda.mp4",
+   "size": 1867237,
+   "sha256": "d921c07bb97224d65a37801541d246067f0d506f08723ffa1ad85c217907ccb8"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 121,
+   "git_oid": "4f0c4ce3e3028b76812135c422c721c3e77b10b6"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671853,
+   "git_oid": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 4696790328,
+   "sha256": "9e09cca4a2aab6cb95f42c5c57f9f6907298851adec0c68a60519e03bf89ee40"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 666,
+   "git_oid": "a7b376e0a83f26eaa784db792ef61be7aac5494f"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 72,
+   "git_oid": "e543bcb3b7550029f450d28cf138706d7f9a5ef5"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 877,
+   "git_oid": "253d50d9027f558bd5478163a49ccd263fc27959"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 11424484,
+   "sha256": "7b9d18660f656ae5a87df2d5d6ed990e80f292d3473c1a35cae8259a5d28cd67"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 7614,
+   "git_oid": "16f34ecc26e1a1c213ab719189e1407e3e200196"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 1345,
+   "git_oid": "312440223df86c67a0794043b915a0422a685971"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

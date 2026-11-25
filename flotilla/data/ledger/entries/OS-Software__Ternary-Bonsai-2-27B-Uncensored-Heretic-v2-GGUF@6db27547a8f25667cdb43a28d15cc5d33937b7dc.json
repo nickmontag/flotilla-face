@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "OS-Software/Ternary-Bonsai-2-27B-Uncensored-Heretic-v2-GGUF",
+ "revision": "6db27547a8f25667cdb43a28d15cc5d33937b7dc",
+ "captured": "2026-11-25T05:08:25+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1806,
+   "git_oid": "b7f1bc735554c1b55d4f4c9c43041b58100fac27"
+  },
+  {
+   "path": "README.md",
+   "size": 4341,
+   "git_oid": "a5fe323bac7e702ebea1520971b372ddc27b4d35"
+  },
+  {
+   "path": "Ternary-Bonsai-2-27B-Uncensored-Heretic-v2-PQ2_0.gguf",
+   "size": 7206168928,
+   "sha256": "9ba04345402584cf7f581ff72c00ea8925a35f3d78ccd34ca3eb195fe552393c"
+  },
+  {
+   "path": "Ternary-Bonsai-2-27B-Uncensored-Heretic-v2-PTQ1_0.gguf",
+   "size": 5946648928,
+   "sha256": "c30f3862e4809db58366aab0b97a50e0a144dd010061d931a61c000adaf50683"
+  },
+  {
+   "path": "mmproj-BF16.gguf",
+   "size": 931145856,
+   "sha256": "e287342d92332fa3577ed1d42e921dac9370c08da58ba9337fa450f6cc76cfd7"
+  },
+  {
+   "path": "mmproj-Q8_0.gguf",
+   "size": 629246976,
+   "sha256": "6807ede61d570bb86ba34b756a0fa109edc33668604de867c6ea6d8f1d631903"
+  }
+ ]
+}

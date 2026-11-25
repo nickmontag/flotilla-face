@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llmfan46/gemma-4-E2B-it-ultra-uncensored-heretic-GGUF",
+ "revision": "d463672d6d94626a949f77a2b8d68ca5838a3878",
+ "captured": "2026-11-25T05:08:38+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2109,
+   "git_oid": "16614f0b3dbdc87b105d8f1c7efcd791e2c51a45"
+  },
+  {
+   "path": "README.md",
+   "size": 32459,
+   "git_oid": "d85ba41e12350e924c62f4c16fba86107ba04f42"
+  },
+  {
+   "path": "gemma-4-E2B-it-mmproj-BF16.gguf",
+   "size": 986833408,
+   "sha256": "d460bb51ce5115232a723a7366694c8ee70d8aa8f60159d182a1da0777d10db3"
+  },
+  {
+   "path": "gemma-4-E2B-it-ultra-uncensored-heretic-BF16.gguf",
+   "size": 9311303904,
+   "sha256": "af116514dac2f9546a16d4ee9f0398494e3b89f80f9a6a3702b2992448bd1969"
+  },
+  {
+   "path": "gemma-4-E2B-it-ultra-uncensored-heretic-Q4_K_M.gguf",
+   "size": 3427879136,
+   "sha256": "b458a896b652de933a587a660c21a4b2516f936934db328ae44bbad7a4518ac5"
+  },
+  {
+   "path": "gemma-4-E2B-it-ultra-uncensored-heretic-Q5_K_M.gguf",
+   "size": 3630287072,
+   "sha256": "5d9832a37d874a6c27f6a2753f026de6d208b866b2aac02c37fdb3710dc9b9ea"
+  },
+  {
+   "path": "gemma-4-E2B-it-ultra-uncensored-heretic-Q5_K_S.gguf",
+   "size": 3595401440,
+   "sha256": "11c28c8875973d322a696f98841773a4ad101f93c892862d61bf9bc2d0f6d29b"
+  },
+  {
+   "path": "gemma-4-E2B-it-ultra-uncensored-heretic-Q6_K.gguf",
+   "size": 3845345504,
+   "sha256": "cb4fe5236c5750ea700f2d51f5635d3ca1e0c303a11241e5c9a7eb72690190a1"
+  },
+  {
+   "path": "gemma-4-E2B-it-ultra-uncensored-heretic-Q8_0.gguf",
+   "size": 4967495904,
+   "sha256": "8fca3d1d4f3a0fdbcaad64313bb7a588a29e8f065da0d8407d1c24952d36389f"
+  }
+ ]
+}

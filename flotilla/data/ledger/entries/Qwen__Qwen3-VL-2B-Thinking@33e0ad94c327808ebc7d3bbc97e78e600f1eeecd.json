@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Qwen/Qwen3-VL-2B-Thinking",
+ "revision": "33e0ad94c327808ebc7d3bbc97e78e600f1eeecd",
+ "captured": "2026-11-25T05:13:09+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 7202,
+   "git_oid": "d1559905d01b27dbe3cc5daf01c84b19263725a3"
+  },
+  {
+   "path": "chat_template.json",
+   "size": 5410,
+   "git_oid": "c38d0b5042ce3bedefa1e8e98906bd723080e34c"
+  },
+  {
+   "path": "config.json",
+   "size": 1505,
+   "git_oid": "0cd8c646eb55794594b14fefcd1d3acea5cc000f"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 270,
+   "git_oid": "eb0c9c3376aa0a9bc0d3a12d234f2cf14c5ea2a7"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671839,
+   "git_oid": "20024bfe7c83998e9aeaf98a0cd6a2ce6306c2f0"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 4255140312,
+   "sha256": "d889ae8b5bffcfce115bc64e47601b1e90ce44b1d9f40ed78e620fd22417d888"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7032403,
+   "git_oid": "c6cc1014128b19d1fc46b1d30a23e3b1d35db421"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 10781,
+   "git_oid": "00fdaf186647b2bc2ed20b1928ed902abbb1a37b"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

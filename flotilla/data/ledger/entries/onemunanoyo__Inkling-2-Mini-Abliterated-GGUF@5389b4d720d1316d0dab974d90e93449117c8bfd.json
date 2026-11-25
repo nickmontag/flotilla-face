@@ -1,0 +1,35 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "onemunanoyo/Inkling-2-Mini-Abliterated-GGUF",
+ "revision": "5389b4d720d1316d0dab974d90e93449117c8bfd",
+ "captured": "2026-11-25T05:09:05+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1677,
+   "git_oid": "012566e7d1ea73d35c06147e644d7208a4f7b0cb"
+  },
+  {
+   "path": "Inkling-2-Mini-UD-Q4_K_XL-Abliterated.gguf",
+   "size": 17629759456,
+   "sha256": "c825682fa13e891eeef1dddb6b1045a1688e765473971f9a9aff5e3ecd13c2e9"
+  },
+  {
+   "path": "Inkling-2-Mini-UD-Q8_K_XL-Abliterated.gguf",
+   "size": 22867451616,
+   "sha256": "eac11c7747c9d03221d6d41f029f7509d40784c77002338cbe22792253ebd657"
+  },
+  {
+   "path": "LICENSE.md",
+   "size": 11357,
+   "git_oid": "7a4a3ea2424c09fbe48d455aed1eaa94d9124835"
+  },
+  {
+   "path": "README.md",
+   "size": 4561,
+   "git_oid": "af87756bf2d94e195eb60fc47f1174cc3dd4c87d"
+  }
+ ]
+}

@@ -1,0 +1,100 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic-i1-GGUF",
+ "revision": "44ce4c8708f683802975ff8c900b6a3cd11d55f5",
+ "captured": "2026-11-25T05:09:01+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3267,
+   "git_oid": "7a598432a97da835833204aa8680686a50f34d0c"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-IQ3_M.gguf",
+   "size": 2216798976,
+   "sha256": "a2376aa9c4e359a55bb331dc24a3a6f2b8d83f734dbdaa513e3317032a716898"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-IQ3_S.gguf",
+   "size": 2191731456,
+   "sha256": "72703a76c993d43e022fcdad1d86e588e1aae5425f7e2fae0e01a6b3f732f265"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-IQ4_NL.gguf",
+   "size": 2677650176,
+   "sha256": "b1ee8d1db146b3fc713f4903104ec0c2f05cb386403bff9b178c977dbcfcaf39"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-IQ4_XS.gguf",
+   "size": 2578813696,
+   "sha256": "5786773fb112900d394ea21675a78ed09231d220fe95ed3f01379294edb3781f"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-Q2_K.gguf",
+   "size": 1959170816,
+   "sha256": "fb9c3fc19f73cbe5f44c6c18e9a14b374ab65e9d2643b750086dbcfbac9017e3"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-Q3_K_L.gguf",
+   "size": 2482649856,
+   "sha256": "e0aef124e188c325016bfe93185ef4881705e6f6b9bf98013f897d435cc437f7"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-Q3_K_M.gguf",
+   "size": 2318809856,
+   "sha256": "b1fd4400997e5c09df67a201c24b978959bf89a52838727825e74f86d0a36c6a"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-Q3_K_S.gguf",
+   "size": 2121751296,
+   "sha256": "56644cc97bdd3052e944236fdc5f266a311da0563369839f21a6cd13ae133ae7"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-Q4_0.gguf",
+   "size": 2617684736,
+   "sha256": "6a2356e344e2c3fee7fd50e8ae10832f6ba9ff384261fb0859ecfb038a4be889"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-Q4_1.gguf",
+   "size": 2842391296,
+   "sha256": "0c8a23c091be7c3856b4e23fbc8f882a19000179e796bf5cffd56bb28019a66a"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-Q4_K_M.gguf",
+   "size": 2783449856,
+   "sha256": "4484d73258b0922d4e8530692e05915369553e811b2d73a6520afec4be683105"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-Q4_K_S.gguf",
+   "size": 2631774976,
+   "sha256": "59930d65dc8c468131ef181105205980ec9650277ae41d57dac4c5b877072760"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-Q5_K_M.gguf",
+   "size": 3161428736,
+   "sha256": "cbdffafa2e7d5cc560e5b2a21b5b8d19f3bfd8a16b3253fb17234130906caa60"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-Q5_K_S.gguf",
+   "size": 3072996096,
+   "sha256": "ccaf9faf97cee14c06d11c3a48a28f56d74b009868b3c23c269f5dc310249c71"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.i1-Q6_K.gguf",
+   "size": 3563031296,
+   "sha256": "b599ce200412700c71a15ac1bb883cdaee98c734ca6d280767601fbb7e1b1333"
+  },
+  {
+   "path": "Qwen3.5-4B-MultiDistill-Megamix-8xMerge-UNCENSORED-heretic.imatrix.gguf",
+   "size": 7260384,
+   "sha256": "73fbe72928ed2387ee2bb8f354e72337e95c1ff5037cb1fccec7127c2ad931a0"
+  },
+  {
+   "path": "README.md",
+   "size": 6801,
+   "git_oid": "93cc455f9dd538f8b57703b42eab86165e7829a1"
+  }
+ ]
+}

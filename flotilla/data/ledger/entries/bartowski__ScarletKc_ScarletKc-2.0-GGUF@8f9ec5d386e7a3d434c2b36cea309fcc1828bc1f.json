@@ -1,0 +1,380 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bartowski/ScarletKc_ScarletKc-2.0-GGUF",
+ "revision": "8f9ec5d386e7a3d434c2b36cea309fcc1828bc1f",
+ "captured": "2026-11-25T05:13:02+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3690,
+   "git_oid": "15c52a752c888c3c1daaaa0e1fd6b4a5254f8a9f"
+  },
+  {
+   "path": "README.md",
+   "size": 21542,
+   "git_oid": "f74441b21297070c67bfbfba7b563f83439a5366"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-IQ2_M.gguf",
+   "size": 10522249600,
+   "sha256": "ce5ea01a86538b008540a5a0143ee28f35546285dcbfa636a145dc802113aed4"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-IQ2_S.gguf",
+   "size": 9684044160,
+   "sha256": "7888c0fe2c686d2aa88fa3c046e7c7d834350a0cb61ae567d2226c55344434cb"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-IQ2_XS.gguf",
+   "size": 9088526720,
+   "sha256": "217603d45227b430b48b2df5b398a9ca6fe0fbc7b38dcfcb05914be625c35c18"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-IQ2_XXS.gguf",
+   "size": 8881269120,
+   "sha256": "dde025efa97f3a6b031a7659badd632ab5c2ee1d1d9ed34899633b05ec70390b"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-IQ3_M.gguf",
+   "size": 14860630400,
+   "sha256": "9849003f064d0a8e26491c9b420aafc9a38a15bf88d2d76e383688d33ee6d716"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-IQ3_XS.gguf",
+   "size": 12799605120,
+   "sha256": "8975291c4b2346fa2319f3638e7f122118c3dfb82e37e0140b541ec53410fe1a"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-IQ3_XXS.gguf",
+   "size": 12320168320,
+   "sha256": "c33eec11676e08e2770fefa18dea4c558ba019779665e6f0b01e177863192dc4"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-IQ4_NL.gguf",
+   "size": 17442400640,
+   "sha256": "545e235f1a39ce4f505310e0094298830883a872866d061cf438879feb1fbfaa"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-IQ4_XS.gguf",
+   "size": 15475952000,
+   "sha256": "27c44a5491f41aefede802aa84d2f225ebee37c33088672a4223a8b3c2e795e9"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q2_K.gguf",
+   "size": 10821544320,
+   "sha256": "9405c55a5ca6defe24942d072075020de01368caf2ef6fd17f1cb47b4d72fa5b"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q3_K_L.gguf",
+   "size": 14122817920,
+   "sha256": "c777c23f74911fda3b4b6c24ffdc6f47d583bee4270cffbe61fe44333658c747"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q3_K_M.gguf",
+   "size": 13404051840,
+   "sha256": "c358c61c0b2f726f87b1271858b77a2e6cfeddf95324cb1eedbc3b30cad859a6"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q3_K_S.gguf",
+   "size": 12739885440,
+   "sha256": "b29f446e04c06f23a88051e6266d90acea42ffdef31d442511a5ec318f4a2d52"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q4_0.gguf",
+   "size": 16348768640,
+   "sha256": "7f3854de38829887251b901f0ddc41687ab1159afe585846ee4ce4017aba6a6b"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q4_1.gguf",
+   "size": 17825458560,
+   "sha256": "206049f77269600149f2400d0e12bdccfe7fee8b44799781e31809a632d1197c"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q4_K_L.gguf",
+   "size": 18820704640,
+   "sha256": "55544c3634e9c35cccc0afa9dac3ee84b73aa6103eb4074c1387c83ce85db959"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q4_K_M.gguf",
+   "size": 17442400640,
+   "sha256": "720e9bbf59f3515d542e9717d22099884ceebccc1e1cb39abf78fda0926274ad"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q4_K_S.gguf",
+   "size": 16363514240,
+   "sha256": "ce01ab627d6c3ca3a1f68bd255665a88d773ef1f7661339bd231ddfbf72d5563"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q5_K_M.gguf",
+   "size": 20923877760,
+   "sha256": "85cd8f55113809568b509c5d0c355f308af7e15c30781433976c661d1f2f099b"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q5_K_S.gguf",
+   "size": 19566913920,
+   "sha256": "69408f0a39df6cd0e2f88f15eb48c8b8cf91e87c277aaf21ba923c9b0d02a302"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q6_K.gguf",
+   "size": 23860566400,
+   "sha256": "8f9663aac3634c03013d65cb9091df7d8df0c6c96950fb8c85114aee84dfcb45"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q6_K_L.gguf",
+   "size": 24958908800,
+   "sha256": "f6f477229ed2af2941628618a46180aee5eedfb16548f456052861d3d409037f"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q6_K_S.gguf",
+   "size": 22857456000,
+   "sha256": "189fc09e8dbcd53361b68a7afaf5c07e56c6c92049b295f112df747b39d72d9f"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-Q8_0.gguf",
+   "size": 29116389760,
+   "sha256": "c0bb66c5e3295cad84e0ffea58355bb7ccf1391097f87bde7508ef4d46174926"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-bf16/ScarletKc_ScarletKc-2.0-bf16-00001-of-00002.gguf",
+   "size": 39940870112,
+   "sha256": "ab4d9b7de0a2bcbab337ba0de97af0726526a96143c8bdb46f25d425345359d3"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-bf16/ScarletKc_ScarletKc-2.0-bf16-00002-of-00002.gguf",
+   "size": 14716864800,
+   "sha256": "3867f36049e81dccda0184fcbdd42d6686315f5895aec4da6a271f9ded6660ec"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-calibration-v6.txt",
+   "size": 1258850,
+   "git_oid": "ae31ba58ff794d7dacb49555270dafb1343a80bd"
+  },
+  {
+   "path": "ScarletKc_ScarletKc-2.0-imatrix.gguf",
+   "size": 27300224,
+   "sha256": "1603247260df0e161c6471f3da9299478483fa5a33bd2cd107ec274a9532270f"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ2_M.layout.json",
+   "size": 13044,
+   "git_oid": "b59468faffbadf63a18d5341dc53bf74db7df61b"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ2_M.tensor-types.txt",
+   "size": 16588,
+   "git_oid": "4bb372fb5392e1213b1f59ab89555255eb07a548"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ2_S.layout.json",
+   "size": 13119,
+   "git_oid": "8ae4df07b8dae21a344524f5681586e146e8fdf7"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ2_S.tensor-types.txt",
+   "size": 16803,
+   "git_oid": "2921fa3ec2298373bc43db6c83c356a8bcc4ffda"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ2_XS.layout.json",
+   "size": 13017,
+   "git_oid": "b306c9989a796f0536c355fa2242a83de97c1005"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ2_XS.tensor-types.txt",
+   "size": 16900,
+   "git_oid": "fc6b3a93cb776cd1da87f7fab7c2f4ca3947b9aa"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ2_XXS.layout.json",
+   "size": 13108,
+   "git_oid": "fb8d3aefaea5a4d7ed18db7a4b6f69b4e71a870d"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ2_XXS.tensor-types.txt",
+   "size": 17164,
+   "git_oid": "52066b1e770bd09ae36b825b1c19d7b9c499972a"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ3_M.layout.json",
+   "size": 12975,
+   "git_oid": "bc2cb99eba636250dd5cae191718d6f69a4b7cbe"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ3_M.tensor-types.txt",
+   "size": 16331,
+   "git_oid": "9a65b06c30b24f309a2692f14914887649d44ed2"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ3_XS.layout.json",
+   "size": 13027,
+   "git_oid": "fe2ff9267691dea99b32ecb3e02ec07c0804bcdc"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ3_XS.tensor-types.txt",
+   "size": 16463,
+   "git_oid": "cc7800e51acc901327792b6b9db4c40e017cfced"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ3_XXS.layout.json",
+   "size": 13089,
+   "git_oid": "11afc6bdd1d3f82315130d12d83081efe7c9719f"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ3_XXS.tensor-types.txt",
+   "size": 16983,
+   "git_oid": "d06505011c06b0097ab3893395cd4871e9b99296"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ4_NL.layout.json",
+   "size": 13040,
+   "git_oid": "1e0a436eef885219f5c0b1c77d03666c6ee037e8"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ4_NL.tensor-types.txt",
+   "size": 16644,
+   "git_oid": "6b817062b2822319dd20f73ee541bfbff492606e"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ4_XS.layout.json",
+   "size": 13003,
+   "git_oid": "d482bc520b7191601889b7da5e97d26d1d9b873e"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-IQ4_XS.tensor-types.txt",
+   "size": 16788,
+   "git_oid": "d0a1af4ca43f1350c091a2e95bad7e425e45517e"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q2_K.layout.json",
+   "size": 13030,
+   "git_oid": "1a35ad3b4d8218cb1b2aa490d05b0359846eb0a4"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q2_K.tensor-types.txt",
+   "size": 16130,
+   "git_oid": "fb1295120732ef58e7835ebd352f5d4c8130a2fe"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q3_K_L.layout.json",
+   "size": 13071,
+   "git_oid": "4deda0fed542719f25ebe79b261d9554dc819f04"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q3_K_L.tensor-types.txt",
+   "size": 16130,
+   "git_oid": "1aea2cdddda33c9ae6cc8d7cc983e24f1cc17991"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q3_K_M.layout.json",
+   "size": 13072,
+   "git_oid": "680ca9151a977bc66b74febe1d30b42c1f7cbb4e"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q3_K_M.tensor-types.txt",
+   "size": 16130,
+   "git_oid": "b11c07de3526c54592d9416791a2090b1a6dbf9c"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q3_K_S.layout.json",
+   "size": 12948,
+   "git_oid": "d492bc6abb7f6073d61cc58cd2cd5d262d807f24"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q3_K_S.tensor-types.txt",
+   "size": 16130,
+   "git_oid": "70ae59d65312c5f0f0f73e336b18f4a514576e6f"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q4_K_L.layout.json",
+   "size": 13020,
+   "git_oid": "85573a5edc5757adcc35e4ce04050a73467c1396"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q4_K_L.tensor-types.txt",
+   "size": 16130,
+   "git_oid": "23f7d93566dedc8ac9a537c58ae51203d2c87cee"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q4_K_M.layout.json",
+   "size": 13019,
+   "git_oid": "62bae6b2367c97dc1babe1a18e554ed63ecfd0d2"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q4_K_M.tensor-types.txt",
+   "size": 16130,
+   "git_oid": "a553a5f0a64506a36c543eb72e0a6683d9dd4b84"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q4_K_S.layout.json",
+   "size": 12967,
+   "git_oid": "96eaf62aadc569c26cebd027806d077a72232f76"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q4_K_S.tensor-types.txt",
+   "size": 16130,
+   "git_oid": "9245b4ee7cca62ac19b1beddca07b516ec9710db"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q5_K_M.layout.json",
+   "size": 12952,
+   "git_oid": "cc7ce3741ccfaa40311652dc285fcde03e3d0476"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q5_K_M.tensor-types.txt",
+   "size": 16130,
+   "git_oid": "096687320b7f7b7569249c794ec20084e5560c22"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q5_K_S.layout.json",
+   "size": 12932,
+   "git_oid": "aec79d3b98677336ce9f5bf2f2416054a9ad4346"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q5_K_S.tensor-types.txt",
+   "size": 16130,
+   "git_oid": "c4fe55afc1dc4facc84a89cafed9487c5ed89cd2"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q6_K.layout.json",
+   "size": 12913,
+   "git_oid": "8228dd5a370a1c81986dc3d8ff88da79df5875c9"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q6_K.tensor-types.txt",
+   "size": 16130,
+   "git_oid": "3bee009e4ba2b10145aa6597a1c947818643856e"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q6_K_L.layout.json",
+   "size": 12919,
+   "git_oid": "5663a588692c57244725dbd87341c19e1c6704d6"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q6_K_L.tensor-types.txt",
+   "size": 16130,
+   "git_oid": "c626e736121c29329f5ea99f8bc5905e3df93c8f"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q6_K_S.layout.json",
+   "size": 12915,
+   "git_oid": "4c0fcdf394e3ad9cab8fe1da6766426f7fadb529"
+  },
+  {
+   "path": "layouts/ScarletKc_ScarletKc-2.0-Q6_K_S.tensor-types.txt",
+   "size": 16130,
+   "git_oid": "433ad5cfba5692299b6878b5655d2f58ad66b25a"
+  },
+  {
+   "path": "mmproj-ScarletKc_ScarletKc-2.0-bf16.gguf",
+   "size": 931146432,
+   "sha256": "d5bc832811c00a4b3e476fe7997f837f65018fb1efd280d9788ede33608e5a24"
+  },
+  {
+   "path": "mmproj-ScarletKc_ScarletKc-2.0-f16.gguf",
+   "size": 927607488,
+   "sha256": "8dd30d1b3ce0496f818d288c5521c5c34265cd36221a861ab41a56cd1c08ee7e"
+  }
+ ]
+}

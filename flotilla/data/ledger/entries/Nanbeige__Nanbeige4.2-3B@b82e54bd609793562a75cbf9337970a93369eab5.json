@@ -1,0 +1,135 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Nanbeige/Nanbeige4.2-3B",
+ "revision": "b82e54bd609793562a75cbf9337970a93369eab5",
+ "captured": "2026-11-25T05:13:07+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".eval_results/claw-eval.yaml",
+   "size": 161,
+   "git_oid": "ec93923019216071dcf1d947cf18d515af0d852f"
+  },
+  {
+   "path": ".eval_results/gpqa.yaml",
+   "size": 157,
+   "git_oid": "0dc525d2eb377a92a31f4f201462ca3717f33d3d"
+  },
+  {
+   "path": ".eval_results/hle.yaml",
+   "size": 146,
+   "git_oid": "bed83ade6535ceea9e122f18588d19e758d9d549"
+  },
+  {
+   "path": ".eval_results/hmmt_feb_2026.yaml",
+   "size": 181,
+   "git_oid": "d6cbec4b7e90b8b26d33bc3341a472379a3031e0"
+  },
+  {
+   "path": ".eval_results/swe-bench_pro.yaml",
+   "size": 169,
+   "git_oid": "c25cbcab8826938d12e670cd27a09de0db4ef16c"
+  },
+  {
+   "path": ".eval_results/swe-bench_verified.yaml",
+   "size": 183,
+   "git_oid": "745db5fc9a6571c8464ed83aef687edecb6d0ddb"
+  },
+  {
+   "path": ".eval_results/terminal-bench-2.0.yaml",
+   "size": 184,
+   "git_oid": "ca898e482b3a4fe8e2e80e72772c30ed8761e54a"
+  },
+  {
+   "path": ".gitattributes",
+   "size": 1694,
+   "git_oid": "d3293ccf9c14d191bfc9d21d254d56c4a1a4cc72"
+  },
+  {
+   "path": "Nanbeige42_report.pdf",
+   "size": 587630,
+   "sha256": "a3d196f37b7d2f0c771bf07afd0a4f2290265187fb55e7645ca7161406294b83"
+  },
+  {
+   "path": "README.md",
+   "size": 16751,
+   "git_oid": "04b72d5a3d6797be6fa53bb947bdab9d4b6ba2ef"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 174,
+   "git_oid": "8805f6dd0517ef0a74400d304c63bf176b3e28ed"
+  },
+  {
+   "path": "config.json",
+   "size": 1019,
+   "git_oid": "e542b36686258dcc58de083c0fa7c81c9ebd65d6"
+  },
+  {
+   "path": "configuration_nanbeige.py",
+   "size": 26677,
+   "git_oid": "dce5b537d2423c16fdbc6b0e8222343f1da4be2c"
+  },
+  {
+   "path": "figures/1",
+   "size": 0,
+   "git_oid": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+  },
+  {
+   "path": "figures/model_performance.png",
+   "size": 491843,
+   "sha256": "c35b4ea176f9ae73893ac5e0d7e8ed7b8c6c2fe828fa5dc59dc528ff073045f1"
+  },
+  {
+   "path": "figures/nbg.png",
+   "size": 15639,
+   "git_oid": "3466c5a7576bf8a142a80596cb73707fbc523d6c"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 187,
+   "git_oid": "b601a8d53465c13659719a8322b4f0bd0af35332"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 4973547960,
+   "sha256": "09d265d5ec837bc64462796b7f8c110be9a135a55ed7a6eb5d07e0e90c976a94"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 3366076760,
+   "sha256": "31019e7870a044f44bc3f7e981f8c5ecd42d341e5ca6cfdbfd07fb95d95be389"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 16519,
+   "git_oid": "001b858f53acf36f01d38608ef11545c85f25aa9"
+  },
+  {
+   "path": "modeling_nanbeige.py",
+   "size": 125310,
+   "git_oid": "734b9ad37d05353083f786993aa3b49f691251cc"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 623,
+   "git_oid": "fb83292a14c95f398736acae643c48c152b9eb71"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 18450979,
+   "sha256": "1d858a0fc007f22af6ae18bfa1ae52d30e398aa9cd1ea06e7777176869346a3f"
+  },
+  {
+   "path": "tokenizer.model",
+   "size": 2782298,
+   "sha256": "fb41d04798b714520a9b075727b0226538b7330254299062742c50ec8374bc36"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 10990,
+   "git_oid": "1e47e2cebb285d1dda85bf1af25044bd216d0dd3"
+  }
+ ]
+}

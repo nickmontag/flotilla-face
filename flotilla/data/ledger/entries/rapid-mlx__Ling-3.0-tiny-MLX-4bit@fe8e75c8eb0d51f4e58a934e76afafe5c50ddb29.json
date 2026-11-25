@@ -1,0 +1,65 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "rapid-mlx/Ling-3.0-tiny-MLX-4bit",
+ "revision": "fe8e75c8eb0d51f4e58a934e76afafe5c50ddb29",
+ "captured": "2026-11-25T05:09:24+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 2248,
+   "git_oid": "29c5a73f25dd9bb5194294d3e36a3c50bcb1f334"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 6041,
+   "git_oid": "23b5a9b824ca6c04861ea8b6ab13fa65335fb96f"
+  },
+  {
+   "path": "config.json",
+   "size": 2680,
+   "git_oid": "bc87ada7060f768eb89a662779b15aae0c55221d"
+  },
+  {
+   "path": "configuration_bailing_moe_v3.py",
+   "size": 4725,
+   "git_oid": "83f44ff35d4ad0eb250d2fb710161b4222af4020"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 56,
+   "git_oid": "6fe28d800f7389572f026c42b6f70899d5918b2f"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 4447478988,
+   "sha256": "be523d3d361ad38d85e48f33bdbd942b9512493d0a2746ec4e962e0a3183243b"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 84556,
+   "git_oid": "a2fadce8744b7dae3c0f482f6d0c91d1b39b6319"
+  },
+  {
+   "path": "modeling_bailing_moe_v3.py",
+   "size": 73194,
+   "git_oid": "d3a2d4155e253e5e5b92cc514b2976e5c35a0236"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 12205732,
+   "sha256": "40fb9d7d7795b8bd305aeff39ce9963f3f450915b9553f2938e009be9a1fed60"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 517,
+   "git_oid": "0348f256cd09c4061e149eff433d5204bbad975c"
+  }
+ ]
+}

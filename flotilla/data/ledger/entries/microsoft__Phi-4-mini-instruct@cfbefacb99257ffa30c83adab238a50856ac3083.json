@@ -1,0 +1,115 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "microsoft/Phi-4-mini-instruct",
+ "revision": "cfbefacb99257ffa30c83adab238a50856ac3083",
+ "captured": "2026-11-25T05:09:25+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "CODE_OF_CONDUCT.md",
+   "size": 453,
+   "git_oid": "c72a5749c52ac97bca71c672ef5295d303d22b05"
+  },
+  {
+   "path": "LICENSE",
+   "size": 1084,
+   "git_oid": "8ab7b4964d147858b89544e8ca33203237161edc"
+  },
+  {
+   "path": "NOTICE.md",
+   "size": 1809,
+   "git_oid": "56ff7dcadd87eb0bec57dbba00f005b6622c2809"
+  },
+  {
+   "path": "README.md",
+   "size": 29246,
+   "git_oid": "0bcd41c7c7bdded52ee8c7f28d9ba636d56ea448"
+  },
+  {
+   "path": "SECURITY.md",
+   "size": 2656,
+   "git_oid": "b3c89efc852e22f71eabf5dfbc6ac62493425eb6"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 249,
+   "git_oid": "af52cde61cc39aca58f7b7f04116b317116e75dd"
+  },
+  {
+   "path": "config.json",
+   "size": 2504,
+   "git_oid": "679e70defca5b399ae9e8ad53ff1176c9d7c6f93"
+  },
+  {
+   "path": "configuration_phi3.py",
+   "size": 10875,
+   "git_oid": "01446e12bf573a1e96c8aa9c7af73a05e2096dec"
+  },
+  {
+   "path": "data_summary_card.md",
+   "size": 4320,
+   "git_oid": "b7d5601b9656769ee0e6552a77158697b00180b0"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 168,
+   "git_oid": "43b32d0bc199571e0818489fa01c1002d7a40452"
+  },
+  {
+   "path": "merges.txt",
+   "size": 2418348,
+   "git_oid": "dcecc4524288b351bbd0da8028e74e9b5bcdb9b5"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 4903637712,
+   "sha256": "bc703090b63eda16f639fa4de7ac54635c23105ab1da2f6ec4d3403151d38ee6"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 2768428504,
+   "sha256": "7ff79b9d2d31076bac2663393451f6530f4fc8ca49b09002116c92c373dba983"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 16273,
+   "git_oid": "d87cc3650f8e8dec46fc6871826ef30b941d0c94"
+  },
+  {
+   "path": "modeling_phi3.py",
+   "size": 54268,
+   "git_oid": "71597d1417913e232b80dcafc0eb5e290dcff43e"
+  },
+  {
+   "path": "sample_finetune.py",
+   "size": 6167,
+   "git_oid": "499f5f05391bf77626808e6c4d36f0f41fff76e6"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 587,
+   "git_oid": "156262f7d61a27706bdcad9d117c579e88e2fa27"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 15524095,
+   "sha256": "382cc235b56c725945e149cc25f191da667c836655efd0857b004320e90e91ea"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 2932,
+   "git_oid": "f5958080514e266176052f86c80aa53f91ce4ba0"
+  },
+  {
+   "path": "vocab.json",
+   "size": 3910310,
+   "git_oid": "ea953a43348cdb3776cb7fd9ea02e3784febde34"
+  }
+ ]
+}

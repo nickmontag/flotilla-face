@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "lukey03/Qwen3.5-9B-abliterated",
+ "revision": "6242e3443765b5ebb35b55e7565b4eeb3e278be2",
+ "captured": "2026-11-25T05:08:18+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 12672,
+   "git_oid": "8ddce62944b0f3ed82ba1860c23961c37bac749f"
+  },
+  {
+   "path": "abliteration_meta.json",
+   "size": 1007,
+   "git_oid": "b03da9bddd06a7ba288224116f4d4126a021fce8"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7756,
+   "git_oid": "a585dec894e63da457d9440ec6aa7caa16d20860"
+  },
+  {
+   "path": "config.json",
+   "size": 1980,
+   "git_oid": "cafb9a93eb2b82a7b7e9f3c0eaf3b9f9a1a3b33f"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 115,
+   "git_oid": "affcdf188ba614483df3d704e436a8e2da880075"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 17907663008,
+   "sha256": "d739afed0f1e4a05d1baec80ffbeee624ab051af857e95cbceb189f20817c554"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989343,
+   "sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1207,
+   "git_oid": "f26b16fb5f69d0a0fc01975d5e077c6abf985767"
+  }
+ ]
+}

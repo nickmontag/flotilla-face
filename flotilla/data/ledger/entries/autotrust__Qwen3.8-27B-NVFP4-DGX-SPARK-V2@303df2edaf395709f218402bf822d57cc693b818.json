@@ -1,0 +1,130 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "autotrust/Qwen3.8-27B-NVFP4-DGX-SPARK-V2",
+ "revision": "303df2edaf395709f218402bf822d57cc693b818",
+ "captured": "2026-11-25T05:13:03+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": ".quant_summary.txt",
+   "size": 335437,
+   "git_oid": "b1c9901000540b08e660ae19fcbec2a829b64d50"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11358,
+   "git_oid": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+  },
+  {
+   "path": "README.md",
+   "size": 8690,
+   "git_oid": "bcf45769f6b3ca28831add808fbe801bd05f6223"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 8952,
+   "git_oid": "c0c686f9c38d70d179fb7b5f5aa7530bc913dda3"
+  },
+  {
+   "path": "config.json",
+   "size": 13814,
+   "git_oid": "c9c33db32e072f8dfaae5cd8b1fb4a3b63ca5304"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 213,
+   "git_oid": "d04042de33b454891a0b8fa98e00da677799f30e"
+  },
+  {
+   "path": "hf_quant_config.json",
+   "size": 9970,
+   "git_oid": "d54da708815148a3bc9b626a334e648957d9c79c"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 9972777720,
+   "sha256": "6e46c31c25b2a53fbb618394a26a996b988e5cbe424c11b87128683267ef5b03"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 9770971368,
+   "sha256": "9ec0e370de3a5aa7a45fb61e0e7116afce150f0a50ef0551038a743ea2a78950"
+  },
+  {
+   "path": "model-mtp-fc.safetensors",
+   "size": 849400389,
+   "sha256": "87e5b25143ce387622a95b0b89607735ad9b7256d6ec0146c5ce466ddb972072"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 237336,
+   "git_oid": "24635ff0c0f76e1566e21a072557438304f8e056"
+  },
+  {
+   "path": "mtp64k/artifacts/draft_vocab_64k.pt",
+   "size": 249953,
+   "sha256": "ec7a9558b083f388441d4bfd33fb3d499d336febf0eb8d57ebba5032670f93cc"
+  },
+  {
+   "path": "mtp64k/manifest.json",
+   "size": 2165,
+   "git_oid": "b08e93ca7af55f9249eed88521d58c7f7455cfff"
+  },
+  {
+   "path": "mtp64k/plugin/pyproject.toml",
+   "size": 440,
+   "git_oid": "2c5f5bf83377f037c5acd6696ad5f56db0a665b5"
+  },
+  {
+   "path": "mtp64k/plugin/spark_mtp_draft.py",
+   "size": 1756,
+   "git_oid": "6daa431d6624b861ad03241e04c3e75a2d829f8d"
+  },
+  {
+   "path": "mtp64k/scripts/nvfp4_ops.py",
+   "size": 2790,
+   "git_oid": "7678fac72d8a7e79f1a9227256ee64f98700c7d6"
+  },
+  {
+   "path": "mtp64k/scripts/real_draft.py",
+   "size": 5816,
+   "git_oid": "f30113a4e0246fbbbd0840e7ebe440267f52e0de"
+  },
+  {
+   "path": "mtp64k/scripts/spark_mtp_draft.py",
+   "size": 1664,
+   "git_oid": "e646949940ee7bc2457d470e79a213933d9ee43a"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1191,
+   "git_oid": "33818c7f9e991ad735fd240209f4fa73e6c28c50"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989492,
+   "sha256": "6f32ce20dc35f57a7f9ad1eac03525bd7d30f9df8cea6507e958279cc3657706"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1226,
+   "git_oid": "b91a520d659b0eb8fd3a6fc8841fc0a8224597d5"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  }
+ ]
+}

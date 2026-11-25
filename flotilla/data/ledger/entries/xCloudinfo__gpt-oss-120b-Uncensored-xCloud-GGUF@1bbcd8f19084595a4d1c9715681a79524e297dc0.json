@@ -1,0 +1,25 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "xCloudinfo/gpt-oss-120b-Uncensored-xCloud-GGUF",
+ "revision": "1bbcd8f19084595a4d1c9715681a79524e297dc0",
+ "captured": "2026-11-25T05:08:56+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1588,
+   "git_oid": "1bce4760994f17177c77585229d7ced31e56305e"
+  },
+  {
+   "path": "README.md",
+   "size": 6322,
+   "git_oid": "89a0ca2c08c0a42af6745e7fa9d948afe81c5b78"
+  },
+  {
+   "path": "gptoss120b-uncensored-MXFP4.gguf",
+   "size": 65369016512,
+   "sha256": "20c561797adedcc88037f3736d0d8d6763fcdbb0e0ec6cfff9cd440bf3c609fa"
+  }
+ ]
+}

@@ -1,0 +1,175 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "ggml-org/stories15M_MOE",
+ "revision": "b6dd737497465570b5f5e962dbc9d9454ed1e0eb",
+ "captured": "2026-11-25T05:13:11+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1562,
+   "git_oid": "f15b49c2e62c6e52121f7b498c0b245512d97955"
+  },
+  {
+   "path": ".gitignore",
+   "size": 26,
+   "git_oid": "bdac63d0be0fbcb281615a6293760dfc4e6b3ef8"
+  },
+  {
+   "path": "README.md",
+   "size": 763,
+   "git_oid": "6349ff60d95531d88c7a9f7d7bca45f844ff8f1f"
+  },
+  {
+   "path": "config.json",
+   "size": 711,
+   "git_oid": "8ea530df05d3ddfff5804a2c535d2945d499a627"
+  },
+  {
+   "path": "data.txt",
+   "size": 66884,
+   "git_oid": "403715f84717ba83a19a7a052eac013517bc4755"
+  },
+  {
+   "path": "finetune.ipynb",
+   "size": 5873,
+   "git_oid": "15a990fd4fc7de1cba92ff69f671961839aa8c95"
+  },
+  {
+   "path": "generate_moe.ipynb",
+   "size": 16462,
+   "git_oid": "d123b32a8b4442c1fa2292aa88d72ae3bf56f33e"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 115,
+   "git_oid": "31843beb343901de52ca8cedca6d0a9ae1d66597"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 72744704,
+   "sha256": "dbfa0289f68a8dd721d10eb12d8bd82e098455682027f6f9986ba548913f9082"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 8890,
+   "git_oid": "85bc51a7db4c09f23468366fec988007e6eccda5"
+  },
+  {
+   "path": "moe_shakespeare15M.gguf",
+   "size": 16364896,
+   "sha256": "d1e0617d7e10de960639d18a4620ec8c6bb56343f45692830d3634a1a3e1fe1a"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-400/README.md",
+   "size": 5097,
+   "git_oid": "73360361f1f2b6a945cb5d34e1c3b6220979ae87"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-400/adapter_config.json",
+   "size": 723,
+   "git_oid": "4977fcef28512bb5733323304cd809ba6ef82332"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-400/adapter_model.safetensors",
+   "size": 68160648,
+   "sha256": "82cc79a24e640c3554d1465ef673df301cecb46eda10176e7fc90a8855c6c7cf"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-400/optimizer.pt",
+   "size": 62700602,
+   "sha256": "ae5736675ac820b1e25b6a3e298df4d49f8d571faecf7ed121a9a9027a0a02f4"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-400/rng_state.pth",
+   "size": 14244,
+   "sha256": "32cbbc805815844964f4e4c4d6a59d08af005aa6a8c007556b995159e3413fc5"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-400/scheduler.pt",
+   "size": 1064,
+   "sha256": "b98c509be49173a16c0268de5029f75de52b88c3d925c26c88bf4cafd360eb93"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-400/trainer_state.json",
+   "size": 3693,
+   "git_oid": "6886e65cd22dd148a885052a1a759cc5a9b9fccb"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-400/training_args.bin",
+   "size": 5112,
+   "sha256": "a2b73b2f545cb4aeeed59e19bc6a72d15f8bfdd68be832143d3c7096a9982a57"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-500/README.md",
+   "size": 5097,
+   "git_oid": "73360361f1f2b6a945cb5d34e1c3b6220979ae87"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-500/adapter_config.json",
+   "size": 723,
+   "git_oid": "4977fcef28512bb5733323304cd809ba6ef82332"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-500/adapter_model.safetensors",
+   "size": 68160648,
+   "sha256": "f18954c98a8efbf979d86e3af1f9a8e8fdf624a0bcf3aa239e59dd6d820f31cc"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-500/optimizer.pt",
+   "size": 62700602,
+   "sha256": "c02c354dd7b15801a89b4d60e6da5846270b8f81c4c8cb28e679907f5e76459b"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-500/rng_state.pth",
+   "size": 14244,
+   "sha256": "2a9285bd087c798eb4268ef909268e501cbd456d1aaa56bfd2778031e469f9cd"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-500/scheduler.pt",
+   "size": 1064,
+   "sha256": "cc4ab5f608c113ef9b81b5921bd661a21962184c52075538ed871611015781ce"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-500/trainer_state.json",
+   "size": 4416,
+   "git_oid": "359c43ac29727df8ed0d8522d736a34e0d1115b3"
+  },
+  {
+   "path": "moe_shakespeare15M/checkpoint-500/training_args.bin",
+   "size": 5112,
+   "sha256": "a2b73b2f545cb4aeeed59e19bc6a72d15f8bfdd68be832143d3c7096a9982a57"
+  },
+  {
+   "path": "run_finetuned.ipynb",
+   "size": 3686,
+   "git_oid": "9406777b7062e120691da65b7ed26acdd98f3eaa"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 411,
+   "git_oid": "d85ba6cb6820b01226ef8bd40b46bb489041c6a8"
+  },
+  {
+   "path": "stories15M_MOE-F16.gguf",
+   "size": 73466432,
+   "sha256": "1240dfc1957df9f3550dd6c1d9e64b466fc2f452d8bc34bd4e45e1a1e2ca6055"
+  },
+  {
+   "path": "stories15M_MOE-Q8_0.gguf",
+   "size": 39390272,
+   "sha256": "c7aa6863f9a4b3cdf19716e2c95622dcbd3bd06989324bf1ac8e60486ef8e881"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 1842764,
+   "git_oid": "67a2e09f9d8b5e85eca24e88aa5c0fb465bbafd6"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 686,
+   "git_oid": "38a14566f5b5237d9707d75e1d7cb05ab2ba45ef"
+  }
+ ]
+}

@@ -1,0 +1,110 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "outsourc-e/Qwen3.8-27B-Unleashed-GGUF",
+ "revision": "67a999218fd7002f11bf82bc81d6289beea60841",
+ "captured": "2026-11-25T05:13:12+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2480,
+   "git_oid": "f6d59af3906d7a1a2168b79a3bcc9e767109b6f8"
+  },
+  {
+   "path": "Qwen3.8-27B-Unleashed-UD-IQ1_M.gguf",
+   "size": 6800436192,
+   "sha256": "5f9baa05d702f42d6014d5aac6fa4b7db4a233df9dcab1af93c8ac773311a4ea"
+  },
+  {
+   "path": "Qwen3.8-27B-Unleashed-UD-IQ2_S.gguf",
+   "size": 8465112032,
+   "sha256": "b6f42ee0742c039460d0538a1bbd198986624273eda10ab7b4b92215fc5a29d1"
+  },
+  {
+   "path": "Qwen3.8-27B-Unleashed-UD-IQ3_XXS.gguf",
+   "size": 10968037216,
+   "sha256": "585267a0ba9bee47e3684f68e7991a61f48ef589982ef93cc0963ff344bc1fca"
+  },
+  {
+   "path": "Qwen3.8-27B-Unleashed-UD-IQ4_XS.gguf",
+   "size": 14298802016,
+   "sha256": "c43bd296e3860511dae12009b8460f7d9bfab26cc854b1935af6fa8208da3eb7"
+  },
+  {
+   "path": "Qwen3.8-27B-Unleashed-UD-Q2_K_XL.gguf",
+   "size": 9886734176,
+   "sha256": "5c52aa529736e93bc669b967400ed93edb0b522d0936dac3cd36824790b024f1"
+  },
+  {
+   "path": "Qwen3.8-27B-Unleashed-UD-Q3_K_XL.gguf",
+   "size": 13223069536,
+   "sha256": "b4c9721ab6ed1b7d1d1863b8f43e2fbce6a88dab39ea4333d2e74a7ad69580fe"
+  },
+  {
+   "path": "Qwen3.8-27B-Unleashed-UD-Q4_K_M.gguf",
+   "size": 16519489376,
+   "sha256": "996c66cdd53346c1c8a7db2c61eeb3ff4bd341120469f12a50d79bf32c4ba35d"
+  },
+  {
+   "path": "Qwen3.8-27B-Unleashed-UD-Q5_K_M.gguf",
+   "size": 19772245856,
+   "sha256": "9c49503acd6468666dc5f3a30e2a68ba002e85542b1335ac2a05651a936de12e"
+  },
+  {
+   "path": "Qwen3.8-27B-Unleashed-UD-Q6_K.gguf",
+   "size": 22086895456,
+   "sha256": "33e98f970171fbf7ac038991cd774ada2ecaa36168b540e34bef35ddc90888c1"
+  },
+  {
+   "path": "README.md",
+   "size": 21637,
+   "git_oid": "9bde61a900975a802a9593f3b444dd92739ae47c"
+  },
+  {
+   "path": "banner.jpg",
+   "size": 156299,
+   "sha256": "f4c684ccaa16184f08c1a1d6c521eb8fa0a849b337dfd8e2b729d7c4d6b1b75a"
+  },
+  {
+   "path": "banner.png",
+   "size": 75200,
+   "git_oid": "3e97c8cf2a4aff1f51c1884c1b6a3a4e47c8557e"
+  },
+  {
+   "path": "charts/1-quality-vs-size.png",
+   "size": 104780,
+   "sha256": "9411ae1b047bf5104b98f45b733f9a43e27ba949e4f589ec9fe711fc6e6b50e0"
+  },
+  {
+   "path": "charts/2-context-retrieval.png",
+   "size": 67916,
+   "git_oid": "abc1e964444a9c68818d1c14b62545287ffc2d09"
+  },
+  {
+   "path": "charts/2-ppl-vs-capability.png",
+   "size": 113439,
+   "sha256": "cecc52e4eeb2ce7e3b04137aa1532343ba58f1c7d75f40aeb8ec382b9c0cad5e"
+  },
+  {
+   "path": "charts/3-throughput.png",
+   "size": 64697,
+   "git_oid": "56434497d9f5036e95b5f11bf2785aad15d39efa"
+  },
+  {
+   "path": "charts/4-speed-at-depth.png",
+   "size": 110509,
+   "sha256": "c9e4c135ad094ba70626e60d5139f5fad69a807152c3b12df2a974d58ee11ae2"
+  },
+  {
+   "path": "charts/4-speed-vs-size.png",
+   "size": 89414,
+   "git_oid": "e4346f56475bbd8990ecf4a7a0a11976a74b28b7"
+  },
+  {
+   "path": "mmproj-Unleashed-f16.gguf",
+   "size": 931145760,
+   "sha256": "02b26e0e0e3f1b09be342f21cff7461f571ce491a2ce514a5e7c9880fc1cee2e"
+  }
+ ]
+}

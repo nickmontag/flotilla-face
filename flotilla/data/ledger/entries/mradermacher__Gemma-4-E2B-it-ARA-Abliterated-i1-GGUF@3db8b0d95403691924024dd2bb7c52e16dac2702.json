@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Gemma-4-E2B-it-ARA-Abliterated-i1-GGUF",
+ "revision": "3db8b0d95403691924024dd2bb7c52e16dac2702",
+ "captured": "2026-11-25T05:08:50+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3555,
+   "git_oid": "8e823005fd0cc3a7ff1d7e32bbe093750fca03da"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-IQ1_M.gguf",
+   "size": 2355380128,
+   "sha256": "f73fbe4fe710757e7e578fc32d9423a4566f73a2656e51c47c01d7d8ca9aed80"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-IQ1_S.gguf",
+   "size": 2315861920,
+   "sha256": "75df10524f6bf9beb2021484cf843e920a7292e99db6045b3508eddfed247a5a"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-IQ2_M.gguf",
+   "size": 2553167776,
+   "sha256": "e73b9e15cfc69fd66e148557d45f9b8e84f3af0cceb441eef740e37c1da5c420"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-IQ2_S.gguf",
+   "size": 2500476832,
+   "sha256": "641f4950bb021f885c9a1ac8128c6ce6ad02c3b93d0f0c7184a45141580f322f"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-IQ2_XS.gguf",
+   "size": 2478063520,
+   "sha256": "5912bfdde54dff0844cded7eefd2a2d20dfae98e3ff99526e8810875b0c7b716"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-IQ2_XXS.gguf",
+   "size": 2421243808,
+   "sha256": "60c9afa12d855a21ad347fa6e558f7359797d369e6af2c8b5a7e0ba283d185ca"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-IQ3_M.gguf",
+   "size": 3125575584,
+   "sha256": "5832759ead18c54197393adfc194d6dea201536a97c960e3ae0b57f87ee420c2"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-IQ3_S.gguf",
+   "size": 3103014816,
+   "sha256": "a54861a8c8bc20b981a4dbeee939168c1bb6cb07df57d6da650d2c50cdf2447d"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-IQ3_XS.gguf",
+   "size": 3060215712,
+   "sha256": "b3ba351551f1bc012399fb9a9ebeec727a418011031bccdb7dfa312d79428909"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-IQ3_XXS.gguf",
+   "size": 2648080288,
+   "sha256": "a0a9536080cdb98c48b040e13c45623fa1af48caf9f1b202f43afbc3691c085e"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-IQ4_NL.gguf",
+   "size": 3350396832,
+   "sha256": "df2d9ae1ec9e2278df4d0d33ed5955f17eb96313a6c505d98cb6250261f349e4"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-IQ4_XS.gguf",
+   "size": 3292397472,
+   "sha256": "e0a58587117df7b62239fc3800a4c2e09fe33d4f5befc007c76ab9612c17d13d"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-Q2_K.gguf",
+   "size": 2980650912,
+   "sha256": "ab12a5afcf9991cbb8477de4401fd0e79533c9b85c13183463c39bc1ef19f962"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-Q2_K_S.gguf",
+   "size": 2923364256,
+   "sha256": "6f626779a7e44bbc7b0515b8e0d02a3a3c04ff0a8df8e1432f6f0a6ab567ca05"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-Q3_K_L.gguf",
+   "size": 3271778208,
+   "sha256": "7919caac49bf3fa354c4b6346106ac98b5758dd8a76dfccd9f62b3adad2cf186"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-Q3_K_M.gguf",
+   "size": 3191955360,
+   "sha256": "df050a66122c950810d2d5da27d08a1b192efb641077d570da6c5b53e69582e2"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-Q3_K_S.gguf",
+   "size": 3102074784,
+   "sha256": "142dda8ee3839efd32569f14ba99de644431862405dc9dbb30a796b2f1991849"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-Q4_0.gguf",
+   "size": 3351871392,
+   "sha256": "ee0e36a2ec49862c1c08824f13e5a5c17b7fce42f90716aa6a3d6fdceac1683c"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-Q4_1.gguf",
+   "size": 3465953184,
+   "sha256": "04411a02bd9819c5d87c96917930af9ea38d8565885e9d9d2b4b0a9394aa3af2"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-Q4_K_M.gguf",
+   "size": 3416116128,
+   "sha256": "724656ce392515b342fc028c74f49072128ced0975da682a11fbe61829e5d11b"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-Q4_K_S.gguf",
+   "size": 3354427296,
+   "sha256": "6bb8f88e753c1f8b613d500d8aa9f7b3495b4c30a31c0e9c08646ddd592cc9dd"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-Q5_K_M.gguf",
+   "size": 3616705440,
+   "sha256": "1f584e2058abd83a85e3f9aa27abd1db0c25481c85a3a742228096b04372470c"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-Q5_K_S.gguf",
+   "size": 3582394272,
+   "sha256": "c3893eb9891a5c53a0c56fff84beb92f790bb2aee4253df9d6001c7fef7b0600"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.i1-Q6_K.gguf",
+   "size": 3829831584,
+   "sha256": "c0c88db703d13241f67f42d16bcf7b71c00c9580cd5921ce4f397aebab973c77"
+  },
+  {
+   "path": "Gemma-4-E2B-it-ARA-Abliterated.imatrix.gguf",
+   "size": 5644768,
+   "sha256": "f48e9a5b0028250509911a96f9ab7cde5757327fff5a899ae5581113418daa43"
+  },
+  {
+   "path": "README.md",
+   "size": 7387,
+   "git_oid": "53fc876d82d73da95e83f682bf58ed45eb2061f2"
+  }
+ ]
+}

@@ -1,0 +1,155 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "saidutta69/MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic",
+ "revision": "9c077adc3de369afc233e2f631a36aa99c94e93d",
+ "captured": "2026-11-25T05:08:53+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2990,
+   "git_oid": "d6e45db3977b7e5e6664ae55014a29c34e77f427"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-F16.gguf",
+   "size": 2166552992,
+   "sha256": "3583f538ceda7000b09e07eac610305df1601d20149fab9fd9e530fada17983e"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-IQ3_S.gguf",
+   "size": 549329312,
+   "sha256": "bb8be573f0dcc4f47fe4105866273d4cff827660fcbe7a554202152028aab118"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-IQ4_XS.gguf",
+   "size": 642245024,
+   "sha256": "010f61861028f03a44cda7a65797ec5bcb6a749a434a15e0a5226fe442eeb218"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-Q2_K.gguf",
+   "size": 485831072,
+   "sha256": "24738f7c3af2e6f651e509c71ab6e19f5922d21741a4f62462e638a72dac035f"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-Q3_K_L.gguf",
+   "size": 613767584,
+   "sha256": "1f3a4e8b404ff161228804a49e3300057794d365bfe0ccce8e32f92c6309dcc0"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-Q3_K_M.gguf",
+   "size": 582900128,
+   "sha256": "7ef25baaf5aaf87f7efdac143e7032f9ee3d3b04eafbecd4dae2e4d59f4c6958"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-Q3_K_S.gguf",
+   "size": 548075936,
+   "sha256": "ae80b368b0710b330b968a03c4a0576d77a73492d3b4c76473c69c651f7724b5"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-Q4_0.gguf",
+   "size": 664953248,
+   "sha256": "7386097d1ccbd68168a22deab712425f36f3db57173434c089fb774ba013f4e2"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-Q4_1.gguf",
+   "size": 719954336,
+   "sha256": "218acf241d0c5bf2a5a6c4edfaa38c082d91b384bd92062cc176702ff21da5a3"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-Q4_K_M.gguf",
+   "size": 688066528,
+   "sha256": "6f3a87e671cc7f4239e7e8044312da559d423e525f462d522c2978ee4c73e834"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-Q4_K_S.gguf",
+   "size": 667804064,
+   "sha256": "3bf4a1da14194f7a7bf4e504b033c94e244e36a106c90ccd332ccc82ef2b47d9"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-Q5_K_M.gguf",
+   "size": 786862048,
+   "sha256": "b5e1450266e734891a1174d0bbdbd4b3fbdb20e691bc899b4c979e2d70123ef5"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-Q5_K_S.gguf",
+   "size": 774955424,
+   "sha256": "4c5d9b5195b97a753091a349072be6c3c5519a7ad0f52d5275306ca6306497f6"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-Q6_K.gguf",
+   "size": 891832928,
+   "sha256": "eae87268725112e415ea87a75d69c23517987bd687819aa06bf002dc757a2a0b"
+  },
+  {
+   "path": "MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking-heretic-Q8_0.gguf",
+   "size": 1153529824,
+   "sha256": "bed1cd339216aa4520154d896f41a54b4090cbd8ef8c300e0675da722f23d2a3"
+  },
+  {
+   "path": "README.md",
+   "size": 14545,
+   "git_oid": "546b2a72bf926b54488a4dadf60c784e51aeb65d"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 9062,
+   "git_oid": "cb2934c459c6eff41b15e45bd6adc13c93846259"
+  },
+  {
+   "path": "config.json",
+   "size": 749,
+   "git_oid": "58022123e3c1d571968be7f03a052908a9c8687a"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 214,
+   "git_oid": "3ca311addc159f09b268537c1fdc453a8b01fc1f"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 2161290944,
+   "sha256": "bfa3e9fd32da8e9803fa9af92b7f2e5528b2e6987f1954984ce3a1a144f14463"
+  },
+  {
+   "path": "reproduce/GnLOLot--MiniCPM5-1B-Claude-Opus-Fable5-V2-Thinking.jsonl",
+   "size": 945160,
+   "git_oid": "a6bd31af0a76d3acec7813cd6ce9a2b0215f4bac"
+  },
+  {
+   "path": "reproduce/README.md",
+   "size": 4100,
+   "git_oid": "2480576f2889fee3361ef2e80f0758dc8985d086"
+  },
+  {
+   "path": "reproduce/SHA256SUMS",
+   "size": 84,
+   "git_oid": "dd6c70d035d8eabe4cb3c91012635e8bdb333b1c"
+  },
+  {
+   "path": "reproduce/config.toml",
+   "size": 1986,
+   "git_oid": "7ac9e209f5ba01aaa52f914a36cfd21b7e58900f"
+  },
+  {
+   "path": "reproduce/reproduce.json",
+   "size": 9067,
+   "git_oid": "0c2b07275601da34dbfab943ea239ccc12720038"
+  },
+  {
+   "path": "reproduce/requirements.txt",
+   "size": 1961,
+   "git_oid": "e5114cf40381ccec5529ed72f6ef55f2da0aab11"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 9894424,
+   "git_oid": "d15448ea90779bc174ed40f5985eecdb4ee869f8"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 461,
+   "git_oid": "6ce3be86787834ff5b6ff338cbc500f8d80482f0"
+  }
+ ]
+}

@@ -1,0 +1,73 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "orcarouter/Ripple-65B-abliterated-GGUF",
+ "revision": "e8595959ee1c1096dbbfea3ed9790991673ebfce",
+ "captured": "2026-11-25T05:08:32+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2217,
+   "git_oid": "b775374b9154e88ef3a9d050136d9e8cd2d2e60e"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11357,
+   "git_oid": "7a4a3ea2424c09fbe48d455aed1eaa94d9124835"
+  },
+  {
+   "path": "README.md",
+   "size": 15105,
+   "git_oid": "d56304112209cae240353c04c1d2f7ee0c1a8537"
+  },
+  {
+   "path": "Ripple-65B-abliterated-BF16-00001-of-00003.gguf",
+   "size": 44979233312,
+   "sha256": "bf68789380100def73fa6a26f7e63d83f6cbe03890f2be4f5c32db586a93afd7",
+   "lfs_pointer_oid": "2ea1538e1b5d46edd061ab4767f475d37ec41e90"
+  },
+  {
+   "path": "Ripple-65B-abliterated-BF16-00002-of-00003.gguf",
+   "size": 44745107328,
+   "sha256": "eefc34038489f52f191b6af2c6f767a0985e2d7f231cd89659a2505e59ddc909",
+   "lfs_pointer_oid": "af2e9f77315b9278d7da8521485874df9c0b10c3"
+  },
+  {
+   "path": "Ripple-65B-abliterated-BF16-00003-of-00003.gguf",
+   "size": 39847984992,
+   "sha256": "c488475e0986699616c808bd2bdffdb2a3e212e3fc4eeecda4ad35fb0d914772",
+   "lfs_pointer_oid": "a6ec50cd8fcd85ff48e285dacdc5e732f7bce1d9"
+  },
+  {
+   "path": "Ripple-65B-abliterated-Mix-2.5bit.gguf",
+   "size": 19985401856,
+   "sha256": "916fb94be5fa6cb91587518b272fd9cf348e0ab548dddbd2d586900e099c703c",
+   "lfs_pointer_oid": "d96cf68d1b55d2c070a06b8848879323f95103d8"
+  },
+  {
+   "path": "Ripple-65B-abliterated-Mix-3bit.gguf",
+   "size": 23971547136,
+   "sha256": "ed8510ea9b34b75695658f1cd4b79a350c0c38944a1a8f7688a518a179db433b",
+   "lfs_pointer_oid": "de3dcb1f651edd3ad37da39def09f86985be12c9"
+  },
+  {
+   "path": "Ripple-65B-abliterated-Mix-4bit.gguf",
+   "size": 31999133696,
+   "sha256": "919586e9a2cccf2b18ba852925984f525a96139b3ef89352ce6af25e4afcecd2",
+   "lfs_pointer_oid": "b37dfecfb44818de5f2f22b785dac6be5e9824ac"
+  },
+  {
+   "path": "Ripple-65B-abliterated-Mix-8bit-00001-of-00002.gguf",
+   "size": 44986640384,
+   "sha256": "39a8fd0cb762f6f1c2b7f085d29e62ef25c8c3262fe6f70668e39480092b8aa6",
+   "lfs_pointer_oid": "f7ac0deab436403562b70a4486b6ba4d18c04864"
+  },
+  {
+   "path": "Ripple-65B-abliterated-Mix-8bit-00002-of-00002.gguf",
+   "size": 18877653088,
+   "sha256": "1d3c95c27b454f4bc9f1f76492f09894af96043c1d7864330184420d96425bd8",
+   "lfs_pointer_oid": "1fdcd7bf57da672720d09e44eb8934989ebfc828"
+  }
+ ]
+}

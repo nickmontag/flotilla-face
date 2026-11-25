@@ -1,0 +1,140 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Qwen3.8-27B-TURBO-Fable-Cold-Fusion-735-882-Heretic-Uncensored-NM-DAU",
+ "revision": "fd6a26869dc5775b3c81ce65468af634dd300b02",
+ "captured": "2026-11-25T05:08:14+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1630,
+   "git_oid": "6c8515c9572b5ce812fff7c35a5ae0eb18b5b167"
+  },
+  {
+   "path": "README.md",
+   "size": 27560,
+   "git_oid": "ebebf6bfcbdb01794223d88ab056e9ef9b9260c9"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 8953,
+   "git_oid": "5a39aa2b4945c400a4359778e42d6f039fcfec76"
+  },
+  {
+   "path": "config.json",
+   "size": 4529,
+   "git_oid": "a63cbf436128aff29472c5682d55a9cd9bc5b150"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 213,
+   "git_oid": "d04042de33b454891a0b8fa98e00da677799f30e"
+  },
+  {
+   "path": "model-00001-of-00012.safetensors",
+   "size": 2542796928,
+   "sha256": "b5df896d93260f64913e8e09892c9f3724e92e4bfb7f4708238880fb50833f98"
+  },
+  {
+   "path": "model-00002-of-00012.safetensors",
+   "size": 4842451936,
+   "sha256": "feacdeb20032f0a1bd7315f80f991885add3e31da43ea65aebde67786b740746"
+  },
+  {
+   "path": "model-00003-of-00012.safetensors",
+   "size": 4965228032,
+   "sha256": "42845ce58e2b023b13df6fdfbacf637cfbf6f0fa764dca7b163b355bd5844aab"
+  },
+  {
+   "path": "model-00004-of-00012.safetensors",
+   "size": 4933789808,
+   "sha256": "a2d24cb46efbb0a75df8becd0d5d3bcea30ddc636273065f8a1b199cf5139cde"
+  },
+  {
+   "path": "model-00005-of-00012.safetensors",
+   "size": 4965228032,
+   "sha256": "3aadc678e631cd4d30213cb15007bedd0e41d77301f17b0ed978c743c7387264"
+  },
+  {
+   "path": "model-00006-of-00012.safetensors",
+   "size": 4911753512,
+   "sha256": "bb1024157fb4f4b6ec734c0a0d75902ecaa2406311bf065db495ede3878d2c37"
+  },
+  {
+   "path": "model-00007-of-00012.safetensors",
+   "size": 4965228016,
+   "sha256": "a590217a8c876cb2b489f6d3e890001fa1d923d07b10b3c09fb552238c86a68f"
+  },
+  {
+   "path": "model-00008-of-00012.safetensors",
+   "size": 4933789824,
+   "sha256": "ba25c6b10abf3b31c43e92906f10e37b10d09b18f6535d1e6a826803a8f077bd"
+  },
+  {
+   "path": "model-00009-of-00012.safetensors",
+   "size": 4965228016,
+   "sha256": "0c5254879f08b62212362fc6c0caf0b3cd36117a2de35075a6b363f3cace4df4"
+  },
+  {
+   "path": "model-00010-of-00012.safetensors",
+   "size": 4933789824,
+   "sha256": "064a6765b5bd47eb82955e23c4d0f6b945aa4871fc29db645f24043acf73a41c"
+  },
+  {
+   "path": "model-00011-of-00012.safetensors",
+   "size": 4911732744,
+   "sha256": "4cbbbf4c89d0cb69755011a686279f6707df6f70ed2f9df344ed7b4467a4794e"
+  },
+  {
+   "path": "model-00012-of-00012.safetensors",
+   "size": 3587132840,
+   "sha256": "1007f875318e6cecadde4d5f56696b8e89d9fe30b71e8ed4aa26b387aac9d304"
+  },
+  {
+   "path": "model-mtp-restored.safetensors",
+   "size": 104857696,
+   "sha256": "fbea25865ec18d0fcc2ba235d7c32a39d5dfad15531b39498796ef8ae9998d25"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 113450,
+   "git_oid": "490712ba0857051d9c46708926f03fdee382722e"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1191,
+   "git_oid": "33818c7f9e991ad735fd240209f4fa73e6c28c50"
+  },
+  {
+   "path": "star-wars-hans-solo.gif",
+   "size": 3515931,
+   "sha256": "b977bb1e9753e92967929932487c5f144cad28ce8dcfe717ae441c7f7a6c2392"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989343,
+   "sha256": "87a7830d63fcf43bf241c3c5242e96e62dd3fdc29224ca26fed8ea333db72de4"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 16429,
+   "git_oid": "08f41ce27b729c20cdda2be2c299ab1a94f4b1e9"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  },
+  {
+   "path": "vocab.json",
+   "size": 6722759,
+   "git_oid": "0aa0ce0658d60ac4a5d609f4eadb0e8e43514176"
+  }
+ ]
+}

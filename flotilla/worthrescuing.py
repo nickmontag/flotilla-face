@@ -16,7 +16,7 @@ import json
 import re
 from dataclasses import dataclass
 
-from .feed import REPO_RE
+from .feed import REPO_RE, target_for_risk
 
 PAGE_URL = "https://pirateface.co/worth-rescuing"
 VIA = "pirateface/worth-rescuing"
@@ -31,7 +31,7 @@ TAKEDOWN_RISK = 30
 # at-risk file with one copy, and fills in once those have two.
 OFFICIAL_BOOST = 0.45
 HISTORIC_CAPABILITY = 75
-TARGET_REPLICAS = 3
+TARGET_REPLICAS = target_for_risk(TAKEDOWN_RISK)
 RELICENSABLE = {"mit", "apache-2.0", "wtfpl"}
 
 

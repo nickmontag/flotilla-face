@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "XHToken/Spark-X2.6-1.7B-GGUF",
+ "revision": "cdc3d8893fba4ce0687f1b49ce1e18b29cae96d0",
+ "captured": "2026-11-25T05:13:08+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1764,
+   "git_oid": "9fea92f81b4918e544391d623de949f2d9556261"
+  },
+  {
+   "path": "README.md",
+   "size": 14094,
+   "git_oid": "148e74ff96b79a6da2f80fc7ed84f032e228c41f"
+  },
+  {
+   "path": "Spark-X2.6-1.7B-Q4_K_M.gguf",
+   "size": 1768720512,
+   "sha256": "7abd9859c10924be3c583945456fa9b25d0569484876105a7b7376f7938fffb7"
+  },
+  {
+   "path": "Spark-X2.6-1.7B-Q8_0.gguf",
+   "size": 1820113440,
+   "sha256": "8d96279c95ae2be111576f3f599880598be0922efee15069b4d7e4dd96ef6ed4"
+  },
+  {
+   "path": "Spark-X2.6-1.7B.gguf",
+   "size": 3420932640,
+   "sha256": "7d88f9eb7b131cb729aef8d0ab95d15e387f8fe58c0b501bacc7729e8585a220"
+  },
+  {
+   "path": "images/all_benchmark.svg",
+   "size": 56772,
+   "git_oid": "c12cd1517545cc68b4c03690390d036c75ce0aa4"
+  },
+  {
+   "path": "images/inference.svg",
+   "size": 46562,
+   "git_oid": "ea945e17599ca365b1f7d28b860ec94eb50d49e4"
+  },
+  {
+   "path": "images/xhtoken-wechat.jpg",
+   "size": 160131,
+   "sha256": "0c3fbd25c987237b383461fdaa96bf6881af615c23ba3baf19e51a7879354ddb"
+  }
+ ]
+}

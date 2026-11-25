@@ -1,0 +1,90 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Maykeye/TinyLLama-v0",
+ "revision": "298338802ab94432b917bcce11382aa151aee50f",
+ "captured": "2026-11-25T05:13:03+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 1641,
+   "git_oid": "efeea5812b5a68f953238c0e1a692fb703e84eb5"
+  },
+  {
+   "path": "backup/do_backup.py",
+   "size": 668,
+   "git_oid": "03a8fbc246fcf725242ec6544a84bc6bc36cf92e"
+  },
+  {
+   "path": "backup/step-1-10300.bin",
+   "size": 9275989,
+   "sha256": "b6ec1c440a393eb0cce4c215de321efa232fb77a549cc85bd98e64a635ca28d9"
+  },
+  {
+   "path": "config.json",
+   "size": 498,
+   "git_oid": "11735ecd103d1074143e5b4fd45e9f0641708fc7"
+  },
+  {
+   "path": "demo.py",
+   "size": 503,
+   "git_oid": "84dab41b89ea47636e71bf451b1f2f1c4448cc75"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 132,
+   "git_oid": "89c31b8e044c6d3589cd86fe3be48558d8bab8fc"
+  },
+  {
+   "path": "model.onnx",
+   "size": 18703657,
+   "sha256": "4611e715a30aadcc5d1d938dffb4e94b7d428caba39b7495fd29b2d8d638fe2e"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 9251608,
+   "sha256": "c302246d91e2854ff350e52a79938a818c203186c2f0671213ce372a0289cd91"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 9269994,
+   "sha256": "ae959aaff509d66f9dd85c53f16481463286950a21e0349c7793f8412fc4a094"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 411,
+   "git_oid": "d85ba6cb6820b01226ef8bd40b46bb489041c6a8"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 1984889,
+   "git_oid": "e23e8407bd6e741244a90f8a26ea70fe0f38c34d"
+  },
+  {
+   "path": "tokenizer.model",
+   "size": 534194,
+   "sha256": "ab1b681ec7fc02fed5edd3026687d7a692a918c4dd8e150ca2e3994a6229843b"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 649,
+   "git_oid": "14570c6e672e61bd0978a4171609466cd9aabc3d"
+  },
+  {
+   "path": "train.ipynb",
+   "size": 25441,
+   "git_oid": "87179335fed73dc11cc02e56111c2f4e45c3841a"
+  },
+  {
+   "path": "valid.py",
+   "size": 1516,
+   "git_oid": "569129f8257a1501574689f1eb105ebc51b68d44"
+  }
+ ]
+}

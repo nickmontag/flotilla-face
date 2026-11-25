@@ -1,0 +1,140 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/waifu-heretic-26b-a4b-i1-GGUF",
+ "revision": "448728dd3200cba5c3e9d704744f77cd217467d4",
+ "captured": "2026-11-25T05:08:52+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3257,
+   "git_oid": "f3238486432afd651200434795773099a73dfa78"
+  },
+  {
+   "path": "README.md",
+   "size": 6301,
+   "git_oid": "228a53de8c0d0c39f3a40d98d9697873fb4dbaef"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-IQ1_M.gguf",
+   "size": 8910879648,
+   "sha256": "a4a1f21dca7cd5e8bb5b3c6641148633f16c0b347d89d679e42514d3a231c5cd"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-IQ1_S.gguf",
+   "size": 8532493728,
+   "sha256": "0a8618e348d4b0a4d55517f5da67cd7e2cfcdba876061c7da79df5da23a06ca6"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-IQ2_M.gguf",
+   "size": 10694911392,
+   "sha256": "c182b8702dc7a4bb87cccb540f086008917fdc72578fe77cf9da031e02c7cecc"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-IQ2_S.gguf",
+   "size": 10190396832,
+   "sha256": "619b02386af04a74a16d2972d0b809c8a6f551d5e924b027fbf170249256c494"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-IQ2_XS.gguf",
+   "size": 10058653088,
+   "sha256": "0dffc0f27502a34fe065421ec6f4926e92e9a526f9a072f426d9f37892e097d8"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-IQ2_XXS.gguf",
+   "size": 9541522848,
+   "sha256": "e777b6354c82397fac8111c1cebf07523eff1694d6f6afb441c00f376827e1f6"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-IQ3_M.gguf",
+   "size": 12709759392,
+   "sha256": "8f74ad00a48860f0989db74932714eca0e0f4f74f85b6c381f44ec600afde7bd"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-IQ3_S.gguf",
+   "size": 12539605408,
+   "sha256": "9f00b8dd4aeda665e47abd92ff795c0b35b6670c25b453b3ad4c3334535a4fd1"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-IQ3_XS.gguf",
+   "size": 11953263520,
+   "sha256": "256fbd9724130566e784f6a41bc12bc54f67a32e19e9c54e8c0a218b62baf952"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-IQ3_XXS.gguf",
+   "size": 11642889632,
+   "sha256": "754a3278480b1218f1b0c933950c0d75ac80ccc379817fe149d7965a56bc69d8"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-IQ4_XS.gguf",
+   "size": 14309895072,
+   "sha256": "2d9f2d92dd550f57ccdf52b969706c29880368c10bc319a96a66d4d378c64f5f"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-Q2_K.gguf",
+   "size": 10824959904,
+   "sha256": "a9c79f173ded9aca454575707112484a2fac876471d41a4e4f8a42920c0c1f50"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-Q2_K_S.gguf",
+   "size": 10866704288,
+   "sha256": "be32a63c7f2ac1bf0e6bcbc97d66c1e04b4a43def077be2e8647f3fdd8422797"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-Q3_K_L.gguf",
+   "size": 14141684128,
+   "sha256": "24dd77f83ed66d8668babc1d8bd67aaa6213b68e6b2dacf3c64b9a98a1e9d969"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-Q3_K_M.gguf",
+   "size": 13603929504,
+   "sha256": "a2069659ac4155d5399408109d259f70954efb5fd43a05ea1cec19cf96e8aed2"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-Q3_K_S.gguf",
+   "size": 12539605408,
+   "sha256": "8eb96d9e8f95f7ed423b39318ba5fa6d74d79b1741116f7153494649c6e910aa"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-Q4_0.gguf",
+   "size": 14903293856,
+   "sha256": "868f895c4425ceeb8453da89a00902584c9317cfd7b94d6ba490ce0ee23d8624"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-Q4_1.gguf",
+   "size": 16430951328,
+   "sha256": "2a4290a63731cb9c7120cef16b9a5849779100e8359915b0beaa09cf9ea0b76d"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-Q4_K_M.gguf",
+   "size": 17211253664,
+   "sha256": "a9b0b936ce3dc547c2804e8a4bf7ac2c5d39e08393094c4cd049b46413d9a60b"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-Q4_K_S.gguf",
+   "size": 15880062880,
+   "sha256": "598d63ab7965fd016fd5a374079422894c9135145435215a50385b9e6405405b"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-Q5_K_M.gguf",
+   "size": 19640402848,
+   "sha256": "808be96c96b0fea5794daf5902934f614643aa7f744d1f51fda3443708c12e47"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-Q5_K_S.gguf",
+   "size": 18494245792,
+   "sha256": "61c0454448cafdb740adb722d5b4ba161e5f04f2391f41b73ea1cb76a4193979"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.i1-Q6_K.gguf",
+   "size": 23243953568,
+   "sha256": "fe03f2eb3fb14c0c1c726572d29f243991fff3da4e8f87e38e27851c36d2f89a"
+  },
+  {
+   "path": "waifu-heretic-26b-a4b.imatrix.gguf",
+   "size": 113862624,
+   "sha256": "ad8431f9ba4cd8df60987693a418131296444a6cbe2c9083f71d7f360d5bf8e1"
+  }
+ ]
+}

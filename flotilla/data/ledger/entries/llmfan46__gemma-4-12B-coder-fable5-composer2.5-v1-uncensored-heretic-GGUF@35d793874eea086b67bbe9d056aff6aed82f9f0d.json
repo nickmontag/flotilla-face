@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llmfan46/gemma-4-12B-coder-fable5-composer2.5-v1-uncensored-heretic-GGUF",
+ "revision": "35d793874eea086b67bbe9d056aff6aed82f9f0d",
+ "captured": "2026-11-25T05:08:49+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2372,
+   "git_oid": "5885b1c231db2e83130fbc3d33a9c567057069b4"
+  },
+  {
+   "path": "README.md",
+   "size": 17472,
+   "git_oid": "90751176848d23dee8a74408d0002d5a1a8f0e5f"
+  },
+  {
+   "path": "gemma-4-12B-coder-fable5-composer2.5-v1-uncensored-heretic-F16.gguf",
+   "size": 23832068320,
+   "sha256": "ecf3495b8dfb408a43fb005c48a3def950c446e30e00f938f3fe0866cd27fe40"
+  },
+  {
+   "path": "gemma-4-12B-coder-fable5-composer2.5-v1-uncensored-heretic-Q4_K_M.gguf",
+   "size": 7381385440,
+   "sha256": "e8b267734c7ed0022688ba0d8dde2ef6ddf572710a09d60c8bb3772b4ab42236"
+  },
+  {
+   "path": "gemma-4-12B-coder-fable5-composer2.5-v1-uncensored-heretic-Q4_K_S.gguf",
+   "size": 7024050400,
+   "sha256": "de94579e8e1316229efcdf0e8aaddebfa9ce09c6e92f2dec22002899ba83b7eb"
+  },
+  {
+   "path": "gemma-4-12B-coder-fable5-composer2.5-v1-uncensored-heretic-Q5_K_M.gguf",
+   "size": 8547270880,
+   "sha256": "5e311253ec252fae489768da85e74b2e4d2be8ccfc7c457304fd75a28c44006c"
+  },
+  {
+   "path": "gemma-4-12B-coder-fable5-composer2.5-v1-uncensored-heretic-Q5_K_S.gguf",
+   "size": 8338374880,
+   "sha256": "d6a227def1215c0b0f48d9eed11944d4a672250f85ad984f39d769fd75c642a0"
+  },
+  {
+   "path": "gemma-4-12B-coder-fable5-composer2.5-v1-uncensored-heretic-Q6_K.gguf",
+   "size": 9786024160,
+   "sha256": "6c0f3482459fc42e47865ef7b556b42aaa163c5f4fdb1701b7cd577def75e81d"
+  },
+  {
+   "path": "gemma-4-12B-coder-fable5-composer2.5-v1-uncensored-heretic-Q8_0.gguf",
+   "size": 12669649120,
+   "sha256": "ac0da7d304b82e5c17ef7d3e7f28efa3fb04f0e2bdb9bce151fffef589adb129"
+  },
+  {
+   "path": "gemma-4-12B-coder-fable5-composer2.5-v1-uncensored-heretic-mmproj-F16.gguf",
+   "size": 122031232,
+   "sha256": "8723820b620f9cd0e07e476fa1d6f55c2634937f1d02118251d51dbb0201dd8e"
+  }
+ ]
+}

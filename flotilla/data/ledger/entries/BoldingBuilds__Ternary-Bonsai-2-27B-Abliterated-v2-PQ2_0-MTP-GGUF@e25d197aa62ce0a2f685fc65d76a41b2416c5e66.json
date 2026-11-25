@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "BoldingBuilds/Ternary-Bonsai-2-27B-Abliterated-v2-PQ2_0-MTP-GGUF",
+ "revision": "e25d197aa62ce0a2f685fc65d76a41b2416c5e66",
+ "captured": "2026-11-25T05:08:28+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1689,
+   "git_oid": "91ca7017192f2b6cc6694da0b0ded87f2bb6a123"
+  },
+  {
+   "path": "0001-qwen35-mtp-hadamard-inverse.patch",
+   "size": 1494,
+   "git_oid": "109211e158fa1750dfefee0d6e28a2e05ea89cf0"
+  },
+  {
+   "path": "README.md",
+   "size": 11733,
+   "git_oid": "e74ed797dd09d4e0ea8425f994c2235fa5589492"
+  },
+  {
+   "path": "SHA256SUMS",
+   "size": 230,
+   "git_oid": "42934defe1cfb431e9f6b13fc446dc4e07b32bd1"
+  },
+  {
+   "path": "Ternary-Bonsai-2-27B-Abliterated-v2-PQ2_0-MTP.gguf",
+   "size": 7657489696,
+   "sha256": "a4e4c7b578131595c1694354bd6c74d00920df1f5082647a6126899753ebebf8"
+  },
+  {
+   "path": "Ternary-Bonsai-2-27B-Abliterated-v2-PQ2_0.gguf",
+   "size": 7206168928,
+   "sha256": "b284cbc6cb6c2894eb3d4181d805b966948128b2add9627dbd7d1e691724b3bb"
+  }
+ ]
+}

@@ -1,0 +1,115 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/OpenAi-GPT-oss-20b-abliterated-uncensored-NEO-Imatrix-gguf",
+ "revision": "92d1bcc0244193a2cd11b9da138dfee9e5203d37",
+ "captured": "2026-11-25T05:08:20+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3032,
+   "git_oid": "fff078b5a57a06ba382e261ca44b1ac26b5d9e17"
+  },
+  {
+   "path": "OpenAI-20B-NEO-CODE-DI-Uncensored-Q5_1.gguf",
+   "size": 15728919168,
+   "sha256": "4c4c2db6d530f748bb76f5486b3b70b32372a3066bebc376e8557f9bf177581e"
+  },
+  {
+   "path": "OpenAI-20B-NEO-CODE-DI-Uncensored-Q8_0.gguf",
+   "size": 22080931968,
+   "sha256": "b0c1153ecf96e1e2d9f253ea28e0bba3979365182f2142d38f52bc140f5af082"
+  },
+  {
+   "path": "OpenAI-20B-NEO-CODE2-Plus-Uncensored-IQ4_NL.gguf",
+   "size": 11815759488,
+   "sha256": "1890e62ea678087f5cf320ee4fd1ebb8f17c293feec96c4347e2a5a7977dc24f"
+  },
+  {
+   "path": "OpenAI-20B-NEO-CODEPlus-Uncensored-IQ4_NL.gguf",
+   "size": 11815759456,
+   "sha256": "040bca110d886598decfa470691fbf8a1b4245ad290197d7f3823b8d3496fcb5"
+  },
+  {
+   "path": "OpenAI-20B-NEO-CODEPlus-Uncensored-Q5_1.gguf",
+   "size": 15728919136,
+   "sha256": "5becabaad9b5a75740e8b981d3d49d419b7aa5b786102984e2e8242ba44b6008"
+  },
+  {
+   "path": "OpenAI-20B-NEO-CODEPlus16-Uncensored-IQ4_NL.gguf",
+   "size": 12648263776,
+   "sha256": "4e2ce148feed05629381d259902c5e43b3c7a58bf33118aef1a6232322133436"
+  },
+  {
+   "path": "OpenAI-20B-NEO-HRR-CODE-5-TRI-Uncensored-Q8_0.gguf",
+   "size": 22080931968,
+   "sha256": "3313f38e5c1ac9f061479f6d21ad3231b3d46567fc720fd47d52014ff0cda4e8"
+  },
+  {
+   "path": "OpenAI-20B-NEO-HRR-CODE-TRI-Uncensored-IQ4_NL.gguf",
+   "size": 11815759488,
+   "sha256": "1f6f4e0e6f0179b52699c7319c41cba857ac445bfdc192204c35c6f79e016e50"
+  },
+  {
+   "path": "OpenAI-20B-NEO-HRR-CODE-TRI-Uncensored-Q5_1.gguf",
+   "size": 15728919168,
+   "sha256": "23f811009fa0468c91fced58b88beb66e766a2bfd08f5ec63da549d357b7fa39"
+  },
+  {
+   "path": "OpenAI-20B-NEO-HRR-CODE-TRI-Uncensored-Q8_0.gguf",
+   "size": 21972344448,
+   "sha256": "b5a42ebf3c9c774ce7271a3da2d52bf0678374f8109a0a220f159959498bc2eb"
+  },
+  {
+   "path": "OpenAI-20B-NEO-HRR-DI-Uncensored-Q5_1.gguf",
+   "size": 15728919168,
+   "sha256": "754f6494e4044aca306f27e590cb219a6912855f461ea08d26850b72e711db7b"
+  },
+  {
+   "path": "OpenAI-20B-NEO-HRR-DI-Uncensored-Q8_0.gguf",
+   "size": 22080931968,
+   "sha256": "e7756d778cd950a62338d3a482b0fba6ab84c9b3cb036120321bdf8b7e11e0c3"
+  },
+  {
+   "path": "OpenAI-20B-NEO-HRRPlus-Uncensored-IQ4_NL.gguf",
+   "size": 11815759488,
+   "sha256": "ef7a0f0091e774d3f5464883b0c1824af18ae2f449c9339d5ad566bfa2a5b7aa"
+  },
+  {
+   "path": "OpenAI-20B-NEO-Uncensored2-IQ4_NL.gguf",
+   "size": 12648263776,
+   "sha256": "8cae25601903df9d25dc09cccb2381c88d75f6169cbe7248ac9ec888fe9b27ca"
+  },
+  {
+   "path": "OpenAI-20B-NEO-Uncensored2-Q5_1.gguf",
+   "size": 16452835936,
+   "sha256": "4340616e4df003bcd66bdd78f5d9753467357658c42347762690989eca65b85e"
+  },
+  {
+   "path": "OpenAI-20B-NEOPlus-Uncensored-IQ4_NL.gguf",
+   "size": 11815759456,
+   "sha256": "274ffaaf0783270c071006842ffe60af73600fc63c2b6153c0701b596fc3b122"
+  },
+  {
+   "path": "OpenAI-20B-NEOPlus-Uncensored-Q5_1.gguf",
+   "size": 15728919136,
+   "sha256": "8f05df324a8ed8b5709ab06361c086661008114b57e0df3e9104431109e634ae"
+  },
+  {
+   "path": "OpenAI-20B-NEOPlus-Uncensored-Q8_0.gguf",
+   "size": 22080931936,
+   "sha256": "284d218dd6e48fd514d8128dafea2e62f34520b2249310ba802e6b8226ab73e6"
+  },
+  {
+   "path": "README.md",
+   "size": 39771,
+   "git_oid": "0c2c137a9ac7357760895a68f43ab9574c76235b"
+  },
+  {
+   "path": "power-the-matrix.gif",
+   "size": 147332,
+   "sha256": "bedb52a85d19008c688c58a6fdf751066bdf06a1d6d0874be5c4a35a6b09be53"
+  }
+ ]
+}

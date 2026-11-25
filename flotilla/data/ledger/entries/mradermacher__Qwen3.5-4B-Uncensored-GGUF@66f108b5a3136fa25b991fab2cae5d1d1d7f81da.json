@@ -1,0 +1,90 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3.5-4B-Uncensored-GGUF",
+ "revision": "66f108b5a3136fa25b991fab2cae5d1d1d7f81da",
+ "captured": "2026-11-25T05:08:50+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2499,
+   "git_oid": "300905a7ee7c154558d6a92e1be07a76614194fa"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.IQ4_XS.gguf",
+   "size": 2593556768,
+   "sha256": "83feba08c0a83c5ace798a11e6cc39c5b7c4f0341f5eb50b86f6e21362bdcb65"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.Q2_K.gguf",
+   "size": 1959168288,
+   "sha256": "0d666736e8f9c8cbfae2b5d18f7de872438ba9e58e435dbd8975331f50b47d23"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.Q3_K_L.gguf",
+   "size": 2482647328,
+   "sha256": "45a23049eae284a755cd6f9c72d207917b772431eac120483ed4bd6c7c5a6e08"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.Q3_K_M.gguf",
+   "size": 2318807328,
+   "sha256": "f10a213425c8c8c1095432f64363c7465604ade15fbbf70849873c0b63b5c988"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.Q3_K_S.gguf",
+   "size": 2121748768,
+   "sha256": "748394b6b8859294fd1f11e698234d97dc2b98647bb4dd65d0e1f2c9a688aeab"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.Q4_K_M.gguf",
+   "size": 2783447328,
+   "sha256": "f3a2e8f1837f52247a5b7b28f379923c98cc38fa8b339a943ba49b518be8b562"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.Q4_K_S.gguf",
+   "size": 2631772448,
+   "sha256": "fbf0e25397c04414adf7ed91efa9b9658b7711b676b6f0427b995bf77679d985"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.Q5_K_M.gguf",
+   "size": 3161426208,
+   "sha256": "c26fc463f65686b53d7daeb8872477a0e1145f625085929e7e72fadfd598aeb7"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.Q5_K_S.gguf",
+   "size": 3072993568,
+   "sha256": "dec5ac1145443749643533c49e429074907af80951836943f43490aad2b86e68"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.Q6_K.gguf",
+   "size": 3563028768,
+   "sha256": "d134dec57db054cbcae034945db3e58227e6c9adb614024f01c3a0429d7ff5ca"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.Q8_0.gguf",
+   "size": 4610580768,
+   "sha256": "dbfdc9280255cb2163fe793ccd8a7897fe5e5eac0bfc237380e090809a80039f"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.f16.gguf",
+   "size": 8665620768,
+   "sha256": "18af077d08512d96154edcf53a817c216f212be578dfd5a170b314bc0514f82a"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.mmproj-Q8_0.gguf",
+   "size": 366894720,
+   "sha256": "04a3af332afa255093f04b1a95ae1065637c140b8b365f721f0be89b62ae2d16"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored.mmproj-f16.gguf",
+   "size": 672423552,
+   "sha256": "adcf2e39eb4d3445c28b239e8b6ce581fe9e5338d72532e66ca046534cb01d8e"
+  },
+  {
+   "path": "README.md",
+   "size": 4340,
+   "git_oid": "878769feb17a6c2fa5695f7a6aeaf33e1fe016c1"
+  }
+ ]
+}

@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "bartowski/mlabonne_Qwen3-8B-abliterated-GGUF",
+ "revision": "0e66e6f836c802246b69941780ec8ef32670dc09",
+ "captured": "2026-11-25T05:08:25+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3453,
+   "git_oid": "7bb1e5809a35622c67780f86a5cef72e619466a4"
+  },
+  {
+   "path": "README.md",
+   "size": 14175,
+   "git_oid": "49e44c07310b6c1ead15f4a736638cb27645377f"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-IQ2_M.gguf",
+   "size": 3051914848,
+   "sha256": "32097cdb4325d8d28e5c12a3bda10667dbcf15b459dbf410918501237591fdfc"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-IQ3_M.gguf",
+   "size": 3896620640,
+   "sha256": "4baf67b175ae0e40fc1e0c33adffc4a761fe686cbf29162325af8fdfc3b5e986"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-IQ3_XS.gguf",
+   "size": 3626874464,
+   "sha256": "a44e167bd596698295c8fe9a306837ea94652b6665ddc833233209e9d6750a11"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-IQ3_XXS.gguf",
+   "size": 3369633376,
+   "sha256": "cd351fd97e9913dd4191066b3cd025fe505a19d54ee8f15ca344f3a5e06c11a6"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-IQ4_NL.gguf",
+   "size": 4793624160,
+   "sha256": "39a227e542c701c9582e1f8dd410c32327cafbf36b1dcd8f3ec5ea37ae2970fa"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-IQ4_XS.gguf",
+   "size": 4561839712,
+   "sha256": "ca1c98286a03e3914ff7b3ddd8c43423f25cf6e4b17c679482b33707f1daa606"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q2_K.gguf",
+   "size": 3281733216,
+   "sha256": "97096bb4bcffdab535d21849fe862d537b2eb5a3e1d6c58484f59f8e4428ad8c"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q2_K_L.gguf",
+   "size": 3889477216,
+   "sha256": "e356c845bb2b3513f07f40da08fb1c515afd7bb4f072b260f53b511dbb88aa45"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q3_K_L.gguf",
+   "size": 4431394400,
+   "sha256": "89c5cb47c804f28917a1f88d1bd92b5c6f5b1e7940091406e8783d1dc69417f3"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q3_K_M.gguf",
+   "size": 4124161632,
+   "sha256": "e53fabce4da0f40ac7d4079f7a48510aa29234763d4bf7bf9cbdd0f0a26d3803"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q3_K_S.gguf",
+   "size": 3769611872,
+   "sha256": "180d6451b83110ef243181248b2c2962dff55fab7f4ad37a5e7f6289bbdded83"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q3_K_XL.gguf",
+   "size": 4975933024,
+   "sha256": "bd076baa210f160b71f0c695c0cc7d2cb868b82a19e8ec6e5a4890997be3abd4"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q4_0.gguf",
+   "size": 4787332704,
+   "sha256": "d3138a1953df0d6009c49ea09adef62f7f0245d4b03d0125c918afc424666806"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q4_1.gguf",
+   "size": 5247755872,
+   "sha256": "565ed2b774e5be2db900780114418d411e904f9ee62984cacb9689c69b733923"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q4_K_L.gguf",
+   "size": 5489669728,
+   "sha256": "1d4d68a6b870e6b1337b05cd3d74094bdecd3255f89e0b7f262218815094e2fb"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q4_K_M.gguf",
+   "size": 5027784288,
+   "sha256": "361557e69ad101ee22b1baf427283b7ddcf81bc7532b8cee8ac2c6b4d1b81ead"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q4_K_S.gguf",
+   "size": 4802012768,
+   "sha256": "e2df915c14e6bd6139ec1a33bdd103253882a3d78dda3727ee1c17ceea8f8e2e"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q5_K_L.gguf",
+   "size": 6235207264,
+   "sha256": "d03b8aadc69f887663648829ff273a67edb40d5531401a115ab82195a293ea27"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q5_K_M.gguf",
+   "size": 5851113056,
+   "sha256": "0dec7daafa1fa3df665ccb79577d4b71d0f8bea0e7bc74c07f5b0a40cdfbb8fa"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q5_K_S.gguf",
+   "size": 5720761952,
+   "sha256": "f1ae3debc0a3f276a6328d8e538bd79df202b37153473038f389bfbfcc1ee229"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q6_K.gguf",
+   "size": 6725899872,
+   "sha256": "1e1b047d8cf005dc57985727ce2cbd5d59c4e23cbda0cb8fca4448250add25c7"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q6_K_L.gguf",
+   "size": 7027340896,
+   "sha256": "0a7153136bf6e6e4723cdb188e50f47b626d12b6b4d96f9c6d306cd6e4a1029e"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-Q8_0.gguf",
+   "size": 8709518944,
+   "sha256": "94cb715802d16be9c082b3c6ae0350014e36dbcbfe78ad2d5122f42f2e2b5599"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated-bf16.gguf",
+   "size": 16388044096,
+   "sha256": "bbb6edf8edfc2b387cf830d9fb7efd0b7cc6e6093957f152875fcba66279f7cd"
+  },
+  {
+   "path": "mlabonne_Qwen3-8B-abliterated.imatrix",
+   "size": 5316782,
+   "sha256": "5422e60242f956b1ba04d94cfe71d8322ae84b42d56bf1bfc9bc797f39ab9b1e"
+  }
+ ]
+}

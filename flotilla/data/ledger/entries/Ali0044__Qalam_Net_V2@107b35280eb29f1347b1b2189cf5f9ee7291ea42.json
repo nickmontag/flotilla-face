@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Ali0044/Qalam_Net_V2",
+ "revision": "107b35280eb29f1347b1b2189cf5f9ee7291ea42",
+ "captured": "2026-11-25T05:13:13+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 5285,
+   "git_oid": "277f38d8ecdfd1c5d80c11750e777b1b0f6ea1cb"
+  },
+  {
+   "path": "config.json",
+   "size": 3140,
+   "git_oid": "182a91d3f4f547386b5ab6dfc55e4fdf922045fb"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 184,
+   "git_oid": "42d7de1166596b03db7522e4be0da15e4a1beccb"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 1335747032,
+   "sha256": "e28af204dcf934ba3b44686fbd7c8a477066dd40c7b4a512321772f7b25be480"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 472,
+   "git_oid": "b983363e85b52e318467c06249081114980fa77a"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 3558907,
+   "git_oid": "715d667982623893df1a467d022e8032c002f1b7"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 589,
+   "git_oid": "ea7630aafce66263ba956887abfb019fac021742"
+  }
+ ]
+}

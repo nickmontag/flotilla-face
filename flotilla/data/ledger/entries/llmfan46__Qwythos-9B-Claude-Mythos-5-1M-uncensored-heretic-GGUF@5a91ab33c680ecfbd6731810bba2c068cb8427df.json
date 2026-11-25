@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llmfan46/Qwythos-9B-Claude-Mythos-5-1M-uncensored-heretic-GGUF",
+ "revision": "5a91ab33c680ecfbd6731810bba2c068cb8427df",
+ "captured": "2026-11-25T05:08:50+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2349,
+   "git_oid": "8dfb9719a0f4e15325ff08439503f964a62a924b"
+  },
+  {
+   "path": "Qwythos-9B-Claude-Mythos-5-1M-uncensored-heretic-BF16.gguf",
+   "size": 17920698112,
+   "sha256": "748bf63e017747bc982166e3e92f6af6b7332aa980fb9245b148b5aa25aaed64"
+  },
+  {
+   "path": "Qwythos-9B-Claude-Mythos-5-1M-uncensored-heretic-Q4_K_M.gguf",
+   "size": 6216967936,
+   "sha256": "1ee1cd89574b1b2e57447d6dab8328a6c39b20d18557a322d928215a8a8a96de"
+  },
+  {
+   "path": "Qwythos-9B-Claude-Mythos-5-1M-uncensored-heretic-Q4_K_S.gguf",
+   "size": 5939488512,
+   "sha256": "41a2f094e227eb8496ba86aa003dd1820f4ec44f8c84873dd06c362643521517"
+  },
+  {
+   "path": "Qwythos-9B-Claude-Mythos-5-1M-uncensored-heretic-Q5_K_M.gguf",
+   "size": 6621325056,
+   "sha256": "28ded3a1ed97ae624200f4cea638c6b0590fe8b7d90ffadce3a8faf85c13e65b"
+  },
+  {
+   "path": "Qwythos-9B-Claude-Mythos-5-1M-uncensored-heretic-Q5_K_S.gguf",
+   "size": 6458664704,
+   "sha256": "dda4d89a6643ad489bd2091dca5c24baca036faece90303aadf39528bea3c2a2"
+  },
+  {
+   "path": "Qwythos-9B-Claude-Mythos-5-1M-uncensored-heretic-Q6_K.gguf",
+   "size": 7458301696,
+   "sha256": "56d1774415e7c4607ba95d07d0d1cccafbd175ec5360b61cc4db170214b43167"
+  },
+  {
+   "path": "Qwythos-9B-Claude-Mythos-5-1M-uncensored-heretic-Q8_0.gguf",
+   "size": 9910888192,
+   "sha256": "a62cc2cbdd647f4e28f1d2128bb0c993061300fd02949f7781e85ed7c64d1154"
+  },
+  {
+   "path": "Qwythos-9B-Claude-Mythos-5-1M-uncensored-heretic-mmproj-BF16.gguf",
+   "size": 921705248,
+   "sha256": "0616764a8e5f4db57bca7d355eaaa3d14176a0bcf6f500df037ab94b5e8d29df"
+  },
+  {
+   "path": "README.md",
+   "size": 29403,
+   "git_oid": "2fd0b72e28bc20690eb6cf927be2dcd3161c8931"
+  },
+  {
+   "path": "assets/qwythos.png",
+   "size": 1797675,
+   "sha256": "3f70d88f35644a482f333d89c61ec1f28240af1d4bc740619071455561977622"
+  },
+  {
+   "path": "assets/qwythos_eval_chart.svg",
+   "size": 6784,
+   "git_oid": "9395bdf14f4ea112686814b8e01a7e439fabd330"
+  }
+ ]
+}

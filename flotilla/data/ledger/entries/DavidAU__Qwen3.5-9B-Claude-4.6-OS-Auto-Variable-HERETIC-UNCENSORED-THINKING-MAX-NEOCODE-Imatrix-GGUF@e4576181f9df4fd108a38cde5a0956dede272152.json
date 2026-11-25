@@ -1,0 +1,100 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Qwen3.5-9B-Claude-4.6-OS-Auto-Variable-HERETIC-UNCENSORED-THINKING-MAX-NEOCODE-Imatrix-GGUF",
+ "revision": "e4576181f9df4fd108a38cde5a0956dede272152",
+ "captured": "2026-11-25T05:08:45+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2930,
+   "git_oid": "1b0e6ab8800933cea3988a05deb5fee5f85a1ac5"
+  },
+  {
+   "path": "Borg_cube_ship_over_earth.webp",
+   "size": 105746,
+   "sha256": "5bf995000da9c7205aef0ae0c0847235e62d985e95476c26b262b3f1861ee177"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-OS-AV-H-UNCENSORED-THINK-D_AU-BF16.gguf",
+   "size": 17920697024,
+   "sha256": "162d09376929846c485f7bec1c3fb665132ea9eba7931d2fef892ab6376c7f10"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-OS-AV-H-UNCENSORED-THINK-D_AU-IQ2_M-imat.gguf",
+   "size": 4757971904,
+   "sha256": "576837cfb10d080a79c270d4e9e9ae695b7a1776143f87dbb5a5c10e10c48d97"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-OS-AV-H-UNCENSORED-THINK-D_AU-IQ3_M-imat.gguf",
+   "size": 5625144256,
+   "sha256": "d2a00dd70630af3cbb3c3f033a2128b0093611dd74b02c4e761e9bac457a9120"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-OS-AV-H-UNCENSORED-THINK-D_AU-IQ4_NL-imat.gguf",
+   "size": 6526477248,
+   "sha256": "1e63aadfdfa2fbeb129452f6a8ab2c547c57006b2384243a43aee93f63086240"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-OS-AV-H-UNCENSORED-THINK-D_AU-IQ4_XS-imat.gguf",
+   "size": 6279734208,
+   "sha256": "f24a9dea94dffe610917163d0fee35079604279bee7adf408cc1fe8ef783bbe9"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-OS-AV-H-UNCENSORED-THINK-D_AU-Q4_K_M-imat.gguf",
+   "size": 6835971008,
+   "sha256": "a381ac75d8bd50b39574f458dbb0edf1d61a5979c1c27d0521bcde32e743aeb2"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-OS-AV-H-UNCENSORED-THINK-D_AU-Q4_K_S-imat.gguf",
+   "size": 6549545920,
+   "sha256": "e3ea9e4028f37fcef56767b82dc203ac109ee7e6df98bd8a82ef8b0e5f233b50"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-OS-AV-H-UNCENSORED-THINK-D_AU-Q5_K_M-imat.gguf",
+   "size": 7730144192,
+   "sha256": "2b97a1117a91da2d73e6a88ec0f461950646417a0ce04679c2cbdb67e9264495"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-OS-AV-H-UNCENSORED-THINK-D_AU-Q5_K_S-imat.gguf",
+   "size": 7513449408,
+   "sha256": "dd9cd539ba94c693bb5657a606e20691d5726999e325ac88e3270b855f1275d5"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-OS-AV-H-UNCENSORED-THINK-D_AU-Q6_K-imat.gguf",
+   "size": 8566563776,
+   "sha256": "572921a66d0fb5a1334323d347bc6ca7ce561589bf79cdc6fb5482e02944e28e"
+  },
+  {
+   "path": "Qwen3.5-9B-Claude-4.6-OS-AV-H-UNCENSORED-THINK-D_AU-Q8_0.gguf",
+   "size": 10486948800,
+   "sha256": "04d5f0b61d79f240d65d31be4489383d9d9ff113b93febabcf41b6f06e105f6b"
+  },
+  {
+   "path": "README.md",
+   "size": 104870,
+   "git_oid": "55e012e8ca9d84011ce2f9f1733c2332705c9f84"
+  },
+  {
+   "path": "mmproj-BF16.gguf",
+   "size": 921705024,
+   "sha256": "853698ce7aa6c7ba732478bad280240969ddf7b0fcbf93900046f63903a83383"
+  },
+  {
+   "path": "mmproj-F16.gguf",
+   "size": 918166080,
+   "sha256": "f70dc3509053962b0d0d3ee8a7eacebf5d60aa560cad78254ae8698516ae029f"
+  },
+  {
+   "path": "mmproj-F32.gguf",
+   "size": 1824062016,
+   "sha256": "a1cd5c1625b44dd0facaec998020e9b36cb78c2225eaee701e73bf2e5b051ce2"
+  },
+  {
+   "path": "valhalla.webp",
+   "size": 4336184,
+   "sha256": "010bce05f9f652093f5b1504f797e540a905871211572ddfc53a0e256d2f84aa"
+  }
+ ]
+}

@@ -1,0 +1,105 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "MaziyarPanahi/Mistral-7B-Instruct-v0.3-GGUF",
+ "revision": "ce89f595755a4bf2e2e05d155cc43cb847c78978",
+ "captured": "2026-11-25T05:13:03+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2677,
+   "git_oid": "8925f1942e8d703ac390f29296244cc3871d3a9d"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.IQ1_M.gguf",
+   "size": 1757663392,
+   "sha256": "e241ecfd88517c9137220d5869ab461853ec80f27ec7241b7ba490e341e2e32f"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.IQ1_S.gguf",
+   "size": 1615319200,
+   "sha256": "0bff52a0d005f697a8326214ae37a13429c6af911dc32fbde004bc23a0dca350"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.IQ2_XS.gguf",
+   "size": 2201473184,
+   "sha256": "213c75f43c21dca7f6fdf5e4eb7ad7e823727a56800a777d7db549c3e4f86cec"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.IQ3_XS.gguf",
+   "size": 3022770336,
+   "sha256": "d70bef5e708d5245e7319391495b94e3952cb9b3cb2ce3b45f4701b17fc28219"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.IQ4_XS.gguf",
+   "size": 3911962784,
+   "sha256": "3fe60995f215969f08926dd61d8a7c81377b2935a6c8c865ba53885fe2e8b6d1"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.Q2_K.gguf",
+   "size": 2722877600,
+   "sha256": "f1e535fb88726ab341bbd2896041fe72d376ac3670d343caad7c2991ecb5b82f"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.Q3_K_L.gguf",
+   "size": 3825979552,
+   "sha256": "ac7c3208985dc337fd9ad8c7674f3e4a141b2c27de62f291125e93345987d8c0"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.Q3_K_M.gguf",
+   "size": 3522941088,
+   "sha256": "b982905e4fccdf5894b4c597426fa71f7b528a4534719568a3ee806fe33a961f"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.Q3_K_S.gguf",
+   "size": 3168522400,
+   "sha256": "ad5a1c665f1a2c7df4e585c673c5d37338505f55290475338bfec4972069dd87"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.Q4_K_M.gguf",
+   "size": 4372811936,
+   "sha256": "14850c84ff9f06e9b51d505d64815d5cc0cea0257380353ac0b3d21b21f6e024"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.Q4_K_S.gguf",
+   "size": 4144746656,
+   "sha256": "45ef6dda7fe3a6058bc915ce3f5cfcd9a4eddf2ae2046aa91d07b68efff038f8"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.Q5_K_M.gguf",
+   "size": 5136175264,
+   "sha256": "16617265368ffaa5f0c67b320a1df4b40b0c8e990a91cf5722fc2159e65f559f"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.Q5_K_S.gguf",
+   "size": 5002481824,
+   "sha256": "1dd8f3de99bb63143a3828f65ab4c81f54fcb1d1af4711904c50a2801b64e088"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.Q6_K.gguf",
+   "size": 5947248800,
+   "sha256": "d58a20f828bca2e163342d43324f953f2edf9bdd5886bfe15c4b81b5b70a3b7b"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.Q8_0.gguf",
+   "size": 7702565024,
+   "sha256": "24df553dc0e725196fe8a3c7be1edfe6ff17a0fe855f508b3f4a0e444e2e4281"
+  },
+  {
+   "path": "Mistral-7B-Instruct-v0.3.fp16.gguf",
+   "size": 14497337312,
+   "sha256": "099a38de1702728b81aeedd337e704d649bfdedf5113952f9e0ade34ffa57022"
+  },
+  {
+   "path": "README.md",
+   "size": 3192,
+   "git_oid": "e3e773941e42237df8e5a1da6c65949b1351015f"
+  },
+  {
+   "path": "config.json",
+   "size": 31,
+   "git_oid": "9f0f76f8d1de0ed9b8adf494540f149aaef5f07c"
+  }
+ ]
+}

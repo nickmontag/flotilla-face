@@ -964,11 +964,14 @@ function render(s) {
   else if (ts.length) setPill("status", "ok", "Seeding", true);
   else setPill("status", "", "Idle");
   const fwd = net.vpn_port, lost = fwd && !fwd.port && fwd.lost;
-  if (net.bind) setPill("vpn", !net.bind_up ? "bad" : lost ? "warn" : "ok", (net.bind_up ? "VPN pinned · " : "Waiting for VPN · ") + net.bind
-                        + (net.bind_up && fwd ? (fwd.port ? " · port " + fwd.port + " open"
+  const taken = fwd && fwd.port && s.port && s.port.forwarded_taken;
+  if (net.bind) setPill("vpn", !net.bind_up ? "bad" : lost || taken ? "warn" : "ok", (net.bind_up ? "VPN pinned · " : "Waiting for VPN · ") + net.bind
+                        + (net.bind_up && fwd ? (taken ? " · forwarded port taken"
+                                                 : fwd.port ? " · port " + fwd.port + " open"
                                                  : lost ? " · inbound port lost" : " · no inbound port") : ""));
   else setPill("vpn", "warn", "No VPN pin");
-  $("vpn").title = fwd ? (fwd.port ? "Peers can connect in: " + fwd.source + " forwards port " + fwd.port
+  $("vpn").title = taken ? "Peers can't connect in: " + fwd.source + " forwards port " + fwd.listen + ", but another program on this machine (another torrent client?) holds it, so Flotilla listens on " + s.port.port + ". Give the other program a different port, or stop it."
+                  : fwd ? (fwd.port ? "Peers can connect in: " + fwd.source + " forwards port " + fwd.port
                           : lost ? "Peers can't connect in since " + new Date(lost.since * 1000).toLocaleString([], { weekday: "short", hour: "2-digit", minute: "2-digit" })
                                    + ", when port " + lost.port + " stopped being forwarded: " + fwd.note
                                    + (lost.tries ? ". Flotilla has had gluetun reconnect " + lost.tries + (lost.tries > 1 ? " times" : " time")
@@ -1651,7 +1654,9 @@ function fillDrawer() {
   [
     ["Files", state.disk.folder],
     ["Traffic", net.bind ? "pinned to " + net.bind + (net.bind_up ? "" : " (not up right now)") : "any interface (no VPN pin)"],
-    ["Port", String(state.listen_port) + (net.vpn_port ? (net.vpn_port.port
+    ["Port", String(state.listen_port)
+        + (state.port && state.port.moved ? " (port " + state.port.wanted + " is taken by another program here, so Flotilla moved)" : "")
+        + (net.vpn_port ? (net.vpn_port.port
         ? " · forwarded by " + net.vpn_port.source + (net.vpn_port.port !== net.vpn_port.listen ? " as " + net.vpn_port.port : "")
         : " · not forwarded: " + net.vpn_port.note) : "")],
     ["Peers", (net.peers_in || 0) + " connected in, " + (net.peers_out || 0) + " dialed"

@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Spark-X2.6-4B-uncensored-i1-GGUF",
+ "revision": "34b781340903d64596e595dfce19802f9f190fd9",
+ "captured": "2026-11-25T05:08:58+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3405,
+   "git_oid": "591213d5258c49f66f6ebc3403123a27075a0edb"
+  },
+  {
+   "path": "README.md",
+   "size": 6482,
+   "git_oid": "83360f64cab11fd981de42b63243fdd17912ced8"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-IQ1_M.gguf",
+   "size": 1283757088,
+   "sha256": "7dc211005172a07c50de26bcbd09da941910552883a62a0834ceda67a4437000"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-IQ1_S.gguf",
+   "size": 1219824928,
+   "sha256": "5854f0940eca92dcb82312018f8abcf474bc5f611eb05b9660907b1747534c9d"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-IQ2_M.gguf",
+   "size": 1636326688,
+   "sha256": "f3b0dcae352dd845f7b80deb2602ffd0877334cd05721c347d89b81998c9ae31"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-IQ2_S.gguf",
+   "size": 1551083808,
+   "sha256": "648ee6b443017dd70772bddea37c215e16e6b2a4062d157fb3d9a9ebe8612b55"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-IQ2_XS.gguf",
+   "size": 1487350048,
+   "sha256": "65dd1dce6d274f7549f61fcd13a784ec750bc9cc04136d3c861ecb3d1cce2710"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-IQ2_XXS.gguf",
+   "size": 1390310688,
+   "sha256": "29bb59b0ebab2a1389a46f1b258e5aa1ae652024028a50ea2627d87836268182"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-IQ3_M.gguf",
+   "size": 2043302688,
+   "sha256": "a493744f4ba79a87dd581d24af905394ded550428aa2dc915969ef86bc72c3a0"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-IQ3_S.gguf",
+   "size": 1979241248,
+   "sha256": "6cf21565cce89502d5e8f3cbe3d10b784ee4022811b75c5e3eccfc127990b082"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-IQ3_XS.gguf",
+   "size": 1912886048,
+   "sha256": "94cda3d00493abf9becbb538cb058c2e41e79bccf54ddd26ad8011ce6ae53976"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-IQ3_XXS.gguf",
+   "size": 1801897248,
+   "sha256": "8aa28aa680b5cea96578290a6165aa1275536c9b84e0bddcc7d640ac14232a85"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-IQ4_NL.gguf",
+   "size": 2476363808,
+   "sha256": "7f809d1e61be282364599dfd5f696d1e25c4d1dba90e1a4d704360ecf3347894"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-IQ4_XS.gguf",
+   "size": 2376047648,
+   "sha256": "b582df1b17a726ca6f6501143daf1ccd51d4d59a074a73b0da47750569398fd2"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-Q2_K.gguf",
+   "size": 1787398688,
+   "sha256": "27df2acf0151cfe93d19a012a89c1df75bed8a095889d8e5f98eb97acec7ff04"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-Q2_K_S.gguf",
+   "size": 1677789728,
+   "sha256": "5e8b53aee194b6c67c10a080f54949dc7c87a26d3c8855c13a7b5e3034005fec"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-Q3_K_L.gguf",
+   "size": 2390643488,
+   "sha256": "04a7c9902fa3bf92b10f006c13fbdc4976b8b14788c5a696f051ad3e8a2edec8"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-Q3_K_M.gguf",
+   "size": 2165199648,
+   "sha256": "df72f1b4c7f064a7e6e266c0cc032f578e3a914bc16719a6aa866562c09ee26b"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-Q3_K_S.gguf",
+   "size": 1904038688,
+   "sha256": "84c5b76691824b514139855f81b3334fee8270bf34049e5ab0d59d76eea2f5a9"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-Q4_0.gguf",
+   "size": 2412138528,
+   "sha256": "c167b8066e07551b0ffcc746bed74b9e50294873af443fee350f54e3634a3caa"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-Q4_1.gguf",
+   "size": 2641606688,
+   "sha256": "d2cd46e5fc49787d7787d6308f5f66d497fc9830c7fa358ff742b068552da90e"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-Q4_K_M.gguf",
+   "size": 2600226848,
+   "sha256": "53634c8a87bfc5b9aa5261231067d420fddf93b0ba1eed07a7bfb8c56eb3038d"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-Q4_K_S.gguf",
+   "size": 2426556448,
+   "sha256": "59d18cd301cec070a2a0008c504f204dc231e0b2c28829358174f1dd15adf4bb"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-Q5_K_M.gguf",
+   "size": 2977898528,
+   "sha256": "1ddd26c6becbdc92b2f980f7e08789ecfa1abad30d8c23b9640dba2880357800"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-Q5_K_S.gguf",
+   "size": 2877628448,
+   "sha256": "f8f309c7e5931f7e1984fcedce71899887f029da7f9b89ad980d8db4ac33215a"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.i1-Q6_K.gguf",
+   "size": 3379174688,
+   "sha256": "943ebd85081a376bb53c44b47b55bfe23ac7638e463165a7ff1abec9e9afd97a"
+  },
+  {
+   "path": "Spark-X2.6-4B-uncensored.imatrix.gguf",
+   "size": 7151808,
+   "sha256": "390b795ba7e679307155635e0fc928cbcc0c6849be555a6f5617c78eebf974f8"
+  }
+ ]
+}

@@ -1,0 +1,110 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "OpenGVLab/InternVL3-1B",
+ "revision": "4415a3b810e636d11dfa86b0e9ba40bb00535aa8",
+ "captured": "2026-11-25T05:13:07+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1634,
+   "git_oid": "772d8e84809a01c0f4fb9509a89d2f60ca5e8496"
+  },
+  {
+   "path": "README.md",
+   "size": 35849,
+   "git_oid": "a10d2b6b5c3459a8c5952731c318e3ffa14566eb"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 790,
+   "git_oid": "dd972e4080e791eab591742c1168ee7fd6279146"
+  },
+  {
+   "path": "config.json",
+   "size": 6326,
+   "git_oid": "61eb4a958839440535b68f427427cd69366c1956"
+  },
+  {
+   "path": "configuration_intern_vit.py",
+   "size": 5548,
+   "git_oid": "7e630c456eb9cf350e55bf850c3ff72f445a7e17"
+  },
+  {
+   "path": "configuration_internvl_chat.py",
+   "size": 4036,
+   "git_oid": "502772cc6e24e6d1fbc5bf91ce76c9b234101eaf"
+  },
+  {
+   "path": "conversation.py",
+   "size": 15309,
+   "git_oid": "5a771766f21ce3aeeb99b286fb8d188b0038a547"
+  },
+  {
+   "path": "examples/image1.jpg",
+   "size": 78073,
+   "git_oid": "fd9891ef7e00774157a9dcd726b2ea9fa0c5ecff"
+  },
+  {
+   "path": "examples/image2.jpg",
+   "size": 125656,
+   "sha256": "08487494b8dc08d44bc36491adf3ab89ff30d13a3122da86f3cd67cad89eeee8"
+  },
+  {
+   "path": "examples/red-panda.mp4",
+   "size": 1867237,
+   "sha256": "d921c07bb97224d65a37801541d246067f0d506f08723ffa1ad85c217907ccb8"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 69,
+   "git_oid": "467e2ba8edc477ad1fb650f892ab5be9210522ab"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671853,
+   "git_oid": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 1876463472,
+   "sha256": "a8b67c54568417f3631723e6b3e120720eaa638e03e62dc25666c70e3ae3e484"
+  },
+  {
+   "path": "modeling_intern_vit.py",
+   "size": 18099,
+   "git_oid": "eb4aef44ddace5782035f0316de3834563b1c8dd"
+  },
+  {
+   "path": "modeling_internvl_chat.py",
+   "size": 15971,
+   "git_oid": "ccf2ab9cc83283f41aafb611d379c4cc50614132"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 287,
+   "git_oid": "dfd7e50d9d4e67cd679b16b337b419a0c6cfa849"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 613,
+   "git_oid": "ac23c0aaa2434523c494330aeb79c58395378103"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7033297,
+   "git_oid": "1b4f039248a420730cd195d6d6a1a9cc713a7f14"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 7330,
+   "git_oid": "f18c701c825405350d5f0ae158749015b3239e6e"
+  },
+  {
+   "path": "vocab.json",
+   "size": 3383407,
+   "git_oid": "6bce3a0a3866c4791a74d83d78f6824c3af64ec3"
+  }
+ ]
+}

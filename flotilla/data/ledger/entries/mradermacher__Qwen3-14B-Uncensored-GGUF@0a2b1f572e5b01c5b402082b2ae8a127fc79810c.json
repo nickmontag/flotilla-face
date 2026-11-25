@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3-14B-Uncensored-GGUF",
+ "revision": "0a2b1f572e5b01c5b402082b2ae8a127fc79810c",
+ "captured": "2026-11-25T05:08:36+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2272,
+   "git_oid": "1fe987517cd3589a9845686f10ff0360d4a28fb5"
+  },
+  {
+   "path": "Qwen3-14B-Uncensored.IQ4_XS.gguf",
+   "size": 8180362688,
+   "sha256": "670f07caecbc237128a645474d2860b206c664b3b31e5d74e712bfb80d5232fe"
+  },
+  {
+   "path": "Qwen3-14B-Uncensored.Q2_K.gguf",
+   "size": 5753984448,
+   "sha256": "f3460718c45f73a0296d516cce8aa364d36b1673ec792acb77574993b9de8fa6"
+  },
+  {
+   "path": "Qwen3-14B-Uncensored.Q3_K_L.gguf",
+   "size": 7900651968,
+   "sha256": "377bc6b9c14a6e24c4c28724efd253101e10ee6c1f42ab7401eae995e908c71a"
+  },
+  {
+   "path": "Qwen3-14B-Uncensored.Q3_K_M.gguf",
+   "size": 7321313728,
+   "sha256": "d94121dda352d702cb98e53e163ec407f87a5a918cbed1211401a4e873140663"
+  },
+  {
+   "path": "Qwen3-14B-Uncensored.Q3_K_S.gguf",
+   "size": 6657106368,
+   "sha256": "ac485b34d01a94700d93e1a0001eae014fa360618843cb19287f34a69243c6a4"
+  },
+  {
+   "path": "Qwen3-14B-Uncensored.Q4_K_M.gguf",
+   "size": 9001754048,
+   "sha256": "7f593eadbb9a7da2f1aa4b2ecc603ab5d0df15635c1e5b81ec79a708390ab525"
+  },
+  {
+   "path": "Qwen3-14B-Uncensored.Q4_K_S.gguf",
+   "size": 8573476288,
+   "sha256": "4aab1650c057ff4d96d477605a62e97baa59f89af2a2d07869a2c656b4e15106"
+  },
+  {
+   "path": "Qwen3-14B-Uncensored.Q5_K_M.gguf",
+   "size": 10514570688,
+   "sha256": "a224a2b0544fd7fb31e42290cd74091c616602607d15f266522a67818c2a232d"
+  },
+  {
+   "path": "Qwen3-14B-Uncensored.Q5_K_S.gguf",
+   "size": 10263895488,
+   "sha256": "59d5da544bdbedf157ff4ff67e66f3ead7e635892dc480047e923c17110c4f44"
+  },
+  {
+   "path": "Qwen3-14B-Uncensored.Q6_K.gguf",
+   "size": 12121938368,
+   "sha256": "4ef714af02f087031db3251aac443786bce1a977f1944773b06c78363818a071"
+  },
+  {
+   "path": "Qwen3-14B-Uncensored.Q8_0.gguf",
+   "size": 15698534848,
+   "sha256": "0fd9255f4289868099c1686205bf24cba135b5877e3a6ed24d4cd35c30c29355"
+  },
+  {
+   "path": "README.md",
+   "size": 3695,
+   "git_oid": "b648f87d2b41ef65b892968b5a7b13d0760e3cde"
+  }
+ ]
+}

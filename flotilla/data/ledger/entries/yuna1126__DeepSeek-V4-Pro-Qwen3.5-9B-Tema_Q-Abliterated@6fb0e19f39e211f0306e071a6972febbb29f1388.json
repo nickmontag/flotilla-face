@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "yuna1126/DeepSeek-V4-Pro-Qwen3.5-9B-Tema_Q-Abliterated",
+ "revision": "6fb0e19f39e211f0306e071a6972febbb29f1388",
+ "captured": "2026-11-25T05:08:41+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 39680,
+   "git_oid": "ab855ba7e8b679bf72b25ddf6a0b30f794b65211"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 8736,
+   "git_oid": "3318462a016af7fd26d338005af2cb3f89b3cb87"
+  },
+  {
+   "path": "config.json",
+   "size": 3465,
+   "git_oid": "d4389588c6b501fcae130b25999748745375d553"
+  },
+  {
+   "path": "model.safetensors-00001-of-00004.safetensors",
+   "size": 5276436248,
+   "sha256": "2768bbbc8918fad1847f09f1b81eab6783de8b6e773b9fa3380cdf963a59d836"
+  },
+  {
+   "path": "model.safetensors-00002-of-00004.safetensors",
+   "size": 5335161536,
+   "sha256": "b1c4acbb81d1a4bfdf0f50bca4ba51a6e782f1a1e3ab9620071df6230a260f08"
+  },
+  {
+   "path": "model.safetensors-00003-of-00004.safetensors",
+   "size": 5368717472,
+   "sha256": "b0880dc25fe9b32c1d0440ede89821b47f65847c1cf2a46706db9e1ea3f5ac84"
+  },
+  {
+   "path": "model.safetensors-00004-of-00004.safetensors",
+   "size": 3325995744,
+   "sha256": "f05229d535fb56504c1b98a8997ec86bbd8c7d2a531b2c143c422d1863d6af90"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 79657,
+   "git_oid": "e4c1cb7dba5096b43b9d92bc781aba5e3aa8acd8"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1296,
+   "git_oid": "8af8110fe33fb48d1a0aefafb83005347beda96a"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989325,
+   "sha256": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 16223,
+   "git_oid": "c679ae4b27f30a9ca3f3759b2f9933457e0ee0ce"
+  }
+ ]
+}

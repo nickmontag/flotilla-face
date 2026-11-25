@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "ttindall/Qwen3.8-27B-Defiance-Uncensored-MTP-GGUF",
+ "revision": "1e664931451831589ce16389a55e0d5605dd4bc5",
+ "captured": "2026-11-25T05:08:14+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1888,
+   "git_oid": "cce865a9ab1d74395a9f4d8af642bb5cab701837"
+  },
+  {
+   "path": "LICENSE",
+   "size": 10280,
+   "git_oid": "137069b823873b8bcf42979bcf8e9371052d26a2"
+  },
+  {
+   "path": "Qwen3.8-27B-Defiance-Uncensored-IQ4_XS.gguf",
+   "size": 15706078272,
+   "sha256": "d48cdb6e627b4e74b862938daf5ac2bfb7b82c5f02627a02a3b4927e7bb35f2f"
+  },
+  {
+   "path": "Qwen3.8-27B-Defiance-Uncensored-Q6_K_P.gguf",
+   "size": 25924369472,
+   "sha256": "0ce1abf7e488a5efbd4408af763f18e21bdc220c93106f658d95607dc97868a3"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-HauhauCS-Aggressive-FastMTP-32K.gguf",
+   "size": 903453952,
+   "sha256": "115e618e1f73cb50817ed5856f0551c6bf9c3d94df96f440eaca78dc63b8968b"
+  },
+  {
+   "path": "README.md",
+   "size": 10199,
+   "git_oid": "0ea4d379f5e94e39a9e8dc8ea50c9c68214eb71e"
+  },
+  {
+   "path": "SHA256SUMS",
+   "size": 431,
+   "git_oid": "a8991f77f0411f8843a4cd9164f5e09c15788850"
+  },
+  {
+   "path": "defiance-27b.jinja",
+   "size": 227085,
+   "git_oid": "b38b78f13900a749945d6d4b6ec35f725b60aa1c"
+  },
+  {
+   "path": "make_defiance_template.py",
+   "size": 6288,
+   "git_oid": "6fa1d107a9bcb76e4648429e0ae15d976b2fd838"
+  },
+  {
+   "path": "morpheus-what-it-is.gif",
+   "size": 1301773,
+   "sha256": "9a8d9a2fa169641dbacadcbbea54e64041215ad5c495c6ddb75467f4e2b4fa76"
+  },
+  {
+   "path": "morpheus-yes.gif",
+   "size": 1109315,
+   "sha256": "4ba20f311e3d2a1646e86b3e2166fe0313d0f1374657c9d3bd2dc6d508604a83"
+  },
+  {
+   "path": "open-webui/brilliance-function.json",
+   "size": 1745,
+   "git_oid": "540309b44a708751b954c12767eac31e1d9ce29e"
+  },
+  {
+   "path": "open-webui/brilliance_instruct_toggle.py",
+   "size": 1312,
+   "git_oid": "7016f018cb4c15f528136954191154ef6a2907a7"
+  },
+  {
+   "path": "open-webui/defiance-models.json",
+   "size": 36271,
+   "git_oid": "1f33eb067bb0d75db0d3fe02cfd4f41d6cb0decb"
+  }
+ ]
+}

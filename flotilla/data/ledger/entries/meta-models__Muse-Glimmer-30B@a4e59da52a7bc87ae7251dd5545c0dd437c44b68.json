@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "meta-models/Muse-Glimmer-30B",
+ "revision": "a4e59da52a7bc87ae7251dd5545c0dd437c44b68",
+ "captured": "2026-11-25T05:09:21+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11358,
+   "git_oid": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+  },
+  {
+   "path": "README.md",
+   "size": 16892,
+   "git_oid": "a25f87c1c1fbd88f367a552fd14427baa8cb947e"
+  },
+  {
+   "path": "USAGE_POLICY.md",
+   "size": 5230,
+   "git_oid": "1a9ed6cffc54585daf9cc904c07cb6e436a9444b"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 9992,
+   "git_oid": "7507f3c9f38809152732c045df3977848f3916a6"
+  },
+  {
+   "path": "config.json",
+   "size": 5109,
+   "git_oid": "190826dc834c13c86b8dc68e775a888a852d7c34"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 202,
+   "git_oid": "b69a50a4239f42707d54a479e0143b8ee56c8bcc"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 49950112952,
+   "sha256": "8eef61530e1283642c77ce2e6721feb5c6f348fa055c00e90f2844a136372694"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 9603322320,
+   "sha256": "b58cc2144ba1ba1af4420f67f4ca3ced7f09298510b80464cc75018a0be14381"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 132674,
+   "git_oid": "00b257ef0c8bce1b001a6266f6b1f66f4fe16a6b"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1084,
+   "git_oid": "ec9a07be13ea1dadf7395131871753b13f406c26"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 28129897,
+   "sha256": "c9dbee66967b58f31a7c27f723c3760da3526ccd0427578e8905b0abb0031c4d"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 79936,
+   "git_oid": "fe7f0bb90fb0d0288e3a505974ae0e4baf1d3e61"
+  }
+ ]
+}

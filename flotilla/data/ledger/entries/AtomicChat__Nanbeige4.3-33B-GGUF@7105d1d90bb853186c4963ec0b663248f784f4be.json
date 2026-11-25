@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "AtomicChat/Nanbeige4.3-33B-GGUF",
+ "revision": "7105d1d90bb853186c4963ec0b663248f784f4be",
+ "captured": "2026-11-25T05:13:05+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2381,
+   "git_oid": "44677c4d6c81b0d3d35321e527775965cd9f6975"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11358,
+   "git_oid": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+  },
+  {
+   "path": "Nanbeige4.3-33B-AD-IQ2_S.gguf",
+   "size": 13716876288,
+   "sha256": "b87f612d83e82ce6f4d94a64a44bcfb387a44814b7e5a33bbde2558d88af2f6f"
+  },
+  {
+   "path": "Nanbeige4.3-33B-AD-IQ3_S.gguf",
+   "size": 17072360448,
+   "sha256": "81d0ee17b731e48c71237489b8ffd90656b7485daa9a134561fc88d63d367440"
+  },
+  {
+   "path": "Nanbeige4.3-33B-AD-IQ3_XXS.gguf",
+   "size": 14944324608,
+   "sha256": "670396efb4b92c2d0dff608cf92003dd6910c23a39a3f0d4f5c21101b30efedc"
+  },
+  {
+   "path": "Nanbeige4.3-33B-AD-IQ4_XS.gguf",
+   "size": 20347792384,
+   "sha256": "47793d95e80b69f46edce427f0676487b4e4fe58b093248300b42f6d9d775481"
+  },
+  {
+   "path": "Nanbeige4.3-33B-AD-Q4_K_M.gguf",
+   "size": 21161159680,
+   "sha256": "409c92c4355c81928f0f2de5d49481fe7e4d0fa4d381aa28eddee0dc4b358c49"
+  },
+  {
+   "path": "Nanbeige4.3-33B-AD-Q5_K_M-Q4_K_M.gguf",
+   "size": 22609812480,
+   "sha256": "ce9abbd71c49fca39ae6d410cf64911dcc3519c7f2fff87456119443938bfc09"
+  },
+  {
+   "path": "Nanbeige4.3-33B-AD-Q5_K_M.gguf",
+   "size": 24683801600,
+   "sha256": "059c79bf69cb6b2864899b89d272cfc923da35984b813c420ae35ef4a63bec8f"
+  },
+  {
+   "path": "Nanbeige4.3-33B-AD-Q6_K-Q5_K.gguf",
+   "size": 27931450368,
+   "sha256": "e69131d46676ecb3cc9ebfca4bba4c3c081523a7edbae0f1f01c73b5b9b3e3a5"
+  },
+  {
+   "path": "Nanbeige4.3-33B-AD-Q6_K.gguf",
+   "size": 30076345344,
+   "sha256": "c4d20857f1718fd8ef4a1b7c7a7d129cc9b8ad05454f6c80b9bcc1fb5499ab4f"
+  },
+  {
+   "path": "Nanbeige4.3-33B-Q5_K_M.gguf",
+   "size": 23504980736,
+   "sha256": "6c86511324d6359a2a1143a9c83577354ac10992a4eb9e70b75ee5dfc04d9c3c"
+  },
+  {
+   "path": "Nanbeige4.3-33B-Q8_0.gguf",
+   "size": 35195128576,
+   "sha256": "4106cbb9ba85da731f88b7493a90343e0d8cd6c77974ed1af00a97c5262c22bc"
+  },
+  {
+   "path": "README.md",
+   "size": 6700,
+   "git_oid": "bfb8782daeb2857bf35b40fee65709c9857a7b05"
+  }
+ ]
+}

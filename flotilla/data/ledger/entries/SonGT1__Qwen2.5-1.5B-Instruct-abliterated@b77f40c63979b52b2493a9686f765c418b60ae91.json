@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "SonGT1/Qwen2.5-1.5B-Instruct-abliterated",
+ "revision": "b77f40c63979b52b2493a9686f765c418b60ae91",
+ "captured": "2026-11-25T05:08:58+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1713,
+   "git_oid": "e234a34cf35d7d28fc4a3e9df70d8c34c5289146"
+  },
+  {
+   "path": "README.md",
+   "size": 839,
+   "git_oid": "9929202e245406a702d8e38053dc23aac7e09d33"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 2561,
+   "git_oid": "9840d40f49842423ad9d3c92bbedac488564c088"
+  },
+  {
+   "path": "config.json",
+   "size": 1434,
+   "git_oid": "11f1c20020c546d6642f48d13882d402adfcc8b8"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 256,
+   "git_oid": "367775e3ebe39ddb0b19e2787c57246d8b073673"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 3087467144,
+   "sha256": "7b58512e564b93fe643d1a8120e5d3a4b62a11e7ad24112a367a022d039012d0"
+  },
+  {
+   "path": "qwen2.5-1.5b-Uncensored-SonGT1-q8_0.gguf",
+   "size": 1646572800,
+   "sha256": "a95d8aaddb1854e91d6c099c2289fc2a7e2256e62abd5007a4ebfac6862e4641"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 11421892,
+   "sha256": "3fd169731d2cbde95e10bf356d66d5997fd885dd8dbb6fb4684da3f23b2585d8"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 724,
+   "git_oid": "df142d09fac6de7e48490cc3d551122ee4ef4098"
+  }
+ ]
+}

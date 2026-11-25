@@ -1,0 +1,160 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "saidutta69/Qwen3.5-0.8B-heretic",
+ "revision": "004ae76b396f75e85380a7ecee085571f46ed68d",
+ "captured": "2026-11-25T05:09:03+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2591,
+   "git_oid": "18f066bbc78edc23541f7dfa73839fa2cc5913a2"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-F16.gguf",
+   "size": 1516744288,
+   "sha256": "b2b3d6d095647578b2a62cd8ae42cbea1484ed9a8ea816a93c4a2bb56e00c9db"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-IQ3_S.gguf",
+   "size": 450821216,
+   "sha256": "81452d2080be90b396fee558e326a95b1c6d583da4b361bc967fe9c57696cf6a"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-IQ4_XS.gguf",
+   "size": 505808480,
+   "sha256": "53222737aa75add23c78021a23707b9933a5481e41b5bbfb03de5bca4673bcd7"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-Q2_K.gguf",
+   "size": 422326880,
+   "sha256": "590ce7769f3db517b53a31f3d0312d07711609e7b9a155076fd824ce316bdbc3"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-Q3_K_L.gguf",
+   "size": 491322464,
+   "sha256": "b732977057871fe500b19b745a4b6b81a5fab48c1d7e4fd55bea7533ac4b7e8f"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-Q3_K_M.gguf",
+   "size": 466222176,
+   "sha256": "59201eed12cfdbd775e83313e5a196dfb715b718c181924c63f5feaf32638e7a"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-Q3_K_S.gguf",
+   "size": 435362912,
+   "sha256": "d0d08b30d33497fc1ed15e8d645f483a90ab7cffd3c108552401cdf9dc1ed545"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-Q4_0.gguf",
+   "size": 501452384,
+   "sha256": "a4eea149e1492e82f615ada47cd9f543799a4a1b2003937283ba93293a0e7ab4"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-Q4_1.gguf",
+   "size": 532553312,
+   "sha256": "a65fb5cd0cbcedb6fd65bf3661fb2587697bf08a77020612c6bc35f677eec0fe"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-Q4_K_M.gguf",
+   "size": 529296992,
+   "sha256": "35025e4022764c42fe59e68215be9637d40aec92a2db1e422736ac1ab5ce609e"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-Q4_K_S.gguf",
+   "size": 505253472,
+   "sha256": "a2a11e174310b04d6d573ead55681a87671ca1ec27348393788e45945f3cf845"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-Q5_K_M.gguf",
+   "size": 577998432,
+   "sha256": "f64344c7e6410674dbd32ef66838d7064017115c451e008fcf681c7db56e2cb6"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-Q5_K_S.gguf",
+   "size": 563654240,
+   "sha256": "32d9f51f5ecc83d6cbcc44a8ccbac1d9db5f61ced9977d3617bedf0dad36ae93"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-Q6_K.gguf",
+   "size": 629743712,
+   "sha256": "035e9acc33a818980b513ecc1d255d5e6f2011c46f000057647d449a61d93fd9"
+  },
+  {
+   "path": "Qwen3.5-0.8B-heretic-Q8_0.gguf",
+   "size": 811843168,
+   "sha256": "bfc46071a6de021177b0cd8a1ebdcab01da787ff251bf57537e33c34bc0ffcf2"
+  },
+  {
+   "path": "README.md",
+   "size": 6450,
+   "git_oid": "5d51244fc60b4a99176dd22079e9ec0019072710"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7908,
+   "git_oid": "cd794859c6205ea05c00f6d40c1eca3edddc826b"
+  },
+  {
+   "path": "config.json",
+   "size": 2724,
+   "git_oid": "8789077513750fe39c78a8507915911d54da5ec7"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 122,
+   "git_oid": "575cb15c9d7359a7f23c0046d22fc674e169f024"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 1706030528,
+   "sha256": "32ad6ea1fcced58ef742da17c054ff9b56318907d4dc78c08a8ef1572e71576d"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1251,
+   "git_oid": "fea06ab6465816931a7b9f8cf5125d393b53c0b0"
+  },
+  {
+   "path": "reproduce/Qwen--Qwen3--5-0--8B.jsonl",
+   "size": 907065,
+   "git_oid": "e7a1460ead426f3bf25dfc714b15873db93cf284"
+  },
+  {
+   "path": "reproduce/README.md",
+   "size": 4000,
+   "git_oid": "e9bcb5917ae34cdd5af1710d47bedcf9e62aa020"
+  },
+  {
+   "path": "reproduce/SHA256SUMS",
+   "size": 85,
+   "git_oid": "64507e170888946bdb9e18a532f86669263f511f"
+  },
+  {
+   "path": "reproduce/config.toml",
+   "size": 2027,
+   "git_oid": "5ec04e0bb2ab2ffc07c136fd286c6b019f8cb410"
+  },
+  {
+   "path": "reproduce/reproduce.json",
+   "size": 8983,
+   "git_oid": "9529406c1834a933ffc8d90fa8d3762fd2d1e330"
+  },
+  {
+   "path": "reproduce/requirements.txt",
+   "size": 1869,
+   "git_oid": "c5381db9b5d3fe55e9147d5fb9102224d1ee7a60"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989325,
+   "sha256": "06b9509352d2af50381ab2247e083b80d32d5c0aba91c272ca9ff729b6a0e523"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1199,
+   "git_oid": "86ccf7ed2b114c583c7f5cd2136f9b040b0349e8"
+  }
+ ]
+}

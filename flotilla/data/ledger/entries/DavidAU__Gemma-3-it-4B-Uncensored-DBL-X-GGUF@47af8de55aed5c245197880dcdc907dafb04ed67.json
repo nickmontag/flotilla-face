@@ -1,0 +1,100 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Gemma-3-it-4B-Uncensored-DBL-X-GGUF",
+ "revision": "47af8de55aed5c245197880dcdc907dafb04ed67",
+ "captured": "2026-11-25T05:09:05+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2777,
+   "git_oid": "29f7771d32d202b4d1e848fca237a5a562de091e"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-F16.gguf",
+   "size": 8522953408,
+   "sha256": "cbb405c5752652ab53fb6a15adbd4e7a4989cd72ae03dc5452f1b2056776841b"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-IQ4_NL.gguf",
+   "size": 2589130688,
+   "sha256": "815e5872278bdd37a08a97b8164944fb45aa7571f54468517dd6275305f11547"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-IQ4_XS.gguf",
+   "size": 2480340928,
+   "sha256": "ea517aa35cbbb57c0fb7d163c60ed4a49deac8a9585f8247ea1c3b67ca6de8d6"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-Q2_k.gguf",
+   "size": 1867046848,
+   "sha256": "5d699cc5412f5fb83d2e6716a2cf2a7e6c12e64fa33889920839c554533c13ec"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-Q3_k_l.gguf",
+   "size": 2433605568,
+   "sha256": "54585703f8cb48d6ea9fd6ec4a7a3f44c1755f995806ad7e7bb83e71a83a5dfc"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-Q3_k_m.gguf",
+   "size": 2278940608,
+   "sha256": "ef9ec2be0a184acd2527f178ddd771cd016b8930936c85f1b9f25cb355df4db5"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-Q3_k_s.gguf",
+   "size": 2099740608,
+   "sha256": "6dac241e7a87fc40c42a218424d12de055b6fc0ca7b9b9516c51289d57027a68"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-Q4_0.gguf",
+   "size": 2576023488,
+   "sha256": "02829b28e6a104daecc06cc8884227ef34b9a461e34f0899cbb819cf7ed6901c"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-Q4_k_m.gguf",
+   "size": 2709839808,
+   "sha256": "077b7eede1d92903c7e234211cd75af7f22507716e5af817c0bd1371b8202683"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-Q4_k_s.gguf",
+   "size": 2590441408,
+   "sha256": "a399a1f7c223f06721104fea0ee9bb116a32cd44ba4065a804ec763d759e4519"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-Q5_0.gguf",
+   "size": 3024289728,
+   "sha256": "ab89ffcccc5215406fac22136950b554a33e5803167f0a6598642cc789815eaf"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-Q5_k_s.gguf",
+   "size": 3024289728,
+   "sha256": "0489df1cf92e93866b98343f3f6a21685c307b9adc006fe1ec8dc69633256efe"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-Q6_k.gguf",
+   "size": 3500572608,
+   "sha256": "4ab5aa49c9d0c805b3e4ac11654851644dff6e19f7b0b47dd727164ae25fa27b"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-Q8_0.gguf",
+   "size": 4531657408,
+   "sha256": "5441bc0e8f4df1b79a8ee3aa9f86a3b2e245d3762a82ce6e2e4a275f8bc223bb"
+  },
+  {
+   "path": "Gemma-3-it-4B-Uncensored-D_AU-q5_k_m.gguf",
+   "size": 3093225408,
+   "sha256": "5b26864f8b90b1cdfd8e51caf420a6f45bb8542eb2a8cbfc3726635d4a4cef29"
+  },
+  {
+   "path": "README.md",
+   "size": 61319,
+   "git_oid": "061476cf48725743e092bfaf70645dbf91547a89"
+  },
+  {
+   "path": "gemma-4b-uncen.jpg",
+   "size": 134620,
+   "sha256": "59553b50790736af3027beba5d14323ed3a014443fae2b136a9ef721cd58133b"
+  }
+ ]
+}

@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+ "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+ "captured": "2026-11-25T05:09:23+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "LICENSE",
+   "size": 1064,
+   "git_oid": "d42fae903e9fa07f3e8edb0db00a8d905ba49560"
+  },
+  {
+   "path": "README.md",
+   "size": 15994,
+   "git_oid": "1ae2b2ccda9cb58fb4179e30c1798b6e75980618"
+  },
+  {
+   "path": "config.json",
+   "size": 679,
+   "git_oid": "68c044b63c894bc0c3d334a44bed2856d6d6815d"
+  },
+  {
+   "path": "figures/benchmark.jpg",
+   "size": 777314,
+   "git_oid": "d1fd67ec1bf748c24b244b6efd825ded1b147787"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 181,
+   "git_oid": "052ab54633116a634da950ab483233c4ace0aa82"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 3554214621,
+   "sha256": "58858233513d76b8703e72eed6ce16807b523328188e13329257fb9594462945"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7031660,
+   "git_oid": "a34650995da6939a945c330eadb0687147ac3ef8"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 3071,
+   "git_oid": "9967ff32d94b21c94dc7e2b3bcbea295a46cde50"
+  }
+ ]
+}

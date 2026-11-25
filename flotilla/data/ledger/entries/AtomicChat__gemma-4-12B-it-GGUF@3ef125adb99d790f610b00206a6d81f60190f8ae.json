@@ -1,0 +1,175 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "AtomicChat/gemma-4-12B-it-GGUF",
+ "revision": "3ef125adb99d790f610b00206a6d81f60190f8ae",
+ "captured": "2026-11-25T05:13:15+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3906,
+   "git_oid": "6f81ab7bda277d6c70e5258e7dca6b5913127f6d"
+  },
+  {
+   "path": "LICENSE",
+   "size": 635,
+   "git_oid": "a7f9285b6a168872eacee10358ace5743063ff35"
+  },
+  {
+   "path": "README.md",
+   "size": 7076,
+   "git_oid": "73fb40e45683b6beda8649b49618f2fbb641b96a"
+  },
+  {
+   "path": "banner.png",
+   "size": 22741,
+   "git_oid": "653150b6ccd57a5c35a5e106b5d8c7ebba4075d6"
+  },
+  {
+   "path": "benchmark.png",
+   "size": 70962,
+   "git_oid": "11ec42d13f85328c5870a498c2889a0ce357c85f"
+  },
+  {
+   "path": "gemma-4-12b-it-IQ3_M.gguf",
+   "size": 5733992832,
+   "sha256": "33da14cd92a46daac4fac6308afbb062759f7bba5b8bfd9d2c88037ce44e9a57"
+  },
+  {
+   "path": "gemma-4-12b-it-IQ4_XS.gguf",
+   "size": 6635256192,
+   "sha256": "e3bbc6d10dc891e504f8469e6a24e6e318569ba838056f29891d825fffc2a676"
+  },
+  {
+   "path": "gemma-4-12b-it-Q2_K.gguf",
+   "size": 4830148992,
+   "sha256": "d49e7c4a90299db27de4077bc3ba17495b076ecbd2ecb2f9cc06a4bfcaf41783"
+  },
+  {
+   "path": "gemma-4-12b-it-Q3_K_L.gguf",
+   "size": 6566320512,
+   "sha256": "d961d6be9a61f9ff21a7c0503eb35fc66aafd19f49ca5fe8eb3d2ad4f7de62c5"
+  },
+  {
+   "path": "gemma-4-12b-it-Q3_K_M.gguf",
+   "size": 6087088512,
+   "sha256": "eca0359fabcd39d095eaf284365872e969d0784c12ff07d9a4b25a075b2960a6"
+  },
+  {
+   "path": "gemma-4-12b-it-Q4_K_M.gguf",
+   "size": 7381383552,
+   "sha256": "275093f957181fae030d006d2e25f6cf515b4dac8273597dfc1653ff7f203366"
+  },
+  {
+   "path": "gemma-4-12b-it-Q4_K_S.gguf",
+   "size": 7024048512,
+   "sha256": "724caf85027a09de8deff5d9de8469fbf2a4c329d014be90a7af52b4733ee0aa"
+  },
+  {
+   "path": "gemma-4-12b-it-Q4_K_XL.gguf",
+   "size": 7625177472,
+   "sha256": "aa15299d17fb77c6f8178b85934b26e7ce92916670a12c540c4be64eb6bbf22d"
+  },
+  {
+   "path": "gemma-4-12b-it-Q5_K_M.gguf",
+   "size": 8547268992,
+   "sha256": "b80c2661088f2198bdd3949dcdbd6cb67badf989adab65ef24ae237b99e75a77"
+  },
+  {
+   "path": "gemma-4-12b-it-Q5_K_S.gguf",
+   "size": 8338372992,
+   "sha256": "53ebe29ef5567fabee8ef5291433cd3b86cd54d62155049120ff09c3ab09937c"
+  },
+  {
+   "path": "gemma-4-12b-it-Q6_K.gguf",
+   "size": 9786022272,
+   "sha256": "9e5fe3b4f9d158fde25571c0850fcc2f26e9a669add193994d44312544d72790"
+  },
+  {
+   "path": "gemma-4-12b-it-Q8_0.gguf",
+   "size": 12669646976,
+   "sha256": "26566333159ee98fb3f8cc917fc90de5e282b83d91883f2d96ef2eba13d80a7d"
+  },
+  {
+   "path": "gemma_banner.png",
+   "size": 185664,
+   "sha256": "9c0e503f4be60479a64510afec10878d3c2787e834b1dc9f89d3b900a1e71001"
+  },
+  {
+   "path": "hero.png",
+   "size": 185664,
+   "sha256": "9c0e503f4be60479a64510afec10878d3c2787e834b1dc9f89d3b900a1e71001"
+  },
+  {
+   "path": "imatrix-coding.gguf",
+   "size": 7480640,
+   "sha256": "84dd2b709ba71ab9399dc1c2a7378cce2e3e8cbe7b7867b47fbd0da0939bad4c"
+  },
+  {
+   "path": "mmproj-gemma4-12b-f16.gguf",
+   "size": 175115616,
+   "sha256": "23397a092a3c52ac9e37df815fa11aa467c81a2c3276549042c2295df5b4c748"
+  },
+  {
+   "path": "open-in-atomic-chat.png",
+   "size": 23523,
+   "git_oid": "a0d29f60be96bab88717867be3b49469a96a8b6e"
+  },
+  {
+   "path": "pill_atomic.png",
+   "size": 23595,
+   "git_oid": "b69d03d9edd8786853b44b170eeb11827f1bc3d1"
+  },
+  {
+   "path": "pill_atomic_v2.png",
+   "size": 23797,
+   "git_oid": "5439392dd44dd766c90b8bdb666b227c11ba8126"
+  },
+  {
+   "path": "pill_atomic_v3.png",
+   "size": 23368,
+   "git_oid": "d8f38e5f9647887e97006b8c353b6f036f9cf2b2"
+  },
+  {
+   "path": "pill_discord.png",
+   "size": 23109,
+   "git_oid": "84a0a8247e0cec705bddbd282ecf279056edd8fc"
+  },
+  {
+   "path": "pill_discord_v2.png",
+   "size": 23006,
+   "git_oid": "72765dcf7bfdc54dfc2c156f5794a8091aaafd43"
+  },
+  {
+   "path": "pill_discord_v3.png",
+   "size": 24244,
+   "git_oid": "43c508304e09cf9eedcbc0025c21cbcdee07b3a9"
+  },
+  {
+   "path": "pill_github.png",
+   "size": 19507,
+   "git_oid": "9351b65a332a5a71e669fd27ace203fd17e6a8c8"
+  },
+  {
+   "path": "pill_github_v2.png",
+   "size": 18291,
+   "git_oid": "18febd2d9461eed7b17459e7a9ad3233b80a2524"
+  },
+  {
+   "path": "pill_github_v3.png",
+   "size": 19512,
+   "git_oid": "c1d320ea78476a33667dca8181f73ad0a4361530"
+  },
+  {
+   "path": "pill_x_v2.png",
+   "size": 20904,
+   "git_oid": "0c6050a707aa11b685001537be17852331c805ba"
+  },
+  {
+   "path": "pill_x_v3.png",
+   "size": 22494,
+   "git_oid": "7b524a0cd9ff6eb86ae7bba9ef6c20ec090f8d01"
+  }
+ ]
+}

@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "InternScience/Agents-A1-4B-Q4_K_M-GGUF",
+ "revision": "d92b02e27074b27542384f72bc0e72203c970f0f",
+ "captured": "2026-11-25T05:13:14+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1773,
+   "git_oid": "5539ac5fc641a93171ebac722e5e27915084b676"
+  },
+  {
+   "path": "Agents-A1-4B-Q4_K_M.gguf",
+   "size": 2708805312,
+   "sha256": "d93c393a9bd5139a4b5cfe24d31ef553c5a497bfb8afec178a354ecbf508f062"
+  },
+  {
+   "path": "Agents-A1-4B-mmproj.gguf",
+   "size": 672423200,
+   "sha256": "254145e7e03e9e8d3120813fac8033ffa04e411eb6d70a198833504935681084"
+  },
+  {
+   "path": "README.md",
+   "size": 15874,
+   "git_oid": "8120a8c899ba4348cda7fe2019d8f2d5155febf2"
+  },
+  {
+   "path": "figures/24px.svg",
+   "size": 252,
+   "git_oid": "fa2daeb71c370e6b7e891d7ba1bd0c88107aa81f"
+  },
+  {
+   "path": "figures/github-logo.svg",
+   "size": 1313,
+   "git_oid": "4e37ca0618c40401251b018133567791229f1c2e"
+  },
+  {
+   "path": "figures/hf-logo.svg",
+   "size": 35286,
+   "git_oid": "ab959d165fa5b05a953c9d1c5acc6640f9f536b8"
+  },
+  {
+   "path": "figures/logo_nobg.png",
+   "size": 2328487,
+   "sha256": "8fa7bbc49686f492b05cfc3920e4dc52614c98edb401243f4ec13e5f4c56e5dd"
+  },
+  {
+   "path": "figures/modelscope-logo.svg",
+   "size": 793,
+   "git_oid": "c153c3bd135757f2b6c46dbab2264d8b8473e20c"
+  }
+ ]
+}

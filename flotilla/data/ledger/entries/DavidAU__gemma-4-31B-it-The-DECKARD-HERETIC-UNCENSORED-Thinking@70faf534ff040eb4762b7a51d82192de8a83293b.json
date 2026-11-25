@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/gemma-4-31B-it-The-DECKARD-HERETIC-UNCENSORED-Thinking",
+ "revision": "70faf534ff040eb4762b7a51d82192de8a83293b",
+ "captured": "2026-11-25T05:08:17+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1620,
+   "git_oid": "8d57e4fcee01044e1b7e844cfd869bc867a21425"
+  },
+  {
+   "path": "README.md",
+   "size": 89036,
+   "git_oid": "85c1368f99f005f83bbac19647555ff5b6b2a333"
+  },
+  {
+   "path": "chat_template-instruct.jinja",
+   "size": 16448,
+   "git_oid": "98da08eb6be6f7a353d390456a6c4cacf811c9ed"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 16483,
+   "git_oid": "df3629f12e6b155d3f3314aa6666ea95c6c2b7b2"
+  },
+  {
+   "path": "config.json",
+   "size": 4621,
+   "git_oid": "5f291aa9973fbb38982f9bade924989edc7b895d"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 49923154850,
+   "sha256": "f86c1ba57fdafea80c8b904555411a89ea62d420e43f2d9db9cc1dd56658c24d"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 12623183414,
+   "sha256": "fc88c207d809ebe1a30b9d7b6efac197518d8abd9f9f174bd03eaa4788a531bd"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 120246,
+   "git_oid": "b6a606040094d589c876d2d5b1e6909346c27cf0"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1689,
+   "git_oid": "5465974d23e1eca2c46c2809b26c997946ce0d90"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 32169626,
+   "sha256": "cc8d3a0ce36466ccc1278bf987df5f71db1719b9ca6b4118264f45cb627bfe0f"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 2068,
+   "git_oid": "e54180678550bb9eb3ed2e4a64c540dcdf80a2ee"
+  },
+  {
+   "path": "valhalla.webp",
+   "size": 4336184,
+   "sha256": "010bce05f9f652093f5b1504f797e540a905871211572ddfc53a0e256d2f84aa"
+  }
+ ]
+}

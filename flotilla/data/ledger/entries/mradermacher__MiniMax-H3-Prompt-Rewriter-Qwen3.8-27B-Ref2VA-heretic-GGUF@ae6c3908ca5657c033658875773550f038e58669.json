@@ -1,0 +1,85 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic-GGUF",
+ "revision": "ae6c3908ca5657c033658875773550f038e58669",
+ "captured": "2026-11-25T05:08:58+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2848,
+   "git_oid": "ea911ab3ec778dad3e2c1af5ba138ab09644d93b"
+  },
+  {
+   "path": "MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic.IQ4_XS.gguf",
+   "size": 15420451744,
+   "sha256": "91abf1084f2678bd96b70968e632e5b14d5f6cf89461ec575e3718ae945051d3"
+  },
+  {
+   "path": "MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic.Q2_K.gguf",
+   "size": 10864593824,
+   "sha256": "d712d2e6dc8dc88b31979366b2103560b8af39f6a1e4ab17cceab2c3106494f8"
+  },
+  {
+   "path": "MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic.Q3_K_L.gguf",
+   "size": 14559800224,
+   "sha256": "5e5eda992fa422d7fd6a8e67e4635cb09336a9521ff63cb9bb8ac52dd777e5c7"
+  },
+  {
+   "path": "MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic.Q3_K_M.gguf",
+   "size": 13500738464,
+   "sha256": "46a5b497615b10c9483cacc88c0ac059e19f3108c5595f56da8b067ff6e5488b"
+  },
+  {
+   "path": "MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic.Q3_K_S.gguf",
+   "size": 12256537504,
+   "sha256": "a237a22f2ed8097357209c668f14271e6d72e65634453c81c309f5829d944a52"
+  },
+  {
+   "path": "MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic.Q4_K_M.gguf",
+   "size": 16810716064,
+   "sha256": "72d6c16f7b416c8f74b1f07ea7fbaaf864f7a440e979aa26c1066083430ad2c1"
+  },
+  {
+   "path": "MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic.Q4_K_S.gguf",
+   "size": 15825300384,
+   "sha256": "c37c3d4b7ed2727c779276902f58b88ebc80a0f778a4b9a5a872ecab7a75ad63"
+  },
+  {
+   "path": "MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic.Q5_K_M.gguf",
+   "size": 19535702944,
+   "sha256": "523b463c41989534930981d0686da68d7d11e32b3762433a5dcf103443b4bdb6"
+  },
+  {
+   "path": "MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic.Q5_K_S.gguf",
+   "size": 18971683744,
+   "sha256": "b8a2be1efac12f4f63d57c0ae1ef6e8089b8d03c4ed713126583849832e224c2"
+  },
+  {
+   "path": "MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic.Q6_K.gguf",
+   "size": 22431001504,
+   "sha256": "8c63ea65c476918bf7c630a7eef5da0243298ed7e74ca9b983827c56e6d1c5e1"
+  },
+  {
+   "path": "MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic.Q8_0.gguf",
+   "size": 29047085984,
+   "sha256": "2362be0b1872e350929bdac8cd113c82f55b85eb32e7088436a4a76073a9619b"
+  },
+  {
+   "path": "MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic.mmproj-Q8_0.gguf",
+   "size": 629247904,
+   "sha256": "c5489dafb635c16e53410ca3936ed91996ad2f1ead1c88111b8e4b8f4395c69c"
+  },
+  {
+   "path": "MiniMax-H3-Prompt-Rewriter-Qwen3.8-27B-Ref2VA-heretic.mmproj-f16.gguf",
+   "size": 927607840,
+   "sha256": "caba01e64113bb72ee5bb81a59aa5172d460ded854ca4cbae9b9830f7c6dea1e"
+  },
+  {
+   "path": "README.md",
+   "size": 5165,
+   "git_oid": "a575970b9a6579a72229c7679890636fb022255c"
+  }
+ ]
+}

@@ -1,0 +1,150 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Qwen3.6-27B-Fable-Fusion-711-Uncensored-Heretic-NM-DAU-MTP",
+ "revision": "86b5ad3846b6eb8b4c34375ddead8424b704c06d",
+ "captured": "2026-11-25T05:08:17+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1674,
+   "git_oid": "a9c1bc82ba1bc31ba197b6e756b5931a65b5d610"
+  },
+  {
+   "path": "FF711-bench2.png",
+   "size": 65706,
+   "git_oid": "0baf5b0d6a66ea0a5e26761abc51b59ff6f90407"
+  },
+  {
+   "path": "README.md",
+   "size": 193486,
+   "git_oid": "ed186b0e2c519f2ad6caeda8a5316964ca072b4e"
+  },
+  {
+   "path": "chat_template-instruct.jinja",
+   "size": 11839,
+   "git_oid": "53066082b3afb751160186bb579c03632636c049"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 11803,
+   "git_oid": "82faea87da5f11909eb551e0671205d4ef47d154"
+  },
+  {
+   "path": "config.json",
+   "size": 3869,
+   "git_oid": "8e17cab4ab3e1222fecc44e768fa48918410ec76"
+  },
+  {
+   "path": "ff711-benches.png",
+   "size": 273317,
+   "sha256": "1e44778749408170e5bfce79aa431b5668618a8d43292454a7d0899f75aed5e7"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 213,
+   "git_oid": "d04042de33b454891a0b8fa98e00da677799f30e"
+  },
+  {
+   "path": "model-00001-of-00012.safetensors",
+   "size": 2542796928,
+   "sha256": "3697575b184c68b508b7bd572e6c146d0f780883ccf526cdcc3391e0ce59ad18"
+  },
+  {
+   "path": "model-00002-of-00012.safetensors",
+   "size": 4842451936,
+   "sha256": "43cdddbef9aad7eefe60de454c8ca67348abad393c685fcf058bcf8ed759d6cd"
+  },
+  {
+   "path": "model-00003-of-00012.safetensors",
+   "size": 4965228032,
+   "sha256": "76c61f4ae524d188e5408a0eb2efb31408ecb384091a98f928a50775fa892058"
+  },
+  {
+   "path": "model-00004-of-00012.safetensors",
+   "size": 4933789808,
+   "sha256": "a5b61556332fc9b93b58bebc3df336b9e2e518746a51ab129f3851ef9428e91c"
+  },
+  {
+   "path": "model-00005-of-00012.safetensors",
+   "size": 4965228032,
+   "sha256": "4c685f8ff7c44e894b81a40023593dbba5a04fcc48f54ec1b8e544071528a2b2"
+  },
+  {
+   "path": "model-00006-of-00012.safetensors",
+   "size": 4911753512,
+   "sha256": "4bd5347af7a52cc92c35a9031c6480e170df4703bb18b193fad5b53d252777b6"
+  },
+  {
+   "path": "model-00007-of-00012.safetensors",
+   "size": 4965228016,
+   "sha256": "fb5ffcaed06aabb7b805410319b3e02f560336adbadc1910780d0c1c5441f3b2"
+  },
+  {
+   "path": "model-00008-of-00012.safetensors",
+   "size": 4933789824,
+   "sha256": "6070c75a4e576be34bc835926476262502a36a2d27936555fe2f439ac2b945f6"
+  },
+  {
+   "path": "model-00009-of-00012.safetensors",
+   "size": 4965228016,
+   "sha256": "65ca9716a7ee8f304f12cd7de5899b9375e41f276c27203470f4bbfd5f4086e5"
+  },
+  {
+   "path": "model-00010-of-00012.safetensors",
+   "size": 4933789824,
+   "sha256": "b22beac9e0c4c3c836f32cc85df8fc2609ebc8c5b2752e68731353f21f41195c"
+  },
+  {
+   "path": "model-00011-of-00012.safetensors",
+   "size": 4911732744,
+   "sha256": "75a8e97e9075341916a61115e71189861c61c934a1a9bfa1b4720f92657adbb8"
+  },
+  {
+   "path": "model-00012-of-00012.safetensors",
+   "size": 3587132840,
+   "sha256": "d10e3bd265750843d0a41ac917123d5228bb4a64bc5ca88659650a857678c567"
+  },
+  {
+   "path": "model-mtp-restored.safetensors",
+   "size": 104857696,
+   "sha256": "98348118686967fe3d5db57dacdac3e4b24d5edff9bab9e56f43cf423d855a92"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 113450,
+   "git_oid": "490712ba0857051d9c46708926f03fdee382722e"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989492,
+   "sha256": "6f32ce20dc35f57a7f9ad1eac03525bd7d30f9df8cea6507e958279cc3657706"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 15293,
+   "git_oid": "5cc018ffbd9634784161b6ffb233e79407234314"
+  },
+  {
+   "path": "valhalla.webp",
+   "size": 4336184,
+   "sha256": "010bce05f9f652093f5b1504f797e540a905871211572ddfc53a0e256d2f84aa"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  },
+  {
+   "path": "vocab.json",
+   "size": 6722759,
+   "git_oid": "0aa0ce0658d60ac4a5d609f4eadb0e8e43514176"
+  }
+ ]
+}

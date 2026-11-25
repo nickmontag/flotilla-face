@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "allenai/OLMo-2-0425-1B-Instruct",
+ "revision": "48d788eca847d4d7548f375ad03d3c9312f6139e",
+ "captured": "2026-11-25T05:13:04+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 6161,
+   "git_oid": "80ab37293236987d7106c848f690542e99a83d9e"
+  },
+  {
+   "path": "config.json",
+   "size": 625,
+   "git_oid": "8270c25100714b935d5f538f06e90b4dd18418d3"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 121,
+   "git_oid": "bfdadfedab612dd93776ee6547bcdbc11d0c78ab"
+  },
+  {
+   "path": "merges.txt",
+   "size": 916646,
+   "git_oid": "354558edcdbd64ca7abd407b8be3d5d09d39d781"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 2969854224,
+   "sha256": "36d044c73655bb904f822915e6294ba3dae8e6e1af5e703e9d452f2d6a3a294f"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 581,
+   "git_oid": "9d133a8f4995ff315a8a3e68dbba03409d214a8e"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7137177,
+   "git_oid": "5fe172127988c3709a49d8d2ce20e11bb266cd57"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 4884,
+   "git_oid": "6a68ef73052b644e4a32208ae0114236db221028"
+  },
+  {
+   "path": "vocab.json",
+   "size": 1611056,
+   "git_oid": "51135344eec01a62fc4deaca39c72ac08f5b9709"
+  }
+ ]
+}

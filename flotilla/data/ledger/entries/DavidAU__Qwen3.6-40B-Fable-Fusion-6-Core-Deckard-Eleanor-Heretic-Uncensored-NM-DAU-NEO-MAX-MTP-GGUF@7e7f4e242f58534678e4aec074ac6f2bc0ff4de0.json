@@ -1,0 +1,105 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Qwen3.6-40B-Fable-Fusion-6-Core-Deckard-Eleanor-Heretic-Uncensored-NM-DAU-NEO-MAX-MTP-GGUF",
+ "revision": "7e7f4e242f58534678e4aec074ac6f2bc0ff4de0",
+ "captured": "2026-11-25T05:08:53+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3912,
+   "git_oid": "0acbc22184034556cee89dce085d57d2759cbb82"
+  },
+  {
+   "path": "Qwen3.6-27B-Fable-Fus-711-UnHeretic-NM-DAU-NEO-MAX-NEO-LOW-MTP-IQ2_XXS.gguf",
+   "size": 12025716736,
+   "sha256": "af9b5229b7c100d22b8ecfadcf077275bf3ba1a949b3f35c520192b25f81a2c1"
+  },
+  {
+   "path": "Qwen3.6-40B-FF6core-Deck-Eleanor-H-Uncen-NEO-MAX-IQ2_M.gguf",
+   "size": 15959921728,
+   "sha256": "1e0df967f99e37c2e20cb867e5088e4e4e9ba575e47b538edf057d9161762436"
+  },
+  {
+   "path": "Qwen3.6-40B-FF6core-Deck-Eleanor-H-Uncen-NEO-MAX-IQ3_M.gguf",
+   "size": 19571057728,
+   "sha256": "4bfb78cd52e8912aaf019d8fc22a9c04f731902baf1d254a944d0621f0a9b31f"
+  },
+  {
+   "path": "Qwen3.6-40B-FF6core-Deck-Eleanor-H-Uncen-NEO-MAX-IQ4_XS.gguf",
+   "size": 23258942528,
+   "sha256": "895dc8078aa6b4ef51a3f3bbe6e3a6b2f1264d0ed236d104a436711508a6c58d"
+  },
+  {
+   "path": "Qwen3.6-40B-FF6core-Deck-Eleanor-H-Uncen-NEO-MAX-LOW-IQ2_XXS.gguf",
+   "size": 11998659648,
+   "sha256": "fdf1e4cf718d86b756370a2150cb9f77d3fe0ca9fa7620389779d0f276deec73"
+  },
+  {
+   "path": "Qwen3.6-40B-FF6core-Deck-Eleanor-H-Uncen-NEO-MAX-MTP-IQ2_M.gguf",
+   "size": 16411242496,
+   "sha256": "fd56eadada689550a906e8bd98d42df49fcee58f1527d8c35dcc07619ec4a0dc"
+  },
+  {
+   "path": "Qwen3.6-40B-FF6core-Deck-Eleanor-H-Uncen-NEO-MAX-MTP-IQ3_M.gguf",
+   "size": 20022378496,
+   "sha256": "e75ffe37c26d220ca0ffb437701058d8553a47194f625262bac5852aa9516256"
+  },
+  {
+   "path": "Qwen3.6-40B-FF6core-Deck-Eleanor-H-Uncen-NEO-MAX-MTP-IQ4_NL.gguf",
+   "size": 24769529856,
+   "sha256": "4a64e4ac2b5b2d95c92d51e553c16377306845db3704a68c667018a27d3e8239"
+  },
+  {
+   "path": "Qwen3.6-40B-FF6core-Deck-Eleanor-H-Uncen-NEO-MAX-MTP-IQ4_XS.gguf",
+   "size": 23710263296,
+   "sha256": "5e8625a12710e9320b01559a68b5dbef420e73111ba09145a8939b6962474ab0"
+  },
+  {
+   "path": "Qwen3.6-40B-FF6core-Deck-Eleanor-H-Uncen-NEO-MAX-MTP-Q4_K_M.gguf",
+   "size": 25887737856,
+   "sha256": "6de44d18afcdca84df170761a802cb8e84e4d523adbdf9b7b9b4d636be57157a"
+  },
+  {
+   "path": "Qwen3.6-40B-FF6core-Deck-Eleanor-H-Uncen-NEO-MAX-MTP-Q5_K_M.gguf",
+   "size": 29833824256,
+   "sha256": "9d6f207e68b5e93ad9be71edb54a467b0779350b8934ebd89c7a8ee67433747e"
+  },
+  {
+   "path": "Qwen3.6-40B-FF6core-Deck-Eleanor-H-Uncen-NEO-MAX-MTP-Q6_K.gguf",
+   "size": 34026541056,
+   "sha256": "fca410685dc20a03bdf34c304e1000c68aacf40c2a1ae47b52a2c3f394be6355"
+  },
+  {
+   "path": "Qwen3.6-40B-FF6core-Deck-Eleanor-H-Uncen-NEO-MAX-MTP-Q8_0.gguf",
+   "size": 43180558336,
+   "sha256": "80c6a0f6eac38d6e4c89f27440d2e5cd7d800ee745f7941a0ddc2e8263f969ae"
+  },
+  {
+   "path": "README.md",
+   "size": 318869,
+   "git_oid": "db22ad21881647575f10df08464243be7a8181ec"
+  },
+  {
+   "path": "ff711-gone-60.gif",
+   "size": 18079294,
+   "sha256": "75d0119d156706e8329716e7bb6bde1aab3f4550098d18d0844917e3428d5661"
+  },
+  {
+   "path": "mmproj-BF16.gguf",
+   "size": 931146304,
+   "sha256": "05353347512982ee62317b9d8c89372bc815f4b4043580e7ef3ad411ec1a1cd3"
+  },
+  {
+   "path": "mmproj-F16.gguf",
+   "size": 927607360,
+   "sha256": "eacf610d1ee4bd5ed0197a0777dd8f4fceb8eefa27009067c7d496cb68fbde45"
+  },
+  {
+   "path": "mmproj-F32.gguf",
+   "size": 1842940480,
+   "sha256": "fdc443e974cad1f61c45af1cfd5580855855ddce0d6c14cc500a5714c486ac1d"
+  }
+ ]
+}

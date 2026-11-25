@@ -1,0 +1,80 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "DavidAU/Qwen3.5-2B-Claude-4.6-OS-Auto-Variable-HERETIC-UNCENSORED-THINKING",
+ "revision": "fc8ce61d28d0c8550055dfdef1d99df9d174650d",
+ "captured": "2026-11-25T05:08:37+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 108208,
+   "git_oid": "d509de8b49757839c4f3b91340df06bf57a1638c"
+  },
+  {
+   "path": "chat_template-instruct.jinja",
+   "size": 7792,
+   "git_oid": "04dbb310fe2df038c7ffa12c3041f275c838e4ab"
+  },
+  {
+   "path": "chat_template-org.jinja",
+   "size": 7755,
+   "git_oid": "0ef09f214eaa6d9bca297988afc1454b5827b2c7"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7967,
+   "git_oid": "5a663a52f8d29ce0807acafb3f47257020b3efb5"
+  },
+  {
+   "path": "config.json",
+   "size": 2616,
+   "git_oid": "f9ed63650d17f9249719fa0ec7c1aace1b7efe49"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 115,
+   "git_oid": "affcdf188ba614483df3d704e436a8e2da880075"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 4426558864,
+   "sha256": "1b69b9454eb3b62a41f9c05e246c86321c0d1b23869598f8bb05ded71191014f"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 1300,
+   "git_oid": "7ad6acdf4203f22b7b990e36ccc3a1fe38563d5e"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19989510,
+   "sha256": "639e352c0f904c1875d448ebed6f6faac005fd3eb58393b7f1fb3ff044e5ca03"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 1243,
+   "git_oid": "08e416fe64eb31ae0b79bfbaeff82a6f780ab0db"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  },
+  {
+   "path": "vocab.json",
+   "size": 6722759,
+   "git_oid": "0aa0ce0658d60ac4a5d609f4eadb0e8e43514176"
+  }
+ ]
+}

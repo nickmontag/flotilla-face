@@ -1,0 +1,120 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "zenosai/MonkeyOCRv2-B-Parsing",
+ "revision": "e8871a0057c98378219b369f924a25ba10f392bf",
+ "captured": "2026-11-25T05:09:38+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".eval_results/mdpbench.yaml",
+   "size": 5005,
+   "git_oid": "da1840caa0c36cd8bf5542ec2198d658633c247a"
+  },
+  {
+   "path": ".eval_results/real5_omnidocbench.yaml",
+   "size": 1416,
+   "git_oid": "5880b15336a11c19d9e1f1e1e357f2f2dee39a8e"
+  },
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 50504,
+   "git_oid": "bcfe9f5dbc65a25d7131f2f89ac31d27e51d99f4"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 707,
+   "git_oid": "b54f9135e44c1e81047e8d05cb027af8bc039eed"
+  },
+  {
+   "path": "args.json",
+   "size": 50063,
+   "git_oid": "01907e75f287237eba2817736d7b6f8640a3f0d0"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 5292,
+   "git_oid": "124386803f142761528f710e77ae483f5f8c4fc4"
+  },
+  {
+   "path": "config.json",
+   "size": 2186,
+   "git_oid": "612fb7d19b0abbd1560a5df970e8506b18795c8d"
+  },
+  {
+   "path": "configuration_monkeyocrv2.py",
+   "size": 3156,
+   "git_oid": "c8aef0bbcb1886f2576105631dd4ba4bd76be99d"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 214,
+   "git_oid": "9e289a1aca21d66f216b0912f192963e60ff573e"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1671853,
+   "git_oid": "31349551d90c7606f325fe0f11bbb8bd5fa0d7c7"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 1755925032,
+   "sha256": "0267fdc991c9be02cf1b60405f77fe0629d084970ad9d6d08163feda3d470284"
+  },
+  {
+   "path": "modeling_monkeyocrv2.py",
+   "size": 5550,
+   "git_oid": "2a3d6076552d020d2338bca53499ba35e06aa67a"
+  },
+  {
+   "path": "modeling_monkeyocrv2_vision.py",
+   "size": 19941,
+   "git_oid": "b314038cf7a00de589f526a2684e76b00fbfcb69"
+  },
+  {
+   "path": "preprocessor1.pth",
+   "size": 4823415,
+   "sha256": "d243b62c3a14bd854539a3b6eebbf69b7716f38f9c7bfe0270d74b2b3e702b55"
+  },
+  {
+   "path": "preprocessor2.pth",
+   "size": 288533650,
+   "sha256": "27712ba877dfdf325d22ddb9f79467c7998da7e57b9d6fcc4b96b7722ac6b505"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 449,
+   "git_oid": "ee327baecc79f0a599819c12f545d93f453bdee9"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 139,
+   "git_oid": "1bf5bd9149bfd4c448f7106b9d46f4c234e95ba5"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 613,
+   "git_oid": "ac23c0aaa2434523c494330aeb79c58395378103"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 11422654,
+   "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 5540,
+   "git_oid": "dc767287cd37a0b3fdbb7fef5651e0b4a7d7ab44"
+  },
+  {
+   "path": "vocab.json",
+   "size": 2776833,
+   "git_oid": "4783fe10ac3adce15ac8f358ef5462739852c569"
+  }
+ ]
+}

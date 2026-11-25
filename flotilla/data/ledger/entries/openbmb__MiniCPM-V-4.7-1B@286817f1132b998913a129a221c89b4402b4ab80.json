@@ -1,0 +1,105 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "openbmb/MiniCPM-V-4.7-1B",
+ "revision": "286817f1132b998913a129a221c89b4402b4ab80",
+ "captured": "2026-11-25T05:09:21+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2475,
+   "git_oid": "54bf1e5385c7f63c584910273bfa3eede0e00b5f"
+  },
+  {
+   "path": "README.md",
+   "size": 24681,
+   "git_oid": "ae8168f313e80aa1e25afd20fed6192319d43e4a"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 7250,
+   "git_oid": "0948ab105fab2a52f84bdc85c3a784221f8452d4"
+  },
+  {
+   "path": "config.json",
+   "size": 2575,
+   "git_oid": "f7e1c13b894ba935e120acdaf503a2515b13783a"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 132,
+   "git_oid": "4c73e409ffe7483d35ecb3b60dfb9cbd8def8912"
+  },
+  {
+   "path": "minicpm_v4dot7_assets/minicpmv4.7/moe_speed_comparison_en.gif",
+   "size": 19657646,
+   "sha256": "62b8de01ee485c70a131580285ed73c0e791a48391bc592f9302ea27b4997496"
+  },
+  {
+   "path": "minicpm_v4dot7_assets/minicpmv4.7/overall_performance_1b_instruct.png",
+   "size": 1455648,
+   "sha256": "c28c42e8ca323bb6669d7282045ceeed7b232dc34a1bb10c72437d89252944ce"
+  },
+  {
+   "path": "minicpm_v4dot7_assets/minicpmv4.7/overall_performance_35ba3b_instruct.png",
+   "size": 1487809,
+   "sha256": "0d90331f7e81184d10fe527c3b9d9bf2e0d0d2dee567f980cd25d43447687b43"
+  },
+  {
+   "path": "minicpm_v4dot7_assets/minicpmv4.7/overall_performance_35ba3b_language.png",
+   "size": 524366,
+   "sha256": "0a04cb534173e07bfea9579975a82eebea0cd29a7ac0862aa9f8b365b983024e"
+  },
+  {
+   "path": "minicpm_v4dot7_assets/minicpmv4.7/performance_efficiency_frontier.png",
+   "size": 1930098,
+   "sha256": "e2b7fc281ed6a4f3422bd7304f8ed02898bd7fa558d209fe9a399626f72ed2c8"
+  },
+  {
+   "path": "minicpm_v4dot7_assets/minicpmv4.7/v47_1b_iphone_en.gif",
+   "size": 16132771,
+   "sha256": "c74287b765a1127eb3ae053b21d18c2696b230c750fed12738e2f1459cc57856"
+  },
+  {
+   "path": "minicpm_v4dot7_assets/minicpmv4.7/v47_35ba3b_ipad_en.gif",
+   "size": 9672251,
+   "sha256": "e3fbf226902bc52b5fbfd05357e766c9f251e124c916dc9cee6341e09f2829d7"
+  },
+  {
+   "path": "minicpm_v4dot7_assets/minicpmv4.7/v47_35ba3b_iphone2_en.gif",
+   "size": 63029179,
+   "sha256": "d389edb5eaf323f7a0eb0e1912a8b3b0b071f0af656ff11328dfbc12b731cce0"
+  },
+  {
+   "path": "minicpm_v4dot7_assets/modelscope_logo.png",
+   "size": 6186,
+   "git_oid": "0286d28f488f6425c9671d2b0ec81db56aede2f8"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 3109054480,
+   "sha256": "8c4921ac83182c85190ad10c3aeb118d51e385d2d98ec13b88b514bbf6cac002"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 148,
+   "git_oid": "a7334d890fcf56c83bc3265d9f71f599b0048289"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 2,
+   "git_oid": "9e26dfeeb6e641a33dae4961196235bdb965b21b"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 19992481,
+   "sha256": "33861e37bb955af1e3f3061182b820f347eba2b9c2c1011c82794bf0d6e77b54"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 8947,
+   "git_oid": "c3a8b13641b85b8b4f48e506fd99e0642f9d6fe3"
+  }
+ ]
+}

@@ -1,0 +1,150 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "allenai/Molmo2-O-7B",
+ "revision": "784410650d12be9bc086118fdefa32d2c3bced86",
+ "captured": "2026-11-25T05:13:17+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 16327,
+   "git_oid": "d9d7c16ec18a1cd77815a4ac0dcd19c6c7846002"
+  },
+  {
+   "path": "added_tokens.json",
+   "size": 247,
+   "git_oid": "9e4ed1fe43ca9861dda31fd4ba147afbeb519fd0"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 3169,
+   "git_oid": "c1149ea803d36a1b379786becf193259356464b5"
+  },
+  {
+   "path": "config.json",
+   "size": 2966,
+   "git_oid": "e569cb9716a206497a370bccabd9a89d35e1ef44"
+  },
+  {
+   "path": "configuration_molmo2.py",
+   "size": 13905,
+   "git_oid": "27c6275330a17d159d2827ebe55ae3b5d0c09d82"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 117,
+   "git_oid": "1db5419b0c0aae2aee625c9c0b0a18bc81d210e7"
+  },
+  {
+   "path": "image_processing_molmo2.py",
+   "size": 21116,
+   "git_oid": "5b78fd8c1170aec613a616225ae553755733c2a4"
+  },
+  {
+   "path": "merges.txt",
+   "size": 916646,
+   "git_oid": "354558edcdbd64ca7abd407b8be3d5d09d39d781"
+  },
+  {
+   "path": "model-00001-of-00007.safetensors",
+   "size": 4883320888,
+   "sha256": "c59d83290b402186c5f07dbc1d3824049b7c45e2bf5f699d0149292370c834c1"
+  },
+  {
+   "path": "model-00002-of-00007.safetensors",
+   "size": 4857403152,
+   "sha256": "78cc21ba267dda59d9f4c861e7210c8ae349ec32c9b1b0b7c2d2d611618c3ade"
+  },
+  {
+   "path": "model-00003-of-00007.safetensors",
+   "size": 4857403200,
+   "sha256": "431192bae063707006a111b4fcd0d9a4f3728c84b31e9acaf477198063d29d5a"
+  },
+  {
+   "path": "model-00004-of-00007.safetensors",
+   "size": 4857403200,
+   "sha256": "d2dfac91d5ce48477afd12741ccd6e3985094208bf59eebbe6854b9d139bdb68"
+  },
+  {
+   "path": "model-00005-of-00007.safetensors",
+   "size": 4857403200,
+   "sha256": "924470fc671372515ed78e7badd7aa50e0fd30ae4e7d9f2d0afd516c25d19874"
+  },
+  {
+   "path": "model-00006-of-00007.safetensors",
+   "size": 4856272712,
+   "sha256": "537acbfd6608f7ebc9c1a51452f98462b34d80986ac2a64fc0e20cbbd5022a28"
+  },
+  {
+   "path": "model-00007-of-00007.safetensors",
+   "size": 1874035072,
+   "sha256": "3f3ec2f54f58925598edcccef2ec19b4d97e28a459d663eaea1e9491a52fb286"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 72832,
+   "git_oid": "f027e987a4b51aa4bc0b9f8b7ab4180238818253"
+  },
+  {
+   "path": "modeling_molmo2.py",
+   "size": 71559,
+   "git_oid": "5f2744a077b6ee49abaf78cca7f08ade7a4ce4fa"
+  },
+  {
+   "path": "molmo_2_logo_RGB.png",
+   "size": 26676,
+   "git_oid": "48956b67e54be779d56780a2add7de4c19919c78"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 555,
+   "git_oid": "be5230df66d867d5234f7f3e3a3859d497dcc844"
+  },
+  {
+   "path": "processing_molmo2.py",
+   "size": 16627,
+   "git_oid": "79e601819fdd203219fc5d0408dcf69612200ead"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 301,
+   "git_oid": "f6632eec8f85922b320bff78d65376f18af8d631"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 802,
+   "git_oid": "68dc588a68f4b30b460d372665a53ef2a5a20d1d"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 7139049,
+   "git_oid": "a4b7762ae2398c391bad1fb80c6dccaa790dbbe1"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 6431,
+   "git_oid": "2f5c52b02c01c1096fff2e42e107584e8b029494"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 984,
+   "git_oid": "4fd951126c70ebefe790d137d3999f0a88ad6bcd"
+  },
+  {
+   "path": "video_processing_molmo2.py",
+   "size": 37045,
+   "git_oid": "3385ee99c139ee5f69fe06e1d2a99b9e33b002b9"
+  },
+  {
+   "path": "vocab.json",
+   "size": 1611055,
+   "git_oid": "9c2954b1c94c5267dc84a5d0214efbc79ff8c3bd"
+  }
+ ]
+}

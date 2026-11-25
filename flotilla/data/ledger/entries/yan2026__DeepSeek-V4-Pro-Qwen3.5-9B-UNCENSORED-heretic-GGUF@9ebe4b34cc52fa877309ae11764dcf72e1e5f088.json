@@ -1,0 +1,40 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "yan2026/DeepSeek-V4-Pro-Qwen3.5-9B-UNCENSORED-heretic-GGUF",
+ "revision": "9ebe4b34cc52fa877309ae11764dcf72e1e5f088",
+ "captured": "2026-11-25T05:08:50+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1896,
+   "git_oid": "b61ca61760b4aa5b0c4588550fa1e2607119668b"
+  },
+  {
+   "path": "DeepSeek-V4-Pro-Qwen3.5-9B-UNCENSORED-heretic-BF16.gguf",
+   "size": 18407323008,
+   "sha256": "5394fc7a4fd594fe5802fc4119599bddc8ac25e0b1513512b5436970bc7bc92c"
+  },
+  {
+   "path": "DeepSeek-V4-Pro-Qwen3.5-9B-UNCENSORED-heretic-Q4_K_M.gguf",
+   "size": 5780092288,
+   "sha256": "0226675352b1f29a2b42d875bd4e49b074ecb707597d34a221c1ed6aaed45e98"
+  },
+  {
+   "path": "DeepSeek-V4-Pro-Qwen3.5-9B-UNCENSORED-heretic-Q8_0.gguf",
+   "size": 9786062208,
+   "sha256": "9969595a3aa12f6b337909574562a43180bc37bb8eae6a2ba6ab0256d1648280"
+  },
+  {
+   "path": "README.md",
+   "size": 2591,
+   "git_oid": "90949ca75587a38bac7938b2061c7c4cd95006dd"
+  },
+  {
+   "path": "mmproj-DeepSeek-V4-Pro-Qwen3.5-9B-UNCENSORED-heretic-BF16.gguf",
+   "size": 921705312,
+   "sha256": "17ece7d2c0897c008f7961d523dddc7ad2a667f46ef372ebb448e40d822bc40a"
+  }
+ ]
+}

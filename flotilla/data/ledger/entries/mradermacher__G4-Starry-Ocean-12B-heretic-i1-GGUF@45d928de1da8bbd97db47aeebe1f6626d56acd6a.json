@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/G4-Starry-Ocean-12B-heretic-i1-GGUF",
+ "revision": "45d928de1da8bbd97db47aeebe1f6626d56acd6a",
+ "captured": "2026-11-25T05:08:45+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3480,
+   "git_oid": "c893959dde09066290e35066bd9b2274f9716ff6"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-IQ1_M.gguf",
+   "size": 3202848384,
+   "sha256": "d1b9d043fe954d3f11b4fadac0f12c3f89476ae769f77d70cd07d8fc14d45b1c"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-IQ1_S.gguf",
+   "size": 2983691904,
+   "sha256": "55aec5f5388b6680fe5cd57738f34bdebdf6c324de931d279bb34be1531936cc"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-IQ2_M.gguf",
+   "size": 4371805824,
+   "sha256": "cbce58af119a3e2546ffa6da30db0ed0d0a2befecf13d04ef2d0a42026a1a70c"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-IQ2_S.gguf",
+   "size": 4079597184,
+   "sha256": "bc5b9116c16872531afbf784c4308ecceeb0da847755779c86de1f35f7dfab66"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-IQ2_XS.gguf",
+   "size": 3887842944,
+   "sha256": "5ef9a08047c97bd75df24272fe359a12a63b463cbcb7147366ac07159342fdea"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-IQ2_XXS.gguf",
+   "size": 3568109184,
+   "sha256": "9b98e99062679e2a0bbff296128d9546610d1152dba76cb0eda527fb272dea4a"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-IQ3_M.gguf",
+   "size": 5733992064,
+   "sha256": "7e184d4b9fc81e9a74598a76d8d4f37b2c409474ed77151c1f1454acedde0774"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-IQ3_S.gguf",
+   "size": 5528229504,
+   "sha256": "fa65a8f054c29187d42ec26b2549f8a741b3880b9eb73d2f1b67a786124b1ca8"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-IQ3_XS.gguf",
+   "size": 5272393344,
+   "sha256": "53e9fb03ac4a05363c9540fc546edb21071ef4d7f5daeaec9a0b75fb11e6f5f8"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-IQ3_XXS.gguf",
+   "size": 4849194624,
+   "sha256": "2feccb31521f36f25b09124f651e5c5729dd8b7921afce10bb47f2e5d5a3e643"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-IQ4_NL.gguf",
+   "size": 6975878784,
+   "sha256": "4d941405abf57e13a4c0629d12717cb5285a1bc8c6fdbc90d86f0019fba8719b"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-IQ4_XS.gguf",
+   "size": 6635255424,
+   "sha256": "a239491218b7654d6e31f2be7fe37d73e23f112698e48df1a9aac994406c7f18"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-Q2_K.gguf",
+   "size": 4830148224,
+   "sha256": "a6e51a10839ac547a6de569cea18ac4144f3fefc760546895df443ab8ef78380"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-Q2_K_S.gguf",
+   "size": 4504147584,
+   "sha256": "83990ef612fbecec70a776e556760ebdf25cb768de38ea680b7c8b74914bfc6b"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-Q3_K_L.gguf",
+   "size": 6566319744,
+   "sha256": "a065de0f8d843fb42dbbfa307217e798b1a38118598c16769c271ba1413635b8"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-Q3_K_M.gguf",
+   "size": 6087087744,
+   "sha256": "77811f2624a30440ee1811f3c62505b0613eea159407b1b5ba6dd3f8671a1028"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-Q3_K_S.gguf",
+   "size": 5528229504,
+   "sha256": "df4509fad46b2796b89962ce522a8af5cc265b26b3b0beeb64ef6fc9dbdeecb9"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-Q4_0.gguf",
+   "size": 6997997184,
+   "sha256": "69b6bf9a421a1d3242af3962eaeb1fba3ec598a73fd8b5eb4e11304e79c996db"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-Q4_1.gguf",
+   "size": 7657125504,
+   "sha256": "73387157e5e26b27fec22ff3c45f641ea1eabbaa6c87f0fb3dbfa4963b8ad169"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-Q4_K_M.gguf",
+   "size": 7381382784,
+   "sha256": "07fc8343f4b2f961acb927c08309756ef47c7deb5e289966b708dc40a96fcbbc"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-Q4_K_S.gguf",
+   "size": 7024047744,
+   "sha256": "07029ded53431905dd01777a59400cf621dc14b96b96ec6054683582e27ce1f9"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-Q5_K_M.gguf",
+   "size": 8547268224,
+   "sha256": "296720d943d190222dcd3a0666f96d5a6ce9be0a235b6ea655d5710c2d046cdc"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-Q5_K_S.gguf",
+   "size": 8338372224,
+   "sha256": "dccc1b49fa9f349407c058a4a7515b4d8825dd62ef2f75fd9d5d5a79329271a5"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.i1-Q6_K.gguf",
+   "size": 9786021504,
+   "sha256": "f3068ce14ad565056592225af9f43a8c022c33ba6bc997c3d2af4a8a9c625bf7"
+  },
+  {
+   "path": "G4-Starry-Ocean-12B-heretic.imatrix.gguf",
+   "size": 7480608,
+   "sha256": "368a8798daf602a3f91d93f6bd10c503484ebf0008a30017965102df4251adbf"
+  },
+  {
+   "path": "README.md",
+   "size": 6791,
+   "git_oid": "0d94e3e06b116260c5b4cf7b4a49ffd5a082e520"
+  }
+ ]
+}

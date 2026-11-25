@@ -1,0 +1,35 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "ayozhee/Qwen3.8-27B-Abliterated-GSQ-Orca-GGUF",
+ "revision": "54f88310a1f84fb81bac74ea5cc9b87be26d3c5d",
+ "captured": "2026-11-25T05:09:00+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1687,
+   "git_oid": "f0926c346cd2d38cecd734c007645171a6b6fcb7"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11544,
+   "git_oid": "f938136e3adacfd92be087f6e113b5d6d97f678f"
+  },
+  {
+   "path": "Qwen3.8-27B-Abliterated-GSQ-Orca-IQ2_S-MTP.gguf",
+   "size": 9607981120,
+   "sha256": "c30a7cdb9928bbbb3b376dad98b3df27b80d4ff8f3eee8d7d69ce0b5b1792112"
+  },
+  {
+   "path": "Qwen3.8-27B-Abliterated-GSQ-Orca-IQ3_S-MTP.gguf",
+   "size": 12120016960,
+   "sha256": "1a3cf19ae0825ca8a485cabd595ee149ddd5b7b75381c9df96ca6e76ccd33d19"
+  },
+  {
+   "path": "README.md",
+   "size": 8528,
+   "git_oid": "375af6fe52584c5abfc4525250a8e9427a92a661"
+  }
+ ]
+}

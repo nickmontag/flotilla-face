@@ -1,0 +1,115 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "microsoft/Phi-3.5-vision-instruct",
+ "revision": "12b77fb40b63a2c73c68243d3f767aab688a1b2a",
+ "captured": "2026-11-25T05:09:30+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "CODE_OF_CONDUCT.md",
+   "size": 444,
+   "git_oid": "f9ba8cf65f3e3104dd061c178066ec8247811f33"
+  },
+  {
+   "path": "LICENSE",
+   "size": 1141,
+   "git_oid": "9e841e7a26e4eb057b24511e7b92d42b257a80e5"
+  },
+  {
+   "path": "README.md",
+   "size": 18872,
+   "git_oid": "a72823aea78389863489cb9bbde9c5e0acbfca1d"
+  },
+  {
+   "path": "SECURITY.md",
+   "size": 2656,
+   "git_oid": "b3c89efc852e22f71eabf5dfbc6ac62493425eb6"
+  },
+  {
+   "path": "SUPPORT.md",
+   "size": 1244,
+   "git_oid": "291d4d43733f4c15a81ff598ec1c99fd6c18f64c"
+  },
+  {
+   "path": "config.json",
+   "size": 3778,
+   "git_oid": "d17800328ba8d16688e87fd95a3d6a6f851cc7db"
+  },
+  {
+   "path": "configuration_phi3_v.py",
+   "size": 10712,
+   "git_oid": "e3affcbfa11f737f840d7f0f4b34153fd0415098"
+  },
+  {
+   "path": "data_summary_card.md",
+   "size": 4419,
+   "git_oid": "e4a09b73c45f9994f7a69d9d53c5f814a904386a"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 136,
+   "git_oid": "4db2e1bb076bed5ceb0ba1b5fc1a7b2d5c2329ae"
+  },
+  {
+   "path": "model-00001-of-00002.safetensors",
+   "size": 4944122112,
+   "sha256": "be7bdee601478b3560aeb7122fe87a7d68445bb21b5f1ca88a764e8530b3aab8"
+  },
+  {
+   "path": "model-00002-of-00002.safetensors",
+   "size": 3349208776,
+   "sha256": "94621eca6936d7a2fb94bd90f37edb0e28850235e7ba2c5e20445d2fc56bcaed"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 68901,
+   "git_oid": "6b0eab0c79547e71df1cce9ffce0570a4e3e76a7"
+  },
+  {
+   "path": "modeling_phi3_v.py",
+   "size": 88866,
+   "git_oid": "f08fb1649b5d530c8a0ed1c74d8f379ddc50c096"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 442,
+   "git_oid": "5559abc31e77a754d6c876fc86878f7b6c679986"
+  },
+  {
+   "path": "processing_phi3_v.py",
+   "size": 22045,
+   "git_oid": "4a4109dd1c20e257e9fdc1e16071a0a9d66051de"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 119,
+   "git_oid": "b9cdc63dde1bec3027ff85f7ea884603bb4fff50"
+  },
+  {
+   "path": "sample_inference.py",
+   "size": 6778,
+   "git_oid": "1c8631abfdd72465afc08be3f989334f2b2b24c4"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 670,
+   "git_oid": "0616f20a3af0830d0991f72c15c4f5e6d5dc02fa"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 1851360,
+   "git_oid": "6a0986c7e1b01a58ff8cc31fc2d64ddd230fec7e"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 9519,
+   "git_oid": "3c7b5bda28936460312aa5161c8ad08d583829fc"
+  }
+ ]
+}

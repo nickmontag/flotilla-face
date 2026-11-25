@@ -1,0 +1,90 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated-GGUF",
+ "revision": "d74c178dfcba78a5c41dd8ea91fd2acd3e20d268",
+ "captured": "2026-11-25T05:08:48+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2835,
+   "git_oid": "f2554354aa319d50e8341669ff728e4e8c35d862"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.IQ4_XS.gguf",
+   "size": 5227894848,
+   "sha256": "9554cbcbbb7d13270ba92f68cca0be4240dcdde33bd64aa2764a98e25e1a11db"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.Q2_K.gguf",
+   "size": 3827259456,
+   "sha256": "8393df3ff5a78d7bf11b063320b156d5286f810f0311549588e62eabdc9adc34"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.Q3_K_L.gguf",
+   "size": 4925511744,
+   "sha256": "0a778b4d25cbf810c3661fa387f07dffb52852d6bf525e224e1ce59cdfb411c4"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.Q3_K_M.gguf",
+   "size": 4623521856,
+   "sha256": "22a9c82dd8dc47c698b9796cac2f427f4ec821ee21cf7322a535b6fab1c39397"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.Q3_K_S.gguf",
+   "size": 4259403840,
+   "sha256": "f166488102ea98c29d8b86961810e7956860c50ae66e79f4e29067795f11200f"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.Q4_K_M.gguf",
+   "size": 5629106240,
+   "sha256": "65b469f1f1ab51be6ae955db21d0e3b1c6b106469dacd22fed81db6ec2f9de10"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.Q4_K_S.gguf",
+   "size": 5351626816,
+   "sha256": "58834af7f2934a92d66d05380040e0aba0d41676e0caab4049f9e912d1b371f7"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.Q5_K_M.gguf",
+   "size": 6467967040,
+   "sha256": "d669affdd696fe3042fe3edcbca282d0cc3dece2269bec40798c4630f10163d7"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.Q5_K_S.gguf",
+   "size": 6305306688,
+   "sha256": "71cb6418c0cbeb05f5840fd9707d29aabbc38daca5dd1a24fa0b08b04269ee87"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.Q6_K.gguf",
+   "size": 7359256640,
+   "sha256": "050af2e3fd531856abe10ac69c74264c5dd8e0e556b00fe3b71e319c9bbd5667"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.Q8_0.gguf",
+   "size": 9527498816,
+   "sha256": "603a1d0c5c5cb979cc0fe6aa7c9a5e8f0e798c074a6d31270bc752c70e24b4bc"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.f16.gguf",
+   "size": 17920694336,
+   "sha256": "3d19160d5e1250f8ad7c62c06b1696cb1c26ca51870a95cf7f1f94804a30c689"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.mmproj-Q8_0.gguf",
+   "size": 624230080,
+   "sha256": "aa35f421bcf7263b5fdaafe6489374caf8de7b3bf38d395b6f5e3f4198ddc384"
+  },
+  {
+   "path": "Huihui-Qwen3.5-9B-Claude-4.6-Opus-abliterated.mmproj-f16.gguf",
+   "size": 918166336,
+   "sha256": "ddff5d353d7efb980449c1655cb6611f40997303483b73c539c01846030b22fe"
+  },
+  {
+   "path": "README.md",
+   "size": 5189,
+   "git_oid": "3509910c1cbf826f47212037b02d1eb29fe5c3eb"
+  }
+ ]
+}

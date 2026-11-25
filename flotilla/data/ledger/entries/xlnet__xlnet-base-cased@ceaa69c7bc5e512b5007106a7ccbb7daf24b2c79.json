@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "xlnet/xlnet-base-cased",
+ "revision": "ceaa69c7bc5e512b5007106a7ccbb7daf24b2c79",
+ "captured": "2026-11-25T05:09:38+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 345,
+   "git_oid": "dc08351d4dc0732d9c8af04070ced089b201ce2f"
+  },
+  {
+   "path": "README.md",
+   "size": 2696,
+   "git_oid": "4e4f8f511395866c89e43743fe447718cef06c08"
+  },
+  {
+   "path": "config.json",
+   "size": 760,
+   "git_oid": "679da36df1afad6a75c4bf7918f4fed8d50c006e"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 137,
+   "git_oid": "d7822b8e7629c92b7426298bc744dfd101742582"
+  },
+  {
+   "path": "generation_config_for_text_generation.json",
+   "size": 179,
+   "git_oid": "32e10ba52bdc2e67197e3d060bd40b9eb8c324a1"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 467042463,
+   "sha256": "b13dc2d3664a385b92d087229d5410d9e3020ede976e7ff4c62c9c85cd969a42"
+  },
+  {
+   "path": "rust_model.ot",
+   "size": 565354898,
+   "sha256": "938fdad36b1dfe04257318f4478f3999487b37e36e60342f335d040f54c16186"
+  },
+  {
+   "path": "spiece.model",
+   "size": 798011,
+   "git_oid": "9cdb90c57fde2a1e883ef1a944d4d22e3d25d2cf"
+  },
+  {
+   "path": "tf_model.h5",
+   "size": 565485600,
+   "sha256": "c91def0a6a0adae911fed1630194d76497736887380848054494ed9ed9324c32"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 1382015,
+   "git_oid": "b8fa9cbfba7a6c3deb14cec45e801f57b01627dc"
+  }
+ ]
+}

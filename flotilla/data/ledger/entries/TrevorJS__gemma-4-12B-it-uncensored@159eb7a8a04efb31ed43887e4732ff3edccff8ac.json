@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "TrevorJS/gemma-4-12B-it-uncensored",
+ "revision": "159eb7a8a04efb31ed43887e4732ff3edccff8ac",
+ "captured": "2026-11-25T05:08:29+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "README.md",
+   "size": 4929,
+   "git_oid": "7b8c4428e6b1236e85aaf7346f0dcbde2e5ee69e"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 17466,
+   "git_oid": "e61bbfe9a31db79ea1e4e557b046f895ad7899d0"
+  },
+  {
+   "path": "config.json",
+   "size": 4338,
+   "git_oid": "befeb9e8ff21813cc397c235e0455447940cec4f"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 255,
+   "git_oid": "65fd0cf23e07fb1830f85f56be72b1af7004477c"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 23919549408,
+   "sha256": "dd7fcab67274aea3adaf0f29fb6bc120b504f8b1a597124f03c15259e20c6f84"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 32169780,
+   "sha256": "a2619fe11b50dbed06ac443c51d757b354d0b62d64baa514404d4e84e6713519"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 2749,
+   "git_oid": "df4afd629c3e51c2a7ef4e72b967a3f17acbffe1"
+  }
+ ]
+}

@@ -1,0 +1,120 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "SC117/Spark-X2.6-4B-abliterated-FIT-GGUF",
+ "revision": "553e60db1f336797dedbf740c0e7db7b751bc614",
+ "captured": "2026-11-25T05:08:27+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2244,
+   "git_oid": "d686d53e0c8bc0d971ed3d9797227f64b18c77dd"
+  },
+  {
+   "path": "README.md",
+   "size": 33399,
+   "git_oid": "1ffd50b43b37de85f4b5b8b7c3a5997dc811c673"
+  },
+  {
+   "path": "README.zh-CN.md",
+   "size": 32420,
+   "git_oid": "6bc50e6f99f6bf132a794b255f1c82f13c424a96"
+  },
+  {
+   "path": "SHA256SUMS.txt",
+   "size": 812,
+   "git_oid": "6564b5e321cd95bdba51f5d79e413e9da0fad5e7"
+  },
+  {
+   "path": "Spark-X2.6-4B-abliterated-BF16-imatrix.gguf",
+   "size": 7151840,
+   "sha256": "5faaf027f3bbe499920ce8c08f872b719b3dcd8f1dff3a145376940cf097af47"
+  },
+  {
+   "path": "Spark-X2.6-4B-abliterated-BF16.gguf",
+   "size": 8229922048,
+   "sha256": "9c2abf3d50e80352516c6478733942d935615dc3ae7362b7e0a6fb14899a7192"
+  },
+  {
+   "path": "Spark-X2.6-4B-abliterated-FIT-BALANCED-3G-Q4_K_M.gguf",
+   "size": 2695724544,
+   "sha256": "6fc01953c2c13b111fb5efabf2b7c94e916a42c8ad8f28f005378035b6fc28c3"
+  },
+  {
+   "path": "Spark-X2.6-4B-abliterated-FIT-COMPACT-2G-IQ4_XS.gguf",
+   "size": 2376047104,
+   "sha256": "c40d657f4b96f45ba7d0172cf3cee130109945744e2d153cbacf9ff812accb53"
+  },
+  {
+   "path": "Spark-X2.6-4B-abliterated-FIT-MINI-2G-Q3_K_M.gguf",
+   "size": 2337421824,
+   "sha256": "0b07e6521b6e6431d1e3832709e66ab51e0df781c4f7903f02b888a3e3de9e89"
+  },
+  {
+   "path": "Spark-X2.6-4B-abliterated-FIT-QUALITY-3G-Q5_K_M.gguf",
+   "size": 3001768704,
+   "sha256": "321bb2e71f9bbba224fdf0e4d3d7cc89293535cee4feea2fdc0963db909ce4be"
+  },
+  {
+   "path": "Spark-X2.6-4B-abliterated-FIT-REFERENCE-3G-Q6_K.gguf",
+   "size": 3379174144,
+   "sha256": "15bbbebeada06c5d41cc1768f7fb28b6b23eb4aa513bb31410d1ff7c51274581"
+  },
+  {
+   "path": "results/Spark-X2.6-4B-abliterated-FIT-BALANCED-3G-Q4_K_M.gguf.quantize-oracle.log",
+   "size": 58441,
+   "git_oid": "9563079c77d1ae8bfebc06bb37a7e59e3b93631c"
+  },
+  {
+   "path": "results/Spark-X2.6-4B-abliterated-FIT-BALANCED-3G-Q4_K_M.gguf.quantize-record.json",
+   "size": 3452,
+   "git_oid": "704c3e558a5725924f18bc3a7a405297eeb6b910"
+  },
+  {
+   "path": "results/Spark-X2.6-4B-abliterated-FIT-MINI-2G-Q3_K_M.gguf.quantize-oracle.log",
+   "size": 58337,
+   "git_oid": "c974b0c78fa521a52c074424ced5cd5d6e8ab4e2"
+  },
+  {
+   "path": "results/Spark-X2.6-4B-abliterated-FIT-MINI-2G-Q3_K_M.gguf.quantize-record.json",
+   "size": 3508,
+   "git_oid": "5ca58a9f16845079fa5679203c60becf847c52fe"
+  },
+  {
+   "path": "results/Spark-X2.6-4B-abliterated-FIT-QUALITY-3G-Q5_K_M.gguf.quantize-oracle.log",
+   "size": 52776,
+   "git_oid": "b5754f1ac1cc895cd76a8cc2cc18c093ce75d6b2"
+  },
+  {
+   "path": "results/Spark-X2.6-4B-abliterated-FIT-QUALITY-3G-Q5_K_M.gguf.quantize-record.json",
+   "size": 3518,
+   "git_oid": "b0296c4d2db11e88906302027b56c4b0107cf2f4"
+  },
+  {
+   "path": "results/behaviour-probe.json",
+   "size": 17593,
+   "git_oid": "b7d9eabbc05c5f4351195bfa5f471161a4158d51"
+  },
+  {
+   "path": "results/fit-vs-native-en.png",
+   "size": 241291,
+   "sha256": "998c17cde55041049682af8b7340037bf3be253ac31ad30b5af5845996e10c1d"
+  },
+  {
+   "path": "results/fit-vs-native-zh.png",
+   "size": 251783,
+   "sha256": "38a7686f2503565697a98b6aa6ecb73c0a9a35e4764d0e55f3af3e806c936dd4"
+  },
+  {
+   "path": "results/tier-artifacts.json",
+   "size": 2189,
+   "git_oid": "6463cbc97afacd4ad10f15b40a3cbb6d06c2286f"
+  },
+  {
+   "path": "results/verification.json",
+   "size": 3952,
+   "git_oid": "cb934fc3cd5c6fec557708eb64653faa3e62d8f9"
+  }
+ ]
+}

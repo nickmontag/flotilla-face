@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "openbmb/MiniCPM-V-4.7-1B-DSpark-gguf",
+ "revision": "2158deac9b84332810676e8dee826135af92014d",
+ "captured": "2026-11-25T05:09:36+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2296,
+   "git_oid": "55139a251355b5b365416dfc948d45c790c8b6fb"
+  },
+  {
+   "path": "README.md",
+   "size": 4597,
+   "git_oid": "ead98f9c3b42b72cfac3fd32d092c7f4c233fffb"
+  },
+  {
+   "path": "dspark-MiniCPM-V-4_7-1B-F16.gguf",
+   "size": 438065472,
+   "sha256": "c24fc0bf1ce056cda3c44b7651537747bd876e63baeccd7cc90acfa70985bf48"
+  },
+  {
+   "path": "dspark-MiniCPM-V-4_7-1B-Q4_0.gguf",
+   "size": 131113728,
+   "sha256": "2bdd8a71387f4f673bc5d5058d17b2069da303610ed92cea1ece0642b264f0c5"
+  },
+  {
+   "path": "dspark-MiniCPM-V-4_7-1B-Q4_1.gguf",
+   "size": 144459456,
+   "sha256": "6feda32ec1754c9dd86c8625b54d5b72aca88906751109a9b1664341f9bcc317"
+  },
+  {
+   "path": "dspark-MiniCPM-V-4_7-1B-Q4_K_M.gguf",
+   "size": 133276416,
+   "sha256": "55531f5f791b7a3090d0bba0de065fd28fc8fda4f74de2b7e54ba2e03f87a38d"
+  },
+  {
+   "path": "dspark-MiniCPM-V-4_7-1B-Q4_K_S.gguf",
+   "size": 131375872,
+   "sha256": "466c4020d4cca29753db7b7374c95e48fa47948a2622b8e173a7f9d66122b351"
+  },
+  {
+   "path": "dspark-MiniCPM-V-4_7-1B-Q5_0.gguf",
+   "size": 157805184,
+   "sha256": "7057d87b4f265ae57100eea0773298614fb02c086764205caf18ce547491769d"
+  },
+  {
+   "path": "dspark-MiniCPM-V-4_7-1B-Q5_1.gguf",
+   "size": 171150912,
+   "sha256": "c9c053a5e8014c79178ed9eb58b5617c31d6b126fb2bbfc96977fe4759427bd4"
+  },
+  {
+   "path": "dspark-MiniCPM-V-4_7-1B-Q5_K_M.gguf",
+   "size": 158919296,
+   "sha256": "c53fff0b135653bac82d7faab80cf2a08331bd5e8959a90e0c95f9706d92d214"
+  },
+  {
+   "path": "dspark-MiniCPM-V-4_7-1B-Q5_K_S.gguf",
+   "size": 157805184,
+   "sha256": "96a8f75cac1a428037a3d35d0b4b3f26cd2f3469cca1567d1fd70fc83d7609c2"
+  },
+  {
+   "path": "dspark-MiniCPM-V-4_7-1B-Q6_K.gguf",
+   "size": 186164864,
+   "sha256": "3cccecdababa23b0addffe0b0bf6f4707f7953fe146b19ebe4a1c0a4ef38049f"
+  },
+  {
+   "path": "dspark-MiniCPM-V-4_7-1B-Q8_0.gguf",
+   "size": 237879552,
+   "sha256": "3ab2149d8820038907f2d2ea24d0a3299f4f6fcf5c1c5713970f3023cdfb27cf"
+  }
+ ]
+}

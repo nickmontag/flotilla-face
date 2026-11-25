@@ -1,0 +1,43 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "orcarouter/Flint-abliterated-GGUF",
+ "revision": "4d618d1cb1d7782d4b08762fb664487bf5e4d3c4",
+ "captured": "2026-11-25T05:08:49+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1702,
+   "git_oid": "1a12c12fb82806f2e668a7dbb7e3a4b35b5a7f5f"
+  },
+  {
+   "path": "Flint-abliterated-Mix-12G.gguf",
+   "size": 11991610912,
+   "sha256": "fac5ca88c572b7c3990814eba8070360485082f9f3fec2698a1b36dadcf20593",
+   "lfs_pointer_oid": "21389548f7fa96e70bc1611d4154c4cf73910760"
+  },
+  {
+   "path": "Flint-abliterated-Mix-24G.gguf",
+   "size": 23993808416,
+   "sha256": "f416403575f77a10e6e12bfd3eb919c727a610c9c622b72fd32de0c4f220fdbd",
+   "lfs_pointer_oid": "36e722d6492f09ae26815b2574df4dcd2ee1cab2"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11356,
+   "git_oid": "f49a4e16e68b128803cc2dcea614603632b04eac"
+  },
+  {
+   "path": "README.md",
+   "size": 18320,
+   "git_oid": "26c0f835b61dd0b97c95b1ca8154f9148b33402c"
+  },
+  {
+   "path": "imatrix.gguf",
+   "size": 450750176,
+   "sha256": "3f24db3226fea22e9ac13c0c5fb035ada2e245b16192a4ca35c8babeec892fcb",
+   "lfs_pointer_oid": "d27650381ed33ba11c2fd4de0ee6137420cc06ad"
+  }
+ ]
+}

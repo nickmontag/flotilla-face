@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "jimmy31chen/RVN-Qwen3.8-Flash-Next-Abliterated-Uncensored-IQ3_S-Strata",
+ "revision": "17876139539724fc6f0b0fbfdcf7b1daa494d045",
+ "captured": "2026-11-25T05:08:16+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1596,
+   "git_oid": "34f575d790bfdb8fc7f5a70315b401d3dd4e3608"
+  },
+  {
+   "path": "README.md",
+   "size": 7286,
+   "git_oid": "12d2549cda66c2c0ceed138ef60f925f04a93d14"
+  },
+  {
+   "path": "RVN-Qwen3.8-Flash-Next-IQ3_S-merged.gguf",
+   "size": 88882765184,
+   "sha256": "cb5958e5b0e97804fa2973f7ce36943a1b0d735b1b83fc1e52b8c3f3b97f87e6"
+  },
+  {
+   "path": "pack/compat-bf16.json",
+   "size": 52646,
+   "git_oid": "a5b24601ac30db5b18b360f9da601ead0c537902"
+  },
+  {
+   "path": "pack/dense.bin",
+   "size": 1538035200,
+   "sha256": "4f87fa3fb3bb87155fada5e0abb05df3d6c9a2872cd70cc3d9f3cc40a7d87eda"
+  },
+  {
+   "path": "pack/index.txt",
+   "size": 93658,
+   "git_oid": "c146895daef0d5845de74bad99fc8d9172c8bd25"
+  },
+  {
+   "path": "pack/native_experts.txt",
+   "size": 3316,
+   "git_oid": "8de55c5bb2cd6757a27211b052eaedd484f53c0b"
+  },
+  {
+   "path": "pack/tokenizer/chat_template.jinja",
+   "size": 8952,
+   "git_oid": "c0c686f9c38d70d179fb7b5f5aa7530bc913dda3"
+  },
+  {
+   "path": "pack/tokenizer/merges.txt",
+   "size": 3353258,
+   "git_oid": "8a3e6bda772e39bf37ee230954da5fd472ad2e01"
+  },
+  {
+   "path": "pack/tokenizer/token_type.json",
+   "size": 744960,
+   "git_oid": "135db3207db449b0be0704e7a6c86cf35dbca36a"
+  },
+  {
+   "path": "pack/tokenizer/tokenizer.json",
+   "size": 541,
+   "git_oid": "911836323abf8b7022c6e97ade2dcdf0c86e0410"
+  },
+  {
+   "path": "pack/tokenizer/vocab.json",
+   "size": 5737005,
+   "git_oid": "5104e655af5680f9c7b56da25c71eccb4e860a6a"
+  }
+ ]
+}

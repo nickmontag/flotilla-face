@@ -1,0 +1,45 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "HauhauCS/Qwen3.5-4B-Uncensored-HauhauCS-Aggressive",
+ "revision": "c09cdbcdb1fefad6d335809d445621b5f5ba0c6e",
+ "captured": "2026-11-25T05:08:16+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1968,
+   "git_oid": "3af28dcfd3ef8b54c6552b243977b7fb43cb5dc2"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored-HauhauCS-Aggressive-BF16.gguf",
+   "size": 8424393056,
+   "sha256": "1be9a739b6de5cf1110f4d74a9fa5f590e7bdf6dcce69324b66d1a669badfb44"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored-HauhauCS-Aggressive-Q4_K_M.gguf",
+   "size": 2707513696,
+   "sha256": "79e28ecacf84e75b6056cf4059636d435aa9eb67795780f7b7dbc7d32a962741"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored-HauhauCS-Aggressive-Q6_K.gguf",
+   "size": 3464055136,
+   "sha256": "ba93c21300854075ab42655bc30dca82c7c6c958f511d1ec9ea2b3e750b4b75f"
+  },
+  {
+   "path": "Qwen3.5-4B-Uncensored-HauhauCS-Aggressive-Q8_0.gguf",
+   "size": 4482402656,
+   "sha256": "3aa21dfc185595bb9f3f8f98f08325fcecfdf446c510ce2b03fe19104e700c16"
+  },
+  {
+   "path": "README.md",
+   "size": 2921,
+   "git_oid": "b4abcaa4c488e19910464c1d29afb7d87b847c38"
+  },
+  {
+   "path": "mmproj-Qwen3.5-4B-Uncensored-HauhauCS-Aggressive-BF16.gguf",
+   "size": 675568768,
+   "sha256": "a1e32e86ea99aa7a56f3dcfe7e63c1d0be9439d31fd07087099f15bc0fda0f22"
+  }
+ ]
+}

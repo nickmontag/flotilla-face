@@ -1,0 +1,90 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llm-jp/llm-jp-4-8b-instruct",
+ "revision": "098f2b2cf33021eba19a6d3582aa3d071ccc0aff",
+ "captured": "2026-11-25T05:13:08+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1634,
+   "git_oid": "6e9f9547ff1f0cb3fd94d8341d9438d3c39d013e"
+  },
+  {
+   "path": "README.md",
+   "size": 7908,
+   "git_oid": "619bc6cc08794b8106dbd72b9f3902ac760a3239"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 16752,
+   "git_oid": "32526a87935e653ddb951ce49a12ca20e30c8505"
+  },
+  {
+   "path": "config.json",
+   "size": 678,
+   "git_oid": "7e6d893ba7c3aaf98fdb294ee39149cc1ff30bf1"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 111,
+   "git_oid": "3da418722744a91d0862a9f05ef251bb9a6a7557"
+  },
+  {
+   "path": "llmjp4_harmony.py",
+   "size": 4177,
+   "git_oid": "6d23fd8dab3ee7e320f4d93c4d877b0efc0bad8b"
+  },
+  {
+   "path": "llmjp4_tokenizer.py",
+   "size": 3876,
+   "git_oid": "60f99e08594384eb82ef18cc1dfd40f209f3a238"
+  },
+  {
+   "path": "model-00001-of-00004.safetensors",
+   "size": 4982955968,
+   "sha256": "4452ee9fc5d9cf7552d377c3724848e8a40a3426d9fd1faf473d513b5af1c4ec"
+  },
+  {
+   "path": "model-00002-of-00004.safetensors",
+   "size": 4999819320,
+   "sha256": "9331a76ec6d4d9fd323118e27a45a5911c6dce6296f7e8d05e7d0882d31d654f"
+  },
+  {
+   "path": "model-00003-of-00004.safetensors",
+   "size": 4915916184,
+   "sha256": "70e25cc0fda7d30bbfaf85ccfa77aa027759aa630c5661d65cae959410de3dec"
+  },
+  {
+   "path": "model-00004-of-00004.safetensors",
+   "size": 2281744072,
+   "sha256": "1635dbb4250a377af62d5b18e5d1e98b0ec277bc5a140c8d100405da3bbdf720"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 23950,
+   "git_oid": "27906ca389304e9a905ed76d1d6c64f2b23b4e24"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 1002,
+   "git_oid": "445f3172b95da87f85886e9d3a9b3eb4eb2afc80"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 12879473,
+   "sha256": "a35f390c6489427e4dcac7d957f34d9dacd7332972c990f4b4eb6b724c8873f4"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 63800,
+   "git_oid": "e8c41cfc6b7f2d5a8a7f5551f72d36276e8dd8d9"
+  },
+  {
+   "path": "v4_pretraining_overview.png",
+   "size": 281924,
+   "sha256": "24c21c60ca5a0b5c9a65841efd9ad98344dd66d4ac7f1fe80ea5100afefe40ef"
+  }
+ ]
+}

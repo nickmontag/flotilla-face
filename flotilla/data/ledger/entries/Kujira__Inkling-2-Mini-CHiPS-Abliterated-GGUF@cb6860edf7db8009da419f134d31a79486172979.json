@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Kujira/Inkling-2-Mini-CHiPS-Abliterated-GGUF",
+ "revision": "cb6860edf7db8009da419f134d31a79486172979",
+ "captured": "2026-11-25T05:09:01+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1944,
+   "git_oid": "39bede739f7511045760a795132e7dc0e666f2ba"
+  },
+  {
+   "path": "Inkling-2-Mini-CHiPS-Abliterated-UD-IQ2_XXS.gguf",
+   "size": 8486237632,
+   "sha256": "23fce18f67920d7fdcbb3a7bb19c31373f2082fd79e8950fe854810fb04d5fc8"
+  },
+  {
+   "path": "Inkling-2-Mini-CHiPS-Abliterated-UD-Q2_K_XL.gguf",
+   "size": 9138716608,
+   "sha256": "f0ca1a1b06db171df1ab70e940fe1dbf9ffe48043af85a99f2f098a2dc006c76"
+  },
+  {
+   "path": "Inkling-2-Mini-CHiPS-Abliterated-UD-Q3_K_XL.gguf",
+   "size": 13631779296,
+   "sha256": "44253937a8dc16204bd0cee8fde2bf29e20b388b52483d5be9d12a9705c1aa78"
+  },
+  {
+   "path": "Inkling-2-Mini-CHiPS-Abliterated-UD-Q4_K_XL.gguf",
+   "size": 17629760736,
+   "sha256": "d3dc2dd73af43c1b4211c447ac74efd456525e186ab633aa7c8c9a88e17608dc"
+  },
+  {
+   "path": "Inkling-2-Mini-CHiPS-Abliterated-UD-Q8_K_XL.gguf",
+   "size": 22867452896,
+   "sha256": "88d0046092abe78f8b93016a1dda273e4ad904b260da052b15e7e41bd1d1d637"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11358,
+   "git_oid": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+  },
+  {
+   "path": "README.md",
+   "size": 13874,
+   "git_oid": "ce50660e1c684fa074954a57378fdf4324fe0a3c"
+  }
+ ]
+}

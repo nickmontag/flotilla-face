@@ -1,0 +1,195 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "Jiunsong/SuperQwen3.8-27b-abliterated-MLX-4bit",
+ "revision": "bd2a440fb188d55be2299771cf9740128f693d72",
+ "captured": "2026-11-25T05:08:57+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1570,
+   "git_oid": "52373fe24473b1aa44333d318f578ae6bf04b49b"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11544,
+   "git_oid": "f938136e3adacfd92be087f6e113b5d6d97f678f"
+  },
+  {
+   "path": "README.md",
+   "size": 9223,
+   "git_oid": "edae0bf5f71047d11849213983d9d9dc6eb9bc12"
+  },
+  {
+   "path": "SHA256SUMS.json",
+   "size": 6827,
+   "git_oid": "d00f10d8c6d4eb9318acced58e26a1251a506f42"
+  },
+  {
+   "path": "assets/superqwen38-hero.svg",
+   "size": 2677,
+   "git_oid": "e46af4c135253450f60caf2b5debf44d5b345e99"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 9201,
+   "git_oid": "bef9dfba2f32a0cf860cdfc625ddc78109c68921"
+  },
+  {
+   "path": "config.json",
+   "size": 4226,
+   "git_oid": "7e96c59f4776ebadd4d70b57938904d8aa2494b0"
+  },
+  {
+   "path": "evidence/abliteration_config.json",
+   "size": 79529,
+   "git_oid": "b3ee9eda7366d5839216afce541c233e737d768b"
+  },
+  {
+   "path": "evidence/abliteration_verification.json",
+   "size": 50137,
+   "git_oid": "5b43b919702b02042fbadc777a0c93268364d751"
+  },
+  {
+   "path": "evidence/candidate_r4g090_harmful_refusal_32.json",
+   "size": 11240,
+   "git_oid": "dbe7a03cbeb4200c48234a58d50acc65d9aa292b"
+  },
+  {
+   "path": "evidence/mlx_dflash2_c1_v3.json",
+   "size": 14330,
+   "git_oid": "792aad7be138d77779fb37c404fd47fc497c9a6c"
+  },
+  {
+   "path": "evidence/mlx_multimodal_harmful_v3.json",
+   "size": 14191,
+   "git_oid": "e6aeb060d971be2d972ff19dd73b08f9e97758af"
+  },
+  {
+   "path": "evidence/mlx_quality_mlx0321_v3.json",
+   "size": 22009,
+   "git_oid": "a69f7b1d67944e88cf7958fddfa17d8170ecc5f4"
+  },
+  {
+   "path": "evidence/parent_harmful_refusal_32.json",
+   "size": 11205,
+   "git_oid": "65d8a6199fcb9819114fa19f01ad4049230e828b"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 202,
+   "git_oid": "023756cfadf88e5bf69eefeee3e172f38c448d64"
+  },
+  {
+   "path": "merges.txt",
+   "size": 3353259,
+   "git_oid": "a494e019ca1502219fd0128658b979e5f05ae8e8"
+  },
+  {
+   "path": "mlx_requantization_manifest.json",
+   "size": 58337,
+   "git_oid": "152ec05206b5b10875cd66f666c99b44942e36ad"
+  },
+  {
+   "path": "model-00001-of-00003.safetensors",
+   "size": 5343268942,
+   "sha256": "d5a71a703f6903abc213676ada5df3547453ad2da3beaee31c6472fe399b9b03"
+  },
+  {
+   "path": "model-00002-of-00003.safetensors",
+   "size": 5354185230,
+   "sha256": "8f9f7404b5e6f90b5400de192aa755ad76ae304be5e4f83df45e782d6dcdc932"
+  },
+  {
+   "path": "model-00003-of-00003.safetensors",
+   "size": 5357087597,
+   "sha256": "53797fd8ffea0908bba200a9b717d77368fbad9eb0d689735944ef4601d82002"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 218281,
+   "git_oid": "05a3a3a17368d54d2887783e96b3a8191e9655f0"
+  },
+  {
+   "path": "overthinking_template_report.json",
+   "size": 682,
+   "git_oid": "b0bf47b59d1dd50bbe73b0cf99692111a014595d"
+  },
+  {
+   "path": "preprocessor_config.json",
+   "size": 390,
+   "git_oid": "2ea84a437d448ff71b08df68fdd949d5cc4ebb64"
+  },
+  {
+   "path": "processor_config.json",
+   "size": 991,
+   "git_oid": "8f29fe38a79a9d8367009ebebd25c35b1f3c4e40"
+  },
+  {
+   "path": "repro/mlx_vlm/speculative/dflash.py",
+   "size": 21011,
+   "git_oid": "25561cf759e4d64b3e4e862db193d40e04681628"
+  },
+  {
+   "path": "repro/mlx_vlm/speculative/drafters/qwen3_dflash/__init__.py",
+   "size": 400,
+   "git_oid": "cc5317345dd1e8db6ec48edbd727c3831461e503"
+  },
+  {
+   "path": "repro/mlx_vlm/speculative/drafters/qwen3_dflash/config.py",
+   "size": 2438,
+   "git_oid": "9cfc2757044b5e2aa95d41d84da56bbc072d10ad"
+  },
+  {
+   "path": "repro/mlx_vlm/speculative/drafters/qwen3_dflash/dflash.py",
+   "size": 16742,
+   "git_oid": "734af2c8466e0b8e7cfe85c8ff64d439d43571c9"
+  },
+  {
+   "path": "repro/scripts/benchmark_superqwen38_mlx_multimodal_refusal.py",
+   "size": 5910,
+   "git_oid": "b74a185fa62836f46aace819511fa25ab5e2410e"
+  },
+  {
+   "path": "repro/scripts/benchmark_superqwen38_mlx_quality.py",
+   "size": 10494,
+   "git_oid": "f293f791baada48f6dbd58ec2cf52b1589c5b0ca"
+  },
+  {
+   "path": "repro/scripts/benchmark_superqwen38_mlx_vlm_dflash2.py",
+   "size": 13122,
+   "git_oid": "8c0927dda1f54c70929d9c8e42eb65640c78ffc3"
+  },
+  {
+   "path": "repro/scripts/build_superqwen38_mlx4.py",
+   "size": 9610,
+   "git_oid": "e534b273dfe74c4df7cc2fce70778a27b0e234ab"
+  },
+  {
+   "path": "repro/scripts/patch_qwen38_overthinking.py",
+   "size": 5977,
+   "git_oid": "7d09d7be8b5e446bc9192d093ad87c86b4686292"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 12809320,
+   "sha256": "0997f410c57a1f4e53b09e4be8f4a172d90edd9564368fb0847030937229b9f3"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 16607,
+   "git_oid": "12911679b2400540a94768b8c0a0bca7861f8b1f"
+  },
+  {
+   "path": "video_preprocessor_config.json",
+   "size": 385,
+   "git_oid": "3ba673a5ad7d4d13f54155ecd38b2a94a6dac8fe"
+  },
+  {
+   "path": "vocab.json",
+   "size": 6722759,
+   "git_oid": "0aa0ce0658d60ac4a5d609f4eadb0e8e43514176"
+  }
+ ]
+}

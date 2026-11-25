@@ -1,0 +1,35 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "badtheorylabs/BTL-4-Compact",
+ "revision": "ef9833b1a486022efc3a6386e2e3d94bd5ccfe5a",
+ "captured": "2026-11-25T05:13:01+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1574,
+   "git_oid": "16fc86133e58e3e7ca297ed165b14131a61297d9"
+  },
+  {
+   "path": "BTL-4-IQ2_XXS.gguf",
+   "size": 9967966240,
+   "sha256": "6b7c298cf909fc04428ecf360a29dcc578188b1c90aa6ed435159f5a0d351496"
+  },
+  {
+   "path": "README.md",
+   "size": 5144,
+   "git_oid": "b73767ecb887441349c40de3118f9302a7fbf58a"
+  },
+  {
+   "path": "eval/bfcl_compact.py",
+   "size": 16887,
+   "git_oid": "566232f09072975f704a985b8c980df911e17d3c"
+  },
+  {
+   "path": "eval/probe_tools.py",
+   "size": 5197,
+   "git_oid": "70be59bbba6269bd15d2e5a71e568e861f4c4bd5"
+  }
+ ]
+}

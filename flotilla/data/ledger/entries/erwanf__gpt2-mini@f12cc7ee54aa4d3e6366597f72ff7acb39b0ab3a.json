@@ -1,0 +1,55 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "erwanf/gpt2-mini",
+ "revision": "f12cc7ee54aa4d3e6366597f72ff7acb39b0ab3a",
+ "captured": "2026-11-25T05:09:25+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1519,
+   "git_oid": "a6344aac8c09253b3b630fb776ae94478aa0275b"
+  },
+  {
+   "path": "README.md",
+   "size": 3608,
+   "git_oid": "b6f0bd036e90e557bac47fb94a985a0f96a55d07"
+  },
+  {
+   "path": "config.json",
+   "size": 834,
+   "git_oid": "f1df355dcaad5f7ee75e13009b24c8f844a92d0f"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 144,
+   "git_oid": "2b8dd757bd3d1afb8ea7367df50d56915429eaec"
+  },
+  {
+   "path": "merges.txt",
+   "size": 456318,
+   "git_oid": "226b0752cac7789c48f0cb3ec53eda48b7be36cc"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 154422320,
+   "sha256": "16192f4149f7d6a7c754dbae4d0ec2d06a259b9b11b91445585ecb617f9b2bf0"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 438,
+   "git_oid": "773bd68cf0900427f8d69dd974724e3abb9a08a9"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 514,
+   "git_oid": "ddd94edbf53961707b2111efe79a797c1fdf8f33"
+  },
+  {
+   "path": "vocab.json",
+   "size": 999186,
+   "git_oid": "a15dd0028acd1dd2c1c2394c80e1de8f3f12a0e4"
+  }
+ ]
+}

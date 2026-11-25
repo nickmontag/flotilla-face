@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Ling-3.0-tiny-Uncensored-Abliterated-i1-GGUF",
+ "revision": "b5c325852d207325c47b6baa6d3cade619b62186",
+ "captured": "2026-11-25T05:09:04+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3705,
+   "git_oid": "1f341241c0c0a63ff3fbd3783acbd35ec9069176"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-IQ1_M.gguf",
+   "size": 1928456352,
+   "sha256": "61089926824f7e6f820240c4a93df9bba864a31c4a6c39b53c07233092f6839d"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-IQ1_S.gguf",
+   "size": 1760679072,
+   "sha256": "a6803ef295c44662a127efa1098d7065898d8210dd85f5ec7743de4627f36b83"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-IQ2_M.gguf",
+   "size": 2704010400,
+   "sha256": "7dec5be4f03dcc3adce313790b2eb6aaa1af0a59191251d7651b1c0dff29965b"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-IQ2_S.gguf",
+   "size": 2480307360,
+   "sha256": "1de435528b93544dd0e4238905a9e66e133a189f3854300dc6bf2a7a75ef1fdd"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-IQ2_XS.gguf",
+   "size": 2434147488,
+   "sha256": "8b13046bab3055468560cf7fa78df4c5a8569563fdafcb8d0873ed4f55ba2689"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-IQ2_XXS.gguf",
+   "size": 2208085152,
+   "sha256": "e6b66082fd7fcf46dbe720606853c8f1b965bd2f011e6f3e4372b50d9c2255d1"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-IQ3_M.gguf",
+   "size": 3556951200,
+   "sha256": "fa962028aa7bc667665827a75ef5aa98ccfad32522204066613321d64759a7b2"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-IQ3_S.gguf",
+   "size": 3511516320,
+   "sha256": "50a7cecb6884a4895832aefa9a5d6003fbcacf986e34a2c6f92dbc310fb6e7d7"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-IQ3_XS.gguf",
+   "size": 3335011488,
+   "sha256": "94cc26cfe74d792d438b7e3859b16dee62eda7c75cc3732084606d21ddf339cd"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-IQ3_XXS.gguf",
+   "size": 3129076896,
+   "sha256": "3363b98048f180c1d8951effdf97b04a210c9ccab974378f04420e7d1f67f48e"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-IQ4_NL.gguf",
+   "size": 4526280864,
+   "sha256": "29eb3662b0c261dfeeb1eed65e3b667007bdab5a978b5c746880e7b52fee4cef"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-IQ4_XS.gguf",
+   "size": 4287512736,
+   "sha256": "eb7ebc5e4c9230f37e297eda726b64c0e63574eef12934f684f0322b4e15834e"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-Q2_K.gguf",
+   "size": 2986637472,
+   "sha256": "387680e11cb2f679b401c1666e33d6d6cdcbe60d7be2bc3425259655e4bb02f2"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-Q2_K_S.gguf",
+   "size": 2784733344,
+   "sha256": "5534e9e06fc76362672e577a95cfed6121de2f73245a236b18e0b42162912f47"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-Q3_K_L.gguf",
+   "size": 4148968608,
+   "sha256": "98d4158db4c4cb1516c941cb7460abf6e8694fa9cae0ae0051b7685a79892d71"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-Q3_K_M.gguf",
+   "size": 3841572000,
+   "sha256": "8037276515d2b742f7299635e63a13933e672b448fd7a683d590c2a9cdf51246"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-Q3_K_S.gguf",
+   "size": 3511516320,
+   "sha256": "de7ca2f1cfc082c3f11589b1b0810024f655c5094ec6a2820cdefa1dc7487e34"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-Q4_0.gguf",
+   "size": 4539404448,
+   "sha256": "b7108f2413ba76724fd9f3c1ead2818d1f7c89bcf41be8d1dff2af7f88d56c6c"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-Q4_1.gguf",
+   "size": 5004210336,
+   "sha256": "c01c3370364bb489469987dff13a5f4ebcee1091e27c33870f573c69d61c1379"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-Q4_K_M.gguf",
+   "size": 4823896224,
+   "sha256": "c693b547fdb8843c913adcd27680e8426c4b8647b308afae533ebf7326adbc52"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-Q4_K_S.gguf",
+   "size": 4554887328,
+   "sha256": "31ed1bb582d01d22ed9f48bc657a9f06b2238a5dd61c61236723b06e3b943fa4"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-Q5_K_M.gguf",
+   "size": 5635444896,
+   "sha256": "e94e25d6c02b47845cb96ac9ee5c492fe44d73244f0d54850cbd307a0d334fff"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-Q5_K_S.gguf",
+   "size": 5482533024,
+   "sha256": "7748ae140c307325ac1be5fb87a6ff271f8efbf018ff617e46963db902264755"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.i1-Q6_K.gguf",
+   "size": 6499263648,
+   "sha256": "cf84108081f78868f46de1c2407c35d9a5d3d150c44f52336100cc3f0f90e837"
+  },
+  {
+   "path": "Ling-3.0-tiny-Uncensored-Abliterated.imatrix.gguf",
+   "size": 44016672,
+   "sha256": "1a43769504ed5ce72f3231b1de80a83ba495bfe76da503c499e004ffb768038d"
+  },
+  {
+   "path": "README.md",
+   "size": 7223,
+   "git_oid": "48439413318ed1d44a9e741dda3c3ba76a6064c2"
+  }
+ ]
+}

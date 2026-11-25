@@ -1,0 +1,70 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "llmfan46/G4-MeroMero-31B-uncensored-heretic-GGUF",
+ "revision": "4bb3e13c5393e7082a9e76bbb7aea19c3ebaf884",
+ "captured": "2026-11-25T05:08:57+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2348,
+   "git_oid": "dc912d62c93b16f9c10c6fa638f572415cdd7a53"
+  },
+  {
+   "path": "G4-MeroMero-31B-uncensored-heretic-BF16.gguf",
+   "size": 61413189344,
+   "sha256": "ae0a5afe24a7ab42f44b20d32626e2cb42af673d5c482e3ed96afef011a2b5c6"
+  },
+  {
+   "path": "G4-MeroMero-31B-uncensored-heretic-Q3_K_L.gguf",
+   "size": 16628270816,
+   "sha256": "e01f8608112755b3e12a41b66a69db08e96c305a2943a0bde7cc6d4c7381a954"
+  },
+  {
+   "path": "G4-MeroMero-31B-uncensored-heretic-Q3_K_M.gguf",
+   "size": 15287109344,
+   "sha256": "52140d50e4565dd3b40131335cef49362b0e6160ac6c321d28ffe7c7e1c1777a"
+  },
+  {
+   "path": "G4-MeroMero-31B-uncensored-heretic-Q4_K_M.gguf",
+   "size": 18687063776,
+   "sha256": "a33daffce3b76ada423616d7ccbe7a70724da854f8175605967b290ce3d9ef0c"
+  },
+  {
+   "path": "G4-MeroMero-31B-uncensored-heretic-Q4_K_S.gguf",
+   "size": 17763165920,
+   "sha256": "22be7199e5bc4c54dc40a69404c08ac1058a58f9e97b0e9d84255f055c099888"
+  },
+  {
+   "path": "G4-MeroMero-31B-uncensored-heretic-Q5_K_M.gguf",
+   "size": 21845571296,
+   "sha256": "762e860b7de70d5031c71af3434d74c7cda3a8841a83455a21208974b641942f"
+  },
+  {
+   "path": "G4-MeroMero-31B-uncensored-heretic-Q5_K_S.gguf",
+   "size": 21311842016,
+   "sha256": "34ab16234572ce551650a6079b3360f0f770e48e64f0cbf609d34f41c6e417a6"
+  },
+  {
+   "path": "G4-MeroMero-31B-uncensored-heretic-Q6_K.gguf",
+   "size": 25201485536,
+   "sha256": "dbdcd2e77df4530daa51e5cd502f2ece71868b190cf08116972a49761707f26a"
+  },
+  {
+   "path": "G4-MeroMero-31B-uncensored-heretic-Q8_0.gguf",
+   "size": 32635676384,
+   "sha256": "521c8ed2fc3cc88b24050a2b6975c6dfb0196cb8adb145ec99f3401fc040ecb8"
+  },
+  {
+   "path": "G4-MeroMero-31B-uncensored-heretic-mmproj-BF16.gguf",
+   "size": 1200727200,
+   "sha256": "7555f7cb379c138a01c7a70298747ad4451c9641fbd42e09ee7c86d61150ea49"
+  },
+  {
+   "path": "README.md",
+   "size": 25396,
+   "git_oid": "aa89967073899bf848472498da42f94fac3ce253"
+  }
+ ]
+}

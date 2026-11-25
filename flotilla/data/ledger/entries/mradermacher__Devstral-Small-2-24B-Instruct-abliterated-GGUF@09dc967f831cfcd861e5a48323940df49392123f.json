@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Devstral-Small-2-24B-Instruct-abliterated-GGUF",
+ "revision": "09dc967f831cfcd861e5a48323940df49392123f",
+ "captured": "2026-11-25T05:09:02+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2503,
+   "git_oid": "c2c93cc76b97234fb32d9a28c3748365f0adddd9"
+  },
+  {
+   "path": "Devstral-Small-2-24B-Instruct-abliterated.IQ4_XS.gguf",
+   "size": 12889992256,
+   "sha256": "51b7c86f9af876a4b2504ad2252306469601e90eb272ea4c5c360cc5914363d6"
+  },
+  {
+   "path": "Devstral-Small-2-24B-Instruct-abliterated.Q2_K.gguf",
+   "size": 8890330176,
+   "sha256": "0b229d59fd6213fa9653146ef9cc2ee17881397936ec8cf90c6723c9907c2bc5"
+  },
+  {
+   "path": "Devstral-Small-2-24B-Instruct-abliterated.Q3_K_L.gguf",
+   "size": 12400766016,
+   "sha256": "1d2a95cddf53b5dc0e4f09ef7624a1cfae28abac6924209d14c01419c5da1177"
+  },
+  {
+   "path": "Devstral-Small-2-24B-Instruct-abliterated.Q3_K_M.gguf",
+   "size": 11474086976,
+   "sha256": "1fec8eb1168040db17e0ebab5e17986199d5d5e50fa11ee52f47e2d62e19bc3e"
+  },
+  {
+   "path": "Devstral-Small-2-24B-Instruct-abliterated.Q3_K_S.gguf",
+   "size": 10400279616,
+   "sha256": "a90c2fb810393030522f0c8d51a8044b58ecb308ad535df2a58faeb236a633f4"
+  },
+  {
+   "path": "Devstral-Small-2-24B-Instruct-abliterated.Q4_K_M.gguf",
+   "size": 14333914176,
+   "sha256": "6f906d34e49035b49079d6a98567ca95baa01b987f9838284628e5100a870ca1"
+  },
+  {
+   "path": "Devstral-Small-2-24B-Instruct-abliterated.Q4_K_S.gguf",
+   "size": 13549284416,
+   "sha256": "8995e64d7542854cfc1208aca5c3b4362dce84520ae948f33ef6f05fea34d6cf"
+  },
+  {
+   "path": "Devstral-Small-2-24B-Instruct-abliterated.Q5_K_M.gguf",
+   "size": 16763989056,
+   "sha256": "2e1bb09a497e3ed7c10b3fa40cc7ea156a04574d4c1382f4bae98d1fd5f0e78d"
+  },
+  {
+   "path": "Devstral-Small-2-24B-Instruct-abliterated.Q5_K_S.gguf",
+   "size": 16304417856,
+   "sha256": "122a14858d435cddd568aec555ffbdc03eef9dc1b8e12142a27455ba7f3ca93e"
+  },
+  {
+   "path": "Devstral-Small-2-24B-Instruct-abliterated.Q6_K.gguf",
+   "size": 19345943616,
+   "sha256": "3aa3c70f3ae44c2dcb24368368a209feb9e06f1e5a0c0edc77fd98c6d3c2efc3"
+  },
+  {
+   "path": "Devstral-Small-2-24B-Instruct-abliterated.Q8_0.gguf",
+   "size": 25054784576,
+   "sha256": "c94d53efc42066ed52289bd0ab81240d6e99eb4012101d301bba782be39d24ea"
+  },
+  {
+   "path": "README.md",
+   "size": 4369,
+   "git_oid": "1ca85efc68d3e9d6ed38b10ba37f014a4477aafd"
+  }
+ ]
+}

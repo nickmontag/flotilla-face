@@ -1,0 +1,175 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "unsloth/Qwen3-VL-32B-Instruct-GGUF",
+ "revision": "b9262a359f54dead8e2609f6146e2fc3398fd0d9",
+ "captured": "2026-11-25T05:09:22+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3692,
+   "git_oid": "7ebd91f93b8ecd70c2b71366339f9e8f69376121"
+  },
+  {
+   "path": "BF16/Qwen3-VL-32B-Instruct-BF16-00001-of-00002.gguf",
+   "size": 49871765632,
+   "sha256": "558f824a33838f6b7386f1ce34d86f633e3d855f8769ca8f39b0077eb3e4296a"
+  },
+  {
+   "path": "BF16/Qwen3-VL-32B-Instruct-BF16-00002-of-00002.gguf",
+   "size": 15659811424,
+   "sha256": "181883d356a36e120eff6f82402139cd322402017d8e6ee3782c8c8d223ddf89"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-IQ4_NL.gguf",
+   "size": 18679496480,
+   "sha256": "1b26bad77ae0c7f306ac84d70d39fe41369cbe0504f2da6a53f1c3001fb08187"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-IQ4_XS.gguf",
+   "size": 17714806560,
+   "sha256": "727a1dc07ba06956fd36850200e24deb70a250a5b03c344fa738d4b7b637d8ed"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-Q2_K.gguf",
+   "size": 12344653600,
+   "sha256": "bdc2610b89916b145ba53ebebc45dd25d3b8b13d6c71083abdf408d439ea06e0"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-Q2_K_L.gguf",
+   "size": 12526976800,
+   "sha256": "62adb01b41d6359040198a25471d31e7afef1881dc6a92d4e60cb3e6f28f0f59"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-Q3_K_M.gguf",
+   "size": 15971779360,
+   "sha256": "d6a8615e273d2dcdfa7066d8f40b905463a79193ddda4ee07f795af85594cf1a"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-Q3_K_S.gguf",
+   "size": 14389740320,
+   "sha256": "028c64c7065114b01d4514a7ace8fb354e8d0d680cffb342543478a7942d11bd"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-Q4_0.gguf",
+   "size": 18703089440,
+   "sha256": "974fb50bac0ff679a70cec7c15fb2ef0ba124049aa5ea88b07f96d4b6339aad8"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-Q4_1.gguf",
+   "size": 20636524320,
+   "sha256": "77e0920282b83a89926fc55c0e7a7aaeeaa1630ae0cf57c02bdec6031fd81633"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-Q4_K_M.gguf",
+   "size": 19762151200,
+   "sha256": "92d605566f8661b296251c535ed028ecf81c32e14e06948a3d8bef829e96a804"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-Q4_K_S.gguf",
+   "size": 18771246880,
+   "sha256": "6a2162c505c4c25c20d5072f4f181bc0fddae51307e8d23ed0f604f95f751e38"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-Q5_K_M.gguf",
+   "size": 23214833440,
+   "sha256": "e20982605cd95b5941fc76c14037623b44684db43c742724ccd8ceefc5b7f509"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-Q5_K_S.gguf",
+   "size": 22635495200,
+   "sha256": "0e8daf5155832311fed24cc07deb8b16ceb28f4ec035de7a1c9009a9eab70af8"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-Q6_K.gguf",
+   "size": 26883308320,
+   "sha256": "665305ae1c9af46536360178602b7858c59db992457ee505d2f5678e776d2fb6"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-Q8_0.gguf",
+   "size": 34817721120,
+   "sha256": "968ac869a67c8fde33a2f5fd497c5fb03223bbdc3afc113e0a8f322e581b52e7"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-UD-IQ1_M.gguf",
+   "size": 8302085920,
+   "sha256": "2b0d56c556446fccabdb442eb7015adba58799a2841ac4e2b99c1b783e45e057"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-UD-IQ1_S.gguf",
+   "size": 7738885920,
+   "sha256": "ec8142db660c507cdfd96301603d0bfbeceb4e30828b0eefe6296383906e99c8"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-UD-IQ2_M.gguf",
+   "size": 11553367840,
+   "sha256": "f239e169ed5da0b4b25ba88dd4fa855436f26a3fc3bfc1a110bec0ca879e31b8"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-UD-IQ2_XXS.gguf",
+   "size": 9277097760,
+   "sha256": "a02945cffd58d2978bfbb45700e88861a753efd9fb92521567a37140c01ab46a"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-UD-IQ3_XXS.gguf",
+   "size": 12967552800,
+   "sha256": "ce457922c40afaa83371dcf02a8bf2aa083f2edece354fdd31208d7bd8876e35"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-UD-Q2_K_XL.gguf",
+   "size": 12797353664,
+   "sha256": "c252d13dfc8a72d1a782c5ea927498cf4387f86a2ec1d7fbf995cc57c7acbb26"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-UD-Q3_K_XL.gguf",
+   "size": 16403103520,
+   "sha256": "f713b2ec0d27c213bc5a89e6bb44b43d179d1367f0129cd597a59bec3021c2b1"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-UD-Q4_K_XL.gguf",
+   "size": 20055506720,
+   "sha256": "71d9a5f8d43a22c39f0730a8072cec6605a5c8b0468144c115c814efb92f10d4"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-UD-Q5_K_XL.gguf",
+   "size": 23250960160,
+   "sha256": "54079c385ee39708b73e2c22b4536620b7466c4e29ca4bfb5db62da1d3ed4ace"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-UD-Q6_K_XL.gguf",
+   "size": 28961588000,
+   "sha256": "e552dbd72d8381dcb466500deb207258a4e82d87a12484e11bef4893cda7afb5"
+  },
+  {
+   "path": "Qwen3-VL-32B-Instruct-UD-Q8_K_XL.gguf",
+   "size": 39481017120,
+   "sha256": "cad51f0e408ee6d85ccb17227351923ebb9858aee8707d38989544f1c4d77143"
+  },
+  {
+   "path": "README.md",
+   "size": 9045,
+   "git_oid": "2d6933b45f2dce4b5d50b67bc32fda7905db8151"
+  },
+  {
+   "path": "imatrix_unsloth.gguf_file",
+   "size": 15273248,
+   "sha256": "206c1b8abb16060f3adbc5bd6e6f16570611905858cb2d0ddd81fd2b302136ce"
+  },
+  {
+   "path": "mmproj-BF16.gguf",
+   "size": 1200334496,
+   "sha256": "f42400deb87085f1e76159a92aedd276050c665c72423597413d341c36c18c71"
+  },
+  {
+   "path": "mmproj-F16.gguf",
+   "size": 1196795552,
+   "sha256": "dde7e407cf72e601455976c2d0daa960d16ee34ba3f0c78718c881d8cd8c1052"
+  },
+  {
+   "path": "mmproj-F32.gguf",
+   "size": 2381088416,
+   "sha256": "c9b2f5bc432af8581cd7275dac22b7e3b2d1db31e7ca0ef505e7ff3a48df6e72"
+  }
+ ]
+}

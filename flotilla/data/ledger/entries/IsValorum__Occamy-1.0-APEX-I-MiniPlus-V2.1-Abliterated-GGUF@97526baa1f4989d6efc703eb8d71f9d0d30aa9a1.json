@@ -1,0 +1,50 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "IsValorum/Occamy-1.0-APEX-I-MiniPlus-V2.1-Abliterated-GGUF",
+ "revision": "97526baa1f4989d6efc703eb8d71f9d0d30aa9a1",
+ "captured": "2026-11-25T05:08:38+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1781,
+   "git_oid": "cf3b77a451feaa3fd96d8f49618b1e2de65f4c26"
+  },
+  {
+   "path": "Occamy-1.0.APEX-I-MiniPlus-V2.1-Abliterated.gguf",
+   "size": 14751300576,
+   "sha256": "ba40cdc039c6c6d449becd81c7f03721fcdcd3dc01306fc35e8476314d5d3c55"
+  },
+  {
+   "path": "README.md",
+   "size": 36309,
+   "git_oid": "3978a39f63ebbbe2a28782757264347dc3071e4e"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 10475,
+   "git_oid": "d4eb5bce12b0238406ce1c300e6dffe94bcdbad1"
+  },
+  {
+   "path": "mmproj-Q8_0.gguf",
+   "size": 614194528,
+   "sha256": "17c9213e22ccf9b1b68c64eb7a4abd4ef5166d6164b7d9720d34e06c309fcd82"
+  },
+  {
+   "path": "occamy-1.0-mtp-Q4_K_M.gguf",
+   "size": 1260897824,
+   "sha256": "f8b0e6174daa6a2ed82d05f6136870ac86e6762bcd42a00dfffdd3397d9be863"
+  },
+  {
+   "path": "occamy-1.0-mtp-Q8_0.gguf",
+   "size": 1990649376,
+   "sha256": "ec86c2b80cdd02a5e10de6d201925bb50834433ce12c49e920d2a09a0264bf19"
+  },
+  {
+   "path": "tensor-map.tsv",
+   "size": 33146,
+   "git_oid": "1b606c91c4c52db3a20be4ba187707755c5a9801"
+  }
+ ]
+}

@@ -1,0 +1,140 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic-i1-GGUF",
+ "revision": "123371a2236b9270fa6086541f39bd71cd09fda2",
+ "captured": "2026-11-25T05:08:44+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 4073,
+   "git_oid": "d4df5c7a45358ff63910b2f26268a6243194b906"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-IQ1_M.gguf",
+   "size": 6766005728,
+   "sha256": "74690d4a82714929852974807aff7b1ce20d8c58db53d05e4615d8eb7222e3af"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-IQ1_S.gguf",
+   "size": 6225763808,
+   "sha256": "d49433d641a56bab08103bdff0e411068d794aae8e489359b6c2fe6a3911f9f8"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-IQ2_M.gguf",
+   "size": 9395105248,
+   "sha256": "140b50d045c13e09a85c746517aa433b86ab9d2dd264e51a6dc59330a6ca87fc"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-IQ2_S.gguf",
+   "size": 8674782688,
+   "sha256": "2fbb0033bd281478352a673ce60d1a796c2419a89746ed94506d73a92b3928a3"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-IQ2_XS.gguf",
+   "size": 8402460128,
+   "sha256": "6c4f08f747ecc504db96cf22865383558050c17c105f75b5c0910c4f6245e65f"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-IQ2_XXS.gguf",
+   "size": 7666408928,
+   "sha256": "01367f286e7e9cfaf08c6eaec767e05615642428f46e09b1594a5b10bb937ae4"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-IQ3_M.gguf",
+   "size": 12580871648,
+   "sha256": "73fe0c5f59c97e330e2cb1c31142e481b86d150f49b5a301f4de4666574840c1"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-IQ3_S.gguf",
+   "size": 12085091808,
+   "sha256": "3900b7a5f5a2aa711058d41625f5935c3aa4c73fbf3778dd9a76df7c22caf18c"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-IQ3_XS.gguf",
+   "size": 11632893408,
+   "sha256": "e02694be1766fd2c3d973650f9bb6a561995366cd1d572e6fbe2775d3ec79343"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-IQ3_XXS.gguf",
+   "size": 10734169568,
+   "sha256": "61cae7eaec953f50bfab317dffe36c89cf1fe726e5ef1de8e762b921f9a074b5"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-IQ4_XS.gguf",
+   "size": 14689287648,
+   "sha256": "54f0df694300dd469c719c6ad99855783271bfc441a219ad5c5d97dd78c10a84"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-Q2_K.gguf",
+   "size": 10121838048,
+   "sha256": "19bd2f80ed50b5f75f675224fae0ebee7086c15b697b34f835e9731f12440e6f"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-Q2_K_S.gguf",
+   "size": 9658498528,
+   "sha256": "bf061f41541afaf66b8f93aae5da54702d5bdc40110f14a42568c315934aedeb"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-Q3_K_L.gguf",
+   "size": 14030200288,
+   "sha256": "7724ab6d0b4b4cdde80ba7d66eef175e2bd5f5469eecf5d24a03a68f6f1e9e8a"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-Q3_K_M.gguf",
+   "size": 13289643488,
+   "sha256": "b256173be5ae4889ecfd18b22b711347adcc974221c5a934183f3fb64ff2abf9"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-Q3_K_S.gguf",
+   "size": 12073950688,
+   "sha256": "a15636f8af96dd856ae123f3c8175e2274dec63d940cbe4a1e39a23137ef7f58"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-Q4_0.gguf",
+   "size": 15521431008,
+   "sha256": "8ac6030ae74e808f5f112ce2a62528de60cd6aaf55119abf37f024decf31779c"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-Q4_1.gguf",
+   "size": 17078238688,
+   "sha256": "1c1d94da61ae367b465d2d36c41852969494405d2e128bce6830e15371a79f58"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-Q4_K_M.gguf",
+   "size": 16540270048,
+   "sha256": "af6c2ceae20d019624cd6ec48cfffb646b0309b0a7a82d9719754297394168e1"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-Q4_K_S.gguf",
+   "size": 15568616928,
+   "sha256": "ab68d55ede1fdf6cb0ec0c35fed884a9c8c2a12f49f563e1b54e9401a95a0085"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-Q5_K_M.gguf",
+   "size": 19399605728,
+   "sha256": "4d5fc6dadbf2ecfad588e498d24b7772b261ea6a81bd46f3d6b3aed9e2e87847"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-Q5_K_S.gguf",
+   "size": 18679610848,
+   "sha256": "48dff216634b25a6fd685fa12dc57e367b4d4ad30d8c1f93dd222e8e9003cb82"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.i1-Q6_K.gguf",
+   "size": 22082526688,
+   "sha256": "4be69d40d0d0fec35c34dc9063795558a80dab0d891771d82268d4351db7649d"
+  },
+  {
+   "path": "Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled-heretic.imatrix.gguf",
+   "size": 13642624,
+   "sha256": "16f88cfb4a8ad5afd1c3bc564ba58e7bdfeeadd1ac9f0fca95973a80396e0d7d"
+  },
+  {
+   "path": "README.md",
+   "size": 8061,
+   "git_oid": "e3ce9166f07b275a6ae2d04322f0fb85a729ca03"
+  }
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "EleutherAI/gpt-neo-125m",
+ "revision": "21def0189f5705e2521767faed922f1f15e7d7db",
+ "captured": "2026-11-25T05:09:27+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 744,
+   "git_oid": "2514e63570ec0eb13d617d6a316ac52e9eed9746"
+  },
+  {
+   "path": "README.md",
+   "size": 4100,
+   "git_oid": "85d86bfc7151abb39e8bc43d4732fca601b8f2ab"
+  },
+  {
+   "path": "config.json",
+   "size": 1007,
+   "git_oid": "06db8066850aa0bb609cc71c77ae27dacaddde8b"
+  },
+  {
+   "path": "flax_model.msgpack",
+   "size": 500800120,
+   "sha256": "809abd2ae40854e092d5b9f64fcc6789a572ec519ce9aa10346f69d1de321e88"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 119,
+   "git_oid": "1275fb9c0b89fc7ddb116749308fd5e94ed00793"
+  },
+  {
+   "path": "merges.txt",
+   "size": 456318,
+   "git_oid": "226b0752cac7789c48f0cb3ec53eda48b7be36cc"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 525979192,
+   "sha256": "52738cbfb54e25a232598242f60ef19ee193d36090b98fe649b10c02724b3521"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 526017373,
+   "sha256": "9b38c2b2761e95b7bbd736e49a7ba553b8015bd3c0036b749043e1cebee464ed"
+  },
+  {
+   "path": "rust_model.ot",
+   "size": 526014685,
+   "sha256": "d7369f7836f7a618fce3570511d216b03b1b5a728ae0170c135049f9440e5305"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 357,
+   "git_oid": "22fabbdda08346a6dfb95b1782a4efb6f876f2c2"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 2107652,
+   "git_oid": "f53f61f36fdd6a4a52266aacfe6dde49575eaf65"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 727,
+   "git_oid": "5bd1f117641b15c0abd00d6baef7405306ef1a12"
+  },
+  {
+   "path": "vocab.json",
+   "size": 898669,
+   "git_oid": "b00361fece0387ca34b4b8b8539ed830d644dbeb"
+  }
+ ]
+}

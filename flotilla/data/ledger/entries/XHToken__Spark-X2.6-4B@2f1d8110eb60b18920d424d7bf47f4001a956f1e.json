@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "XHToken/Spark-X2.6-4B",
+ "revision": "2f1d8110eb60b18920d424d7bf47f4001a956f1e",
+ "captured": "2026-11-25T05:09:18+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1793,
+   "git_oid": "9bfe29e47ca5817a9ba9012d8c2cd8b1fb69fcc6"
+  },
+  {
+   "path": "LICENSE",
+   "size": 11338,
+   "git_oid": "b7456707c547e5df6a88ee0255ad9c422ac52f9b"
+  },
+  {
+   "path": "README.md",
+   "size": 14127,
+   "git_oid": "a990cff99ef94e8323b88ea4427018a838b4c732"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 5717,
+   "git_oid": "f0a835ddcab00f6a2cd0bbe977fe5123f451259a"
+  },
+  {
+   "path": "config.json",
+   "size": 2035,
+   "git_oid": "2c6a1864a9dbd661704d7699f17adbc186547687"
+  },
+  {
+   "path": "configuration_spark.py",
+   "size": 4329,
+   "git_oid": "cca611a0302679df685ca442d21c2756884aa47e"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 281,
+   "git_oid": "d47d113162317c2d4338dd7f0727663b6aa9fb57"
+  },
+  {
+   "path": "images/.DS_Store",
+   "size": 6148,
+   "git_oid": "5008ddfcf53c02e82d7eee2e57c38e5672ef89f6"
+  },
+  {
+   "path": "images/all_benchmark.svg",
+   "size": 45910,
+   "git_oid": "9b8c04ba48986c0fa977643f0569930231ab2d22"
+  },
+  {
+   "path": "images/benchmark.svg",
+   "size": 51427,
+   "git_oid": "8ff50652fc18ce3f2c5ddb2af098c8230c95397e"
+  },
+  {
+   "path": "images/inference.svg",
+   "size": 25659,
+   "git_oid": "5999bcdc1fad0559cd062cb5f95f8c787c8675d3"
+  },
+  {
+   "path": "images/model-benchmark-comparison.svg",
+   "size": 31544,
+   "git_oid": "1dea537ae66225f699ac868e894ce63de6d3c4df"
+  },
+  {
+   "path": "images/post_training_pipeline.svg",
+   "size": 10602,
+   "git_oid": "d76949ed578b4c426205c5abd39b41e7258621dc"
+  },
+  {
+   "path": "images/spark25-hybrid-architecture-light.png",
+   "size": 429073,
+   "sha256": "5eddac6baf8e8460cc2a75b96070eff4074428674f3c33665bc2ff9479756bbd"
+  },
+  {
+   "path": "images/xhtoken-wechat.jpg",
+   "size": 160131,
+   "sha256": "0c3fbd25c987237b383461fdaa96bf6881af615c23ba3baf19e51a7879354ddb"
+  },
+  {
+   "path": "merges.txt",
+   "size": 1567883,
+   "git_oid": "3f921c3aed6a693e3dcfd15b7171467fcade71b3"
+  },
+  {
+   "path": "model-00001-of-00005.safetensors",
+   "size": 1982449560,
+   "sha256": "9ba8a59a47ce4197d5c749c76c04272e0b4b880747b31b9167a82d8757e90665"
+  },
+  {
+   "path": "model-00002-of-00005.safetensors",
+   "size": 1993132424,
+   "sha256": "f0cad973670dda858a177d62a1845f9ec3c3e2a7a1cdbd34f98ab6789fbd452d"
+  },
+  {
+   "path": "model-00003-of-00005.safetensors",
+   "size": 1993225080,
+   "sha256": "479c8aecd24d1d4c6c2243541b36acc6a84df4c0706a7ccaacda748eac46b8e8"
+  },
+  {
+   "path": "model-00004-of-00005.safetensors",
+   "size": 1993132448,
+   "sha256": "766cd843c58676b0be533b465368a76f574f36bea074f4d16f7e37d910423d08"
+  },
+  {
+   "path": "model-00005-of-00005.safetensors",
+   "size": 262252896,
+   "sha256": "e2cb22cc6aa1dccdc30042170841058a1a8cffb7e9eb57356c86ae14fc4ca0e3"
+  },
+  {
+   "path": "model.safetensors.index.json",
+   "size": 24133,
+   "git_oid": "065dd034896142c54055eec0961b99fd15f304ca"
+  },
+  {
+   "path": "modeling_spark.py",
+   "size": 19418,
+   "git_oid": "4e48c7a98111e2a8457970fad0361db3404c154f"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 156,
+   "git_oid": "9a77af52dba6347730c06368baa133534a2ac129"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 10115786,
+   "sha256": "710cce15cf3565674c499f9413997c6e8101f2bdd96245cff8f0311fb501248c"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 5841,
+   "git_oid": "3744e6bd35bf786fb626752b2594dd483a7a4aa5"
+  },
+  {
+   "path": "vocab.json",
+   "size": 3032795,
+   "git_oid": "9cca33b9d8dc48d4fe1ae44743b0b7c1df5bf0c1"
+  }
+ ]
+}

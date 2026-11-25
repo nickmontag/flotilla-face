@@ -28,9 +28,11 @@ from __future__ import annotations
 
 import math
 import re
+import time
 from dataclasses import dataclass, field
 
-from .feed import REPO_RE
+from .feed import REPO_RE, target_for_risk
+from .netsafe import FetchError
 from .sources import license_from_card
 from .worthrescuing import RELICENSABLE
 
@@ -41,11 +43,14 @@ MAX_ENTRIES = 40
 PER_BASE = 2               # fallback entries per base model
 TRIES_PER_GROUP = 4        # copies of one group checked against Pirate Face before giving up on it
 MAX_PARENT_LOOKUPS = 150   # extra Hugging Face calls to find the full-precision release of a quantisation
-TARGET_REPLICAS = 3
 CYBER = 40
-TAKEDOWN_RISK = {"refusal-removal": 80, "unknown": 70}
+# General-purpose refusal-removed builds: the lowest tier of takedown risk (README, "How models are
+# chosen"). Hugging Face has removed builds named for offensive cyber use; popular general ones stay up.
+# A build that doesn't say whether training was involved scores a little lower.
+TAKEDOWN_RISK = {"refusal-removal": 40, "unknown": 35}
 DEFAULT_CAPABILITY = 60    # base model not scored on the list
-BOOST_MIN, BOOST_MAX = 0.30, 0.40   # by downloads: 1k or fewer a month -> min, 1M or more -> max
+# By downloads: 1k or fewer a month -> min, 1M or more -> max. Puts them at a priority of about 0.17-0.30.
+BOOST_MIN, BOOST_MAX = 0.38, 0.51
 
 # Language and vision-language models only: image, video and audio generators and LoRA adapters
 # turn up in the same searches ("uncensored") but aren't what the list is for.
@@ -58,6 +63,22 @@ WEIGHT_EDIT_RE = re.compile(r"abliterat|heretic|obliterat", re.I)   # weight edi
 _QUANT = (r"(?:i1-)?gguf|awq|gptq|exl[23]|mlx|fp8|nvfp4|mxfp4|int[48]|w4a16|w8a8|bnb|[248]bit|"
           r"[0-9.]+bpw|i?q[0-9](?:_[a-z0-9]+)*")
 QUANT_RE = re.compile(rf"(?:^|[-_.])(?:{_QUANT})(?=$|[-_.])", re.I)
+
+
+PATIENCE = 6                # tries when Hugging Face or Pirate Face says 429 (too many requests)
+
+
+def patient(call, *args, tries: int = PATIENCE, sleep=time.sleep):
+    """call(*args), waiting out 429s (Retry-After, else a minute more each time). Editor tools make
+    hundreds of lookups in a row; one 429 shouldn't end the run."""
+    for i in range(tries):
+        try:
+            return call(*args)
+        except FetchError as e:
+            if e.status != 429 or i == tries - 1:
+                raise
+            sleep(min(600.0, e.retry_after if e.retry_after is not None else 60.0 * (i + 1)))
+    return None
 
 
 @dataclass
@@ -127,7 +148,7 @@ def gather_hits(hf, terms=SEARCH_TERMS, limit=SEARCH_LIMIT, log=print) -> dict[s
     """Search Hugging Face, then look up the full-precision release behind popular quantisations."""
     hits: dict[str, Hit] = {}
     for term in terms:
-        found = hf.search(term, limit)
+        found = patient(hf.search, term, limit)
         log(f"huggingface: {len(found)} models matching {term!r}")
         for doc in found:
             h = hit_from(doc)
@@ -137,15 +158,20 @@ def gather_hits(hf, terms=SEARCH_TERMS, limit=SEARCH_LIMIT, log=print) -> dict[s
                      if h.quantized and h.parent and h.parent not in hits and REFUSAL_RE.search(h.parent)},
                     key=lambda p: -sum(h.downloads for h in hits.values() if h.parent == p))
     for parent in wanted[:MAX_PARENT_LOOKUPS]:
-        doc = hf.model_info(parent)
+        doc = patient(hf.model_info, parent)
         h = hit_from(doc) if doc else None
         if h:
             hits[h.repo] = h
     return hits
 
 
-def group_hits(hits: dict[str, Hit]) -> list[Group]:
-    """Each build with its quantisations, most downloaded group first."""
+def _refusal_removed(repo: str) -> bool:
+    return bool(REFUSAL_RE.search(repo))
+
+
+def group_hits(hits: dict[str, Hit], derived=_refusal_removed) -> list[Group]:
+    """Each build with its quantisations, most downloaded group first. `derived(parent)`: whether a
+    quantisation of `parent` joins its group (for the fallback list, only refusal-removed parents)."""
     up = {r: r for r in hits}
 
     def find(r):
@@ -161,7 +187,7 @@ def group_hits(hits: dict[str, Hit]) -> list[Group]:
 
     by_stem: dict[tuple[str, str], str] = {}
     for h in hits.values():
-        if h.quantized and h.parent in hits and REFUSAL_RE.search(h.parent):
+        if h.quantized and h.parent in hits and derived(h.parent):
             union(h.parent, h.repo)
         key = (h.author, h.stem)
         if key in by_stem:
@@ -172,17 +198,18 @@ def group_hits(hits: dict[str, Hit]) -> list[Group]:
     for h in hits.values():
         groups.setdefault(find(h.repo), Group()).members.append(h)
     for g in groups.values():
-        g.base = base_of(g, hits)
+        g.base = base_of(g, hits, derived)
     return sorted(groups.values(), key=lambda g: (-g.downloads, g.preference()[0].repo))
 
 
-def base_of(g: Group, hits: dict[str, Hit]) -> str | None:
-    """The model the group's builds start from: the first ancestor that isn't refusal-removed."""
+def base_of(g: Group, hits: dict[str, Hit], derived=_refusal_removed) -> str | None:
+    """The model the group's builds start from: the first ancestor `derived` doesn't claim (for the
+    fallback list, the first that isn't refusal-removed)."""
     for h in g.preference():
         seen = set()
         while h.parent and h.parent not in seen:
             seen.add(h.parent)
-            if not REFUSAL_RE.search(h.parent):
+            if not derived(h.parent):
                 return h.parent
             if h.parent not in hits:
                 break
@@ -226,16 +253,20 @@ def _count(n: int) -> str:
 
 
 def sync(doc: dict, groups: list[Group], pf, hf, licenses: set[str], deny: set[str] = frozenset(),
-         max_entries: int = MAX_ENTRIES, per_base: int = PER_BASE) -> dict:
-    """Bring the list's fallback entries in line with the ranked groups. Changes doc in place.
+         max_entries: int = MAX_ENTRIES, per_base: int = PER_BASE, via: str = VIA, entry_for=None,
+         kind: str = "fallback", spare_after: int | None = None) -> dict:
+    """Bring the list's fallback entries (or, with via and entry_for, another automatically chosen
+    set: catalog.py) in line with the ranked groups. Changes doc in place.
 
     Returns a summary like worthrescuing.sync: added, updated, removed, kept and skipped, each a
-    list of lines for the editor to review.
+    list of lines for the editor to review. With spare_after, entries ranked past that many are
+    written "spare": nodes look at them only once the rest of the list has its copies.
     """
+    entry_for = entry_for or _entry_for
     summary = {"added": [], "updated": [], "removed": [], "kept": [], "skipped": []}
     models = doc.setdefault("models", [])
-    others = {e["repo"].lower() for e in models if e.get("via") != VIA}
-    mine = {e["repo"]: e for e in models if e.get("via") == VIA}
+    others = {e["repo"].lower() for e in models if e.get("via") != via}
+    mine = {e["repo"]: e for e in models if e.get("via") == via}
     deny = {d.lower() for d in deny} | {d.lower() for d in doc.get("deny", []) if isinstance(d, str)}
     caps = base_capabilities(doc)
     per: dict[str, int] = {}
@@ -254,11 +285,12 @@ def sync(doc: dict, groups: list[Group], pf, hf, licenses: set[str], deny: set[s
             continue
         base_key = (g.base or top).lower()
         if per.get(base_key, 0) >= per_base:
-            summary["skipped"].append(f"{top}: already {per_base} fallback builds of {g.base or 'this model'}")
+            summary["skipped"].append(f"{top}: already {per_base} {kind} build{'' if per_base == 1 else 's'} of "
+                                     f"{g.base or 'this model'}")
             continue
         why = []
         for h in g.preference()[:TRIES_PER_GROUP]:
-            entry, reason = _entry_for(h, g, pf, hf, licenses, caps)
+            entry, reason = entry_for(h, g, pf, hf, licenses, caps)
             if entry:
                 chosen[h.repo] = entry
                 per[base_key] = per.get(base_key, 0) + 1
@@ -267,14 +299,16 @@ def sync(doc: dict, groups: list[Group], pf, hf, licenses: set[str], deny: set[s
         else:
             summary["skipped"].append(f"{top} ({_count(g.downloads)} downloads): " + "; ".join(why))
 
-    for repo, entry in chosen.items():
+    for i, (repo, entry) in enumerate(chosen.items()):
+        if spare_after is not None and i >= spare_after:
+            entry["spare"] = True
         existing = mine.get(repo)
         if existing is None:
             models.append(entry)
             summary["added"].append(f"{repo} @ {entry['revision'][:12]} "
                                     f"(priority {_priority(entry, doc.get('weights')):.2f})")
             continue
-        material = ("revision", "scores", "boost", "origin", "target_replicas")
+        material = ("revision", "scores", "boost", "origin", "target_replicas", "spare")
         changed = {k: existing.get(k) for k in material} != {k: entry.get(k) for k in material}
         moved = existing.get("revision") != entry["revision"]
         existing.clear()
@@ -283,32 +317,46 @@ def sync(doc: dict, groups: list[Group], pf, hf, licenses: set[str], deny: set[s
             summary["updated"].append(repo + (f": now pinned to {entry['revision'][:12]}" if moved else ""))
 
     for e in list(models):
-        if e.get("via") == VIA and e["repo"] not in chosen:
+        if e.get("via") == via and e["repo"] not in chosen:
             models.remove(e)
             summary["removed"].append(f"{e['repo']} (no longer among the top {max_entries})")
     return summary
 
 
-def _entry_for(h: Hit, g: Group, pf, hf, licenses: set[str], caps: dict[str, float]):
-    lic = h.license if h.license and h.license != "other" else hf.license(h.repo)
+def vet(h: Hit, g: Group, pf, hf, licenses: set[str]):
+    """The checks every automatically chosen entry passes: a license Flotilla seeds by default (the
+    base's, when a build relabels a custom one), a Pirate Face torrent with its .torrent published,
+    and Hugging Face still serving that commit. Returns (license, relabelled, revision, tree), or the
+    reason it fails as a string."""
+    lic = h.license if h.license and h.license != "other" else patient(hf.license, h.repo)
     if lic not in licenses:
-        return None, f"license {lic or 'unknown'} isn't allowed by default"
+        return f"license {lic or 'unknown'} isn't allowed by default"
     # Derivatives sometimes relabel a custom license as MIT or Apache-2.0: the base's license is the real one.
-    base_lic = hf.license(g.base) if g.base else None
+    base_lic = patient(hf.license, g.base) if g.base else None
     relabelled = bool(base_lic) and base_lic not in RELICENSABLE and base_lic != lic
     if relabelled:
         if base_lic not in licenses:
-            return None, f"labelled {lic}, but its base {g.base} is {base_lic}, which isn't allowed by default"
+            return f"labelled {lic}, but its base {g.base} is {base_lic}, which isn't allowed by default"
         lic = base_lic
-    info = pf.torrent(h.repo)
+    info = patient(pf.torrent, h.repo)
     if not info or not info.get("revision") or not info.get("magnet"):
-        return None, "no Pirate Face torrent"
+        return "no Pirate Face torrent"
     if not info.get("torrent"):
-        return None, "Pirate Face hasn't published its .torrent file"
+        return "Pirate Face hasn't published its .torrent file"
     rev = info["revision"]
-    tree = hf.tree(h.repo, rev)
+    if not isinstance(rev, str) or not re.fullmatch(r"[0-9a-f]{40}", rev):
+        return f"Pirate Face pins no full commit ({str(rev)[:20]!r})"
+    tree = patient(hf.tree, h.repo, rev)
     if tree is None:
-        return None, f"Hugging Face no longer has commit {rev[:12]}"
+        return f"Hugging Face no longer has commit {rev[:12]}"
+    return lic, relabelled, rev, tree
+
+
+def _entry_for(h: Hit, g: Group, pf, hf, licenses: set[str], caps: dict[str, float]):
+    got = vet(h, g, pf, hf, licenses)
+    if isinstance(got, str):
+        return None, got
+    lic, relabelled, rev, tree = got
     # As the name describes it; a merge may have involved training, so its method stays unstated.
     method = "refusal-removal" if WEIGHT_EDIT_RE.search(h.repo) and h.relation != "merge" else "unknown"
     origin = {"method": method}
@@ -325,7 +373,7 @@ def _entry_for(h: Hit, g: Group, pf, hf, licenses: set[str], caps: dict[str, flo
     entry = {
         "repo": h.repo, "revision": rev,
         "scores": {"capability": int(round(cap)), "cyber": CYBER, "takedown_risk": TAKEDOWN_RISK[method]},
-        "target_replicas": TARGET_REPLICAS, "boost": boost,
+        "target_replicas": target_for_risk(TAKEDOWN_RISK[method]), "boost": boost,
         "note": note_for(h.repo, g, method, gb, lic),
         "origin": origin, "via": VIA,
     }

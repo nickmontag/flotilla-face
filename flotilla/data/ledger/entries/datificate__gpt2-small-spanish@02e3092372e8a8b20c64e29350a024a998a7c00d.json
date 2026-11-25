@@ -1,0 +1,60 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "datificate/gpt2-small-spanish",
+ "revision": "02e3092372e8a8b20c64e29350a024a998a7c00d",
+ "captured": "2026-11-25T05:09:31+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 391,
+   "git_oid": "ae8c63daedbd4206d7d40126955d4e6ab1c80f8f"
+  },
+  {
+   "path": "README.md",
+   "size": 6366,
+   "git_oid": "c1fb085830f241b789a9617d1e260fdc0abdf41b"
+  },
+  {
+   "path": "config.json",
+   "size": 817,
+   "git_oid": "3ec76ecfbb58bd921346a401394776ad7903aeef"
+  },
+  {
+   "path": "flax_model.msgpack",
+   "size": 497764120,
+   "sha256": "8f996a43c46a19cac4a26193f0b8708f0ba4380b3f8e9095e13e0cbb1822dce5"
+  },
+  {
+   "path": "merges.txt",
+   "size": 507987,
+   "git_oid": "e0678740af0ec3f4da95c508084f1243d4b71623"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 510408315,
+   "sha256": "0f7cd7aabcc897ffc5f287f32ca7e3dec933138dac6130c15a1514c62055842d"
+  },
+  {
+   "path": "special_tokens_map.json",
+   "size": 387,
+   "git_oid": "e9131a53e1cd5d08bb386320220d7f40c5eb0785"
+  },
+  {
+   "path": "tf_model.h5",
+   "size": 497933648,
+   "sha256": "b270dec40b4e43ea03e159edce17140601380cc5e3a8ea475fd3ca6ecb0dc596"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 620,
+   "git_oid": "b087c45f2622503ad89d8a67d3bffc2eed70ac6f"
+  },
+  {
+   "path": "vocab.json",
+   "size": 849679,
+   "git_oid": "e0bad6f0987f604cee425306f0f650c6cd35fc9d"
+  }
+ ]
+}

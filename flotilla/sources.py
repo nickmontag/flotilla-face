@@ -425,6 +425,14 @@ class HuggingFace:
         doc = fetch_json(f"{self.base}/api/models?{q}", allowed=self.allowed, max_bytes=64 << 20)
         return [m for m in doc if isinstance(m, dict) and isinstance(m.get("id"), str)] if isinstance(doc, list) else []
 
+    def popular(self, pipeline_tag: str, limit: int = 1000) -> list[dict]:
+        """The most downloaded models (last 30 days) with this pipeline tag, as `search` returns them.
+        Editor tools only."""
+        q = urllib.parse.urlencode([("pipeline_tag", pipeline_tag), ("sort", "downloads"), ("limit", str(limit))]
+                                   + [("expand[]", f) for f in self.SEARCH_FIELDS])
+        doc = fetch_json(f"{self.base}/api/models?{q}", allowed=self.allowed, max_bytes=64 << 20)
+        return [m for m in doc if isinstance(m, dict) and isinstance(m.get("id"), str)] if isinstance(doc, list) else []
+
     def model_info(self, repo: str) -> dict | None:
         """One model's search fields (as `search` returns them), or None if Hugging Face doesn't have it."""
         q = urllib.parse.urlencode([("expand[]", f) for f in self.SEARCH_FIELDS])

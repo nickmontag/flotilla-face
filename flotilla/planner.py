@@ -314,6 +314,66 @@ def build_units(cands: list[TorrentCand], p: Params, node_id: str) -> list[Unit]
 
 
 SHOWN = 8     # units kept in Plan.lowest and Plan.top
+# Share of the list's bytes a measure below needs. Not all of it: a model nobody can fetch mustn't hold
+# the rest back.
+SATURATED = 0.95
+# Copies a model's target may ask for before every model on the list has two (set_targets): the riskiest
+# models' copies past this are back-filled once nothing on the list is down to its last copy.
+BACKFILL_CAP = 7
+TWO = 2
+
+
+def _share(cands: list[TorrentCand], wanted, spare: bool) -> bool:
+    """Whether SATURATED of the listed candidates' bytes (spare entries too if `spare`) have at least
+    wanted(c) copies."""
+    total = covered = 0
+    for c in cands:
+        if not c.listed or (c.spare and not spare):
+            continue
+        live = [f for f in c.files if f.kind == "weight"] or [f for f in c.files if f.kind != "skip"]
+        need = wanted(c)
+        for f in live:
+            total += f.size
+            if _avail(f, c) >= need:
+                covered += f.size
+    return total > 0 and covered >= SATURATED * total
+
+
+def set_targets(cands: list[TorrentCand], spare_included: bool = False) -> bool:
+    """Set each candidate's target in use, and say whether the list is covered.
+
+    A model's target (feed.target_for_risk) can be as high as 11 for the riskiest. Copies past
+    BACKFILL_CAP wait until nearly everything on the list, spare entries included, has two: so no
+    model on the list is down to its last copy while another gets its eighth. `spare_included` says the
+    candidates include the list's spare entries (gathered only once the list is covered); without
+    them that can't be measured, and the cap stays.
+
+    Returns whether the list is covered: nearly all of its non-spare bytes at their targets, capped.
+    That opens the spare entries (gather(covered=)). Both measures use targets that never fall as the
+    other comes into force, so neither switches back off while copies accumulate. Every node sees the
+    same swarm, so they switch together."""
+    capped = lambda c: min(c.target_base, BACKFILL_CAP)  # noqa: E731
+    two_each = spare_included and _share(cands, lambda c: min(TWO, c.target_base), spare=True)
+    for c in cands:
+        c.target_replicas = c.target_base if two_each else capped(c)
+    return _share(cands, capped, spare=False)
+
+
+def list_full(cands: list[TorrentCand]) -> bool:
+    """Whether the swarm holds the target number of copies of nearly everything on the list, spare
+    entries included and at the targets in use (after set_targets). Then more space would only add
+    copies past every target, so the node turns to the catalog sweep (sweep.py). Sweep picks aren't
+    listed, so they never count either way."""
+    total = covered = 0
+    for c in cands:
+        if not c.listed:
+            continue
+        live = [f for f in c.files if f.kind == "weight"] or [f for f in c.files if f.kind != "skip"]
+        for f in live:
+            total += f.size
+            if _avail(f, c) >= c.target_replicas:
+                covered += f.size
+    return total > 0 and covered >= SATURATED * total
 
 
 def plan(cands: list[TorrentCand], p: Params, node_id: str) -> Plan:

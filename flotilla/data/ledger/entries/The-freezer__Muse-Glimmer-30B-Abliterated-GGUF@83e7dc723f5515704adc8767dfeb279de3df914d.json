@@ -1,0 +1,105 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "The-freezer/Muse-Glimmer-30B-Abliterated-GGUF",
+ "revision": "83e7dc723f5515704adc8767dfeb279de3df914d",
+ "captured": "2026-11-25T05:08:28+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2693,
+   "git_oid": "bd65981141c75e6437d4bda27ebd983c61862c21"
+  },
+  {
+   "path": "Muse-Glimmer-30B-Abliterated-Q2_K.gguf",
+   "size": 10686704000,
+   "sha256": "f756cbe4269431ceb9e062d6cc8fd50c88d09d29048955ac140895c08fe7638c"
+  },
+  {
+   "path": "Muse-Glimmer-30B-Abliterated-Q3_K_M.gguf",
+   "size": 13680522880,
+   "sha256": "39045df4ac5d449206e04bd78859d3c70c145550e109b8bbbb16c3f8a642fe0c"
+  },
+  {
+   "path": "Muse-Glimmer-30B-Abliterated-Q3_K_S.gguf",
+   "size": 12512315008,
+   "sha256": "51330230fde35b96d428f64df79aff4bb762ae189e070d9bd110c6649f4e50ba"
+  },
+  {
+   "path": "Muse-Glimmer-30B-Abliterated-Q4_K_M.gguf",
+   "size": 16935296896,
+   "sha256": "1316a7e2b90c362a820a906867bb60941511906361827314817a8e83c33d179e"
+  },
+  {
+   "path": "Muse-Glimmer-30B-Abliterated-Q4_K_S.gguf",
+   "size": 16133515136,
+   "sha256": "979641228ef2d2900268452a449502b8298d7fc059ff84a5c63538f5caa272a0"
+  },
+  {
+   "path": "Muse-Glimmer-30B-Abliterated-Q5_K_M.gguf",
+   "size": 19811381120,
+   "sha256": "21073f1acc9e35e7d033e4d586f1b834567704ad8052c31cc1b1ec48f3c12a0f"
+  },
+  {
+   "path": "Muse-Glimmer-30B-Abliterated-Q5_K_S.gguf",
+   "size": 19346552704,
+   "sha256": "a05d442b25cdd7626cfdd892a63cebd52ea1c65452440f3d86f20b272665ec53"
+  },
+  {
+   "path": "Muse-Glimmer-30B-Abliterated-Q6_K.gguf",
+   "size": 22867220608,
+   "sha256": "f5487c504af36646e7b14069b1e05cca6ab2741b5cd8f93a2ae126d5a7f643db"
+  },
+  {
+   "path": "Muse-Glimmer-30B-Abliterated-Q8_0.gguf",
+   "size": 29612963456,
+   "sha256": "fc7f9c5ea4035609d48439c95a19264bc825bd4ee53a5ff5decb15fe09c4deb6"
+  },
+  {
+   "path": "README.md",
+   "size": 7096,
+   "git_oid": "c15b81bd5abdc74d656eb26c29424c3a3fb5db25"
+  },
+  {
+   "path": "chat_template.jinja",
+   "size": 12357,
+   "git_oid": "07fc68d065e6e2240d66711464b34904bdef3c22"
+  },
+  {
+   "path": "deploy/DEPLOYMENT.md",
+   "size": 3768,
+   "git_oid": "b58dd918ecafe2222de4585a9c5b1284df02198e"
+  },
+  {
+   "path": "deploy/serve.sh",
+   "size": 1446,
+   "git_oid": "1b664f45908f2e2e78bbdc28b500dc1c55459942"
+  },
+  {
+   "path": "dflash-Muse-Glimmer-30B-Abliterated-F16.gguf",
+   "size": 5125208544,
+   "sha256": "8356491407f97cddcef17e66f4f05ed3be4e8b7cc2777eb32f0ea16296d031c2"
+  },
+  {
+   "path": "dflash-Muse-Glimmer-30B-Abliterated-Q4_K_M.gguf",
+   "size": 1631210720,
+   "sha256": "1b58b92b670d20b49d06a9a1210e4bf5350696bb8f7b4931769b7000d0456eda"
+  },
+  {
+   "path": "mmproj-Muse-Glimmer-30B-Abliterated-F16.gguf",
+   "size": 3847367616,
+   "sha256": "c2e08b8bd13ca60b59ffdcb79b969b354b1edda9b9198047d10621adc11591bb"
+  },
+  {
+   "path": "mmproj-Muse-Glimmer-30B-Abliterated-Q4_K_M.gguf",
+   "size": 1400329152,
+   "sha256": "acd4058ce27e4b263a99841a70c63385620ca2351aa8cc3ae4d8f8cef2a0b973"
+  },
+  {
+   "path": "mmproj-Muse-Glimmer-30B-Abliterated-Q8_0.gguf",
+   "size": 2049878976,
+   "sha256": "ca930c0d8b0ee0fa1a569c8ac05d090ff90440aaad6f2ebcc9bdec1433b32d66"
+  }
+ ]
+}

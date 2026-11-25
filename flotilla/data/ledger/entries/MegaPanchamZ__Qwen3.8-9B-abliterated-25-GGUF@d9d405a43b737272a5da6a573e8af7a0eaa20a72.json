@@ -1,0 +1,25 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "MegaPanchamZ/Qwen3.8-9B-abliterated-25-GGUF",
+ "revision": "d9d405a43b737272a5da6a573e8af7a0eaa20a72",
+ "captured": "2026-11-25T05:08:55+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 1593,
+   "git_oid": "ed66b403453e8ea7409c226b23f15060c16b9977"
+  },
+  {
+   "path": "Qwen3.8-9B-abliterated-25.Q4_K_M.gguf",
+   "size": 5629108864,
+   "sha256": "542d41f6cf4cc450152651d0d8099bd4856f919f1a8909c3037976480cb894cf"
+  },
+  {
+   "path": "README.md",
+   "size": 2938,
+   "git_oid": "027efa2aeccfbd6a89b1c0ca2dd665c3becb9077"
+  }
+ ]
+}

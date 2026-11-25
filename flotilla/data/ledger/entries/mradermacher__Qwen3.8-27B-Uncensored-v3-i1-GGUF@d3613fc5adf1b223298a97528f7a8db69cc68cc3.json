@@ -1,0 +1,140 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3.8-27B-Uncensored-v3-i1-GGUF",
+ "revision": "d3613fc5adf1b223298a97528f7a8db69cc68cc3",
+ "captured": "2026-11-25T05:08:53+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3353,
+   "git_oid": "4e46a8a4c7574b186447d67c66394e7e737f1ec9"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-IQ1_M.gguf",
+   "size": 7631085504,
+   "sha256": "7c0a5facd7efdf408e1898fc0e3ba4d7df6e43b9099fcc989a140eeadd2ecda1"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-IQ1_S.gguf",
+   "size": 7149825984,
+   "sha256": "2084a5114c174f47923c8ee3bf2cd54b859f04fb7440990565207a8612c73f89"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-IQ2_M.gguf",
+   "size": 10004594624,
+   "sha256": "d2c7ff3278c4018b62916f32129fbf4c29777df0302e95a98332b54901b97a12"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-IQ2_S.gguf",
+   "size": 9362915264,
+   "sha256": "e2ba0ec7b69c052f0b94f3715621ed1bbb46f6f7868e1e4662732d1a6a82d284"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-IQ2_XS.gguf",
+   "size": 9090592704,
+   "sha256": "861cdac433ebfa04f4c116c42c910e943d67ab7522aecce69dcee963e46e25f6"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-IQ2_XXS.gguf",
+   "size": 8433184704,
+   "sha256": "888ffc94d4e38549b28379521d8564e87b35e4592f93d689b5ba45fe9beef8e5"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-IQ3_M.gguf",
+   "size": 12580876224,
+   "sha256": "84556f60deedea665623d7a691ecdd89fcfebe5a8be1abc660245f07e6afe76f"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-IQ3_S.gguf",
+   "size": 12419329984,
+   "sha256": "b799e8ba7fd6c28ef3467183de8fcc6f76c66b0fc7d9051673011d094bc20c01"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-IQ3_XS.gguf",
+   "size": 11967131584,
+   "sha256": "e31e1f6580b0f02d003bbfa85848c80ef09253921491f20c96022498d99d5dbb"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-IQ3_XXS.gguf",
+   "size": 11186372544,
+   "sha256": "c6dfe49bf7f748274aca5f9b2bb2e688e808e4abe5f560b560c42f6bf4040ffd"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-IQ4_XS.gguf",
+   "size": 15082508224,
+   "sha256": "692ecf51c60c90e9fcd58a5360967fc365a110a7a6d811b46364856abe1fefe1"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-Q2_K.gguf",
+   "size": 10711666624,
+   "sha256": "2b2496e8cd88e5af399222b8eafbe507c09bff74204dbec5fcf7c66ece5252ec"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-Q2_K_S.gguf",
+   "size": 10248327104,
+   "sha256": "88091ac6e04bc0b90a71b6967dc84c57f066be41757d47e0c077165b27d84dd6"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-Q3_K_L.gguf",
+   "size": 14344777664,
+   "sha256": "1cf0c2c41c8857213c788f54b44d31f2e9326bc95f7ea6e26f031993d79ba694"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-Q3_K_M.gguf",
+   "size": 13301444544,
+   "sha256": "d56d15fad470d36e081403a55ab11a8ca037a83661f70260b476dd383de49dfa"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-Q3_K_S.gguf",
+   "size": 12073955264,
+   "sha256": "685f1be005b40209a6009267d1e9af19c4ccbd33a166321965b1bc3d0b158ff6"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-Q4_0.gguf",
+   "size": 15521435584,
+   "sha256": "3bb2e4f62d4548719fd5228b20b14161b36f4bab19d848bd766221e09264157d"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-Q4_1.gguf",
+   "size": 17078243264,
+   "sha256": "188c8a81fc3cbcedce0370e7f433ea45313a78c802cdbcfa6e3f12f529a052bc"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-Q4_K_M.gguf",
+   "size": 16547401664,
+   "sha256": "a8cade66575dc6f906a83fbb84737464dc2ae5021bf7b2cebd205c293eb8a59e"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-Q4_K_S.gguf",
+   "size": 15586316224,
+   "sha256": "b259719d330a49bfec2e91036a66b135e85eadb868eb7c7dcb07580af929e23e"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-Q5_K_M.gguf",
+   "size": 19231100864,
+   "sha256": "09f077b5dbceae9811996ebc621d48cda1ee1beb7c6e013178d0561f791f43d2"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-Q5_K_S.gguf",
+   "size": 18679615424,
+   "sha256": "43e556faddf6194bda9ae784c5446c41488b3f834e0d7c3d853ed04987828718"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.i1-Q6_K.gguf",
+   "size": 22082531264,
+   "sha256": "773f3dab507a2791dc7cd77f6df1907a9f7a648a02e116787a818390bf028fa9"
+  },
+  {
+   "path": "Qwen3.8-27B-Uncensored-v3.imatrix.gguf",
+   "size": 27300160,
+   "sha256": "af9afce42e53f9c9f8efa71ccaf591912335c8c796e870eb72f9b72d903f2bd3"
+  },
+  {
+   "path": "README.md",
+   "size": 6500,
+   "git_oid": "c5e810114b8ea8b7eb9e2fe071986259882ffd93"
+  }
+ ]
+}

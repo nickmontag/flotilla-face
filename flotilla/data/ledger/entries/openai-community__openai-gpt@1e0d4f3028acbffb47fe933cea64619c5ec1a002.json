@@ -1,0 +1,75 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "openai-community/openai-gpt",
+ "revision": "1e0d4f3028acbffb47fe933cea64619c5ec1a002",
+ "captured": "2026-11-25T05:13:10+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 399,
+   "git_oid": "9a0990c5c0e00e26cc5ca4ba5c1c3ad533de7018"
+  },
+  {
+   "path": "README.md",
+   "size": 14108,
+   "git_oid": "b70e1da67cc969e18f8fcbd4c5cfc500fdfa9218"
+  },
+  {
+   "path": "config.json",
+   "size": 656,
+   "git_oid": "812e9b1784617ec5b57f89fc2278cf59d4e474c8"
+  },
+  {
+   "path": "generation_config.json",
+   "size": 74,
+   "git_oid": "ff245ea7c803122ca5a2c8459333017d47c2130d"
+  },
+  {
+   "path": "generation_config_for_text_generation.json",
+   "size": 115,
+   "git_oid": "38b966126ddd72e5d1526410d2dfe75054a14494"
+  },
+  {
+   "path": "merges.txt",
+   "size": 458495,
+   "git_oid": "0023a687b3d4d0b795a5e97cc914bdabb5a253df"
+  },
+  {
+   "path": "model.safetensors",
+   "size": 478736214,
+   "sha256": "25c82cdf1844d2d93e9120b3b628fc6c2b4fcc7801a1297f58465ba67d45deb3"
+  },
+  {
+   "path": "pytorch_model.bin",
+   "size": 478750579,
+   "sha256": "16e27229889ec4dc473665eb83c9cc3441b3b67be77e0e306d1bbb653b40e0fc"
+  },
+  {
+   "path": "rust_model.ot",
+   "size": 603105432,
+   "sha256": "74e4c864883a08f03d35c61d366ea0f6e732aaafce77446fc245f46d335918bf"
+  },
+  {
+   "path": "tf_model.h5",
+   "size": 466312920,
+   "sha256": "8bf5488d77b1221af74cad303845855e0d9e094f1b8563066a28eb74b104f8d4"
+  },
+  {
+   "path": "tokenizer.json",
+   "size": 1272610,
+   "git_oid": "5da717f8ef45efd3b31c686b722c58e3b12195d7"
+  },
+  {
+   "path": "tokenizer_config.json",
+   "size": 25,
+   "git_oid": "34ddbd64a4cd3f2d9d8a9120d3662d0bf91baead"
+  },
+  {
+   "path": "vocab.json",
+   "size": 815973,
+   "git_oid": "9dc3f0af5a80956e57dc8d9401e16dfadcade7c2"
+  }
+ ]
+}

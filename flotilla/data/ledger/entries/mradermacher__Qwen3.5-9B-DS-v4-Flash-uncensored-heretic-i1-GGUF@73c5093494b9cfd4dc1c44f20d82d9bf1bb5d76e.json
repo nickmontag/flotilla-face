@@ -1,0 +1,100 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen3.5-9B-DS-v4-Flash-uncensored-heretic-i1-GGUF",
+ "revision": "73c5093494b9cfd4dc1c44f20d82d9bf1bb5d76e",
+ "captured": "2026-11-25T05:08:59+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 2995,
+   "git_oid": "39c33cf3519a545e834bdb8330629e0a68c1209a"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-IQ3_M.gguf",
+   "size": 4522783840,
+   "sha256": "739c768f6f8453afac65739a025abbee4a2a3fb466e7fbbfc4bfed206615148a"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-IQ3_S.gguf",
+   "size": 4475991136,
+   "sha256": "aea2d92fb1b0b7ccbe8ad9af5dbb5f4a030ac44ada14afdccafa91b88c27cecc"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-IQ4_NL.gguf",
+   "size": 5555663968,
+   "sha256": "c5eb47bf4a6cb7eba23448d3540d58360bfd61b0c057b50426e308a61c165319"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-IQ4_XS.gguf",
+   "size": 5326419040,
+   "sha256": "444948e5ee2db59874a51aaf922f905d9eda94cc72327f3a903ab7f9369382fc"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-Q2_K.gguf",
+   "size": 3914970208,
+   "sha256": "d2a7c0dffe82afff1203c97999a1cf32efecb23402151571a702b127d1c6c477"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-Q3_K_L.gguf",
+   "size": 5048513632,
+   "sha256": "e84d4ebb8ebfb8649c5d3b3ba2af9bf8ab1226e7b3c38e99daccb0272aea0df5"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-Q3_K_M.gguf",
+   "size": 4737610848,
+   "sha256": "296b2655e5b993eada80d76f68fb85d5469ed95b6282f422b9e75edd2b8ea0f4"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-Q3_K_S.gguf",
+   "size": 4364022880,
+   "sha256": "ce321af897b1f6cfb67dc4c6ce61445218939e90ae0e885c621bc0ff9a156733"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-Q4_0.gguf",
+   "size": 5462864992,
+   "sha256": "cc32c5a772903b0b6d24fbc2187f2622de0a8d57cca731154dce74582b03797b"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-Q4_1.gguf",
+   "size": 5961462880,
+   "sha256": "0c981510a877a6de8d3685fb9d047c129bf4e04dc798822a61e0542c13557142"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-Q4_K_M.gguf",
+   "size": 5780092000,
+   "sha256": "84ec636c0dd4091bee34a3705f9e0b238742bc47e00b4d2cd239b85cd34f496b"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-Q4_K_S.gguf",
+   "size": 5488555104,
+   "sha256": "c78e78827261c99f5bf0f0cba944aac530c1513b48fef3abe2e3dbae5bb8c877"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-Q5_K_M.gguf",
+   "size": 6642545760,
+   "sha256": "aa3ca306c29021dd8a1e9fac5772c6466ed3496fb75b52ceeca5c8fec639145e"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-Q5_K_S.gguf",
+   "size": 6472643680,
+   "sha256": "ec739a0e086445b4bf95e841040ebb6008c84aab13278fb0a39867c13a26eaa7"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.i1-Q6_K.gguf",
+   "size": 7558902880,
+   "sha256": "a5c88a7b15068fe1e92f3bd1376055765e7cacf10e5569287f7b15d143be4fbc"
+  },
+  {
+   "path": "Qwen3.5-9B-DS-v4-Flash-uncensored-heretic.imatrix.gguf",
+   "size": 10307808,
+   "sha256": "c93e3a151550d5064c544325a1816569f1667fa6be29153ead5972e642e00379"
+  },
+  {
+   "path": "README.md",
+   "size": 5918,
+   "git_oid": "907441bf6e2195ecf292561af8c3692320cdf8eb"
+  }
+ ]
+}

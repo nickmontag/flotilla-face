@@ -1,0 +1,145 @@
+{
+ "kind": "flotilla-hash-ledger-entry",
+ "schema": 1,
+ "repo": "mradermacher/Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated-i1-GGUF",
+ "revision": "4fba2ae5c7fe4f8403480630ee72a4a2cdd0e968",
+ "captured": "2026-11-25T05:08:56+00:00",
+ "source": "huggingface",
+ "files": [
+  {
+   "path": ".gitattributes",
+   "size": 3830,
+   "git_oid": "a040e2332eb1144540a97afc4b4e1a13aa56b0c1"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-IQ1_M.gguf",
+   "size": 2042195712,
+   "sha256": "eebee59f279a22fa7d9c19e7c0100a2e5898dad0a4073547c736cb49210fd6b4"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-IQ1_S.gguf",
+   "size": 1903666944,
+   "sha256": "a90033e0d7f0fb61ab32392ee80e15cf351c394be5253afd812e3a9d0ab3b922"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-IQ2_M.gguf",
+   "size": 2780342016,
+   "sha256": "992b1df9162e175493b314092b7e3430821cbb6b231c1b91ad0d88e49520f5ea"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-IQ2_S.gguf",
+   "size": 2595636992,
+   "sha256": "adaff8ad478269b52088fd057cc4eb2c5fdb50ebc5e1bafec071e8bcf85c606f"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-IQ2_XS.gguf",
+   "size": 2469021440,
+   "sha256": "9f5b4a4906b203df95544bd01c2efa353961f0a822413f7f19d4b42b16452f28"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-IQ2_XXS.gguf",
+   "size": 2273076992,
+   "sha256": "eb7c38ad51f4b10a8ffe5441b0b8921fab56ac0dce9034a032419170ce8cf820"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-IQ3_M.gguf",
+   "size": 3574011648,
+   "sha256": "7a318c19d32d4da16f47a04d2de162921bc3ee591dc64c184e2cf8c9d8b4b70f"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-IQ3_S.gguf",
+   "size": 3499192064,
+   "sha256": "5a19be7d3a704eeba3fa85b97252fe1ac97cd5aa5d7ef9c7d133df88aca7a2e9"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-IQ3_XS.gguf",
+   "size": 3346255616,
+   "sha256": "fc9b0694c57cea5747b5652eff3404b151b326768b25132b4c748c55c2eed885"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-IQ3_XXS.gguf",
+   "size": 3114514176,
+   "sha256": "376fde1423e97b7ac4ca362242c7443710ff00273b2ebd54bc7459629711aefd"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-IQ4_NL.gguf",
+   "size": 4437812992,
+   "sha256": "122218b22a2c798ad17d731c2243d6204b0981b6f51858a657c9eceab641cb57"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-IQ4_XS.gguf",
+   "size": 4218472192,
+   "sha256": "cb11842d47b9f7710acfe4899b3a89d7ce53bbf4de5819c1adca2e72d6ef54ab"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-Q2_K.gguf",
+   "size": 3015939840,
+   "sha256": "021656b6dc3e9e872a0598d991410cb7e07ab1fc693780ad24ffb6823621e9fe"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-Q2_K_S.gguf",
+   "size": 2834073344,
+   "sha256": "f8fea2ecb460694a6d05a2eaf3b0f48a3442c6d5dd46a351ad008914427c35be"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-Q3_K_L.gguf",
+   "size": 4088459008,
+   "sha256": "11b9e25def048288d3213e0fdd405160933d8b89269463bad08fb3c27a07f606"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-Q3_K_M.gguf",
+   "size": 3808390912,
+   "sha256": "d43d48803a5c274f44383536390234a5f87ad17170cd980c7dc04b6afd74080d"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-Q3_K_S.gguf",
+   "size": 3492368128,
+   "sha256": "ae9aa07acf2b1f40d308f898270436597df03a3117f50af54bee781bd59dad7d"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-Q4_0.gguf",
+   "size": 4444120832,
+   "sha256": "cad25134edaaed3e234b7c658012f7c1710677c07bfe0af45e5ab5e9036cb04e"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-Q4_1.gguf",
+   "size": 4873283328,
+   "sha256": "146a89ef9e9cf37b7a5d12cc7b927799159cc3e12f3e121f2154e013fbfe010f"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-Q4_K_M.gguf",
+   "size": 4683073280,
+   "sha256": "7e04c24dbe681fa4355a12c3aa9c4f31e9ecf9d92ab03c3b118977cd8b21c849"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-Q4_K_S.gguf",
+   "size": 4457768704,
+   "sha256": "7d007af4120be14c1b430e9ad7ad74a583d8394f4d41c2c23d22ea1e46fa7903"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-Q5_K_M.gguf",
+   "size": 5444830976,
+   "sha256": "474a3cec7bc8b26d77e750d049c40e272a4af88058ee48e8ca7de94095844a37"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-Q5_K_S.gguf",
+   "size": 5315176192,
+   "sha256": "55e90a588b1bd5c864b5b4b93882da7a81d597aa28dafedf1fb49cd21094e346"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.i1-Q6_K.gguf",
+   "size": 6254198528,
+   "sha256": "4589b9512271bad2dc7a38411fe2338cae5ca8db961413996758ce84a0e8bcef"
+  },
+  {
+   "path": "Qwen2.5-VL-7B-NSFW-Caption-V3-abliterated.imatrix.gguf",
+   "size": 4560352,
+   "sha256": "56c1fde27965b4b9e15a446a6ca570cc01c7068eada5ee2fb112fe38483d6cca"
+  },
+  {
+   "path": "README.md",
+   "size": 7501,
+   "git_oid": "11ae49fdef3268b270ebf4c4f8d6db36de5d153b"
+  }
+ ]
+}

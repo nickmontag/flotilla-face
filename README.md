@@ -32,6 +32,7 @@ with whatever disk and bandwidth you can spare.
 ![python 3.11–3.13](https://img.shields.io/badge/python-3.11%20%7C%203.12%20%7C%203.13-3776ab)
 ![runs on macOS, Linux, Raspberry Pi](https://img.shields.io/badge/runs%20on-macOS%20%7C%20Linux%20%7C%20Raspberry%20Pi-6e7681)
 ![telemetry: none](https://img.shields.io/badge/telemetry-none-111111)
+[![GitGem](https://gitgem.org/api/badge/github/nickmontag/flotilla-face.svg)](https://gitgem.org/github/nickmontag/flotilla-face)
 
 [Install](#get-started) · [How it decides](#how-flotilla-decides-what-to-carry) ·
 [Safety](#safety) · [Hash ledger](#the-hash-ledger) · [Design](DESIGN.md)

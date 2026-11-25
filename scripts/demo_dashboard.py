@@ -1,4 +1,4 @@
-"""Offline dashboard demo for UI work: python scripts/demo_dashboard.py [--hours 8] [--port 7499]
+"""Offline dashboard demo for UI work: python scripts/demo_dashboard.py [--hours 8] [--port 7499] [--setup-seconds 60]
 
 Runs the real Flotilla engine and dashboard against a fake swarm on 127.0.0.1:
 three made-up models, a full seeder, a partial seeder, and a slow downloader
@@ -27,7 +27,7 @@ sys.path.insert(0, str(ROOT))
 
 import libtorrent as lt  # noqa: E402
 
-from flotilla.candidates import build_candidate  # noqa: E402
+from flotilla.candidates import Rejection, build_candidate  # noqa: E402
 from flotilla.config import Config, State, render_config  # noqa: E402
 from flotilla.engine import Engine  # noqa: E402
 from flotilla.feed import FeedModel, neutral_feed  # noqa: E402
@@ -56,18 +56,42 @@ def add(ses: lt.session, repo: FakeRepo, path: Path, prios=None, limit=0) -> lt.
 class DemoEngine(Engine):
     """The real engine, with discovery swapped for the fake catalogue."""
 
-    def __init__(self, *a, catalogue, **kw):
+    def __init__(self, *a, catalogue, setup_seconds=0.0, **kw):
         super().__init__(*a, **kw)
         self.catalogue = catalogue
+        self.setup_seconds = setup_seconds   # spread the first refresh's steps over this long, to see them
 
     def discover(self):
-        cands = []
+        slow = self.setup_seconds if not self._plans_applied else 0.0
+        self.progress.step("list")
+        time.sleep(slow * 0.05)
+        self.progress.note("list", version=8, models=647, signed=True)
+        self.progress.step("index", enabled=True)
+        time.sleep(slow * 0.15)
+        self.progress.note("index", build="2026-11-23", models=58754)
+        self.progress.step("lookup", done=0, total=0, usable=0, skipped=0)
+        # Made-up skips, so the lookup step's counts look like a real node's.
+        skips = [Rejection(f"demo-skip/m{i}", reason) for i, reason in enumerate(
+            [".torrent download failed: https://pirateface.co/api/torrents/x.torrent: HTTP 404"] * 9
+            + ["no magnet listed (no torrent yet, or terms must be accepted first)"] * 3
+            + ["license unknown: Hugging Face no longer has it, and its license was never read here"]
+            + ["size of 'README.md' differs from the hash ledger"])] if slow else []
+        total = len(self.catalogue) + len(skips)
+        self.progress.looked_up(0, total)
+        cands, done = [], 0
         for repo, entry, pf, hf in self.catalogue:
             c = build_candidate(repo.repo, None, neutral_feed(), entry, pf, hf, self.cfg)
             c.priority = neutral_feed().priority(entry) if entry else c.priority
             cands.append(c)
+            done += 1
+            self.progress.looked_up(done, total, c)
+            time.sleep(slow * 0.4 / total)
+        for r in skips:
+            done += 1
+            self.progress.looked_up(done, total, r)
+            time.sleep(slow * 0.4 / total)
         dropped = set(self.state.data["dropped"])
-        return [c for c in cands if c.repo not in dropped], []
+        return [c for c in cands if c.repo not in dropped], skips
 
     def sample(self, now: float, force: bool = False) -> None:  # a chart point every 10 s, not every minute
         if force or now - self._last_sample >= 10:
@@ -79,6 +103,8 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=7499)
     ap.add_argument("--hours", type=float, default=8)
+    ap.add_argument("--setup-seconds", type=float, default=0,
+                    help="spread the first look at the swarm over this long, to see the setup card")
     args = ap.parse_args()
     base = Path(tempfile.mkdtemp(prefix="flotilla-demo-"))
     print(f"demo files in {base}", flush=True)
@@ -124,14 +150,15 @@ def main() -> int:
     cfg.budget_gb, cfg.reserve_gb = 0.02, 0           # 20 MB: all of two models, part of the big one
     cfg.whole_model_under_gb = 0.001                   # the 0.3 MB model is kept whole
     cfg.upload_mbps, cfg.download_mbps, cfg.monthly_upload_cap_gb = 1, 20, 0
-    cfg.probe_seconds, cfg.refresh_hours = 4, 6
+    cfg.probe_seconds, cfg.refresh_hours = max(4, round(args.setup_seconds * 0.4)), 6
     cfg.reorient, cfg.churn_gb, cfg.min_hold_days = "weekly", 0.002, 0   # swap up to 2 MB; nothing is too new to go
     cfg.dashboard_port, cfg.include_unlisted = args.port, False
     cfg.path = base / "config.toml"
     cfg.path.write_text(render_config(cfg))
     state = State(base / "state")
     eng = DemoEngine(cfg, state, log=lambda m: print("[node]", m, flush=True), listen_host="127.0.0.1",
-                     dht=False, connect=[a_addr], catalogue=catalogue)
+                     dht=False, connect=[a_addr], catalogue=catalogue,
+                     setup_seconds=args.setup_seconds)
 
     def late_seeder():
         """The partial seeder is found after the first plan: its shards are then the over-copied ones."""

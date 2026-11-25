@@ -122,7 +122,8 @@ it listens on the next free port) or a `TAKEN` line (the VPN's forwarded port is
 client, so peers can't connect in: tell the person, and give the other client a different port).
 
 The dashboard address includes an access key: give it to the person, not to anyone else. Downloads
-start within a few minutes; filling the space takes hours to days.
+start after the first look at the swarm, about five minutes in: until then `flotilla status` prints a
+`setting up:` line and the dashboard shows each step. Filling the space takes hours to days.
 
 ## Later
 

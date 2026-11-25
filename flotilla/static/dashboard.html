@@ -338,6 +338,26 @@
   pre { margin: 0; max-height: 240px; overflow: auto; font: 12px/1.6 var(--mono);
         white-space: pre-wrap; word-break: break-word; color: var(--muted); }
   .empty { padding: 18px; color: var(--muted); }
+  /* a refresh in progress: the steps of a new node's first look at the swarm (renderSetup) */
+  .setup { padding: 18px 20px 8px; }
+  .setup-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .setup-head h3 { margin: 0; font: 600 16px var(--display); }
+  .setup-head .eta { font-size: 13px; color: var(--muted); }
+  .setup > p { margin: 4px 0 10px; font-size: 13px; color: var(--muted); }
+  .setup ol { list-style: none; margin: 0; padding: 0; }
+  .setup li { display: flex; gap: 12px; padding: 11px 0; border-top: 1px solid var(--border-soft); }
+  .setup li:first-child { border-top: 0; }
+  .setup .mark { width: 22px; height: 22px; border-radius: 50%; flex: none; display: grid; place-items: center;
+                 font: 600 11px var(--mono); border: 1px solid var(--border); color: var(--faint); margin-top: 1px; }
+  .setup li.done .mark { background: color-mix(in srgb, var(--ok) 16%, transparent); border-color: transparent; color: var(--ok); }
+  .setup li.now .mark { background: var(--accent-soft); border-color: transparent; color: var(--accent); }
+  .setup .what { flex: 1; min-width: 0; }
+  .setup .what b { display: block; font-size: 14px; font-weight: 600; }
+  .setup li.next .what b { font-weight: 500; color: var(--muted); }
+  .setup .what span { display: block; font-size: 13px; color: var(--muted); margin-top: 2px; }
+  .setup .took { font: 12px var(--mono); color: var(--faint); white-space: nowrap; }
+  .setup .bar { margin: 8px 0 4px; }
+  .setup .counts { display: flex; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--muted); }
   footer { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--border-soft); font-size: 12px; color: var(--faint);
            display: flex; align-items: center; justify-content: space-between; gap: 8px 20px; flex-wrap: wrap; }
   footer svg { width: 13px; height: 13px; flex: none; }
@@ -518,6 +538,7 @@
       <span><b>Flotilla</b> <i>Face</i></span>
     </span>
     <span id="status" class="pill"><span class="dot"></span><span>Connecting…</span></span>
+    <span id="refreshing" class="pill" hidden><span class="dot"></span><span></span></span>
     <span id="vpn" class="pill" hidden><span class="dot"></span><span></span></span>
     <a id="points" class="pill" hidden href="#pfset" role="button"><span class="dot"></span><span></span></a>
     <a id="update" class="pill warn" hidden target="_blank" rel="noopener noreferrer"><span class="dot"></span><span></span></a>
@@ -1046,9 +1067,13 @@ function render(s) {
   else if (net.bind && net.bind_up === false) setPill("status", "bad", "Offline: VPN is down");
   else if (s.disk && s.disk.paused) setPill("status", "warn", "Downloads paused: disk nearly full");
   else if (s.paused) setPill("status", "warn", "Paused: monthly cap reached");
+  else if (!ts.length && s.refresh && s.refresh.first) setPill("status", "ok", "Setting up · step " + s.refresh.index + " of " + s.refresh.of, true);
   else if (wanted && done < wanted) setPill("status", "ok", "Downloading " + Math.floor(100 * done / wanted) + "%", true);
   else if (ts.length) setPill("status", "ok", "Seeding", true);
   else setPill("status", "", "Idle");
+  // A later refresh runs while the node seeds: a small pill, not the setup card.
+  if (s.refresh && !(s.refresh.first && !ts.length)) setPill("refreshing", "", "Replanning · " + refreshShort(s.refresh), true);
+  else $("refreshing").hidden = true;
   const fwd = net.vpn_port, lost = fwd && !fwd.port && fwd.lost;
   const taken = fwd && fwd.port && s.port && s.port.forwarded_taken;
   if (net.bind) setPill("vpn", !net.bind_up ? "bad" : lost || taken ? "warn" : "ok", (net.bind_up ? "VPN pinned · " : "Waiting for VPN · ") + net.bind
@@ -1425,9 +1450,82 @@ function coverStrip(t) {
 
 const heldBefore = new Map();   // infohash -> pieces held at the last render, so newly landed ones can flash
 
+const secs = (n) => n < 90 ? Math.max(1, Math.round(n)) + " s" : Math.round(n / 60) + " min";
+const STEP_WORDS = {   // [while it runs, once it's done]
+  list: ["Checking the priority list", "Priority list checked"],
+  index: ["Updating Pirate Face's catalog", "Catalog updated"],
+  lookup: ["Looking up models", "Models looked up"],
+  probe: ["Watching the swarms", "Watched the swarms"],
+  plan: ["Choosing what to carry", "Chose what to carry"],
+};
+
+function refreshShort(r) {
+  const s = (r.steps || {})[r.step] || {};
+  if (r.step === "lookup") return "looking up models " + (s.done || 0) + "/" + (s.total || 0);
+  if (r.step === "probe") return "watching swarms, " + secs(s.left || 0) + " left";
+  if (r.step === "plan") return "choosing what to carry";
+  return r.step === "index" ? "updating the catalog" : "checking the list";
+}
+
+// A refresh while the node holds nothing yet: what it's doing, step by step, in place of an empty list.
+function renderSetup(r) {
+  const steps = r.steps || {}, order = ["list", "index", "lookup", "probe", "plan"];
+  const st = (state && state.settings) || {}, net = (state && state.network) || {};
+  const card = el("div", "setup");
+  const head = el("div", "setup-head");
+  head.append(el("h3", null, r.first ? "Getting set up" : "Looking at the swarm"),
+              el("span", "eta", r.eta != null ? "about " + secs(r.eta) + " left" : ""));
+  card.append(head, el("p", null, r.first
+    ? "A new node checks the list and the swarms before it downloads anything. This happens once: later looks run while it seeds."
+    : "Flotilla is looking at the swarm before it picks what to carry."));
+  const ol = el("ol");
+  order.forEach((name, i) => {
+    const s = steps[name], now = r.step === name, done = s && s.done_step;
+    const li = el("li", done ? "done" : now ? "now" : "next");
+    li.append(el("span", "mark", done ? "✓" : String(i + 1)));
+    const what = el("div", "what");
+    what.append(el("b", null, STEP_WORDS[name][done ? 1 : 0]));
+    let detail = "";
+    if (name === "list") detail = s && s.version ? "Version " + s.version + ", signed · " + plural(s.models, "model")
+                                   : s && s.models != null ? "No signed list reachable: every model counts the same" : "The signed list of what most needs copies";
+    if (name === "index") detail = s && s.enabled === false ? "Off (keep_magnet_index = false)"
+                                    : s && s.models ? Number(s.models).toLocaleString() + " models in its magnet index" : "Pirate Face's list of every torrent, kept here in case the site goes down";
+    if (name === "lookup") detail = "Files, licenses and hashes from Pirate Face and Hugging Face";
+    if (name === "probe") detail = (s && s.swarms ? plural(s.swarms, "swarm") + ", " : "") + secs((s && s.seconds) || r.probe_seconds || 90)
+                                    + " to see who seeds what. Peers see the address you seed from" + (net.bind ? " (your VPN's)." : ".");
+    if (name === "plan") detail = (s && s.budget ? "Fills up to " + human(s.budget) + ". " : "") + "Then downloads start"
+                                   + (st.hf_fallback ? "; a file no peer has comes from Hugging Face after 10 minutes." : ".");
+    what.append(el("span", null, detail));
+    if (name === "lookup" && s && s.total) {
+      const bar = el("div", "bar"), fill = el("div");
+      fill.style.width = Math.min(100, 100 * s.done / s.total) + "%"; bar.append(fill);
+      const counts = el("div", "counts");
+      counts.append(el("span", null, s.done + " of " + s.total),
+                    el("span", null, (s.usable || 0) + " usable · " + (s.skipped || 0) + " skipped"));
+      what.append(bar, counts);
+      const kinds = Object.entries(s.kinds || {});
+      if (kinds.length) what.append(el("span", null, "Skipped: " + kinds.map(([k, n]) => n + " " + k).join(" · ")));
+    }
+    if (name === "probe" && now && s && s.seconds) {
+      const bar = el("div", "bar"), fill = el("div");
+      fill.style.width = Math.min(100, 100 * (1 - (s.left || 0) / s.seconds)) + "%"; bar.append(fill);
+      what.append(bar);
+    }
+    li.append(what);
+    if (s && (done || now)) li.append(el("span", "took", secs(s.took || 0)));
+    ol.append(li);
+  });
+  card.append(ol);
+  return card;
+}
+
 function renderCarrying(ts) {
   const box = $("carry"); box.replaceChildren();
-  if (!ts.length) { box.append(el("div", "empty", "Nothing yet. Flotilla picks pieces after its first look at the swarm.")); return; }
+  if (!ts.length) {
+    if (state.refresh) box.append(renderSetup(state.refresh));
+    else box.append(el("div", "empty", "Nothing yet. Flotilla picks pieces after its first look at the swarm."));
+    return;
+  }
   ts.slice().sort((a, b) => b.done - a.done).forEach((t) => {
     const row = el("div", "row" + (openRows.has(t.infohash) ? " open" : ""));
     const line = el("div", "line");

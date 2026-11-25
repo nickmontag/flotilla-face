@@ -1591,6 +1591,28 @@ def cmd_history(args) -> int:
     return 0
 
 
+def refresh_line(r: dict | None) -> str:
+    """One line on what a running refresh is doing (status.json's "refresh"), or "" when none is."""
+    if not r:
+        return ""
+    steps, step = r.get("steps") or {}, r.get("step")
+    s = steps.get(step) or {}
+    what = {
+        "list": "checking the priority list and hash ledger",
+        "index": "updating Pirate Face's magnet index",
+        "lookup": f"looking up models {s.get('done', 0)}/{s.get('total', 0)}"
+                  + (f" ({s['skipped']} skipped)" if s.get("skipped") else ""),
+        "probe": f"watching {s.get('swarms', 0)} swarm(s), {s.get('left', 0):.0f} s left",
+        "plan": "choosing what to carry",
+    }.get(step, step or "starting")
+    watch = f"{r.get('probe_seconds', 0):.0f} s watching the swarms"
+    then = {"list": "then looking up models and " + watch, "index": "then looking up models and " + watch,
+            "lookup": "then " + watch, "probe": "then choosing what to carry"}.get(step, "")
+    eta = r.get("eta")
+    return (("setting up: " if r.get("first") else "refreshing: ") + what + (f", {then}" if then else "")
+            + (f" (about {max(1, round(eta / 60))} min left)" if eta is not None else ""))
+
+
 def cmd_status(args) -> int:
     path = Path(args.state) / "status.json"
     if not path.exists():
@@ -1601,6 +1623,9 @@ def cmd_status(args) -> int:
     up = doc.get("upload_month", {})
     print(f"node {doc['node']}  port {doc['listen_port']}  {'PAUSED  ' if doc.get('paused') else ''}"
           f"status {age:.0f}s old  uploaded this month {human(up.get('bytes', 0))}")
+    line = refresh_line(doc.get("refresh"))
+    if line:
+        print(line)
     port = doc.get("port") or {}
     if port.get("forwarded_taken"):
         print(f"TAKEN  port {port['wanted']}, the one the VPN forwards, is held by another program here (another "

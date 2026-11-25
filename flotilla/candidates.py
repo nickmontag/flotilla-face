@@ -424,8 +424,9 @@ def sweep_entry(repo: str) -> FeedModel:
 
 def gather(cfg: Config, feed: Feed, pf: PirateFace, hf: HuggingFace, held_repos: set[str], log=print,
            ledger: Ledger | None = None, index=None, covered: bool = False, sweep: list[str] = (),
-           swept: set[str] = frozenset()):
-    """Decide which repos to look at, then build candidates for each.
+           swept: set[str] = frozenset(), progress=None):
+    """Decide which repos to look at, then build candidates for each. progress(done, total, result):
+    called before the first lookup (result None) and after each, for the dashboard.
 
     Order: the signed feed's models, models we already hold, then (if enabled)
     Pirate Face's rescued models and its new torrents that need seeders, at most
@@ -484,7 +485,11 @@ def gather(cfg: Config, feed: Feed, pf: PirateFace, hf: HuggingFace, held_repos:
             add(repo, None, sweep_entry(repo))
     cands: list[TorrentCand] = []
     rejected: list[Rejection] = []
-    for repo, quant, entry in wanted:
+    if progress:
+        progress(0, len(wanted), None)
+    for i, (repo, quant, entry) in enumerate(wanted, 1):
         c = build_candidate(repo, quant, feed, entry, pf, hf, cfg, ledger=ledger, index=index)
         (cands if isinstance(c, TorrentCand) else rejected).append(c)
+        if progress:
+            progress(i, len(wanted), c)
     return cands, rejected

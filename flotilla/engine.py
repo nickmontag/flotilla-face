@@ -49,6 +49,7 @@ from .feed import (BUNDLED_FEED, REPO_RE, Feed, FeedError, add_pick, apply_local
 from .netinfo import address_present
 from .magnetindex import INDEX_REPO, MagnetIndex
 from .perfile import PerFile
+from .progress import RefreshProgress
 from .vpnport import RESTART_ROUTE, Forward, GluetunAbsent, GluetunAuth, PortFinder, gluetun_restart_vpn
 from .hfauth import remove_token, save_secret
 from .pfaccount import Account, clean_handle, clean_key, key_path, kind_of
@@ -67,6 +68,7 @@ SETTLE = 3.0    # seconds a probe watches a peer before counting it as a downloa
 STATUS_EVERY = 10.0
 SAVE_EVERY = 300.0          # state.json is written this often (and at once after real changes)
 STATUS_FILE_EVERY = 60.0    # status.json (for `flotilla status`) is written this often
+STATUS_FILE_REFRESHING = 5.0   # and this often while a refresh runs, so its progress is current
 # Torrent status reads. libtorrent's default asks for everything (piece bitfields, distributed
 # copies...), work that grows with the piece count and runs on its network thread. Only the
 # accurate byte counters are used here, and one read per torrent is shared for STATUS_MAX_AGE.
@@ -582,6 +584,7 @@ class Engine:
         self._refresher: threading.Thread | None = None
         self._plans_applied = 0
         self._refresh_failed = False
+        self.progress = RefreshProgress()   # what a running refresh is doing (dashboard, `flotilla status`)
         self._mem_used: int | None = None
         self._dirty = False      # state changed in a way worth saving before the next SAVE_EVERY
         self._snap: tuple[float, dict] | None = None       # (monotonic, the last dashboard snapshot)
@@ -679,6 +682,7 @@ class Engine:
         return keys
 
     def discover(self) -> tuple[list[TorrentCand], list[Rejection]]:
+        self.progress.step("list")
         self.feed = load_feed(self.cfg.feed_urls, self.trusted_keys(), self.state.data["feed_version"],
                               self.state.dir / "cache", tuple(self.cfg.feed_allowed_hosts), log=self.log,
                               bundled=BUNDLED_FEED)
@@ -693,15 +697,21 @@ class Engine:
         with self.lock:
             held_repos = {h["repo"] for h in self.state.holdings.values()}
         self.ledger = load_ledger(self.trusted_keys(), self.state.dir, tuple(self.cfg.feed_allowed_hosts), log=self.log)
+        self.progress.note("list", version=self.feed.version, models=len(self.feed.models),
+                           signed=self.feed.version > 0)
+        self.progress.step("index", enabled=bool(self.index.enabled))
         try:
             self.index.sync(pf)
         except (netsafe.FetchError, netsafe.UnsafeURL, ValueError, OSError) as e:
             self.log(f"magnet index: couldn't check for a new build ({e})")
+        info = self.index.info()
+        self.progress.note("index", build=info.get("build"), models=info.get("models"))
         picks = self._sweep_picks(held_repos)
         swept = set(self.state.data.get("sweep", {}).get("picked", []))
+        self.progress.step("lookup", done=0, total=0, usable=0, skipped=0)
         cands, rejected = gather(self.cfg, self.feed, pf, hf, held_repos, log=self.log, ledger=self.ledger,
                                  index=self.index, covered=bool(self.state.data.get("list_covered")),
-                                 sweep=picks, swept=swept)
+                                 sweep=picks, swept=swept, progress=self.progress.looked_up)
         for c in cands:
             if c.index_build:
                 self.log(f"{c.repo}: Pirate Face can't be reached; listed from the magnet index (build "
@@ -849,9 +859,11 @@ class Engine:
         with self.lock:
             self.mark_held(cands)
         seconds = self.cfg.probe_seconds if probe_seconds is None else probe_seconds
+        self.progress.step("probe", swarms=len(cands), seconds=seconds, ends_at=time.time() + seconds)
         result = probe(cands, self.cfg, self.cfg.folder / ".probe", seconds, self.fingerprint.encode(),
                        log=self.log, listen_host=self.listen_host, dht=self.dht, connect=self.connect)
         apply_probe(cands, result)
+        self.progress.step("plan", budget=self.budget_bytes())
         was_covered = bool(self.state.data.get("list_covered"))
         # The spare entries were looked at only if the list was covered when they were gathered.
         covered = set_targets(cands, spare_included=was_covered)
@@ -888,6 +900,12 @@ class Engine:
         return self._plan_and_apply(cands, rejected)
 
     def _plan_and_apply(self, cands: list[TorrentCand], rejected: list[Rejection]) -> Plan:
+        try:
+            return self._plan_and_apply_now(cands, rejected)
+        finally:
+            self.progress.end()       # applied (or failed): the refresh is over either way
+
+    def _plan_and_apply_now(self, cands: list[TorrentCand], rejected: list[Rejection]) -> Plan:
         now = time.time()
         ro = self.state.data["reorient"]
         asked, self._reorient_now = self._reorient_now, False
@@ -1092,6 +1110,16 @@ class Engine:
         self._refresher.start()
 
     def refresh(self) -> Plan:
+        with self.lock:
+            first = not self.state.holdings
+        self.progress.begin(first, self.cfg.probe_seconds)
+        try:
+            return self._refresh()
+        except BaseException:
+            self.progress.end()
+            raise
+
+    def _refresh(self) -> Plan:
         cands, rejected = self.discover()
         self.last_rejected = rejected
         for r in rejected:
@@ -1825,6 +1853,7 @@ class Engine:
                          "expires": self.feed.expires.isoformat() if self.feed.version else None} if self.feed else None,
                 "vpn_port": self.vpn_port_view(), "reach": self.reach_view(),
                 "upload_month": dict(self.state.data["upload"]), "next_refresh": self.next_refresh,
+                "refresh": self.progress.view(),
                 "budget_bytes": self.last_plan.budget_bytes if self.last_plan else None, "torrents": rows,
                 "run": {"started": self.run_started, "until": self.run_until,
                         "uploaded": self.session_uploaded, "upload_peers": len(self.upload_peers)},
@@ -2868,7 +2897,7 @@ class Engine:
                 guarded("counting peers", self.scan_upload_peers, now)
                 guarded("announcing", self.dial_out_announce, now)
                 guarded("progress", self.report_progress)
-                if now - last_status_file >= STATUS_FILE_EVERY:
+                if now - last_status_file >= (STATUS_FILE_REFRESHING if self.progress.running else STATUS_FILE_EVERY):
                     guarded("writing status.json", self.write_status)
                     last_status_file = now
                 last_status = now

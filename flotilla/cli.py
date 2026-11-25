@@ -249,7 +249,7 @@ def cmd_init(args) -> int:
     fill = duration(budget * GB / cfg.download_bps)
     ui.table([
         ("Space", f"{budget:g} GB in {_host_path(folder, docker)}, keeping {reserve:g} GB free"),
-        ("Upload", f"{up:g} Mbit/s × {cfg.upload_share:.0%}, up to {cfg.max_torrents} swarms at once"
+        ("Upload", f"{up:g} Mbit/s × {cfg.upload_share:.0%}, up to {cfg.max_models:,} models at once"
                    + (f", {cap:g} GB a month" if cap else "")),
         ("Filling", f"about {fill} at {down:g} Mbit/s × {cfg.download_share:.0%} (rare models take longer)"),
         ("Seeding", {"at-risk": "at-risk first: the copies most likely to be lost",
@@ -1761,7 +1761,7 @@ def cmd_editor(args) -> int:
         return _ledger_capture(args)
     if args.action == "stamp":
         return _ledger_stamp(args)
-    if args.action in ("sync-worth-rescuing", "sync-fallback"):
+    if args.action in ("sync-worth-rescuing", "sync-fallback", "sync-catalog"):
         return _editor_sync(args)
     if args.action == "template":
         now = datetime.now(timezone.utc).replace(microsecond=0)
@@ -1779,7 +1779,7 @@ def cmd_editor(args) -> int:
 
 
 def _editor_sync(args) -> int:
-    """sync-worth-rescuing / sync-fallback: update the list's automatically chosen entries."""
+    """sync-worth-rescuing / sync-fallback / sync-catalog: update the list's automatically chosen entries."""
     import tempfile
 
     from .config import Config
@@ -1799,12 +1799,28 @@ def _editor_sync(args) -> int:
             page = parse_page(html.decode("utf-8", "replace"))
             print(f"{PAGE_URL}: {len(page)} models")
             summary = sync(doc, page, pf, hf, licenses)
+        elif args.action == "sync-catalog":
+            from . import catalog
+            from .config import STATE_DIR
+
+            shards = Path(args.index).expanduser() if args.index else STATE_DIR / "index" / "files" / "magnet-index" / "shards"
+            if not shards.is_dir():
+                raise ValueError(f"no magnet index at {shards}: point --index at a build's shards folder (a node "
+                                 f"keeps one at <state>/index/files/magnet-index/shards)")
+            listed = catalog.read_index(shards)
+            print(f"{shards}: Pirate Face lists {len(listed)} models")
+            groups = catalog.group_hits(catalog.gather_hits(hf, listed, limit=min(1000, args.search_limit * 5)))
+            print(f"{len(groups)} of Hugging Face's most downloaded models are on Pirate Face "
+                  f"(quantisations grouped with their source)")
+            summary = catalog.sync(doc, groups, pf, hf, licenses, max_entries=args.max or catalog.MAX_ENTRIES,
+                                   per_base=args.per_base or catalog.PER_BASE)
         else:
             from . import fallback
 
-            groups = fallback.group_hits(fallback.gather_hits(hf))
+            groups = fallback.group_hits(fallback.gather_hits(hf, limit=args.search_limit))
             print(f"{len(groups)} refusal-removed builds on Hugging Face (quantisations grouped with their source)")
-            summary = fallback.sync(doc, groups, pf, hf, licenses, max_entries=args.max)
+            summary = fallback.sync(doc, groups, pf, hf, licenses, max_entries=args.max or fallback.MAX_ENTRIES,
+                                    per_base=args.per_base or fallback.PER_BASE, spare_after=args.spare_after)
         mismatches = license_mismatches(doc, hf)
     for k in ("added", "updated", "removed", "kept", "skipped"):
         for line in summary[k]:
@@ -2129,10 +2145,12 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--init-local", action="store_true", help="create your own my-priorities.json to edit")
     p = sub.add_parser("editor", help="tools for feed editors")
     p.add_argument("action", choices=["keygen", "sign", "check", "template", "sync-worth-rescuing",
-                                      "sync-fallback", "ledger-capture", "stamp", "release"],
+                                      "sync-fallback", "sync-catalog", "ledger-capture", "stamp", "release"],
                    help="sync-worth-rescuing: update FILE from Pirate Face's Worth Rescuing page; "
                         "sync-fallback: update FILE's fallback entries (popular refusal-removed models "
                         "on Hugging Face that Pirate Face has torrents for); "
+                        "sync-catalog: update FILE's catalog entries (Hugging Face's most downloaded models "
+                        "that Pirate Face's magnet index lists, for spare space once the rest is covered); "
                         "ledger-capture: record hashes for FILE's pinned models in the hash ledger; "
                         "stamp: OpenTimestamps proofs for new ledger entries; "
                         "release: check, sign and publish the draft release CI built for a tag")
@@ -2141,7 +2159,18 @@ def main(argv: list[str] | None = None) -> int:
                                            "release tag like v0.2.0 (release)")
     p.add_argument("--dry-run", action="store_true",
                    help="sync-*/ledger-capture: show changes, write nothing; release: sign but don't publish")
-    p.add_argument("--max", type=int, default=40, help="sync-fallback: most fallback entries (default 40)")
+    p.add_argument("--max", type=int, help="sync-fallback: most fallback entries (default 40); "
+                                          "sync-catalog: most catalog entries (default 100)")
+    p.add_argument("--per-base", type=int,
+                   help="sync-fallback / sync-catalog: most entries of one base model (default 2 / 1)")
+    p.add_argument("--search-limit", type=int, default=200,
+                   help="sync-fallback: Hugging Face results read per search term (default 200, at most 1000; "
+                        "sync-catalog reads 5x this per pipeline, at most 1000)")
+    p.add_argument("--spare-after", type=int,
+                   help="sync-fallback: mark entries ranked past this many spare (looked at only once the rest of "
+                        "the list has its copies)")
+    p.add_argument("--index", help="sync-catalog: a magnet index build's shards folder "
+                                   "(default: this machine's node copy)")
     p.add_argument("--ledger", help="ledger-capture/stamp: the ledger index.json (default: next to the feed)")
     p.add_argument("--repo", help="ledger-capture: only this model")
     p.add_argument("--upgrade", action="store_true", help="stamp: complete proofs stamped a few hours ago")

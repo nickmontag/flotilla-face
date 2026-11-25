@@ -34,6 +34,30 @@ HEX40 = re.compile(r"^[0-9a-f]{40}$")
 
 DEFAULT_WEIGHTS = {"capability": 0.35, "cyber": 0.25, "takedown_risk": 0.40}
 
+# How many full copies a model should have: its minimum target. The threat that loses a model isn't one
+# seeder leaving (Flotilla copies it again within a day) but a takedown wave that removes many seeders at
+# once: a crackdown in one country, a VPN provider blocking torrents, a run of legal notices. We assume
+# a wave removes a share of a model's seeders that grows steeply with its takedown-risk score, up to
+# WAVE_MAX for a model scored 100, and want at least one copy to survive it with probability SURVIVE.
+# Never fewer than MIN_COPIES: with one copy, any single loss loses the model before it can be copied.
+WAVE_MAX, WAVE_POWER, SURVIVE, MIN_COPIES = 0.7, 1.5, 0.99, 2
+
+
+def wave_share(takedown_risk: float) -> float:
+    """The share of a model's seeders a takedown wave is assumed to remove."""
+    return WAVE_MAX * (max(0.0, min(100.0, takedown_risk)) / 100.0) ** WAVE_POWER
+
+
+def target_for_risk(takedown_risk: float) -> int:
+    """The fewest full copies with at least one surviving a takedown wave SURVIVE of the time:
+    risk 20 -> 2, 30-40 -> 3, 52-58 -> 4, 80 -> 7, 95 -> 11."""
+    import math
+
+    w = wave_share(takedown_risk)
+    if w <= 0:
+        return MIN_COPIES
+    return max(MIN_COPIES, math.ceil(math.log(1 - SURVIVE) / math.log(w) - 1e-9))
+
 # Where a model's weights come from, as its publisher describes it. Hash checks prove the bytes
 # are the publisher's; this records what the publisher says they did, so people can judge how
 # far to trust a model before running it.
@@ -69,6 +93,11 @@ class FeedModel:
     local: bool = False      # came from the user's own my-priorities.json
     priority_override: float | None = None   # set by the user's drag-to-reorder ranking
     origin: dict | None = None   # see ORIGIN_METHODS
+    # Looked at only once the rest of the list has its target copies (catalog.py's entries): every
+    # model looked at costs a Pirate Face lookup at every refresh, on every node.
+    spare: bool = False
+    # Not from any list: a least-seeded catalog model the node chose itself (sweep.py). Never "listed".
+    sweep: bool = False
 
 
 @dataclass
@@ -178,6 +207,9 @@ def _parse_models(items) -> list[FeedModel]:
         tr = e.get("target_replicas")
         if tr is not None and (not isinstance(tr, int) or not 1 <= tr <= 1000):
             raise FeedError(f"models[{i}].target_replicas out of range")
+        spare = e.get("spare", False)
+        if not isinstance(spare, bool):
+            raise FeedError(f"models[{i}].spare must be true or false")
         boost = e.get("boost", 1.0)
         if not isinstance(boost, (int, float)) or not 0 <= boost <= 10:
             raise FeedError(f"models[{i}].boost out of range")
@@ -187,6 +219,7 @@ def _parse_models(items) -> list[FeedModel]:
         m = FeedModel(repo, {k: float(v) for k, v in scores.items()}, e.get("quant"), ih, rev, tr, float(boost),
                       str(e.get("note", ""))[:500], lic.lower() if lic else None)
         m.origin = _parse_origin(e.get("origin"), i)
+        m.spare = spare
         models.append(m)
     return models
 

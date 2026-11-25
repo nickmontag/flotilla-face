@@ -1,6 +1,7 @@
 """Trust checks on candidates, and the shard planner."""
 
 import hashlib
+import json
 import math
 from pathlib import Path
 
@@ -8,8 +9,8 @@ import pytest
 
 from flotilla.candidates import Rejection, TorrentCand, build_candidate, classify
 from flotilla.config import Config
-from flotilla.feed import FeedModel, neutral_feed
-from flotilla.planner import GB, Params, plan
+from flotilla.feed import BUNDLED_FEED, FeedError, FeedModel, neutral_feed, parse_feed, target_for_risk, wave_share
+from flotilla.planner import GB, Params, plan, set_targets
 from flotilla.sources import HFFile, lfs_pointer_oid
 from flotilla.torrentmeta import make_torrent
 
@@ -776,3 +777,71 @@ def test_hf_keeps_mains_tree_for_an_hour(tmp_path, monkeypatch):
     _os.utime(cached, (old, old))
     assert "config.json" in hf.tree("x/y", "main")
     assert len(asked) == 2
+
+
+# ---------------------------------------------------------------- minimum targets and back-filling
+
+
+def _listed(name, avail, target=5, size=5 * GB):
+    c = cand(name, n_shards=2, shard=size)
+    c.listed, c.target_base, c.target_replicas = True, target, target
+    for f in c.files:
+        f.availability = avail
+    return c
+
+
+def test_targets_follow_takedown_risk_and_never_drop_below_two():
+    assert [target_for_risk(r) for r in (0, 20, 30, 40, 52, 58, 68, 80, 84, 95)] == [2, 2, 3, 3, 4, 4, 5, 7, 8, 11]
+    # each target leaves at least one copy through the assumed wave 99% of the time, and one fewer wouldn't
+    for r in (52, 80, 95):
+        n = target_for_risk(r)
+        assert wave_share(r) ** n <= 0.01 < wave_share(r) ** (n - 1)
+
+
+def test_copies_past_seven_wait_until_everything_listed_has_two():
+    risky = _listed("org/risky", avail=7, target=11)
+    other = _listed("org/other", avail=3, target=3)
+    spare = _listed("org/spare", avail=1, target=2)
+    spare.spare = True
+    # capped while a spare entry is down to one copy, or while the spare entries weren't looked at
+    assert set_targets([risky, other, spare], spare_included=True) is True
+    assert risky.target_replicas == 7 and other.target_replicas == 3
+    for f in spare.files:
+        f.availability = 2
+    set_targets([risky, other], spare_included=False)
+    assert risky.target_replicas == 7
+    set_targets([risky, other, spare], spare_included=True)
+    assert risky.target_replicas == 11
+    # covered is measured at the capped targets, so lifting the cap doesn't switch it off
+    assert set_targets([risky, other, spare], spare_included=True) is True
+    # one small model nobody can fetch doesn't hold the rest back; a large share short of copies does
+    stuck = _listed("org/stuck", avail=0, target=3, size=GB // 10)
+    assert set_targets([risky, other, stuck], spare_included=False) is True
+    for f in other.files:
+        f.availability = 1
+    assert set_targets([risky, other, stuck], spare_included=False) is False
+
+
+def test_a_higher_target_keeps_the_model_needed():
+    risky = _listed("org/risky", avail=6, target=11)
+    calm = _listed("org/calm", avail=6, target=5)
+    set_targets([risky, calm])
+    p = plan([risky, calm], params(10.5), "node-a")          # room for one of the two
+    assert risky.infohash in p.picks and calm.infohash not in p.picks
+
+
+def test_feed_reads_spare_and_refuses_a_bad_one():
+    def feed_with(**m):
+        return json.dumps({"schema": 1, "version": 1, "issued": "2026-01-01T00:00:00+00:00",
+                           "expires": "2027-01-01T00:00:00+00:00",
+                           "models": [{"repo": "org/m", "scores": {}, **m}]}).encode()
+
+    assert parse_feed(feed_with(spare=True)).models[0].spare is True
+    with pytest.raises(FeedError, match="spare"):
+        parse_feed(feed_with(spare="yes"))
+
+
+def test_the_shipped_list_follows_the_target_rule():
+    feed = parse_feed(BUNDLED_FEED.read_bytes())
+    for m in feed.models:
+        assert m.target_replicas == target_for_risk(m.scores.get("takedown_risk", 0)), m.repo

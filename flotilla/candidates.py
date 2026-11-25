@@ -106,6 +106,14 @@ class TorrentCand:
     manifest_mismatches: list[dict] = field(default_factory=list)   # {"path", "pirateface", "huggingface" | "ledger"}
     # Peers the probe saw still fetching, Flotilla nodes left out (engine.probe). None: no probe.
     downloaders: int | None = None
+    # target_replicas is the target in use: target_base, or at most BACKFILL_CAP until every model on
+    # the list has two copies (planner.set_targets).
+    target_base: int = 0
+    spare: bool = False            # FeedModel.spare: looked at only once the list is covered
+
+    def __post_init__(self) -> None:
+        if not self.target_base:
+            self.target_base = self.target_replicas
 
     @property
     def piece_length(self) -> int:
@@ -363,18 +371,30 @@ def build_candidate(
         repo=repo, quant=info.get("quant"), infohash=ih, revision=revision, magnet=info["magnet"],
         license=license_, priority=priority, target_replicas=target, hf_backed=hf_backed,
         seeders=int(info.get("seeders") or 0), leechers=int(info.get("leechers") or 0), meta=meta, files=files,
-        verify_source=source, pinned=pinned, listed=entry is not None, note=entry.note if entry else "",
+        verify_source=source, pinned=pinned, listed=entry is not None and not entry.sweep,
+        note=entry.note if entry else "",
         manifest_mismatches=mismatches, replaces=replaces, index_build=from_index,
+        spare=bool(entry and entry.spare),
     )
 
 
+def sweep_entry(repo: str) -> FeedModel:
+    """A catalog model the sweep picked (sweep.py): last in priority, two copies wanted."""
+    from .sweep import PRIORITY, TARGET
+
+    return FeedModel(repo, {}, target_replicas=TARGET, note="Least-seeded model in Pirate Face's catalog (sweep)",
+                     priority_override=PRIORITY, sweep=True)
+
+
 def gather(cfg: Config, feed: Feed, pf: PirateFace, hf: HuggingFace, held_repos: set[str], log=print,
-           ledger: Ledger | None = None, index=None):
+           ledger: Ledger | None = None, index=None, covered: bool = False, sweep: list[str] = (),
+           swept: set[str] = frozenset()):
     """Decide which repos to look at, then build candidates for each.
 
     Order: the signed feed's models, models we already hold, then (if enabled)
     Pirate Face's rescued models and its new torrents that need seeders, at most
-    policy.max_candidates of those.
+    policy.max_candidates of those, then the catalog sweep's picks (`sweep`). A held model
+    the sweep once picked (`swept`) keeps the sweep's priority and target.
     """
     wanted: list[tuple[str, str | None, FeedModel | None]] = []
     seen: set[tuple[str, str | None]] = set()
@@ -387,9 +407,12 @@ def gather(cfg: Config, feed: Feed, pf: PirateFace, hf: HuggingFace, held_repos:
             wanted.append((repo, quant, entry))
 
     for m in feed.models:
+        if m.spare and not covered and m.repo not in held_repos:
+            continue          # only once the rest of the list has its copies (planner.set_targets)
         add(m.repo, m.quant, m)
     for repo in sorted(held_repos):
-        add(repo, None, (by_repo.get(repo) or [None])[0])
+        listed_as = (by_repo.get(repo) or [None])[0]
+        add(repo, None, listed_as or (sweep_entry(repo) if repo in swept else None))
 
     fresh: list[dict] = []
     if cfg.include_unlisted:
@@ -417,6 +440,9 @@ def gather(cfg: Config, feed: Feed, pf: PirateFace, hf: HuggingFace, held_repos:
             add(m["repo"], None, None)
 
     wanted = wanted[: listed + max(0, cfg.max_candidates)]
+    for repo in sweep:
+        if repo.lower() not in feed.deny:
+            add(repo, None, sweep_entry(repo))
     cands: list[TorrentCand] = []
     rejected: list[Rejection] = []
     for repo, quant, entry in wanted:

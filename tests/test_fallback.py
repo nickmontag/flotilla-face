@@ -248,3 +248,30 @@ def test_unlisted_models_are_capped_on_top_of_the_list():
     assert repos[:3] == ["list/m0", "list/m1", "list/m2"]      # the whole list, though it's over the cap
     assert repos[3:] == ["new/m0", "new/m2"]                    # then the least-seeded new torrents, up to the cap
     assert all(x.priority == feed.unlisted_priority for x in cands[3:])
+
+
+def test_spare_entries_are_looked_at_only_once_the_list_is_covered_or_held():
+    repos = [FakeRepo(f"list/m{i}", make_repo(1, 1000, seed=20 + i)) for i in range(3)]
+    pf, hf = FakePF(repos), FakeHF(repos)
+    feed = neutral_feed()
+    feed.models = [FeedModel(r.repo, {"capability": 50}) for r in repos]
+    feed.models[1].spare = feed.models[2].spare = True
+    c = Config()
+    c.include_unlisted = False
+
+    def looked_at(**kw):
+        return [x.repo for x in gather(c, feed, pf, hf, kw.pop("held", set()), log=lambda *_: None, **kw)[0]]
+
+    assert looked_at() == ["list/m0"]
+    assert looked_at(held={"list/m2"}) == ["list/m0", "list/m2"]      # held: always looked at
+    cands = gather(c, feed, pf, hf, set(), log=lambda *_: None, covered=True)[0]
+    assert [x.repo for x in cands] == ["list/m0", "list/m1", "list/m2"] and [x.spare for x in cands] == [False, True, True]
+
+
+def test_entries_past_spare_after_are_spare():
+    groups = groups_for(doc("a/Q-9B-abliterated", 5_000_000, parent="Qwen/Q-9B", relation="finetune"),
+                        doc("b/Other-heretic", 2_000))
+    d = base_list()
+    fallback.sync(d, groups, PF({"a/Q-9B-abliterated", "b/Other-heretic"}), HF(), LICENSES, spare_after=1)
+    spare = {e["repo"]: e.get("spare", False) for e in d["models"] if e.get("via") == fallback.VIA}
+    assert spare == {"a/Q-9B-abliterated": False, "b/Other-heretic": True}

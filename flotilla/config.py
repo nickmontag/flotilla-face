@@ -76,6 +76,10 @@ class Config:
     # (seeding goes on). 0 = automatic: a quarter of this computer's memory, or 70% of a
     # container's limit.
     memory_gb: float = 0.0
+    # Most models (torrents) this node carries at once. Space, memory_gb and the upload and connection
+    # limits already bound what a node does, and a model nobody is downloading costs only a tracker
+    # announce now and then, so the default is high; lower it to keep fewer swarms open.
+    max_models: int = 1000
     listen_port: int = 6881
     port_forwarding: bool = False
     # On a node bound to a VPN: find the port the VPN forwards (gluetun, NAT-PMP, PIA's app; see
@@ -125,6 +129,10 @@ class Config:
     allow_pickle: bool = False
     whole_model_under_gb: float = 25.0
     max_candidates: int = 20      # unlisted models (rescued, new torrents) looked at per refresh
+    # Once everything on the list has its copies, look at the least-seeded models of Pirate Face's whole
+    # catalog (sweep.py), at most sweep_candidates at a time.
+    catalog_sweep: bool = True
+    sweep_candidates: int = 20
 
     feed_urls: list[str] = field(default_factory=lambda: list(DEFAULT_FEED_URLS))
     # Your own changes to the priority list (unsigned; it's your file). See README.
@@ -152,9 +160,10 @@ class Config:
 
     @property
     def max_torrents(self) -> int:
-        # ~1 Mbit/s of useful upload per active swarm, bounded to keep the
-        # session healthy on small links and sane on big ones.
-        return int(max(4, min(64, self.upload_mbps * self.upload_share)))
+        """The planner's cap on models carried at once (Config.max_models). It used to be about one per
+        Mbit/s of upload, 4 to 64, which left most of a big disk empty once the list was full: Pirate
+        Face's catalog is mostly models under 1 GB."""
+        return self.max_models
 
     @property
     def connections_limit(self) -> int:
@@ -165,10 +174,10 @@ _SECTIONS = {
     "storage": ["folder", "budget_gb", "reserve_gb"],
     "reorient": ["every", "churn_gb"],
     "network": ["upload_mbps", "download_mbps", "upload_share", "download_share", "monthly_upload_cap_gb",
-                "memory_gb", "listen_port", "port_forwarding", "vpn_port_forwarding", "vpn_port_file",
+                "memory_gb", "max_models", "listen_port", "port_forwarding", "vpn_port_forwarding", "vpn_port_file",
                 "vpn_port_recover", "bind_interface", "hf_fallback", "hf_gb_per_day"],
     "policy": ["focus", "licenses", "include_unlisted", "include_rescue", "seed_code_files", "allow_pickle",
-               "whole_model_under_gb", "max_candidates"],
+               "whole_model_under_gb", "max_candidates", "catalog_sweep", "sweep_candidates"],
     "feed": ["urls", "trusted_keys", "allowed_hosts", "local"],
     "net": ["allowed_hosts"],
     "tuning": ["refresh_hours", "probe_seconds", "spread", "hold_bonus", "min_hold_days"],
@@ -227,6 +236,12 @@ def load_config(path: Path = CONFIG_PATH) -> Config:
         raise ValueError("network.vpn_port_file must be a path, or \"\"")
     if isinstance(cfg.churn_gb, bool) or not isinstance(cfg.churn_gb, (int, float)) or cfg.churn_gb < 0:
         raise ValueError("reorient.churn_gb must be a number of GB, 0 or more")
+    if isinstance(cfg.max_models, bool) or not isinstance(cfg.max_models, int) or not 1 <= cfg.max_models <= 100_000:
+        raise ValueError("network.max_models must be a whole number from 1 to 100000")
+    if not isinstance(cfg.catalog_sweep, bool):
+        raise ValueError("policy.catalog_sweep must be true or false")
+    if isinstance(cfg.sweep_candidates, bool) or not isinstance(cfg.sweep_candidates, int) or not 0 <= cfg.sweep_candidates <= 200:
+        raise ValueError("policy.sweep_candidates must be a whole number from 0 to 200")
     # Flotilla's own requests (listings, pieces from Hugging Face) leave by the same pin as torrent traffic.
     pin(cfg.bind_interface)
     return cfg
@@ -269,6 +284,7 @@ upload_share = {_toml_str(cfg.upload_share)}         # fraction of upload given 
 download_share = {_toml_str(cfg.download_share)}
 monthly_upload_cap_gb = {_toml_str(cfg.monthly_upload_cap_gb)}  # 0 = no cap; pauses seeding when reached
 memory_gb = {_toml_str(cfg.memory_gb)}             # most memory to use; no new downloads start above it. 0 = automatic
+max_models = {_toml_str(cfg.max_models)}          # most models to carry at once; lower it to keep fewer swarms open
 listen_port = {_toml_str(cfg.listen_port)}
 port_forwarding = {_toml_str(cfg.port_forwarding)}   # UPnP/NAT-PMP on your router
 vpn_port_forwarding = {_toml_str(cfg.vpn_port_forwarding)}   # bound to a VPN: find the port it forwards and listen on it
@@ -287,6 +303,8 @@ seed_code_files = {_toml_str(cfg.seed_code_files)}   # .py etc. in model repos (
 allow_pickle = {_toml_str(cfg.allow_pickle)}      # formats that can run code when loaded: pickle (.bin/.pt/.ckpt), Keras .h5/.keras, NumPy .npz/.npy
 whole_model_under_gb = {_toml_str(cfg.whole_model_under_gb)}  # seed small models whole instead of by shard
 max_candidates = {_toml_str(cfg.max_candidates)}   # most unlisted models to consider (on top of the list)
+catalog_sweep = {_toml_str(cfg.catalog_sweep)}    # once the whole list has its copies, seed the least-seeded models in Pirate Face's catalog
+sweep_candidates = {_toml_str(cfg.sweep_candidates)}  # most catalog models the sweep looks at at a time
 
 [feed]
 urls = {_toml_str(cfg.feed_urls)}

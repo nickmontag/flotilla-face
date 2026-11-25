@@ -191,6 +191,8 @@ torrent. That keeps every partial seed useful and license-compliant.
 rate(unit)  = priority × (w_risk × scarcity(a, T) × risk + w_demand × demand × uplink)   # value per GB
 scarcity    = 1/(1+a)            if a < T     (a = availability, T = target replicas)
             = 0.1/(1+a)          otherwise
+            T = target_replicas (feed.target_for_risk), at most 7 until 95% of the list's bytes,
+                spare entries included, have 2 copies (set_targets)
             × 1.4 on a reachable node when a ≤ 1
 risk        = 2.5  HF original gone   | 1.5 unknown | 1.0 HF still serves it
 rate        = 0 for a file under a tenth here with no full copy seen, in a torrent HF wouldn't serve (24 h)
@@ -283,6 +285,17 @@ and `min_hold_days`. Now the user sets how often it happens and how much moves: 
   models the user chose by hand (`Feed.manual`: models in their own list file, and models with space
   set aside). Reordering the list is not choosing a model: it changes priorities, which the next
   reorientation follows.
+- **Minimum targets and back-filling.** A model's `target_replicas` comes from its takedown risk
+  (`feed.target_for_risk`): the fewest full copies for at least one to survive a takedown wave 99% of
+  the time, the wave removing `0.7 × (risk/100)^1.5` of its seeders; never fewer than 2. That runs from
+  2 (risk 20) to 11 (risk 95). `set_targets` caps targets at `BACKFILL_CAP` (7) until 95% of the list's
+  bytes, spare entries included, have 2 copies, so no listed model is down to its last copy while
+  another gets its eighth. The list is *covered* when 95% of its non-spare bytes reach their capped
+  targets: not all, so one model nobody can fetch doesn't hold the rest back. Covered decides when
+  nodes start looking at the `spare` entries (`gather(covered=)`, from `state.json`'s `list_covered`,
+  kept across restarts). Both measures use targets that don't fall as the other comes into force, so
+  neither switches off again while copies accumulate; every node sees the same swarm, so they switch
+  together.
 - **Spare copies thin out, never vanish.** A held file that others already hold the target number of
   times (`a ≥ T`) is spare, and spare copies are the cheapest victims. But every holder sees the same
   count, so if each dropped its copy, all of them would at once and the file could go from many copies
@@ -609,8 +622,9 @@ models. `flotilla editor sync-fallback`:
    its own entries that dropped out. Entries on the list for another reason are left alone.
 
 **Where they rank.** Each entry's capability is its base model's score on the list (60 if the base
-isn't scored), with cyber 40 and takedown risk 80 (70 when the name says only "uncensored", which may
-mean fine-tuning). The boost runs from 0.30 at 1k downloads a month to 0.40 at 1M. That puts them at a
+isn't scored), with cyber 40 and takedown risk 40 (35 when the name says only "uncensored", which may
+mean fine-tuning): general-purpose refusal-removed builds are the lowest tier of takedown risk, so
+their minimum target is 3. The boost runs from 0.38 at 1k downloads a month to 0.51 at 1M. That puts them at a
 priority of about 0.2-0.3: around the official releases, about half the lowest hand-picked model
 (0.56), and above Pirate Face's unranked new torrents (0.15). The planner divides a file's value by
 1 + its copies, so these fill in once the hand-picked models have about two copies each, and take
@@ -620,6 +634,78 @@ over completely once those reach their target (where their value drops to a tent
 is still reviewed and pinned to a commit, every node sees the same pool (so the planner's per-node draw
 spreads copies across the fleet instead of every node picking the same models), and a thousand nodes
 don't each query Hugging Face and Pirate Face for hundreds of models.
+
+Editors can raise the caps for a bigger fleet: `--max`, `--per-base` and `--search-limit` (Hugging
+Face results per term, at most 1000). Both editor tools wait out a 429 (`fallback.patient`: its
+Retry-After, else a minute more each time) rather than end a run of hundreds of lookups. Hugging Face's
+`license` lookup still answers a refused request with no license, which skips that model this run.
+
+## The catalog list
+
+`catalog.py`, an editor tool for a fleet bigger than the rest of the list. Once everything listed has
+its target number of copies, more space only adds a 20th or 40th copy of the same models; a first copy
+of another model protects far more. `flotilla editor sync-catalog`:
+
+1. **Reads Pirate Face's magnet index**, the copy a node keeps (`--index`, a build's `shards` folder,
+   read by `magnetindex.parse_shards`, which refuses a copy whose removals can't be read). Pirate Face
+   has no machine-readable catalog any more, and the index lists every model it holds (58,753 in the
+   2026-11-23 build), so membership costs no Pirate Face lookups.
+2. **Reads Hugging Face's most downloaded models** per pipeline (`text-generation`,
+   `image-text-to-text`; 1000 each), keeping those the index lists. Refusal-removed builds are the
+   fallback list's.
+3. **Groups each model with its quantisations** by Hugging Face's links, whoever made them, and keeps
+   one entry per base model: the furthest ancestor the links name outside the group (`root_of`), so a
+   popular model's fine-tunes don't take every place.
+4. **Checks each pick** like the fallback list (`fallback.vet`) and writes at most 100 (`--max`),
+   marked `"via": "pirateface/catalog"`, removing its own entries that dropped out.
+
+**Where they rank.** Capability is the base's score on the list (60 if unscored), cyber 40, takedown
+risk 20; the boost is set so the priority runs from 0.16 at 1k downloads a month to 0.19 at 1M. That's
+above Pirate Face's unranked new torrents (0.15) and below everything else, so these come in once the
+rest is covered. Their target is 2, so the fleet reaches across all of them before deepening any.
+Models Hugging Face has already lost can't be ranked by downloads; they come in by hand or through
+Pirate Face's rescue list.
+
+**The cost of a longer list.** Every model a node looks at is a Pirate Face lookup at every refresh
+(`PF_MIN_GAP` apart, so 300 models add over a minute), and that load grows with the fleet. So catalog
+entries are `spare`: a node looks at them only once the rest of the list has its target copies (see
+[Higher targets](#planner)), or while it holds one. Until a fleet is that big they cost nothing. The
+fallback list's top entries rank among the rest, so they're looked at always; `--spare-after N` makes
+everything past its top N spare, so a long fallback list costs only N lookups until then. Listing pinned models from the node's magnet index copy instead of
+`/api/torrents` would remove that cost; not done yet.
+
+## The catalog sweep
+
+`sweep.py`. Once the list is full, a node's spare space goes to the least-seeded models in Pirate
+Face's whole catalog (58,753 models in the 2026-11-23 index), without anyone enumerating it.
+
+- **When.** After a replan, `planner.list_full`: 95% of the listed bytes, spare entries included, have
+  their target copies at the targets in use. It counts only a replan whose candidates included the
+  spare entries (the list was already covered when they were gathered), so it can't flip on while
+  they are first looked at. `state.json` keeps `list_full`, and the next refresh acts on it.
+- **Which.** The node's magnet index copy is the catalog. Its slice is the SLICE (740) entries with the
+  smallest `H(node_id ‖ "sweep" ‖ week ‖ infohash)`, list and held models left out. Nodes get
+  different slices with no coordinator; the week in the key moves them, so about 80 nodes cover the
+  catalog weekly.
+- **Seeders.** A BitTorrent scrape of `tracker.pirateface.co:6969`, BATCH (74) infohashes a request
+  (the tracker returns HTTP 500 for 200). A hash the tracker doesn't know has had no peer announce it:
+  no seeder. Plain HTTP, through the network pin; a forged count can only steer which catalog models
+  are looked at, since each is then checked like any other. Done at most daily (`EVERY`), picks kept
+  in `state.json`; if the tracker is down, yesterday's picks stand.
+- **How much.** The `sweep_candidates` (20) least seeded, fewest seeders first, become candidates
+  (`gather(sweep=)`) at priority 0.1 with a target of 2. That's below Pirate Face's unranked new
+  torrents (0.15), and above a copy past its target of anything on the list (about 0.01 for the top
+  at-risk model), so the catalog gets space before more surplus. They aren't `listed`, so they never
+  count toward `set_targets` or `list_full`. A held model the sweep once picked keeps those terms
+  (`state.json`'s `sweep.picked`, the last 2000).
+- **Cost.** Per node per day: 10 scrape requests and up to 20 Pirate Face lookups, the same as the
+  unlisted extras. Turn it off with `policy.catalog_sweep = false`.
+- **How many models a node carries.** The planner's `max_torrents` is `network.max_models`, 1000 by
+  default. It used to be about one per Mbit/s of upload (4 to 64). A simulation of 500 nodes of 2 TB
+  at 32 showed every node out of slots at 157 TB of 1000: the catalog is mostly models under 1 GB.
+  Torrents are added without libtorrent's auto-management, so none is queued; an idle one costs a
+  tracker announce per interval and a little memory. Space, `memory_gb`, the upload limit and
+  `connections_limit` still bound what a node does.
 
 ## Unlisted models
 

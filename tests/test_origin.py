@@ -51,8 +51,12 @@ def test_rescoring_a_listed_model_keeps_its_origin(tmp_path):
 def test_published_list_records_every_origin():
     feed = parse_feed(BUNDLED_FEED.read_bytes())
     by_repo = {m.repo: m for m in feed.models}
+    # The editor tools' entries record what Hugging Face's links say, which may name no base.
+    auto = {e["repo"] for e in json.loads(BUNDLED_FEED.read_text())["models"] if e.get("via")
+            in ("huggingface/refusal-removed", "pirateface/catalog")}
     for m in feed.models:
-        assert m.origin and (m.origin.get("base") or m.origin["method"] == "original"), f"{m.repo} has no origin"
+        assert m.origin, f"{m.repo} has no origin"
+        assert m.repo in auto or m.origin.get("base") or m.origin["method"] == "original", f"{m.repo} names no base"
         if m.origin["method"] in ("fine-tune", "fine-tune+refusal-removal"):
             assert "data" in m.origin, f"{m.repo}: say whether the training data is public"
         src = m.origin.get("repack_of")
@@ -81,7 +85,11 @@ def test_official_releases_fill_in_after_at_risk_models():
     # The planner divides a file's value by 1 + its copies. An official release nobody holds must
     # still lose to an at-risk file that has a single copy, so it fills in after them.
     feed = parse_feed(BUNDLED_FEED.read_bytes())
-    official = [feed.priority(m) for m in feed.models if (m.origin or {}).get("method") == "original"]
-    at_risk = [feed.priority(m) for m in feed.models if (m.origin or {}).get("method") != "original"]
+    # Entries the editor tools add (fallback, catalog) rank below both on purpose.
+    auto = {e["repo"] for e in json.loads(BUNDLED_FEED.read_text())["models"] if e.get("via", "").startswith(
+        ("huggingface/refusal-removed", "pirateface/catalog"))}
+    picked = [m for m in feed.models if m.repo not in auto]
+    official = [feed.priority(m) for m in picked if (m.origin or {}).get("method") == "original"]
+    at_risk = [feed.priority(m) for m in picked if (m.origin or {}).get("method") != "original"]
     assert official and at_risk
     assert max(official) * 1.0 < min(at_risk) / 2
